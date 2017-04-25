@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Common_Description" xml:space="preserve">
+    <value>Descrption</value>
+  </data>
+  <data name="Common_Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Common_IsPublic" xml:space="preserve">
+    <value>Is Public</value>
+  </data>
+  <data name="Common_Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="Common_Key_Help" xml:space="preserve">
+    <value>The key is used to identify this item in scripts and must be unique with respect to it's parent. One a key has been assigned, it can not be changed.</value>
+  </data>
+  <data name="Common_Key_Validation" xml:space="preserve">
+    <value>The key must use only letters and numbers, and must be lowercase and must be between 3 and 20 characters.</value>
+  </data>
+  <data name="Common_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Common_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Deployment_Listeners" xml:space="preserve">
+    <value>Listeners</value>
+  </data>
+  <data name="Deployment_Listeners_Help" xml:space="preserve">
+    <value>A deployment contains listeners.  A listener monitors a service, port or protocol for incoming messages.  A deployment can contain main listeners.</value>
+  </data>
+  <data name="Deployment_Planner" xml:space="preserve">
+    <value>Planner</value>
+  </data>
+  <data name="Deployment_Planner_Help" xml:space="preserve">
+    <value>Your deployment needs a planner.  The Planner is used to map a device and message to a route that will be executed to process the message.</value>
+  </data>
+  <data name="Deployment_Planner_Select" xml:space="preserve">
+    <value>-select planner for device configuration-</value>
+  </data>
+  <data name="Deployment_Title" xml:space="preserve">
+    <value>Deployment</value>
+  </data>
+  <data name="DeviceConfiguration_Description" xml:space="preserve">
+    <value>A Device Configuration is a specification for a set of Server Side Pipeline Modules that are used to process incoming Messages from a Device and perform Workflows.</value>
+  </data>
+  <data name="DeviceConfiguration_Help" xml:space="preserve">
+    <value>A Device Configuration is a specification for a set of Server Side Pipeline Modules that are used to process incoming Messages from a Device and perform Workflows.</value>
+  </data>
+  <data name="DeviceConfiguration_Routes" xml:space="preserve">
+    <value>Routes</value>
+  </data>
+  <data name="DeviceConfiguration_Sentinel" xml:space="preserve">
+    <value>Sentinel</value>
+  </data>
+  <data name="DeviceConfiguration_Title" xml:space="preserve">
+    <value>Device Configuration</value>
+  </data>
+  <data name="DeviceMessageDefinition_Description" xml:space="preserve">
+    <value>Content and Format of a Message your Device will Send or Receive</value>
+  </data>
+  <data name="DeviceMessageDefinition_Help" xml:space="preserve">
+    <value>Content and Format of a Message your Device will Send or Receive</value>
+  </data>
+  <data name="DeviceMessageDefinition_MessageId" xml:space="preserve">
+    <value>Message Id</value>
+  </data>
+  <data name="DeviceMessageDefinition_MessageId_Help" xml:space="preserve">
+    <value>The Message Id is a free form field that you can add add an Id that you can use to relate this message type to a message type in your system. They key must be unique across your organization. You can add anything you want in the Message Id field.</value>
+  </data>
+  <data name="DeviceMessageDefinition_Title" xml:space="preserve">
+    <value>Message Definition</value>
+  </data>
+  <data name="HostCapacity_75Percent" xml:space="preserve">
+    <value>75 Percent of Capacity</value>
+  </data>
+  <data name="HostCapacity_90Percent" xml:space="preserve">
+    <value>90 Percent of Capacity</value>
+  </data>
+  <data name="HostCapacity_AtCapacity" xml:space="preserve">
+    <value>At Capacity</value>
+  </data>
+  <data name="HostCapacity_FailureImminent" xml:space="preserve">
+    <value>Failure Immintent</value>
+  </data>
+  <data name="HostCapacity_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="HostCapacity_OverCapacity" xml:space="preserve">
+    <value>Over Capacity</value>
+  </data>
+  <data name="HostCapacity_Underutlized" xml:space="preserve">
+    <value>Under Utilized</value>
+  </data>
+  <data name="HostStatus_Degraded" xml:space="preserve">
+    <value>Degraded</value>
+  </data>
+  <data name="HostStatus_Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="HostStatus_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="HostStatus_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="HostStatus_Starting" xml:space="preserve">
+    <value>Starting</value>
+  </data>
+  <data name="HostStatus_Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="HostStatus_Stopping" xml:space="preserve">
+    <value>Stopping</value>
+  </data>
+  <data name="Host_AdminAPIUri" xml:space="preserve">
+    <value>Admin API URI</value>
+  </data>
+  <data name="Host_AdminAPIUri_Help" xml:space="preserve">
+    <value>The Admin API URI is the location of the API that supports starting, stopping and checking the status of the deployments</value>
+  </data>
+  <data name="Host_AdminEndpoint" xml:space="preserve">
+    <value>Admin Endpoint</value>
+  </data>
+  <data name="Host_AdminEndpoint_Help" xml:space="preserve">
+    <value>The full uri including the port that will be used to communicate with run time.</value>
+  </data>
+  <data name="Host_AverageCPU_30_Minutes" xml:space="preserve">
+    <value>30 Minute Average CPU</value>
+  </data>
+  <data name="Host_AverageMemory_30_Minutes" xml:space="preserve">
+    <value>30 Minutes Average Memory</value>
+  </data>
+  <data name="Host_AverageNetwork_30_Minutes" xml:space="preserve">
+    <value>30 Minute Average Network</value>
+  </data>
+  <data name="Host_CapacityStatus" xml:space="preserve">
+    <value>Capacity Status</value>
+  </data>
+  <data name="Host_DateStampOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Host_Description" xml:space="preserve">
+    <value>The Deployment Host is information about the compute resource that is hosting the run time, this could be for any of the deployment options.  This is primarily used by a System Admin, but can be provisioned as a dedicated resource by a user</value>
+  </data>
+  <data name="Host_Help" xml:space="preserve">
+    <value>The Deployment Host is information about the compute resource that is hosting the run time, this could be for any of the deployment options.  This is primarily used by a System Admin, but can be provisioned as a dedicated resource by a user</value>
+  </data>
+  <data name="Host_InstanceId" xml:space="preserve">
+    <value>Instance Id</value>
+  </data>
+  <data name="Host_InstanceId_Help" xml:space="preserve">
+    <value>The Instance ID is the ID of the compute resource in the environment that is hosing the machine.  This is usually the ID of the machine on the hosting/cloud provider.</value>
+  </data>
+  <data name="Host_Instance_Uri" xml:space="preserve">
+    <value>Instance URI</value>
+  </data>
+  <data name="Host_Instance_Uri_Help" xml:space="preserve">
+    <value>The Instance URI is the base location for the compute resource</value>
+  </data>
+  <data name="Host_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Host_Subscription" xml:space="preserve">
+    <value>Subscription</value>
+  </data>
+  <data name="Host_SubscriptionSelect" xml:space="preserve">
+    <value>-select subscription-</value>
+  </data>
+  <data name="Host_Title" xml:space="preserve">
+    <value>Deployment Host</value>
+  </data>
+  <data name="Host_Type" xml:space="preserve">
+    <value>Host Type</value>
+  </data>
+  <data name="Host_Type_Clustered" xml:space="preserve">
+    <value>Clustered</value>
+  </data>
+  <data name="Host_Type_Community" xml:space="preserve">
+    <value>Community</value>
+  </data>
+  <data name="Host_Type_Dedicated" xml:space="preserve">
+    <value>Dedicated</value>
+  </data>
+  <data name="Host_Type_Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="Host_Type_Select" xml:space="preserve">
+    <value>-select host type-</value>
+  </data>
+  <data name="Host_Type_Shared" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="Host_Type_SharedHighPerformance" xml:space="preserve">
+    <value>High Performance</value>
+  </data>
+  <data name="Instance_Description" xml:space="preserve">
+    <value>The is the engine that runs your Deployment Configuration.  It consists of all the components you have configured such as the Deployment Configuration, Device Configurations and Workflow.</value>
+  </data>
+  <data name="Instance_Help" xml:space="preserve">
+    <value>The is the engine that runs your Deployment Configuration.  It consists of all the components you have configured such as the Deployment Configuration, Device Configurations and Workflow.</value>
+  </data>
+  <data name="Instance_Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Instance_Host_Help" xml:space="preserve">
+    <value>The Compute Resource that will be Hosting Your Instance.</value>
+  </data>
+  <data name="Instance_Host_Watermark" xml:space="preserve">
+    <value>-select a host-</value>
+  </data>
+  <data name="Instance_Solution" xml:space="preserve">
+    <value>Assigned Solution</value>
+  </data>
+  <data name="Instance_Solution_Select" xml:space="preserve">
+    <value>-assigned a solution-</value>
+  </data>
+  <data name="Instance_Title" xml:space="preserve">
+    <value>Instance</value>
+  </data>
+  <data name="Route_Description" xml:space="preserve">
+    <value>A route is a path that defines how your message will be processed</value>
+  </data>
+  <data name="Route_Help" xml:space="preserve">
+    <value>A route is a path that defines how your message will be processed</value>
+  </data>
+  <data name="Route_InputTranslator" xml:space="preserve">
+    <value>Input Translator</value>
+  </data>
+  <data name="Route_IsDefault" xml:space="preserve">
+    <value>Is Default</value>
+  </data>
+  <data name="Route_IsDefault_Help" xml:space="preserve">
+    <value>For each device configuration you can optionally configure one route as default. If the planner can not find a route by message id, if a default route is specified that default route will be executed.</value>
+  </data>
+  <data name="Route_Messages" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="Route_Messages_Help" xml:space="preserve">
+    <value>You can map or create a message with a message id that is associated with this route.  If the incoming messages, message id matches one that is associated with a route, that route is executed.</value>
+  </data>
+  <data name="Route_OutputTranslator" xml:space="preserve">
+    <value>Output Translator</value>
+  </data>
+  <data name="Route_SelectInputTranslator" xml:space="preserve">
+    <value>-select input translator for route-</value>
+  </data>
+  <data name="Route_SelectOutputTranslator" xml:space="preserve">
+    <value>-select output translator for route-</value>
+  </data>
+  <data name="Route_SelectSentinel" xml:space="preserve">
+    <value>-select sentinel for route-</value>
+  </data>
+  <data name="Route_SelectTransmitter" xml:space="preserve">
+    <value>-select transmitter for route-</value>
+  </data>
+  <data name="Route_SelectWorkflow" xml:space="preserve">
+    <value>-select workflow for route-</value>
+  </data>
+  <data name="Route_Title" xml:space="preserve">
+    <value>Route</value>
+  </data>
+  <data name="Route_Transmitter" xml:space="preserve">
+    <value>Transmitter</value>
+  </data>
+  <data name="Route_Workflow" xml:space="preserve">
+    <value>Workflow</value>
+  </data>
+  <data name="Solution_Description" xml:space="preserve">
+    <value>A Solution is a Specification for an End-to-End Solution that can be deployed to at as a Server to Manage your Devices.</value>
+  </data>
+  <data name="Solution_DeviceConfigurations" xml:space="preserve">
+    <value>Device Configurations</value>
+  </data>
+  <data name="Solution_DeviceConfigurations_Help" xml:space="preserve">
+    <value>Add the Device Configurations that Make up your Deployment.</value>
+  </data>
+  <data name="Solution_Environment" xml:space="preserve">
+    <value>Environment</value>
+  </data>
+  <data name="Solution_Help" xml:space="preserve">
+    <value>Create a Solution that can be Deployed</value>
+  </data>
+  <data name="Solution_Title" xml:space="preserve">
+    <value>Solution</value>
+  </data>
+</root>

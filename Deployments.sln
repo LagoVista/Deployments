@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Admin", "src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj", "{88DC40A1-10EE-4812-AB91-2E2096B788F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Admin.Rest", "src\LagoVista.IoT.Deployment.Admin.Rest\LagoVista.IoT.Deployment.Admin.Rest.csproj", "{ED0E5800-C7C8-4990-B3A5-848220755BC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.CloudRepos", "src\LagoVista.IoT.Deployment.CloudRepos\LagoVista.IoT.Deployment.CloudRepos.csproj", "{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88DC40A1-10EE-4812-AB91-2E2096B788F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88DC40A1-10EE-4812-AB91-2E2096B788F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88DC40A1-10EE-4812-AB91-2E2096B788F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88DC40A1-10EE-4812-AB91-2E2096B788F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED0E5800-C7C8-4990-B3A5-848220755BC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED0E5800-C7C8-4990-B3A5-848220755BC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED0E5800-C7C8-4990-B3A5-848220755BC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED0E5800-C7C8-4990-B3A5-848220755BC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,184 @@
+﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
+using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Resources;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using LagoVista.Core.Models;
+
+namespace LagoVista.IoT.Deployment.Admin.Models
+{
+
+    public enum HostTypes
+    {
+        [EnumLabel(DeploymentHost.HostType_Free, DeploymentAdminResources.Names.Host_Type_Free, typeof(DeploymentAdminResources))]
+        Free,
+        [EnumLabel(DeploymentHost.HostType_Community, DeploymentAdminResources.Names.Host_Type_Community, typeof(DeploymentAdminResources))]
+        Community,
+        [EnumLabel(DeploymentHost.HostType_Shared, DeploymentAdminResources.Names.Host_Type_Shared, typeof(DeploymentAdminResources))]
+        Shared,
+        [EnumLabel(DeploymentHost.HostType_SharedHighPerformacne, DeploymentAdminResources.Names.Host_Type_SharedHighPerformance, typeof(DeploymentAdminResources))]
+        SharedHighPerformance,
+        [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.Host_Type_Dedicated, typeof(DeploymentAdminResources))]
+        Dedicated,
+        [EnumLabel(DeploymentHost.HostType_Clustered, DeploymentAdminResources.Names.Host_Type_Clustered, typeof(DeploymentAdminResources))]
+        Clustered
+    }
+
+    public enum HostStatus
+    {
+        [EnumLabel(DeploymentHost.HostStatus_Offline, DeploymentAdminResources.Names.HostStatus_Offline, typeof(DeploymentAdminResources))]
+        Offline,
+        [EnumLabel(DeploymentHost.HostStatus_Failed, DeploymentAdminResources.Names.HostStatus_Failed, typeof(DeploymentAdminResources))]
+        Failed,
+        [EnumLabel(DeploymentHost.HostStatus_Stopped, DeploymentAdminResources.Names.HostStatus_Stopped, typeof(DeploymentAdminResources))]
+        Stopped,
+        [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
+        Starting,
+        [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
+        Running,
+        [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
+        StoppingHostStatus_Degraded,
+        [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
+        Degraded,
+    }
+
+    public enum HostCapacityStatus
+    {
+        [EnumLabel(DeploymentHost.HostCapacity_underutilized, DeploymentAdminResources.Names.HostCapacity_Underutlized, typeof(DeploymentAdminResources))]
+        UnderUtilized,
+        [EnumLabel(DeploymentHost.HostCapacity_Ok, DeploymentAdminResources.Names.HostCapacity_OverCapacity, typeof(DeploymentAdminResources))]
+        Ok,
+        [EnumLabel(DeploymentHost.HostCapacity_75Percent, DeploymentAdminResources.Names.HostCapacity_75Percent, typeof(DeploymentAdminResources))]
+        At75Percent,
+        [EnumLabel(DeploymentHost.HostCapacity_90Percent, DeploymentAdminResources.Names.HostCapacity_90Percent, typeof(DeploymentAdminResources))]
+        At90Percent,
+        [EnumLabel(DeploymentHost.HostCapacity_atcapacity, DeploymentAdminResources.Names.HostCapacity_AtCapacity, typeof(DeploymentAdminResources))]
+        AtCapacity,
+        [EnumLabel(DeploymentHost.HostCapacity_overcapacity, DeploymentAdminResources.Names.HostCapacity_OverCapacity, typeof(DeploymentAdminResources))]
+        OverCapacity,
+        [EnumLabel(DeploymentHost.HostCapacity_failureimmintent, DeploymentAdminResources.Names.HostCapacity_FailureImminent, typeof(DeploymentAdminResources))]
+        FailureImminent
+    }
+
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, Resources.DeploymentAdminResources.Names.Host_Help, Resources.DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
+    {
+        public const string HostType_Free = "free";
+        public const string HostType_Community = "community";
+        public const string HostType_Shared = "shared";
+        public const string HostType_SharedHighPerformacne = "shared_highperformance";
+        public const string HostType_Dedicated = "dedicated";
+        public const string HostType_Clustered = "clustered";
+
+
+        public const string HostStatus_Offline = "offline";
+        public const string HostStatus_Failed = "failed";
+        public const string HostStatus_Stopped = "stopped";
+        public const string HostStatus_Starting = "starting";
+        public const string HostStatus_Running = "running";
+        public const string HostStatus_Stopping = "stopping";
+        public const string HostStatus_Degraded = "degraded";
+
+        public const string HostCapacity_underutilized = "underutilized";
+        public const string HostCapacity_Ok = "ok";
+        public const string HostCapacity_75Percent = "75percent";
+        public const string HostCapacity_90Percent = "90percent";
+
+        public const string HostCapacity_atcapacity = "atcapacity";
+        public const string HostCapacity_overcapacity = "overcapacity";
+        public const string HostCapacity_failureimmintent = "failureimminent";
+
+        public DeploymentHost()
+        {
+            Status = new EntityHeader<HostStatus>()
+            {
+                Value = HostStatus.Offline,
+                Id = HostStatus_Offline,
+                Text = DeploymentAdminResources.HostStatus_Offline
+            };
+
+            CapacityStatus = new EntityHeader<HostCapacityStatus>()
+            {
+                Value = HostCapacityStatus.Ok,
+                Id = HostCapacity_Ok,
+                Text = DeploymentAdminResources.HostCapacity_Ok
+
+            };
+        }
+
+        public string DatabaseName { get; set; }
+        public string EntityType { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string Key { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Type, EnumType: (typeof(HostTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<HostTypes> HostType { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
+        public EntityHeader<HostStatus> Status { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
+        public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }
+
+
+        public bool IsPublic { get; set; }
+        public EntityHeader OwnerOrganization { get; set; }
+        public EntityHeader OwnerUser { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string AdminAPIUri { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_InstanceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_InstanceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string InstanceId { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Instance_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_Instance_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string InstanceUri { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string AverageCPU { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageNetwork_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string AverageNetwork { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageMemory_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string AverageMemory { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        public EntityHeader Subscription { get; set; }
+
+        public DeploymentHostSummary CreateSummary()
+        {
+            return new DeploymentHostSummary()
+            {
+                Id = Id,
+                Name = Name,
+                Status = Status.Text,
+                CapacityStatus = CapacityStatus.Text,
+                HostType = HostType.Text,
+                Key = Key,
+                Description = Description,
+                IsPublic = IsPublic
+            };
+        }
+    }
+
+    public class DeploymentHostSummary : SummaryData
+    {
+        [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_Type, ResourceType: typeof(DeploymentAdminResources))]
+        public string HostType { get; set; }
+
+
+        [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_Status, ResourceType: typeof(DeploymentAdminResources))]
+        public string Status { get; set; }
+
+        [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_CapacityStatus, ResourceType: typeof(DeploymentAdminResources))]
+        public string CapacityStatus { get; set; }
+    }
+
+}
