@@ -125,6 +125,27 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:DeviceMessageDefinition_Title
 
 		public static string DeviceMessageDefinition_Title { get { return GetResourceString("DeviceMessageDefinition_Title"); } }
+//Resources:DeploymentAdminResources:Err_ErrorCommunicatingWithHost
+
+		public static string Err_ErrorCommunicatingWithHost { get { return GetResourceString("Err_ErrorCommunicatingWithHost"); } }
+//Resources:DeploymentAdminResources:Err_InstanceAlreadyRunning
+
+		public static string Err_InstanceAlreadyRunning { get { return GetResourceString("Err_InstanceAlreadyRunning"); } }
+//Resources:DeploymentAdminResources:Err_InstanceNotRunning
+
+		public static string Err_InstanceNotRunning { get { return GetResourceString("Err_InstanceNotRunning"); } }
+//Resources:DeploymentAdminResources:Errs_AlreadyDeployed
+
+		public static string Errs_AlreadyDeployed { get { return GetResourceString("Errs_AlreadyDeployed"); } }
+//Resources:DeploymentAdminResources:Errs_InstanceBusy
+
+		public static string Errs_InstanceBusy { get { return GetResourceString("Errs_InstanceBusy"); } }
+//Resources:DeploymentAdminResources:Errs_MustBeStoppedBeforeRemoving
+
+		public static string Errs_MustBeStoppedBeforeRemoving { get { return GetResourceString("Errs_MustBeStoppedBeforeRemoving"); } }
+//Resources:DeploymentAdminResources:Errs_NotDeployed
+
+		public static string Errs_NotDeployed { get { return GetResourceString("Errs_NotDeployed"); } }
 //Resources:DeploymentAdminResources:Host_AdminAPIUri
 
 		public static string Host_AdminAPIUri { get { return GetResourceString("Host_AdminAPIUri"); } }
@@ -263,12 +284,21 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Instance_Host_Watermark
 
 		public static string Instance_Host_Watermark { get { return GetResourceString("Instance_Host_Watermark"); } }
+//Resources:DeploymentAdminResources:Instance_IsDeployed
+
+		public static string Instance_IsDeployed { get { return GetResourceString("Instance_IsDeployed"); } }
+//Resources:DeploymentAdminResources:Instance_IsDeployed_Help
+
+		public static string Instance_IsDeployed_Help { get { return GetResourceString("Instance_IsDeployed_Help"); } }
 //Resources:DeploymentAdminResources:Instance_Solution
 
 		public static string Instance_Solution { get { return GetResourceString("Instance_Solution"); } }
 //Resources:DeploymentAdminResources:Instance_Solution_Select
 
 		public static string Instance_Solution_Select { get { return GetResourceString("Instance_Solution_Select"); } }
+//Resources:DeploymentAdminResources:Instance_Status
+
+		public static string Instance_Status { get { return GetResourceString("Instance_Status"); } }
 //Resources:DeploymentAdminResources:Instance_Title
 
 		public static string Instance_Title { get { return GetResourceString("Instance_Title"); } }
@@ -365,6 +395,13 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string DeviceMessageDefinition_MessageId = "DeviceMessageDefinition_MessageId";
 			public const string DeviceMessageDefinition_MessageId_Help = "DeviceMessageDefinition_MessageId_Help";
 			public const string DeviceMessageDefinition_Title = "DeviceMessageDefinition_Title";
+			public const string Err_ErrorCommunicatingWithHost = "Err_ErrorCommunicatingWithHost";
+			public const string Err_InstanceAlreadyRunning = "Err_InstanceAlreadyRunning";
+			public const string Err_InstanceNotRunning = "Err_InstanceNotRunning";
+			public const string Errs_AlreadyDeployed = "Errs_AlreadyDeployed";
+			public const string Errs_InstanceBusy = "Errs_InstanceBusy";
+			public const string Errs_MustBeStoppedBeforeRemoving = "Errs_MustBeStoppedBeforeRemoving";
+			public const string Errs_NotDeployed = "Errs_NotDeployed";
 			public const string Host_AdminAPIUri = "Host_AdminAPIUri";
 			public const string Host_AdminAPIUri_Help = "Host_AdminAPIUri_Help";
 			public const string Host_AdminEndpoint = "Host_AdminEndpoint";
@@ -411,8 +448,11 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Instance_Host = "Instance_Host";
 			public const string Instance_Host_Help = "Instance_Host_Help";
 			public const string Instance_Host_Watermark = "Instance_Host_Watermark";
+			public const string Instance_IsDeployed = "Instance_IsDeployed";
+			public const string Instance_IsDeployed_Help = "Instance_IsDeployed_Help";
 			public const string Instance_Solution = "Instance_Solution";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
+			public const string Instance_Status = "Instance_Status";
 			public const string Instance_Title = "Instance_Title";
 			public const string Route_Description = "Route_Description";
 			public const string Route_Help = "Route_Help";

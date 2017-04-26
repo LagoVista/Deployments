@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Validation;
+using LagoVista.Core;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using System;
 using System.Collections.Generic;
@@ -104,8 +105,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Value = HostCapacityStatus.Ok,
                 Id = HostCapacity_Ok,
                 Text = DeploymentAdminResources.HostCapacity_Ok
-
             };
+
+            GenerateAccessKeys();
+        }
+
+        public void GenerateAccessKeys()
+        {
+            HostAccessKey1 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
+            HostAccessKey2 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
         }
 
         public string DatabaseName { get; set; }
@@ -151,6 +159,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
+
+        public String HostAccessKey1 { get; set; }
+
+        public String HostAccessKey2 { get; set; }
 
         public DeploymentHostSummary CreateSummary()
         {

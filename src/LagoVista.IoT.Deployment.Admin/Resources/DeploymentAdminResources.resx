@@ -189,6 +189,21 @@
   <data name="DeviceMessageDefinition_Title" xml:space="preserve">
     <value>Message Definition</value>
   </data>
+  <data name="Errs_AlreadyDeployed" xml:space="preserve">
+    <value>Your isntance has already been deployed.  You can not redploy it.</value>
+  </data>
+  <data name="Errs_InstanceBusy" xml:space="preserve">
+    <value>Your instance is busy, please try again later.</value>
+  </data>
+  <data name="Errs_MustBeStoppedBeforeRemoving" xml:space="preserve">
+    <value>Your instance must be completely stopped or have a fatal error prior to removing it.</value>
+  </data>
+  <data name="Errs_NotDeployed" xml:space="preserve">
+    <value>Your instance has not been successfully deployed.  Please deploy it prior to start, pausing and stopping your instance.</value>
+  </data>
+  <data name="Err_InstanceNotRunning" xml:space="preserve">
+    <value>Your instance is not running, please start your instance or try again later.</value>
+  </data>
   <data name="HostCapacity_75Percent" xml:space="preserve">
     <value>75 Percent of Capacity</value>
   </data>
@@ -327,11 +342,20 @@
   <data name="Instance_Host_Watermark" xml:space="preserve">
     <value>-select a host-</value>
   </data>
+  <data name="Instance_IsDeployed" xml:space="preserve">
+    <value>Is Deployed</value>
+  </data>
+  <data name="Instance_IsDeployed_Help" xml:space="preserve">
+    <value>Will be true if this instance has been deployed to a Host, this doesn't necessarily mean it is running.</value>
+  </data>
   <data name="Instance_Solution" xml:space="preserve">
     <value>Assigned Solution</value>
   </data>
   <data name="Instance_Solution_Select" xml:space="preserve">
     <value>-assigned a solution-</value>
+  </data>
+  <data name="Instance_Status" xml:space="preserve">
+    <value>Status</value>
   </data>
   <data name="Instance_Title" xml:space="preserve">
     <value>Instance</value>
@@ -401,5 +425,11 @@
   </data>
   <data name="Solution_Title" xml:space="preserve">
     <value>Solution</value>
+  </data>
+  <data name="Err_ErrorCommunicatingWithHost" xml:space="preserve">
+    <value>There was an error communicating with the Host Server, please try again later.</value>
+  </data>
+  <data name="Err_InstanceAlreadyRunning" xml:space="preserve">
+    <value>Your instance is already running, please try again later.</value>
   </data>
 </root>

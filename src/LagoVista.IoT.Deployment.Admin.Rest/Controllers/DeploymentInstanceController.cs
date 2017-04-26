@@ -38,7 +38,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpPost("/api/deployment/instance")]
         public Task<InvokeResult> AddInstanceAsync([FromBody] DeploymentInstance instance)
         {
-            return _instanceManager.AddInstanceAsync(instance, UserEntityHeader, OrgEntityHeader);
+            return _instanceManager.AddInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult> UpdateInstanceAsync([FromBody] DeploymentInstance instance)
         {
             SetUpdatedProperties(instance);
-            return _instanceManager.UpdateInstanceAsync(instance, UserEntityHeader);
+            return _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -124,6 +124,76 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetOwnedProperties(response.Model);
 
             return response;
+        }
+
+        /* Methods to manage the instance */
+
+        /// <summary>
+        /// Deployment Instance - Deploy
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/deploy")]
+        public Task<InvokeResult> DeployAsync(String id)
+        {
+            return _instanceManager.DeployAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Start
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/start")]
+        public Task<InvokeResult> StartAsync(String id)
+        {
+            return _instanceManager.StartAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Pause
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/pause")]
+        public Task<InvokeResult> PauseAsync(String id)
+        {
+            return _instanceManager.PauseAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Stop
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/stop")]
+        public Task<InvokeResult> StopAsync(String id)
+        {
+            return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
+        /// Deployment Instance - Remove
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/remove")]
+        public Task<InvokeResult> RemoveAsync(String id)
+        {
+            return _instanceManager.RemoveAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
+        /// Deployment Instance - Get Monitor URI
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/instance/{id}/monitoruri")]
+        public Task<InvokeResult<Uri>> GetMonitorUriAsync(String id)
+        {
+            return _instanceManager.GetRemoteMonitoringURIAsync(id, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

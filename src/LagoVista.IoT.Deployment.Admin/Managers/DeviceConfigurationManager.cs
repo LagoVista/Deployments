@@ -45,7 +45,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DependentObjectCheckResult> CheckDeviceConfigInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deviceConfig = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
-            await AuthorizeAsync(deviceConfig, AuthorizeActions.Read, user);
+            await AuthorizeAsync(deviceConfig, AuthorizeActions.Read, user, org);
             return await base.CheckForDepenenciesAsync(deviceConfig);
         }
 
@@ -182,7 +182,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DependentObjectCheckResult> CheckDeviceMessageInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deviceMessageConfiguration = await _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionAsync(id);
-            await AuthorizeAsync(deviceMessageConfiguration, AuthorizeActions.Read, user);            
+            await AuthorizeAsync(deviceMessageConfiguration, AuthorizeActions.Read, user, org);            
             return await base.CheckForDepenenciesAsync(deviceMessageConfiguration);
         }
     }

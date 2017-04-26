@@ -35,14 +35,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(id);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             return await CheckForDepenenciesAsync(host);
         }
 
         public async Task<InvokeResult> DeleteDeploymentHostAsync(String instanceId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);            
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             await ConfirmNoDepenenciesAsync(host);
             await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
             return InvokeResult.Success;
@@ -51,7 +51,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DeploymentHost> GetDeploymentHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             return host;
         }
 
@@ -71,10 +71,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _deploymentHostRepo.QueryInstanceKeyInUseAsync(key, org.Id);
         }
 
+        public async Task<InvokeResult> RegenerateAccessKeys(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
+            host.GenerateAccessKeys();
+            await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
+            return InvokeResult.Success;
+        }
+
         public async Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(host, Actions.Update);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user);            
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);            
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }

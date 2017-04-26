@@ -77,6 +77,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Host - Regenerate Access Keys
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/regenerateaccesskeys")]
+        public Task<InvokeResult> RegenerateAccessKeysAsync(String id)
+        {
+            return _hostManager.RegenerateAccessKeys(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Deployment Host - Get
         /// </summary>
         /// <param name="id"></param>
