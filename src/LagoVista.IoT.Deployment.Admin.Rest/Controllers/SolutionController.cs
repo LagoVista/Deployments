@@ -81,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Deployment Config - Key In Use
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/deployment/solution/{key}/keyinuse")]
+        [HttpGet("/api/deployment/solution/{key}/InUse")]
         public Task<bool> SolutionKeyInUse(String key)
         {
             return _solutionManager.QueryKeyInUse(key, OrgEntityHeader);

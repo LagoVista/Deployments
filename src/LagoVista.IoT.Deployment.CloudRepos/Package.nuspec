@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.CloudRepos</id>
-    <version>0.8.116-alpha00969</version>
+    <version>0.8.151-alpha1547</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -16,7 +16,7 @@
       <dependency id="Newtonsoft.Json" version="10.0.1" />
       <dependency id="LagoVista.Core" version="0.8.112-alpha00944" />
       <dependency id="LagoVista.Core.Authentication" version="0.8.112-alpha00944" />
-      <dependency id="LagoVista.IoT.DeviceAdmin" version="0.8.112-alpha00944" />      
+      <dependency id="LagoVista.IoT.DeviceAdmin" version="0.8.112-alpha00944" />
     </dependencies>
   </metadata>
   <files>
