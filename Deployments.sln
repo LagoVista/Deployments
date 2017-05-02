@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Ad
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.CloudRepos", "src\LagoVista.IoT.Deployment.CloudRepos\LagoVista.IoT.Deployment.CloudRepos.csproj", "{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{20A35980-CCE6-48BF-8ED8-8FF6BC1BFB07}"
+	ProjectSection(SolutionItems) = preProject
+		CreateLocalPackage.ps1 = CreateLocalPackage.ps1
+		UpdateNuspecVersion.ps1 = UpdateNuspecVersion.ps1
+		UploadResources.ps1 = UploadResources.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -432,4 +432,28 @@
   <data name="Err_InstanceAlreadyRunning" xml:space="preserve">
     <value>Your instance is already running, please try again later.</value>
   </data>
+  <data name="Err_InstanceWithoutHost" xml:space="preserve">
+    <value>You must specify a Host prior to deploying your instance.</value>
+  </data>
+  <data name="Err_InstanceWithoutSolution" xml:space="preserve">
+    <value>You must associate a solution prior to deploying your instance.</value>
+  </data>
+  <data name="Err_CouldNotLoadDeviceConfiguration" xml:space="preserve">
+    <value>System Error: Could Not Load Device Configuration</value>
+  </data>
+  <data name="Err_CouldNotLoadListener" xml:space="preserve">
+    <value>System Error: Could Not Load Listener</value>
+  </data>
+  <data name="Err_CouldNotLoadPlanner" xml:space="preserve">
+    <value>System Error: Could Not Load Planner</value>
+  </data>
+  <data name="Err_CouldNotLoadSolution" xml:space="preserve">
+    <value>System Error: Could Not Load Solution</value>
+  </data>
+  <data name="Err_NoPlannerHasBeenSpecified" xml:space="preserve">
+    <value>Your solution does not appear to have a Planner configured.  Please add one.</value>
+  </data>
+  <data name="Err_CouldNotLoadInstance" xml:space="preserve">
+    <value>System Error:  Could not load Instance.</value>
+  </data>
 </root>

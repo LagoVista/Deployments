@@ -11,6 +11,8 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Authentication.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.Logging.Exceptions;
+using LagoVista.IoT.Deployment.Admin.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -47,9 +49,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.AlreadyDeployed);
             }
 
+            if(instance.Host.IsEmpty())
+            {
+                throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceWithoutHost);
+            }
+
+            if (instance.Solution.IsEmpty())
+            {
+                throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceWithoutSolution);
+            }
+
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Deploy);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
             return await _connector.DeployAsync(host, id, org, user);
         }
 
@@ -75,7 +87,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Start);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
             return await _connector.StartAsync(host, id, org, user);
         }
 
@@ -102,7 +114,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Pause);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
             return await _connector.PauseAsync(host, id, org, user);
         }
 
@@ -128,7 +140,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Stop);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
             return await _connector.StopAsync(host, id, org, user);
         }
 
@@ -149,7 +161,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Remove);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
             return await _connector.StopAsync(host, id, org, user);
         }
 
@@ -215,6 +227,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DeploymentInstance> LoadFullInstanceAsync(string id)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            if(instance == null) throw RecordNotFoundException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadInstance, typeof(DeploymentInstance).Name, id);
 
             instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(id);
             instance.Solution.Id = instance.Solution.Value.Id;

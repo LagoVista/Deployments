@@ -64,7 +64,7 @@ try{
 	var names = new List<string>();
 	foreach(var entry in AllEntries)
 	{
-	    WriteLine("//" + entry.Path + ":" + entry.File+ ":" + entry.Name);
+	    WriteLine("//" + entry.Path + ":" + entry.File+ ":" + entry.Name);  
 
 		var newNamespace = ("Resources." + entry.Path + ".").Replace(".Resources.", ".");
 		newNamespace = RootNamespace + "." + newNamespace.Substring(0, newNamespace.Length-1);

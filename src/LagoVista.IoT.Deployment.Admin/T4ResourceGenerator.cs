@@ -125,6 +125,21 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:DeviceMessageDefinition_Title
 
 		public static string DeviceMessageDefinition_Title { get { return GetResourceString("DeviceMessageDefinition_Title"); } }
+//Resources:DeploymentAdminResources:Err_CouldNotLoadDeviceConfiguration
+
+		public static string Err_CouldNotLoadDeviceConfiguration { get { return GetResourceString("Err_CouldNotLoadDeviceConfiguration"); } }
+//Resources:DeploymentAdminResources:Err_CouldNotLoadInstance
+
+		public static string Err_CouldNotLoadInstance { get { return GetResourceString("Err_CouldNotLoadInstance"); } }
+//Resources:DeploymentAdminResources:Err_CouldNotLoadListener
+
+		public static string Err_CouldNotLoadListener { get { return GetResourceString("Err_CouldNotLoadListener"); } }
+//Resources:DeploymentAdminResources:Err_CouldNotLoadPlanner
+
+		public static string Err_CouldNotLoadPlanner { get { return GetResourceString("Err_CouldNotLoadPlanner"); } }
+//Resources:DeploymentAdminResources:Err_CouldNotLoadSolution
+
+		public static string Err_CouldNotLoadSolution { get { return GetResourceString("Err_CouldNotLoadSolution"); } }
 //Resources:DeploymentAdminResources:Err_ErrorCommunicatingWithHost
 
 		public static string Err_ErrorCommunicatingWithHost { get { return GetResourceString("Err_ErrorCommunicatingWithHost"); } }
@@ -134,6 +149,15 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_InstanceNotRunning
 
 		public static string Err_InstanceNotRunning { get { return GetResourceString("Err_InstanceNotRunning"); } }
+//Resources:DeploymentAdminResources:Err_InstanceWithoutHost
+
+		public static string Err_InstanceWithoutHost { get { return GetResourceString("Err_InstanceWithoutHost"); } }
+//Resources:DeploymentAdminResources:Err_InstanceWithoutSolution
+
+		public static string Err_InstanceWithoutSolution { get { return GetResourceString("Err_InstanceWithoutSolution"); } }
+//Resources:DeploymentAdminResources:Err_NoPlannerHasBeenSpecified
+
+		public static string Err_NoPlannerHasBeenSpecified { get { return GetResourceString("Err_NoPlannerHasBeenSpecified"); } }
 //Resources:DeploymentAdminResources:Errs_AlreadyDeployed
 
 		public static string Errs_AlreadyDeployed { get { return GetResourceString("Errs_AlreadyDeployed"); } }
@@ -395,9 +419,17 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string DeviceMessageDefinition_MessageId = "DeviceMessageDefinition_MessageId";
 			public const string DeviceMessageDefinition_MessageId_Help = "DeviceMessageDefinition_MessageId_Help";
 			public const string DeviceMessageDefinition_Title = "DeviceMessageDefinition_Title";
+			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";
+			public const string Err_CouldNotLoadInstance = "Err_CouldNotLoadInstance";
+			public const string Err_CouldNotLoadListener = "Err_CouldNotLoadListener";
+			public const string Err_CouldNotLoadPlanner = "Err_CouldNotLoadPlanner";
+			public const string Err_CouldNotLoadSolution = "Err_CouldNotLoadSolution";
 			public const string Err_ErrorCommunicatingWithHost = "Err_ErrorCommunicatingWithHost";
 			public const string Err_InstanceAlreadyRunning = "Err_InstanceAlreadyRunning";
 			public const string Err_InstanceNotRunning = "Err_InstanceNotRunning";
+			public const string Err_InstanceWithoutHost = "Err_InstanceWithoutHost";
+			public const string Err_InstanceWithoutSolution = "Err_InstanceWithoutSolution";
+			public const string Err_NoPlannerHasBeenSpecified = "Err_NoPlannerHasBeenSpecified";
 			public const string Errs_AlreadyDeployed = "Errs_AlreadyDeployed";
 			public const string Errs_InstanceBusy = "Errs_InstanceBusy";
 			public const string Errs_MustBeStoppedBeforeRemoving = "Errs_MustBeStoppedBeforeRemoving";

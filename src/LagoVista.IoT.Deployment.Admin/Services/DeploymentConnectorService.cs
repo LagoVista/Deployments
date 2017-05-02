@@ -51,7 +51,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             {
                 try
                 {
-                    var uri = new Uri("{host.AdminAPIUri}{path}");
+                    var uriStr = $"{host.AdminAPIUri}{path}";
+                    _logger.Log(LogLevel.Message, "DeploymentConnectorService", uriStr);
+                    var uri = new Uri(uriStr);
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -63,7 +65,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                         _logger.Log(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("instanceid", instanceId),
-                            new KeyValuePair<string, string>("userid", org.Id),
+                            new KeyValuePair<string, string>("orgid", org.Id),
                             new KeyValuePair<string, string>("userid", user.Id));
 
                         return DeploymentErrorCodes.ErrorCommunicatingWithhost.ToFailedInvocation($"{response.StatusCode} - {response.ReasonPhrase}");
@@ -74,7 +76,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     _logger.Log(LogLevel.Error, "DeploymentConnectorService", ex.Message,
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("instanceid", instanceId),
-                        new KeyValuePair<string, string>("userid", org.Id),
+                        new KeyValuePair<string, string>("orgid", org.Id),
                         new KeyValuePair<string, string>("userid", user.Id));
 
                     return DeploymentErrorCodes.ErrorCommunicatingWithhost.ToFailedInvocation(ex.Message);
@@ -88,7 +90,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             {
                 try
                 {
-                    var uri = new Uri("{host.AdminAPIUri}{path}");
+                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -100,7 +102,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                         _logger.Log(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("instanceid", instanceId),
-                            new KeyValuePair<string, string>("userid", org.Id),
+                            new KeyValuePair<string, string>("orgid", org.Id),
                             new KeyValuePair<string, string>("userid", user.Id));
 
                         return DeploymentErrorCodes.ErrorCommunicatingWithhost.ToFailedInvocation<T>($"{response.StatusCode} - {response.ReasonPhrase}");
@@ -111,7 +113,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     _logger.Log(LogLevel.Error, "DeploymentConnectorService", ex.Message,
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("instanceid", instanceId),
-                        new KeyValuePair<string, string>("userid", org.Id),
+                        new KeyValuePair<string, string>("orgid", org.Id),
                         new KeyValuePair<string, string>("userid", user.Id));
 
                     return DeploymentErrorCodes.ErrorCommunicatingWithhost.ToFailedInvocation<T>(ex.Message);

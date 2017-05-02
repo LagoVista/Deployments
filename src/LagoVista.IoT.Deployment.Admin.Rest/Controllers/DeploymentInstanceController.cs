@@ -133,7 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/deploy")]
+        [HttpGet("/api/deployment/instance/{id}/deploy")]
         public Task<InvokeResult> DeployAsync(String id)
         {
             return _instanceManager.DeployAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -144,7 +144,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/start")]
+        [HttpGet("/api/deployment/instance/{id}/start")]
         public Task<InvokeResult> StartAsync(String id)
         {
             return _instanceManager.StartAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -155,7 +155,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/pause")]
+        [HttpGet("/api/deployment/instance/{id}/pause")]
         public Task<InvokeResult> PauseAsync(String id)
         {
             return _instanceManager.PauseAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -166,7 +166,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/stop")]
+        [HttpGet("/api/deployment/instance/{id}/stop")]
         public Task<InvokeResult> StopAsync(String id)
         {
             return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -178,7 +178,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/remove")]
+        [HttpGet("/api/deployment/instance/{id}/remove")]
         public Task<InvokeResult> RemoveAsync(String id)
         {
             return _instanceManager.RemoveAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -190,7 +190,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpPost("/api/deployment/instance/{id}/monitoruri")]
+        [HttpGet("/api/deployment/instance/{id}/monitoruri")]
         public Task<InvokeResult<Uri>> GetMonitorUriAsync(String id)
         {
             return _instanceManager.GetRemoteMonitoringURIAsync(id, OrgEntityHeader, UserEntityHeader);
