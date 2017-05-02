@@ -229,7 +229,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             if(instance == null) throw RecordNotFoundException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadInstance, typeof(DeploymentInstance).Name, id);
 
-            instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(id);
+            instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id);
             instance.Solution.Id = instance.Solution.Value.Id;
             instance.Solution.Text = instance.Solution.Value.Name;
 
