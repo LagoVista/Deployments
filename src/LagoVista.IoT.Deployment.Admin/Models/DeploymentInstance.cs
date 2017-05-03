@@ -9,25 +9,107 @@ using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    public enum DeploymentHostStates
+    public enum DeploymentIntanceStates
     {
-        New,
+        [EnumLabel(DeploymentInstance.Status_NotDeployed, DeploymentAdminResources.Names.InstanceStates_NotDeployed, typeof(DeploymentAdminResources))]
+        NotDeployed,
+        [EnumLabel(DeploymentInstance.Status_Deploying, DeploymentAdminResources.Names.InstanceStates_Deploying, typeof(DeploymentAdminResources))]
+        Deploying,
+        [EnumLabel(DeploymentInstance.Status_Initializing, DeploymentAdminResources.Names.InstanceStates_Initializing, typeof(DeploymentAdminResources))]
         Initializing,
+        [EnumLabel(DeploymentInstance.Status_Ready, DeploymentAdminResources.Names.InstanceStates_Ready, typeof(DeploymentAdminResources))]
+        Ready,
+        [EnumLabel(DeploymentInstance.Status_Starting, DeploymentAdminResources.Names.InstanceStates_Starting, typeof(DeploymentAdminResources))]
+        Starting,
+        [EnumLabel(DeploymentInstance.Status_Running, DeploymentAdminResources.Names.InstanceStates_Running, typeof(DeploymentAdminResources))]
         Running,
+        [EnumLabel(DeploymentInstance.Status_Pausing, DeploymentAdminResources.Names.InstanceStates_Pausing, typeof(DeploymentAdminResources))]
+        Pausing,
+        [EnumLabel(DeploymentInstance.Status_Paused, DeploymentAdminResources.Names.InstanceStates_Paused, typeof(DeploymentAdminResources))]
         Paused,
+        [EnumLabel(DeploymentInstance.Status_Stopping, DeploymentAdminResources.Names.InstanceStates_Stopping, typeof(DeploymentAdminResources))]
         Stopping,
+        [EnumLabel(DeploymentInstance.Status_Stopped, DeploymentAdminResources.Names.InstanceStates_Stopped, typeof(DeploymentAdminResources))]
         Stopped,
+        [EnumLabel(DeploymentInstance.Status_Degraded, DeploymentAdminResources.Names.InstanceStates_Degraded, typeof(DeploymentAdminResources))]
         Degraded,
+        [EnumLabel(DeploymentInstance.Status_FatalError, DeploymentAdminResources.Names.InstanceStates_FatalError, typeof(DeploymentAdminResources))]
         FatalError,
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, Resources.DeploymentAdminResources.Names.Instance_Help, Resources.DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
     {
+        public DeploymentInstance()
+        {
+            Status = new EntityHeader<DeploymentIntanceStates>();
+            SetState(DeploymentIntanceStates.NotDeployed);
+        }
 
-        public const string Status_New = "new";
+        public void SetState(DeploymentIntanceStates newState)
+        {            
+            Status.Value = newState;
+
+            switch (newState)
+            {
+                case DeploymentIntanceStates.NotDeployed:
+                    Status.Id = Status_NotDeployed;
+                    Status.Text = DeploymentAdminResources.InstanceStates_NotDeployed;
+                    break;
+                case DeploymentIntanceStates.Deploying:
+                    Status.Id = Status_Deploying;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Deploying;
+                    break;
+                case DeploymentIntanceStates.Initializing:
+                    Status.Id = Status_Initializing;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Initializing;
+                    break;
+                case DeploymentIntanceStates.Ready:
+                    Status.Id = Status_Ready;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Ready;
+                    break;
+                case DeploymentIntanceStates.Starting:
+                    Status.Id = Status_Starting;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Starting;
+                    break;
+                case DeploymentIntanceStates.Running:
+                    Status.Id = Status_Running;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Running;
+                    break;
+                case DeploymentIntanceStates.Pausing:
+                    Status.Id = Status_Pausing;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Pausing;
+                    break;
+                case DeploymentIntanceStates.Paused:
+                    Status.Id = Status_Paused;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Paused;
+                    break;
+                case DeploymentIntanceStates.Stopping:
+                    Status.Id = Status_Stopping;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Stopping;
+                    break;
+                case DeploymentIntanceStates.Stopped:
+                    Status.Id = Status_Stopped;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Stopped;
+                    break;
+                case DeploymentIntanceStates.Degraded:
+                    Status.Id = Status_Degraded;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Degraded;
+                    break;
+                case DeploymentIntanceStates.FatalError:
+                    Status.Id = Status_FatalError;
+                    Status.Text = DeploymentAdminResources.InstanceStates_FatalError;
+                    break;
+            }
+        }
+
+        public const string Status_NotDeployed = "notdeployed";
+        public const string Status_Deploying = "deploying";
         public const string Status_Initializing = "initializing";
+        public const string Status_Ready = "ready";
+        public const string Status_Starting = "starting";
         public const string Status_Running = "running";
+        public const string Status_Pausing = "pausing";
         public const string Status_Paused = "paused";
         public const string Status_Stopping = "stopping";
         public const string Status_Stopped = "stopped";
@@ -42,15 +124,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public String Key { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_IsDeployed, HelpResource:DeploymentAdminResources.Names.Instance_IsDeployed_Help, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources), IsUserEditable:false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_IsDeployed, HelpResource: DeploymentAdminResources.Names.Instance_IsDeployed_Help, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool IsDeployed { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Status, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public EntityHeader<DeploymentHostStates> Status { get; set; }
+        public EntityHeader<DeploymentIntanceStates> Status { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource:Resources.DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: Resources.DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeploymentHost> Host { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
@@ -67,7 +149,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, WaterMark:DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, WaterMark: DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader<Solution> Solution { get; set; }
         public DeploymentInstanceSummary CreateSummary()
         {

@@ -35,13 +35,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Failed,
         [EnumLabel(DeploymentHost.HostStatus_Stopped, DeploymentAdminResources.Names.HostStatus_Stopped, typeof(DeploymentAdminResources))]
         Stopped,
+        [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
+        Stopping,
         [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
         Starting,
         [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
         Running,
-        [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
+        [EnumLabel(DeploymentHost.HostStatus_StoppingDegraded, DeploymentAdminResources.Names.HostStatus_StoppingDegraded, typeof(DeploymentAdminResources))]
         StoppingHostStatus_Degraded,
-        [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
+        [EnumLabel(DeploymentHost.HostStatus_Degraded, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
         Degraded,
     }
 
@@ -81,6 +83,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostStatus_Running = "running";
         public const string HostStatus_Stopping = "stopping";
         public const string HostStatus_Degraded = "degraded";
+        public const string HostStatus_StoppingDegraded = "stopping-degraded";
 
         public const string HostCapacity_underutilized = "underutilized";
         public const string HostCapacity_Ok = "ok";
@@ -93,21 +96,93 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public DeploymentHost()
         {
-            Status = new EntityHeader<HostStatus>()
-            {
-                Value = HostStatus.Offline,
-                Id = HostStatus_Offline,
-                Text = DeploymentAdminResources.HostStatus_Offline
-            };
+            Status = new EntityHeader<HostStatus>();
+            CapacityStatus = new EntityHeader<HostCapacityStatus>();
+            HostType = new EntityHeader<HostTypes>();
 
-            CapacityStatus = new EntityHeader<HostCapacityStatus>()
-            {
-                Value = HostCapacityStatus.Ok,
-                Id = HostCapacity_Ok,
-                Text = DeploymentAdminResources.HostCapacity_Ok
-            };
+            SetCapacityStatus(HostCapacityStatus.UnderUtilized);
+            SetHostState(HostStatus.Offline);
 
             GenerateAccessKeys();
+        }
+
+        public void SetHostState(HostStatus hostState)
+        {
+            Status.Value = hostState;
+
+
+            switch (hostState)
+            {
+                case HostStatus.StoppingHostStatus_Degraded:
+                    Status.Id = HostStatus_StoppingDegraded;
+                    Status.Text = DeploymentAdminResources.HostStatus_StoppingDegraded;
+                    break;
+                case HostStatus.Offline:
+                    Status.Id = HostStatus_Offline;
+                    Status.Text = DeploymentAdminResources.HostStatus_Offline;
+                    break;
+                case HostStatus.Failed:
+                    Status.Id = HostStatus_Failed;
+                    Status.Text = DeploymentAdminResources.HostStatus_Failed;
+                    break;
+                case HostStatus.Running:
+                    Status.Id = HostStatus_Running;
+                    Status.Text = DeploymentAdminResources.HostStatus_Running;
+                    break;
+                case HostStatus.Starting:
+                    Status.Id = HostStatus_Starting;
+                    Status.Text = DeploymentAdminResources.HostStatus_Starting;
+                    break;
+                case HostStatus.Stopped:
+                    Status.Id = HostStatus_Stopped;
+                    Status.Text = DeploymentAdminResources.HostStatus_Stopped;
+                    break;
+                case HostStatus.Stopping:
+                    Status.Id = HostStatus_Stopping;
+                    Status.Text = DeploymentAdminResources.HostStatus_Stopping;
+                    break;
+                case HostStatus.Degraded:
+                    Status.Id = HostStatus_Degraded;
+                    Status.Text = DeploymentAdminResources.HostStatus_Degraded;
+                    break;
+            }
+        }
+
+        public void SetCapacityStatus(HostCapacityStatus capacityStatus)
+        {
+            CapacityStatus.Value = capacityStatus;
+
+            switch (capacityStatus)
+            {
+                case HostCapacityStatus.Ok:
+                    CapacityStatus.Id = HostCapacity_Ok;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_Ok;
+                    break;
+                case HostCapacityStatus.At75Percent:
+                    CapacityStatus.Id = HostCapacity_75Percent;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_75Percent;
+                    break;
+                case HostCapacityStatus.At90Percent:
+                    CapacityStatus.Id = HostCapacity_90Percent;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_90Percent;
+                    break;
+                case HostCapacityStatus.AtCapacity:
+                    CapacityStatus.Id = HostCapacity_atcapacity;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_AtCapacity;
+                    break;
+                case HostCapacityStatus.FailureImminent:
+                    CapacityStatus.Id = HostCapacity_failureimmintent;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_FailureImminent;
+                    break;
+                case HostCapacityStatus.OverCapacity:
+                    CapacityStatus.Id = HostCapacity_overcapacity;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_OverCapacity;
+                    break;
+                case HostCapacityStatus.UnderUtilized:
+                    CapacityStatus.Id = HostCapacity_underutilized;
+                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_Underutlized;
+                    break;
+            }
         }
 
         public void GenerateAccessKeys()

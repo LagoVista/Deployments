@@ -456,4 +456,43 @@
   <data name="Err_CouldNotLoadInstance" xml:space="preserve">
     <value>System Error:  Could not load Instance.</value>
   </data>
+  <data name="InstanceStates_Degraded" xml:space="preserve">
+    <value>Degraded</value>
+  </data>
+  <data name="InstanceStates_FatalError" xml:space="preserve">
+    <value>Fatal Error</value>
+  </data>
+  <data name="InstanceStates_Initializing" xml:space="preserve">
+    <value>Initializing</value>
+  </data>
+  <data name="InstanceStates_NotDeployed" xml:space="preserve">
+    <value>Not Deployed</value>
+  </data>
+  <data name="InstanceStates_Paused" xml:space="preserve">
+    <value>Paused</value>
+  </data>
+  <data name="InstanceStates_Pausing" xml:space="preserve">
+    <value>Pausing</value>
+  </data>
+  <data name="InstanceStates_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="InstanceStates_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="InstanceStates_Starting" xml:space="preserve">
+    <value>Starting</value>
+  </data>
+  <data name="InstanceStates_Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="InstanceStates_Stopping" xml:space="preserve">
+    <value>Stopping</value>
+  </data>
+  <data name="InstanceStates_Deploying" xml:space="preserve">
+    <value>Deploying</value>
+  </data>
+  <data name="HostStatus_StoppingDegraded" xml:space="preserve">
+    <value>Stopping - Degraded</value>
+  </data>
 </root>

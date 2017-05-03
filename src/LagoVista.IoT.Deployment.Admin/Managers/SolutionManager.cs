@@ -67,23 +67,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<Solution> LoadFullSolutionAsync(string id)
         {
             var deployment = await _deploymentRepo.GetSolutionAsync(id);
-            if (deployment == null) throw RecordNotFoundException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadSolution, typeof(Solution).Name, id);
 
             foreach (var config in deployment.DeviceConfigurations)
             {
                 config.Value = await _deviceConfigManager.LoadFullDeviceConfigurationAsync(config.Id);
-                if (config.Value == null) throw InvalidConfigurationException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadDeviceConfiguration, $"Missing Device Configuration Id: {config.Id}");
             }
 
             if (deployment.Planner.IsEmpty()) throw InvalidConfigurationException.FromErrorCode(DeploymentErrorCodes.NoPlannerSpecified);
 
             deployment.Planner.Value = await _pipelineModuleManager.LoadFullPlannerConfigurationAsync(deployment.Planner.Id);
-            if (deployment.Planner == null) throw RecordNotFoundException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadPlanner, typeof(PlannerConfiguration).Name, deployment.Planner.Id);
 
             foreach (var listenerConfig in deployment.Listeners)
             {
                 listenerConfig.Value = await _pipelineModuleManager.LoadFullListenerConfigurationAsync(listenerConfig.Id);
-                if (listenerConfig.Value == null) throw RecordNotFoundException.FromErrorCode(DeploymentErrorCodes.CouldNotLoadListener, typeof(ListenerConfiguration).Name, listenerConfig.Id);
             }
 
             return deployment;
