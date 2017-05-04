@@ -11,10 +11,7 @@ using LagoVista.Core.Managers;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
-using LagoVista.Core.Authentication.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Services;
-using LagoVista.IoT.Logging.Exceptions;
-using LagoVista.IoT.Deployment.Admin.Resources;
 
 
 

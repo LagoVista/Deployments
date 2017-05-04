@@ -7,7 +7,6 @@ using LagoVista.Core.Validation;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
-using LagoVista.Core.Authentication.Exceptions;
 using static LagoVista.Core.Models.AuthorizeResult;
 using LagoVista.IoT.Pipeline.Admin.Managers;
 using System;

@@ -1,5 +1,4 @@
-﻿using LagoVista.Core.Authentication.Exceptions;
-using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
 using LagoVista.Core.PlatformSupport;
