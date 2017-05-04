@@ -121,10 +121,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-        public Task<InvokeResult<Uri>> GetRemoteMonitoringUriAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult<string>> GetRemoteMonitoringUriAsync(DeploymentHost host, string instanceId, string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
-            var path = $"/api/instancemanager/deploy/{instanceId}";
-            return Execute<Uri>(path, host, instanceId, org, user);
+            var path = $"/api/websocket/{instanceId}/{channel}/{id}/{verbosity}";
+            return Execute<string>(path, host, instanceId, org, user);
         }
 
         public Task<InvokeResult> DeployAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user)

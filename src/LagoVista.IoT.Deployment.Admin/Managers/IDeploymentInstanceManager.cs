@@ -29,6 +29,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<Uri>> GetRemoteMonitoringURIAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string instanceid, string channel, string id, string verbosity, EntityHeader org, EntityHeader user);
     }
 }

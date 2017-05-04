@@ -22,6 +22,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         Task<InvokeResult> RemoveAsync(DeploymentHost host, String instanceId, EntityHeader org, EntityHeader user);
 
-        Task<InvokeResult<Uri>> GetRemoteMonitoringUriAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<string>> GetRemoteMonitoringUriAsync(DeploymentHost host, string instanceid, string channel, string instanceId, string verbosity, EntityHeader org, EntityHeader user);
     }
 }

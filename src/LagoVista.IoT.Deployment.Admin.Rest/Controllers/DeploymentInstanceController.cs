@@ -172,7 +172,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
-
         /// <summary>
         /// Deployment Instance - Remove
         /// </summary>
@@ -186,14 +185,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
 
         /// <summary>
-        /// Deployment Instance - Get Monitor URI
+        /// 
         /// </summary>
+        /// <param name="instanceid"></param>
+        /// <param name="channel"></param>
         /// <param name="id"></param>
+        /// <param name="verbosity"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/monitoruri")]
-        public Task<InvokeResult<Uri>> GetMonitorUriAsync(String id)
+        [HttpGet("/api/deployment/instance/{instanceid}/{channel}/{id}/{verbosity}")]
+        public Task<InvokeResult<string>> GetMonitorUriAsync(String instanceid, string channel, string id, string verbosity)
         {
-            return _instanceManager.GetRemoteMonitoringURIAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.GetRemoteMonitoringURIAsync(instanceid, channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

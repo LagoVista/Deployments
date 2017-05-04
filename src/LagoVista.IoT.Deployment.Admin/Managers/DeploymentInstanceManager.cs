@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define WEBSERVERSIDECHECK
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,8 @@ using LagoVista.Core.Authentication.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Resources;
+
+
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -43,13 +47,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
-
+#if WEBSERVERSIDECHECK
             if (instance.IsDeployed)
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.AlreadyDeployed);
             }
 
-            if(instance.Host.IsEmpty())
+            if (instance.Host.IsEmpty())
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceWithoutHost);
             }
@@ -58,6 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceWithoutSolution);
             }
+#endif
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Deploy);
 
@@ -70,6 +75,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
+#if WEBSERVERSIDECHECK
             if (!instance.IsDeployed)
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
@@ -84,6 +90,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceBusy);
             }
+#endif
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Start);
 
@@ -96,6 +103,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
+#if WEBSERVERSIDECHECK
             if (!instance.IsDeployed)
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
@@ -110,6 +118,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceBusy);
             }
+#endif
 
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Pause);
@@ -123,6 +132,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
+#if WEBSERVERSIDECHECK
             if (!instance.IsDeployed)
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
@@ -137,6 +147,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.InstanceBusy);
             }
+#endif
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Stop);
 
@@ -149,6 +160,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
+#if WEBSERVERSIDECHECK
             if (!instance.IsDeployed)
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
@@ -158,6 +170,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.MustBeStoppedBeforeRemoving);
             }
+#endif
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Remove);
 
@@ -165,20 +178,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _connector.StopAsync(host, id, org, user);
         }
 
-        public async Task<InvokeResult<Uri>> GetRemoteMonitoringURIAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string instanceid, string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
-
-            if (!instance.IsDeployed)
-            {
-                throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
-            }
-
+           
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Monitor);
 
-            var host = await _hostManager.GetDeploymentHostAsync(id, org, user);
-            return await _connector.GetRemoteMonitoringUriAsync(host, id, org, user);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
+            return await _connector.GetRemoteMonitoringUriAsync(host, instanceid, channel, id, verbosity, org, user);
         }
 
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
