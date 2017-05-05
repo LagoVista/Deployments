@@ -86,7 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     msgDefinition.Value = await LoadFullDeviceMessageDefinitionAsync(msgDefinition.Id);
                 }
             }
-
+            
             if (route.InputTranslator != null && route.InputTranslator.HasValue)
             {
                 route.InputTranslator.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(route.InputTranslator.Id);
