@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var requestId = Guid.NewGuid().ToId();
             var requestDate = DateTime.UtcNow.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
             request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            request.DefaultRequestHeaders.Add("x-nuviot-client-request-id", Guid.NewGuid().ToId());
+            request.DefaultRequestHeaders.Add("x-nuviot-client-request-id", requestId);
             request.DefaultRequestHeaders.Add("x-nuviot-orgid", org.Id);
             request.DefaultRequestHeaders.Add("x-nuviot-org", org.Text);
             request.DefaultRequestHeaders.Add("x-nuviot-userid", usr.Id);

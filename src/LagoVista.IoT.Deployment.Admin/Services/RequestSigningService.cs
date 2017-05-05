@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.Core.PlatformSupport;
+using LagoVista.IoT.Deployment.Admin.Models;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -34,6 +35,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             {
                 md5Sting.Append(result[i].ToString("X2"));
             }
+
+            
 
             return $"{instanceId}:{md5Sting.ToString()}";
         }
