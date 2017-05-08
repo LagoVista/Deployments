@@ -174,21 +174,6 @@
   <data name="DeviceConfiguration_Title" xml:space="preserve">
     <value>Device Configuration</value>
   </data>
-  <data name="DeviceMessageDefinition_Description" xml:space="preserve">
-    <value>Content and Format of a Message your Device will Send or Receive</value>
-  </data>
-  <data name="DeviceMessageDefinition_Help" xml:space="preserve">
-    <value>Content and Format of a Message your Device will Send or Receive</value>
-  </data>
-  <data name="DeviceMessageDefinition_MessageId" xml:space="preserve">
-    <value>Message Id</value>
-  </data>
-  <data name="DeviceMessageDefinition_MessageId_Help" xml:space="preserve">
-    <value>The Message Id is a free form field that you can add add an Id that you can use to relate this message type to a message type in your system. They key must be unique across your organization. You can add anything you want in the Message Id field.</value>
-  </data>
-  <data name="DeviceMessageDefinition_Title" xml:space="preserve">
-    <value>Message Definition</value>
-  </data>
   <data name="Errs_AlreadyDeployed" xml:space="preserve">
     <value>Your isntance has already been deployed.  You can not redploy it.</value>
   </data>
@@ -494,23 +479,5 @@
   </data>
   <data name="HostStatus_StoppingDegraded" xml:space="preserve">
     <value>Stopping - Degraded</value>
-  </data>
-  <data name="DeviceMessageField_Description" xml:space="preserve">
-    <value>A Message Field is part of a definition of a message that contains exactly one element.  It is populated from the Input Translator and mapped to a Input on a Device Workflow</value>
-  </data>
-  <data name="DeviceMessageField_FieldType" xml:space="preserve">
-    <value>Field Type</value>
-  </data>
-  <data name="DeviceMessageField_FieldType_Help" xml:space="preserve">
-    <value>You need to define the type of data that is arriving in the field.</value>
-  </data>
-  <data name="DeviceMessageField_Help" xml:space="preserve">
-    <value>A Message Field is part of a definition of a message that contains exactly one element.  It is populated from the Input Translator and mapped to a Input on a Device Workflow</value>
-  </data>
-  <data name="DeviceMessageField_Title" xml:space="preserve">
-    <value>Message Field</value>
-  </data>
-  <data name="DeviceMessageField_SelectFieldType" xml:space="preserve">
-    <value>-select field type-</value>
   </data>
 </root>

@@ -12,24 +12,28 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using System;
+using LagoVista.IoT.DeviceMessaging.Admin.Repos;
+using LagoVista.IoT.DeviceMessaging.Admin.Managers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
     public class DeviceConfigurationManager : ManagerBase, IDeviceConfigurationManager
     {
+        IDeviceMessageDefinitionManager _deviceMessageDefinitionManager;
         IDeviceConfigurationRepo _deviceConfigRepo;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
-        IDeviceMessageDefinitionRepo _deviceMessageDefinitionRepo;
+        
 
-        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionRepo deviceMessageDefinitionRepo, 
-            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+
+        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+            base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
             _deviceAdminManager = deviceAdminManager;
-            _deviceMessageDefinitionRepo = deviceMessageDefinitionRepo;
-        }
+            _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
+    }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
         {
@@ -54,7 +58,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
             await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Delete, user,org);            
             await ConfirmNoDepenenciesAsync(deviceConfiguration);
-            await _deviceMessageDefinitionRepo.DeleteDeviceMessageDefinitionAsync(id);
             return InvokeResult.Success;
         }
 
@@ -83,7 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 foreach(var msgDefinition in route.MessageDefinitions)
                 {
-                    msgDefinition.Value = await LoadFullDeviceMessageDefinitionAsync(msgDefinition.Id);
+                    msgDefinition.Value = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(msgDefinition.Id);
                 }
             }
             
@@ -130,59 +133,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<bool> QueryDeviceConfigurationKeyInUseAsync(string key, string orgId)
         {
             return _deviceConfigRepo.QueryKeyInUseAsync(key, orgId);
-        }
-
-        public async Task<InvokeResult> AddDeviceMessageDefinitionAsync(DeviceMessageDefinition deviceMessageConfiguration, EntityHeader org, EntityHeader user)
-        {
-            await AuthorizeAsync(deviceMessageConfiguration, AuthorizeActions.Create, user, org);
-            ValidationCheck(deviceMessageConfiguration, Actions.Create);
-            await _deviceMessageDefinitionRepo.AddDeviceMessageDefinitionAsync(deviceMessageConfiguration);
-            return InvokeResult.Success;
-        }
-
-        public async Task<DeviceMessageDefinition> GetDeviceMessageDefinitionAsync(string id, EntityHeader org, EntityHeader user)
-        {
-            var deviceMessageDefinition = await _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionAsync(id);
-            await AuthorizeAsync(deviceMessageDefinition, AuthorizeActions.Read, org, user);
-            return deviceMessageDefinition;
-        }
-
-        public Task<DeviceMessageDefinition> LoadFullDeviceMessageDefinitionAsync(string id)
-        {
-            return  _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionAsync(id);            
-        }
-
-        public async Task<IEnumerable<DeviceMessageDefinitionSummary>> GetDeviceMessageDefinitionsForOrgsAsync(string orgId, EntityHeader user)
-        {
-            await AuthorizeOrgAccess(user, orgId, typeof(Solution));
-            return await _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionsForOrgAsync(orgId);
-        }
-
-        public async Task<InvokeResult> UpdateDeviceMessageDefinitionAsync(DeviceMessageDefinition deviceMessageConfiguration, EntityHeader org, EntityHeader user)
-        {
-            await AuthorizeAsync(deviceMessageConfiguration, AuthorizeActions.Update, org, user);
-            ValidationCheck(deviceMessageConfiguration, Actions.Update);
-            return InvokeResult.Success;
-        }
-
-        public async Task<InvokeResult> DeleteDeviceMessageDefinitionAsync(string id, EntityHeader org, EntityHeader user)
-        {
-            var messageDefinition = await _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionAsync(id);
-            await AuthorizeAsync(messageDefinition, AuthorizeActions.Delete, org, user);
-            await ConfirmNoDepenenciesAsync(messageDefinition);
-            return InvokeResult.Success;
-        }
-
-        public  Task<bool> QueryDeviceMessageDefinitionKeyInUseAsync(string key, string orgId)
-        {
-            return _deviceMessageDefinitionRepo.QueryKeyInUseAsync(key, orgId);
-        }
-
-        public async Task<DependentObjectCheckResult> CheckDeviceMessageInUseAsync(string id, EntityHeader org, EntityHeader user)
-        {
-            var deviceMessageConfiguration = await _deviceMessageDefinitionRepo.GetDeviceMessageDefinitionAsync(id);
-            await AuthorizeAsync(deviceMessageConfiguration, AuthorizeActions.Read, user, org);            
-            return await base.CheckForDepenenciesAsync(deviceMessageConfiguration);
         }
     }
 }

@@ -95,9 +95,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/host/{id}")]
         public async Task<DetailResponse<DeploymentHost>> GetHostAsync(String id)
         {
-            var deviceMessageConfiguration = await _hostManager.GetDeploymentHostAsync(id, OrgEntityHeader, UserEntityHeader);
+            var deploymentHost = await _hostManager.GetDeploymentHostAsync(id, OrgEntityHeader, UserEntityHeader);
 
-            var response = DetailResponse<DeploymentHost>.Create(deviceMessageConfiguration);
+            var response = DetailResponse<DeploymentHost>.Create(deploymentHost);
 
             return response;
         }

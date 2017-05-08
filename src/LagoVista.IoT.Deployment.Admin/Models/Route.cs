@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using LagoVista.Core;
 using LagoVista.Core.Interfaces;
+using LagoVista.IoT.DeviceMessaging.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -15,7 +16,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public Route()
         {
-            MessageDefinitions = new List<EntityHeader<DeviceMessageDefinition>>();
+            //MessageDefinitions = new List<EntityHeader<DeviceMessageDefinition>>();
             CustomPipelineModuleConfigurations = new List<DevicePipelineModuleConfiguration<CustomPipelineModuleConfiguration>>();
             Id = Guid.NewGuid().ToId();
         }

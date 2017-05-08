@@ -20,18 +20,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user);
         Task<InvokeResult> UpdateDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user);
-        Task<bool> QueryDeviceConfigurationKeyInUseAsync(string key, string orgId);
-
-
-        Task<InvokeResult> AddDeviceMessageDefinitionAsync(DeviceMessageDefinition deviceMessageConfiguration, EntityHeader org, EntityHeader user);
-        Task<DeviceMessageDefinition> GetDeviceMessageDefinitionAsync(string id, EntityHeader org, EntityHeader user);
-        Task<DeviceMessageDefinition> LoadFullDeviceMessageDefinitionAsync(string id);
-
-        Task<DependentObjectCheckResult> CheckDeviceMessageInUseAsync(string id, EntityHeader org, EntityHeader user);
-
-        Task<IEnumerable<DeviceMessageDefinitionSummary>> GetDeviceMessageDefinitionsForOrgsAsync(string orgId, EntityHeader user);
-        Task<InvokeResult> UpdateDeviceMessageDefinitionAsync(DeviceMessageDefinition deviceMessageConfiguration, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> DeleteDeviceMessageDefinitionAsync(string id, EntityHeader org, EntityHeader user);
-        Task<bool> QueryDeviceMessageDefinitionKeyInUseAsync(string key, string orgId);
+        Task<bool> QueryDeviceConfigurationKeyInUseAsync(string key, string orgId);   
     }
 }

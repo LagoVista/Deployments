@@ -84,9 +84,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}")]
         public async Task<DetailResponse<DeploymentInstance>> GetInstanceAsync(String id)
         {
-            var deviceMessageConfiguration = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
 
-            var response = DetailResponse<DeploymentInstance>.Create(deviceMessageConfiguration);
+            var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
 
             return response;
         }

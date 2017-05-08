@@ -29,10 +29,5 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode CouldNotLoadListener => new ErrorCode() { Code = "INS1003", Message = DeploymentAdminResources.Err_CouldNotLoadListener };
 
         public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "INS1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
-
-        
-
-
-
     }
 }
