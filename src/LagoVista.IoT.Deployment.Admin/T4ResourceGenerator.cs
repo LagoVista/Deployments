@@ -125,6 +125,24 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:DeviceMessageDefinition_Title
 
 		public static string DeviceMessageDefinition_Title { get { return GetResourceString("DeviceMessageDefinition_Title"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_Description
+
+		public static string DeviceMessageField_Description { get { return GetResourceString("DeviceMessageField_Description"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_FieldType
+
+		public static string DeviceMessageField_FieldType { get { return GetResourceString("DeviceMessageField_FieldType"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_FieldType_Help
+
+		public static string DeviceMessageField_FieldType_Help { get { return GetResourceString("DeviceMessageField_FieldType_Help"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_Help
+
+		public static string DeviceMessageField_Help { get { return GetResourceString("DeviceMessageField_Help"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_SelectFieldType
+
+		public static string DeviceMessageField_SelectFieldType { get { return GetResourceString("DeviceMessageField_SelectFieldType"); } }
+//Resources:DeploymentAdminResources:DeviceMessageField_Title
+
+		public static string DeviceMessageField_Title { get { return GetResourceString("DeviceMessageField_Title"); } }
 //Resources:DeploymentAdminResources:Err_CouldNotLoadDeviceConfiguration
 
 		public static string Err_CouldNotLoadDeviceConfiguration { get { return GetResourceString("Err_CouldNotLoadDeviceConfiguration"); } }
@@ -458,6 +476,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string DeviceMessageDefinition_MessageId = "DeviceMessageDefinition_MessageId";
 			public const string DeviceMessageDefinition_MessageId_Help = "DeviceMessageDefinition_MessageId_Help";
 			public const string DeviceMessageDefinition_Title = "DeviceMessageDefinition_Title";
+			public const string DeviceMessageField_Description = "DeviceMessageField_Description";
+			public const string DeviceMessageField_FieldType = "DeviceMessageField_FieldType";
+			public const string DeviceMessageField_FieldType_Help = "DeviceMessageField_FieldType_Help";
+			public const string DeviceMessageField_Help = "DeviceMessageField_Help";
+			public const string DeviceMessageField_SelectFieldType = "DeviceMessageField_SelectFieldType";
+			public const string DeviceMessageField_Title = "DeviceMessageField_Title";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";
 			public const string Err_CouldNotLoadInstance = "Err_CouldNotLoadInstance";
 			public const string Err_CouldNotLoadListener = "Err_CouldNotLoadListener";

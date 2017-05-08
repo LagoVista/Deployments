@@ -495,4 +495,22 @@
   <data name="HostStatus_StoppingDegraded" xml:space="preserve">
     <value>Stopping - Degraded</value>
   </data>
+  <data name="DeviceMessageField_Description" xml:space="preserve">
+    <value>A Message Field is part of a definition of a message that contains exactly one element.  It is populated from the Input Translator and mapped to a Input on a Device Workflow</value>
+  </data>
+  <data name="DeviceMessageField_FieldType" xml:space="preserve">
+    <value>Field Type</value>
+  </data>
+  <data name="DeviceMessageField_FieldType_Help" xml:space="preserve">
+    <value>You need to define the type of data that is arriving in the field.</value>
+  </data>
+  <data name="DeviceMessageField_Help" xml:space="preserve">
+    <value>A Message Field is part of a definition of a message that contains exactly one element.  It is populated from the Input Translator and mapped to a Input on a Device Workflow</value>
+  </data>
+  <data name="DeviceMessageField_Title" xml:space="preserve">
+    <value>Message Field</value>
+  </data>
+  <data name="DeviceMessageField_SelectFieldType" xml:space="preserve">
+    <value>-select field type-</value>
+  </data>
 </root>
