@@ -8,13 +8,13 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="0.8.171-alpha0837" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="0.8.171-alpha0837" />
+    <PackageReference Include="LagoVista.Core" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="0.8.172-alpha0827" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="0.8.172-alpha0827" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
   </ItemGroup>
