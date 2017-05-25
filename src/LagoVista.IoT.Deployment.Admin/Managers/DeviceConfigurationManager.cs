@@ -25,7 +25,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceAdminManager _deviceAdminManager;
         
 
-
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
@@ -37,7 +36,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
         {
-            ValidationCheck(deviceConfiguration, Actions.Create);
             await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Create, user, org);
             ValidationCheck(deviceConfiguration, Actions.Create);
             await _deviceConfigRepo.AddDeviceConfigurationAsync(deviceConfiguration);
@@ -118,7 +116,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, orgId, typeof(Solution));        
+            await AuthorizeOrgAccess(user, orgId, typeof(DeviceConfiguration));        
             return await _deviceConfigRepo.GetDeviceConfigurationsForOrgAsync(orgId);
         }
 

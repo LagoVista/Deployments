@@ -29,6 +29,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public double ConfigurationVersion { get; set; }
 
+
+
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
         
