@@ -14,6 +14,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Digests;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -21,8 +22,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
     {
         public const string CLIENT_VERSION = "2017-04-26";
 
-        ILogger _logger;
-        public DeploymentConnectorService(ILogger logger)
+        IAdminLogger _logger;
+        public DeploymentConnectorService(IAdminLogger logger)
         {
             _logger = logger;
         }

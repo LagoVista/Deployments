@@ -179,6 +179,18 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_CapacityStatus
 
 		public static string Host_CapacityStatus { get { return GetResourceString("Host_CapacityStatus"); } }
+//Resources:DeploymentAdminResources:Host_ComputeResource_Uri
+
+		public static string Host_ComputeResource_Uri { get { return GetResourceString("Host_ComputeResource_Uri"); } }
+//Resources:DeploymentAdminResources:Host_ComputeResource_Uri_Help
+
+		public static string Host_ComputeResource_Uri_Help { get { return GetResourceString("Host_ComputeResource_Uri_Help"); } }
+//Resources:DeploymentAdminResources:Host_ComputeResourceId
+
+		public static string Host_ComputeResourceId { get { return GetResourceString("Host_ComputeResourceId"); } }
+//Resources:DeploymentAdminResources:Host_ComputeResourceId_Help
+
+		public static string Host_ComputeResourceId_Help { get { return GetResourceString("Host_ComputeResourceId_Help"); } }
 //Resources:DeploymentAdminResources:Host_DateStampOnline
 
 		public static string Host_DateStampOnline { get { return GetResourceString("Host_DateStampOnline"); } }
@@ -188,18 +200,6 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Help
 
 		public static string Host_Help { get { return GetResourceString("Host_Help"); } }
-//Resources:DeploymentAdminResources:Host_Instance_Uri
-
-		public static string Host_Instance_Uri { get { return GetResourceString("Host_Instance_Uri"); } }
-//Resources:DeploymentAdminResources:Host_Instance_Uri_Help
-
-		public static string Host_Instance_Uri_Help { get { return GetResourceString("Host_Instance_Uri_Help"); } }
-//Resources:DeploymentAdminResources:Host_InstanceId
-
-		public static string Host_InstanceId { get { return GetResourceString("Host_InstanceId"); } }
-//Resources:DeploymentAdminResources:Host_InstanceId_Help
-
-		public static string Host_InstanceId_Help { get { return GetResourceString("Host_InstanceId_Help"); } }
 //Resources:DeploymentAdminResources:Host_Status
 
 		public static string Host_Status { get { return GetResourceString("Host_Status"); } }
@@ -461,13 +461,13 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_AverageMemory_30_Minutes = "Host_AverageMemory_30_Minutes";
 			public const string Host_AverageNetwork_30_Minutes = "Host_AverageNetwork_30_Minutes";
 			public const string Host_CapacityStatus = "Host_CapacityStatus";
+			public const string Host_ComputeResource_Uri = "Host_ComputeResource_Uri";
+			public const string Host_ComputeResource_Uri_Help = "Host_ComputeResource_Uri_Help";
+			public const string Host_ComputeResourceId = "Host_ComputeResourceId";
+			public const string Host_ComputeResourceId_Help = "Host_ComputeResourceId_Help";
 			public const string Host_DateStampOnline = "Host_DateStampOnline";
 			public const string Host_Description = "Host_Description";
 			public const string Host_Help = "Host_Help";
-			public const string Host_Instance_Uri = "Host_Instance_Uri";
-			public const string Host_Instance_Uri_Help = "Host_Instance_Uri_Help";
-			public const string Host_InstanceId = "Host_InstanceId";
-			public const string Host_InstanceId_Help = "Host_InstanceId_Help";
 			public const string Host_Status = "Host_Status";
 			public const string Host_Subscription = "Host_Subscription";
 			public const string Host_SubscriptionSelect = "Host_SubscriptionSelect";

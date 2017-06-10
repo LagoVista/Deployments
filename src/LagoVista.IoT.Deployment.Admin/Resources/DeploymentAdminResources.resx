@@ -264,16 +264,16 @@
   <data name="Host_Help" xml:space="preserve">
     <value>The Deployment Host is information about the compute resource that is hosting the run time, this could be for any of the deployment options.  This is primarily used by a System Admin, but can be provisioned as a dedicated resource by a user</value>
   </data>
-  <data name="Host_InstanceId" xml:space="preserve">
-    <value>Instance Id</value>
+  <data name="Host_ComputeResourceId" xml:space="preserve">
+    <value>Compute Resource ID</value>
   </data>
-  <data name="Host_InstanceId_Help" xml:space="preserve">
-    <value>The Instance ID is the ID of the compute resource in the environment that is hosing the machine.  This is usually the ID of the machine on the hosting/cloud provider.</value>
+  <data name="Host_ComputeResourceId_Help" xml:space="preserve">
+    <value>The Compute Resource ID is the ID of the compute resource in the environment that is hosting the machine.  This is usually the ID of the machine with the hosting/cloud provider.</value>
   </data>
-  <data name="Host_Instance_Uri" xml:space="preserve">
-    <value>Instance URI</value>
+  <data name="Host_ComputeResource_Uri" xml:space="preserve">
+    <value>Compute Resource URI</value>
   </data>
-  <data name="Host_Instance_Uri_Help" xml:space="preserve">
+  <data name="Host_ComputeResource_Uri_Help" xml:space="preserve">
     <value>The Instance URI is the base location for the compute resource</value>
   </data>
   <data name="Host_Status" xml:space="preserve">

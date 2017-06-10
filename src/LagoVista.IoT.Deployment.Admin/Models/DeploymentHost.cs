@@ -217,11 +217,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string AdminAPIUri { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_InstanceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_InstanceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string InstanceId { get; set; }
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string ComputeResourceId { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Instance_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_Instance_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string InstanceUri { get; set; }
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string ComputeResourceUri { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageCPU { get; set; }

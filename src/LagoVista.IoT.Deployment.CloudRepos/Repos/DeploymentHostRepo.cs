@@ -52,7 +52,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task UpdateDeploymentHostAsync(DeploymentHost host)
         {
-            return UpdateDeploymentHostAsync(host);
+            return UpsertDocumentAsync(host);
         }
     }
 }
