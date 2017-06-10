@@ -52,7 +52,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 try
                 {
                     var uriStr = $"{host.AdminAPIUri}{path}";
-                    _logger.Log(LogLevel.Message, "DeploymentConnectorService", uriStr);
                     var uri = new Uri(uriStr);
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
@@ -62,7 +61,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.Log(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("instanceid", instanceId),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -73,7 +72,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch(Exception ex)
                 {
-                    _logger.Log(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("instanceid", instanceId),
                         new KeyValuePair<string, string>("orgid", org.Id),
@@ -99,7 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.Log(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("instanceid", instanceId),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -110,7 +109,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("instanceid", instanceId),
                         new KeyValuePair<string, string>("orgid", org.Id),

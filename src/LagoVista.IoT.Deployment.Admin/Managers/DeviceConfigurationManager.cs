@@ -14,6 +14,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using System;
 using LagoVista.IoT.DeviceMessaging.Admin.Repos;
 using LagoVista.IoT.DeviceMessaging.Admin.Managers;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -25,7 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceAdminManager _deviceAdminManager;
         
 
-        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;

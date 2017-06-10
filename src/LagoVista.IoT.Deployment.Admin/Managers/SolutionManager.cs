@@ -13,6 +13,7 @@ using System;
 using LagoVista.IoT.Logging.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Pipeline.Admin.Models;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -23,7 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IPipelineModuleManager _pipelineModuleManager;
 
         public SolutionManager(ISolutionRepo deploymentRepo, IDeviceConfigurationManager deviceConfigManager, IPipelineModuleManager pipelineModuleManager,
-        ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentRepo = deploymentRepo;
             _deviceConfigManager = deviceConfigManager;

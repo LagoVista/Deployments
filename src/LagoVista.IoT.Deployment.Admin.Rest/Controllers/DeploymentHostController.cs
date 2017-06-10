@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Models;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -23,7 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class DeploymentHostController : LagoVistaBaseController
     {
         IDeploymentHostManager _hostManager;
-        public DeploymentHostController(IDeploymentHostManager hostManager, UserManager<AppUser> userManager, ILogger logger) : base(userManager, logger)
+        public DeploymentHostController(IDeploymentHostManager hostManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _hostManager = hostManager;
         }

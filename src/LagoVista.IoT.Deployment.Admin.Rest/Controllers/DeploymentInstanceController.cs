@@ -14,6 +14,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using System.Threading.Tasks;
 using LagoVista.Core.Models;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -25,7 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class DeploymentInstanceController : LagoVistaBaseController
     {
         IDeploymentInstanceManager _instanceManager;
-        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, UserManager<AppUser> userManager, ILogger logger) : base(userManager, logger)
+        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _instanceManager = instanceManager;
         }        

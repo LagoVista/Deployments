@@ -7,6 +7,7 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -14,7 +15,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     {
 
         private bool _shouldConsolidateCollections;
-        public SolutionRepo(IDeploymentRepoSettings repoSettings, ILogger logger) : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
+        public SolutionRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger) : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

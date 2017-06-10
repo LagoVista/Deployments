@@ -13,6 +13,7 @@ using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.UserAdmin.Models.Account;
 using LagoVista.Core.Models;
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -20,7 +21,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class SolutionController : LagoVistaBaseController
     {
         ISolutionManager _solutionManager;
-        public SolutionController(ISolutionManager deploymentConfigManager, UserManager<AppUser> userManager, ILogger logger) : base(userManager, logger)
+        public SolutionController(ISolutionManager deploymentConfigManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _solutionManager = deploymentConfigManager;
         }

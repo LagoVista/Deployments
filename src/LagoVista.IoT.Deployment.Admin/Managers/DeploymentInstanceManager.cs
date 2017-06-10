@@ -12,8 +12,7 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services;
-
-
+using LagoVista.IoT.Logging.Loggers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -32,7 +31,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentHostManager _hostManager;
         IDeploymentConnectorService _connector;
 
-        public DeploymentInstanceManager(IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager, ILogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentInstanceManager(IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
