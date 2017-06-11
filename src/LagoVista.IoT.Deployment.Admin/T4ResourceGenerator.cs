@@ -350,6 +350,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:InstanceStates_Stopping
 
 		public static string InstanceStates_Stopping { get { return GetResourceString("InstanceStates_Stopping"); } }
+//Resources:DeploymentAdminResources:InstanceStates_Undeploying
+
+		public static string InstanceStates_Undeploying { get { return GetResourceString("InstanceStates_Undeploying"); } }
 //Resources:DeploymentAdminResources:Route_Description
 
 		public static string Route_Description { get { return GetResourceString("Route_Description"); } }
@@ -518,6 +521,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string InstanceStates_Starting = "InstanceStates_Starting";
 			public const string InstanceStates_Stopped = "InstanceStates_Stopped";
 			public const string InstanceStates_Stopping = "InstanceStates_Stopping";
+			public const string InstanceStates_Undeploying = "InstanceStates_Undeploying";
 			public const string Route_Description = "Route_Description";
 			public const string Route_Help = "Route_Help";
 			public const string Route_InputTranslator = "Route_InputTranslator";

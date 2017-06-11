@@ -13,8 +13,15 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task DeleteInstanceAsync(string id);
 
         Task<DeploymentInstance> GetInstanceAsync(string instanceId);
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsyncAsync(string id);
+
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string id);
+
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string id);
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId);
+
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id);
+
+
     }
 }

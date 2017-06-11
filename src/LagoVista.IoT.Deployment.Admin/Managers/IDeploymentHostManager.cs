@@ -25,5 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
 
         Task<InvokeResult> RegenerateAccessKeys(String id, EntityHeader org, EntityHeader user);
+
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
     }
 }

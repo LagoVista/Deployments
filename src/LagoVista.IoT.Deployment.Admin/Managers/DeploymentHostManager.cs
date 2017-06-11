@@ -17,10 +17,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     public class DeploymentHostManager : ManagerBase, IDeploymentHostManager
     {
         IDeploymentHostRepo _deploymentHostRepo;
+        IDeploymentInstanceRepo _deploymentInstanceRepo;
 
-        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
+            _deploymentInstanceRepo = deploymentInstanceRepo;
         }
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
@@ -59,6 +61,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await AuthorizeOrgAccess(user, orgId, typeof(DeploymentHost));            
             return await _deploymentHostRepo.GetDeploymentsForOrgAsync(orgId);
+        }
+
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user)
+        {
+            await AuthorizeOrgAccess(user, org, typeof(DeploymentHost));
+            return await _deploymentInstanceRepo.GetInstanceForHostAsync(hostId);
         }
 
         public Task<DeploymentHost> LoadFullDeploymentHostAsync(string id)

@@ -480,4 +480,7 @@
   <data name="HostStatus_StoppingDegraded" xml:space="preserve">
     <value>Stopping - Degraded</value>
   </data>
+  <data name="InstanceStates_Undeploying" xml:space="preserve">
+    <value>Undeploying</value>
+  </data>
 </root>

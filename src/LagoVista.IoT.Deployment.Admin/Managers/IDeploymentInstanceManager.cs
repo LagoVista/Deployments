@@ -13,14 +13,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         Task<DeploymentInstance> LoadFullInstanceAsync(string id);
 
-        Task<DependentObjectCheckResult> CheckInUserAsync(string id, EntityHeader org, EntityHeader user);
+        Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteInstanceAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsyncAsync(string orgId, EntityHeader user);
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user);
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
 

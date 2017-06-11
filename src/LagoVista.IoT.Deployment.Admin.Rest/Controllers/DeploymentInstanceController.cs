@@ -62,7 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/org/{orgid}/deployment/instances")]
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(String orgId)
         {
-            var instanceSummaries = await _instanceManager.GetInstanceForOrgAsyncAsync(orgId, UserEntityHeader);
+            var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(orgId, UserEntityHeader);
             return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
         }
 
@@ -74,7 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}/inuse")]
         public Task<DependentObjectCheckResult> InUseCheck(String id)
         {
-            return _instanceManager.CheckInUserAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.CheckInUseAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

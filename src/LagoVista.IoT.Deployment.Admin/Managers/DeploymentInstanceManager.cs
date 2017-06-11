@@ -31,7 +31,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentHostManager _hostManager;
         IDeploymentConnectorService _connector;
 
-        public DeploymentInstanceManager(IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentInstanceManager(IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager,
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
@@ -171,7 +172,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Remove);
 
             var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
-            return await _connector.StopAsync(host, id, org, user);
+            return await _connector.RemoveAsync(host, id, org, user);
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string instanceid, string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
@@ -195,7 +196,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<DependentObjectCheckResult> CheckInUserAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
@@ -207,7 +208,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
             await CheckForDepenenciesAsync(instance);
-
 
             await _instanceRepo.DeleteInstanceAsync(instanceId);
 
@@ -222,10 +222,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return instance;
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsyncAsync(string orgId, EntityHeader user)
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user)
         {
             await AuthorizeOrgAccess(user, orgId);
-            return await _instanceRepo.GetInstanceForOrgAsyncAsync(orgId);
+            return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 
         public async Task<DeploymentInstance> LoadFullInstanceAsync(string id)

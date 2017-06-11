@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.IoT.Logging.Loggers;
+using System;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -35,12 +36,25 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(instanceId);
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsyncAsync(string orgId)
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string hostId)
+        {
+            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.Host.Id == hostId);
+
+            return from item in items
+                   select item.CreateSummary();
+        }
+
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId)
         {
             var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
 
             return from item in items
                    select item.CreateSummary();
+        }
+
+        public Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId)
