@@ -483,4 +483,7 @@
   <data name="InstanceStates_Undeploying" xml:space="preserve">
     <value>Undeploying</value>
   </data>
+  <data name="Telemetry_ErrorQueryServer" xml:space="preserve">
+    <value>Could not query Telemetry Server, please try again later.</value>
+  </data>
 </root>

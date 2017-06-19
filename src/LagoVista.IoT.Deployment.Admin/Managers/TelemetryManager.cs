@@ -20,16 +20,40 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _telemetryService = telemetryService;
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForHostAsync(string hostId, EntityHeader org, EntityHeader user)
+        public Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
         {
             base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
-            return _telemetryService.GetForHostAsync(hostId);
+            return _telemetryService.GetForDeviceAsync(deviceId, take, afterDateStamp);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
         {
             base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
-            return _telemetryService.GetForInstanceAsync(instanceId);
+            return _telemetryService.GetForDeviceTypeAsync(deviceTypeId, take, afterDateStamp);
+        }
+
+        public Task<IEnumerable<TelemetryReportData>> GetForHostAsync(string hostId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
+        {
+            base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
+            return _telemetryService.GetForHostAsync(hostId, take, afterDateStamp);
+        }
+
+        public Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(string instanceId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
+        {
+            base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
+            return _telemetryService.GetForInstanceAsync(instanceId,  take,  afterDateStamp);
+        }
+
+        public Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
+        {
+            base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
+            return _telemetryService.GetForPipelineModuleAsync(pipelineModuleId, take, afterDateStamp);
+        }
+
+        public Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, int take, string afterDateStamp, EntityHeader org, EntityHeader user)
+        {
+            base.AuthorizeOrgAccess(user, org, typeof(TelemetryReportData));
+            return _telemetryService.GetForPipelineQueueAsync(pipelineModuleId, take, afterDateStamp);
         }
     }
 }

@@ -419,6 +419,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Solution_Title
 
 		public static string Solution_Title { get { return GetResourceString("Solution_Title"); } }
+//Resources:DeploymentAdminResources:Telemetry_ErrorQueryServer
+
+		public static string Telemetry_ErrorQueryServer { get { return GetResourceString("Telemetry_ErrorQueryServer"); } }
 
 		public static class Names
 		{
@@ -544,6 +547,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Solution_Environment = "Solution_Environment";
 			public const string Solution_Help = "Solution_Help";
 			public const string Solution_Title = "Solution_Title";
+			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
 		}
 	}
 }
