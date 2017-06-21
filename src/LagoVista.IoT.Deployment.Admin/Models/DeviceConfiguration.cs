@@ -54,7 +54,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public Route FindRoute(string messageId)
         {
-            var route = Routes.Where(rte => rte.MessageDefinitions.Where(msg => msg.Id == messageId).Any()).FirstOrDefault();
+            var route = Routes.Where(rte => rte.MessageDefinitions.Where(msg => msg.Value.MessageId == messageId).Any()).FirstOrDefault();
             if(route == null)
             {
                 return Routes.Where(rte => rte.IsDefault).FirstOrDefault();
