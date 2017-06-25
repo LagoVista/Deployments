@@ -186,17 +186,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
 
         /// <summary>
-        /// 
+        /// Web Socket URI - Get a URI to Receive Web Socket Notifcations
         /// </summary>
-        /// <param name="instanceid"></param>
         /// <param name="channel"></param>
         /// <param name="id"></param>
         /// <param name="verbosity"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{instanceid}/{channel}/{id}/{verbosity}")]
-        public Task<InvokeResult<string>> GetMonitorUriAsync(String instanceid, string channel, string id, string verbosity)
+        [HttpGet("/api/wsuri/{channel}/{id}/{verbosity}")]
+        public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
         {
-            return _instanceManager.GetRemoteMonitoringURIAsync(instanceid, channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

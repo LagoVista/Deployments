@@ -140,9 +140,27 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_InstanceWithoutSolution
 
 		public static string Err_InstanceWithoutSolution { get { return GetResourceString("Err_InstanceWithoutSolution"); } }
+//Resources:DeploymentAdminResources:Err_MCPServerExists
+
+		public static string Err_MCPServerExists { get { return GetResourceString("Err_MCPServerExists"); } }
+//Resources:DeploymentAdminResources:Err_MultipleMCPServersFound
+
+		public static string Err_MultipleMCPServersFound { get { return GetResourceString("Err_MultipleMCPServersFound"); } }
+//Resources:DeploymentAdminResources:Err_MultipleNotificationServersFound
+
+		public static string Err_MultipleNotificationServersFound { get { return GetResourceString("Err_MultipleNotificationServersFound"); } }
+//Resources:DeploymentAdminResources:Err_NoMCPServerExists
+
+		public static string Err_NoMCPServerExists { get { return GetResourceString("Err_NoMCPServerExists"); } }
+//Resources:DeploymentAdminResources:Err_NoNotificationsServerExists
+
+		public static string Err_NoNotificationsServerExists { get { return GetResourceString("Err_NoNotificationsServerExists"); } }
 //Resources:DeploymentAdminResources:Err_NoPlannerHasBeenSpecified
 
 		public static string Err_NoPlannerHasBeenSpecified { get { return GetResourceString("Err_NoPlannerHasBeenSpecified"); } }
+//Resources:DeploymentAdminResources:Err_NotificationServerExists
+
+		public static string Err_NotificationServerExists { get { return GetResourceString("Err_NotificationServerExists"); } }
 //Resources:DeploymentAdminResources:Errs_AlreadyDeployed
 
 		public static string Errs_AlreadyDeployed { get { return GetResourceString("Errs_AlreadyDeployed"); } }
@@ -227,6 +245,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Type_Free
 
 		public static string Host_Type_Free { get { return GetResourceString("Host_Type_Free"); } }
+//Resources:DeploymentAdminResources:Host_Type_MCP
+
+		public static string Host_Type_MCP { get { return GetResourceString("Host_Type_MCP"); } }
+//Resources:DeploymentAdminResources:Host_Type_Notifications
+
+		public static string Host_Type_Notifications { get { return GetResourceString("Host_Type_Notifications"); } }
 //Resources:DeploymentAdminResources:Host_Type_Select
 
 		public static string Host_Type_Select { get { return GetResourceString("Host_Type_Select"); } }
@@ -454,7 +478,13 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Err_InstanceNotRunning = "Err_InstanceNotRunning";
 			public const string Err_InstanceWithoutHost = "Err_InstanceWithoutHost";
 			public const string Err_InstanceWithoutSolution = "Err_InstanceWithoutSolution";
+			public const string Err_MCPServerExists = "Err_MCPServerExists";
+			public const string Err_MultipleMCPServersFound = "Err_MultipleMCPServersFound";
+			public const string Err_MultipleNotificationServersFound = "Err_MultipleNotificationServersFound";
+			public const string Err_NoMCPServerExists = "Err_NoMCPServerExists";
+			public const string Err_NoNotificationsServerExists = "Err_NoNotificationsServerExists";
 			public const string Err_NoPlannerHasBeenSpecified = "Err_NoPlannerHasBeenSpecified";
+			public const string Err_NotificationServerExists = "Err_NotificationServerExists";
 			public const string Errs_AlreadyDeployed = "Errs_AlreadyDeployed";
 			public const string Errs_InstanceBusy = "Errs_InstanceBusy";
 			public const string Errs_MustBeStoppedBeforeRemoving = "Errs_MustBeStoppedBeforeRemoving";
@@ -483,6 +513,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_Type_Community = "Host_Type_Community";
 			public const string Host_Type_Dedicated = "Host_Type_Dedicated";
 			public const string Host_Type_Free = "Host_Type_Free";
+			public const string Host_Type_MCP = "Host_Type_MCP";
+			public const string Host_Type_Notifications = "Host_Type_Notifications";
 			public const string Host_Type_Select = "Host_Type_Select";
 			public const string Host_Type_Shared = "Host_Type_Shared";
 			public const string Host_Type_SharedHighPerformance = "Host_Type_SharedHighPerformance";

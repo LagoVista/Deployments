@@ -175,17 +175,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _connector.RemoveAsync(host, id, org, user);
         }
 
-        public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string instanceid, string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
-           
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, DeploymentAction_Monitor);
-
-            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
-            return await _connector.GetRemoteMonitoringUriAsync(host, instanceid, channel, id, verbosity, org, user);
+            var host = await _hostManager.GetNotificationsHostAsync(org, user);
+            return await _connector.GetRemoteMonitoringUriAsync(host, channel, id, verbosity, org, user);
         }
-
+       
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(instance, Actions.Create);

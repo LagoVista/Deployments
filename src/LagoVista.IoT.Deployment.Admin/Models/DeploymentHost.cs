@@ -24,7 +24,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.Host_Type_Dedicated, typeof(DeploymentAdminResources))]
         Dedicated,
         [EnumLabel(DeploymentHost.HostType_Clustered, DeploymentAdminResources.Names.Host_Type_Clustered, typeof(DeploymentAdminResources))]
-        Clustered
+        Clustered,
+        [EnumLabel(DeploymentHost.HostType_MCP, DeploymentAdminResources.Names.Host_Type_MCP, typeof(DeploymentAdminResources))]
+        MCP,
+        [EnumLabel(DeploymentHost.HostType_Notifications, DeploymentAdminResources.Names.Host_Type_Notifications, typeof(DeploymentAdminResources))]
+        Notification
     }
 
     public enum HostStatus
@@ -74,7 +78,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_SharedHighPerformacne = "shared_highperformance";
         public const string HostType_Dedicated = "dedicated";
         public const string HostType_Clustered = "clustered";
-
+        public const string HostType_Notifications = "notifications";
+        public const string HostType_MCP = "mcp";
 
         public const string HostStatus_Offline = "offline";
         public const string HostStatus_Failed = "failed";
@@ -232,7 +237,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageMemory_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageMemory { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
 
         public String HostAccessKey1 { get; set; }

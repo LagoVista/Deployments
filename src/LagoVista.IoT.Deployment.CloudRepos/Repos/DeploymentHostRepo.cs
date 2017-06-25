@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Logging.Exceptions;
+using LagoVista.IoT.Deployment.Admin.Resources;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -20,10 +22,24 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
-
-        public Task AddDeploymentHostAsync(DeploymentHost host)
+        public async Task AddDeploymentHostAsync(DeploymentHost host)
         {
-            return CreateDocumentAsync(host);
+            if(host.HostType.Value == HostTypes.MCP)
+            {
+                var mcps = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.MCP);
+                throw new InvalidConfigurationException(DeploymentErrorCodes.MCPExists);
+            }
+
+            if (host.HostType.Value == HostTypes.MCP)
+            {
+                var notificationsServers = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.Notification);
+                if(notificationsServers.Any())
+                {
+                    throw new InvalidConfigurationException(DeploymentErrorCodes.NotificationsServerExists);
+                }
+            }
+
+            await CreateDocumentAsync(host);
         }
 
         public Task DeleteDeploymentHostAsync(string hostId)
@@ -42,6 +58,40 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
             return from item in items
                    select item.CreateSummary();
+        }
+
+        public async Task<DeploymentHost> GetMCPHostAsync()
+        {
+            var items = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.MCP);
+
+            if (items.Count() == 0)
+            {
+                throw new InvalidConfigurationException(DeploymentErrorCodes.NoMCPExits);
+            }
+
+            if(items.Count() > 1)
+            {
+                throw new InvalidConfigurationException(DeploymentErrorCodes.MultipleMCPServersFound);
+            }
+
+            return items.First();
+        }
+
+        public async Task<DeploymentHost> GetNotificationsHostAsync()
+        {
+            var items = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.Notification);
+
+            if (items.Count() == 0)
+            {
+                throw new InvalidConfigurationException(DeploymentErrorCodes.NoNotificationsServerExits);
+            }
+
+            if (items.Count() > 1)
+            {
+                throw new InvalidConfigurationException(DeploymentErrorCodes.MultipleNotificationServersFound);
+            }
+
+            return items.First();
         }
 
         public async Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId)

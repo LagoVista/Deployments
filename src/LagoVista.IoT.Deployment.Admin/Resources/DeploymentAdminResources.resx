@@ -486,4 +486,28 @@
   <data name="Telemetry_ErrorQueryServer" xml:space="preserve">
     <value>Could not query Telemetry Server, please try again later.</value>
   </data>
+  <data name="Err_MCPServerExists" xml:space="preserve">
+    <value>MCP Server Already Exists, only one MCP Server is allowed per system. </value>
+  </data>
+  <data name="Err_MultipleMCPServersFound" xml:space="preserve">
+    <value>Multiple MCP Servers Were Found, Please contact System Administrator</value>
+  </data>
+  <data name="Err_MultipleNotificationServersFound" xml:space="preserve">
+    <value>Multiple Notification Servers Were Found, Please contact System Administrator</value>
+  </data>
+  <data name="Err_NoMCPServerExists" xml:space="preserve">
+    <value>No MCP Server Exists for this System, Please Add One.</value>
+  </data>
+  <data name="Err_NoNotificationsServerExists" xml:space="preserve">
+    <value>No Notifications Server Exists for this System, Please Add One.</value>
+  </data>
+  <data name="Err_NotificationServerExists" xml:space="preserve">
+    <value>Notifications Server Already Exists, only one Notifications Server is allowed per system.</value>
+  </data>
+  <data name="Host_Type_MCP" xml:space="preserve">
+    <value>Master Control Program</value>
+  </data>
+  <data name="Host_Type_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
 </root>

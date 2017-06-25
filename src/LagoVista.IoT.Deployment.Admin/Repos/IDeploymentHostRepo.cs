@@ -10,6 +10,11 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddDeploymentHostAsync(DeploymentHost host);
         Task<DeploymentHost> GetDeploymentHostAsync(String hostId);
+
+        Task<DeploymentHost> GetNotificationsHostAsync();
+
+        Task<DeploymentHost> GetMCPHostAsync();
+
         Task UpdateDeploymentHostAsync(DeploymentHost host);
         Task DeleteDeploymentHostAsync(String hostId);
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId);

@@ -11,11 +11,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public static class RequestSigningService
     {     
-        public static string GetAuthHeaderValue(DeploymentHost host, String instanceId, string requestId, string orgId, string userId, string method, String resource, String date)
+        public static string GetAuthHeaderValue(DeploymentHost host, string requestId, string orgId, string userId, string method, String resource, String date)
         {
             var canonicalizedString = $"{method}\n";
             canonicalizedString += $"{requestId}\n";
-            canonicalizedString += $"{instanceId}\n";
             canonicalizedString += $"{orgId}\n";
             canonicalizedString += $"{userId}\n";
             canonicalizedString += $"{date}\n";
@@ -38,7 +37,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             
 
-            return $"{instanceId}:{md5Sting.ToString()}";
+            return $"{requestId}:{md5Sting.ToString()}";
         }
 
     }

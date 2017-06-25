@@ -17,6 +17,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string id);
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string id);
+        
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId);
 

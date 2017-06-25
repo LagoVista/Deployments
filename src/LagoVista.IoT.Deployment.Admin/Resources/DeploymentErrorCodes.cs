@@ -18,6 +18,14 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode InstanceWithoutSolution => new ErrorCode() { Code = "DEP1009", Message = DeploymentAdminResources.Err_InstanceWithoutSolution };
         public static ErrorCode CouldNotLoadInstance => new ErrorCode() { Code = "DEP1010", Message = DeploymentAdminResources.Err_CouldNotLoadInstance };
 
+        public static ErrorCode MCPExists => new ErrorCode() { Code = "DEP1011", Message = DeploymentAdminResources.Err_NoMCPServerExists };
+        public static ErrorCode NotificationsServerExists => new ErrorCode() { Code = "DEP1012", Message = DeploymentAdminResources.Err_NoNotificationsServerExists };
+
+        public static ErrorCode NoMCPExits => new ErrorCode() { Code = "DEP1013", Message = DeploymentAdminResources.Err_NoMCPServerExists };
+        public static ErrorCode NoNotificationsServerExits => new ErrorCode() { Code = "DEP1014", Message = DeploymentAdminResources.Err_NoNotificationsServerExists };
+
+        public static ErrorCode MultipleMCPServersFound => new ErrorCode() { Code = "DEP1015", Message = DeploymentAdminResources.Err_MultipleMCPServersFound };
+        public static ErrorCode MultipleNotificationServersFound => new ErrorCode() { Code = "DEP1016", Message = DeploymentAdminResources.Err_MultipleNotificationServersFound };
 
 
         public static ErrorCode CouldNotLoadSolution => new ErrorCode() { Code = "INS1000", Message = DeploymentAdminResources.Err_CouldNotLoadSolution };
