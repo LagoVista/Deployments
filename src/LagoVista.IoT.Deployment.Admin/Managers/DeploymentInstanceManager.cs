@@ -13,6 +13,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -30,14 +31,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         ISolutionManager _solutionManager;
         IDeploymentHostManager _hostManager;
         IDeploymentConnectorService _connector;
+        IDeviceRepositoryManager _deviceRepoManager;
 
-        public DeploymentInstanceManager(IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager,
+                     IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
             _solutionManager = deploymentConfigurationManager;
             _connector = connector;
+            _deviceRepoManager = deviceRepoManager;
         }
 
         public async Task<InvokeResult> DeployAsync(String id, EntityHeader org, EntityHeader user)
@@ -223,16 +226,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 
-        public async Task<DeploymentInstance> LoadFullInstanceAsync(string id)
+        public async Task<DeploymentInstance> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
+
+            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
 
             instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id);
             instance.Solution.Id = instance.Solution.Value.Id;
             instance.Solution.Text = instance.Solution.Value.Name;
 
             return instance;
-
         }
 
         public Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org)

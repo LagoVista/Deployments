@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     public interface IDeploymentInstanceManager
     {
 
-        Task<DeploymentInstance> LoadFullInstanceAsync(string id);
+        Task<DeploymentInstance> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
 
