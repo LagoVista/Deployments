@@ -3,6 +3,7 @@ using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.DeviceManagement.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -156,6 +157,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Text = Name,
             };
         }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeviceRepo, HelpResource: DeploymentAdminResources.Names.Instance_DeviceRepo_Help, WaterMark: DeploymentAdminResources.Names.Instance_DeviceRepo_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public EntityHeader<DeviceRepository> DeviceRepository { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, WaterMark: DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader<Solution> Solution { get; set; }

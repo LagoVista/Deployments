@@ -308,6 +308,15 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Instance_Description
 
 		public static string Instance_Description { get { return GetResourceString("Instance_Description"); } }
+//Resources:DeploymentAdminResources:Instance_DeviceRepo
+
+		public static string Instance_DeviceRepo { get { return GetResourceString("Instance_DeviceRepo"); } }
+//Resources:DeploymentAdminResources:Instance_DeviceRepo_Help
+
+		public static string Instance_DeviceRepo_Help { get { return GetResourceString("Instance_DeviceRepo_Help"); } }
+//Resources:DeploymentAdminResources:Instance_DeviceRepo_Select
+
+		public static string Instance_DeviceRepo_Select { get { return GetResourceString("Instance_DeviceRepo_Select"); } }
 //Resources:DeploymentAdminResources:Instance_Help
 
 		public static string Instance_Help { get { return GetResourceString("Instance_Help"); } }
@@ -534,6 +543,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostStatus_Stopping = "HostStatus_Stopping";
 			public const string HostStatus_StoppingDegraded = "HostStatus_StoppingDegraded";
 			public const string Instance_Description = "Instance_Description";
+			public const string Instance_DeviceRepo = "Instance_DeviceRepo";
+			public const string Instance_DeviceRepo_Help = "Instance_DeviceRepo_Help";
+			public const string Instance_DeviceRepo_Select = "Instance_DeviceRepo_Select";
 			public const string Instance_Help = "Instance_Help";
 			public const string Instance_Host = "Instance_Host";
 			public const string Instance_Host_Help = "Instance_Host_Help";

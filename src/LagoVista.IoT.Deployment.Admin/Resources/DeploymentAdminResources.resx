@@ -510,4 +510,13 @@
   <data name="Host_Type_Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>
+  <data name="Instance_DeviceRepo" xml:space="preserve">
+    <value>Device Repository</value>
+  </data>
+  <data name="Instance_DeviceRepo_Help" xml:space="preserve">
+    <value>Select the Device Repository that contains the devices that your instance will have access to.</value>
+  </data>
+  <data name="Instance_DeviceRepo_Select" xml:space="preserve">
+    <value>-select device repository-</value>
+  </data>
 </root>
