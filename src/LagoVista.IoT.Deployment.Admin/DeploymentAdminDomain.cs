@@ -6,6 +6,7 @@ using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin
 {
+    [DomainDescriptor]
     public class DeploymentAdminDomain
     {
         public const string DeploymentAdmin = "Deployment Admin";
