@@ -16,7 +16,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public Route()
         {
-            //MessageDefinitions = new List<EntityHeader<DeviceMessageDefinition>>();
             CustomPipelineModuleConfigurations = new List<DevicePipelineModuleConfiguration<CustomPipelineModuleConfiguration>>();
             Id = Guid.NewGuid().ToId();
             MessageDefinitions = new List<EntityHeader<DeviceMessageDefinition>>();
