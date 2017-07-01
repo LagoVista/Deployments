@@ -233,7 +233,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
 
-            instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id);
+            instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
             instance.Solution.Id = instance.Solution.Value.Id;
             instance.Solution.Text = instance.Solution.Value.Name;
 

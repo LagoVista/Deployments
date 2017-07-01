@@ -64,13 +64,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return deployment;
         }
 
-        public async Task<Solution> LoadFullSolutionAsync(string id)
+        public async Task<Solution> LoadFullSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deployment = await _deploymentRepo.GetSolutionAsync(id);
 
             foreach (var config in deployment.DeviceConfigurations)
             {
-                config.Value = await _deviceConfigManager.LoadFullDeviceConfigurationAsync(config.Id);
+                config.Value = await _deviceConfigManager.LoadFullDeviceConfigurationAsync(config.Id, org, user);
             }
 
             if (deployment.Planner.IsEmpty()) throw InvalidConfigurationException.FromErrorCode(DeploymentErrorCodes.NoPlannerSpecified);

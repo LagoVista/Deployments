@@ -67,19 +67,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return deviceConfiguration;
         }
 
-        public async Task<DeviceConfiguration> LoadFullDeviceConfigurationAsync(string id)
+        public async Task<DeviceConfiguration> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
 
             foreach (var route in deviceConfiguration.Routes)
             {
-                await PopulateRoutes(route);
+                await PopulateRoutes(route, org, user);
             }
 
             return deviceConfiguration;
         }
 
-        public async Task PopulateRoutes(Route route)
+        public async Task PopulateRoutes(Route route, EntityHeader org, EntityHeader user)
         {
             if(route.MessageDefinitions != null)
             {
@@ -101,7 +101,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (route.DeviceWorkflow != null && route.DeviceWorkflow.HasValue)
             {
-                route.DeviceWorkflow.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(route.DeviceWorkflow.Id);
+                route.DeviceWorkflow.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(route.DeviceWorkflow.Id, org, user);
             }
 
             if (route.OutputTranslator != null && route.OutputTranslator.HasValue)
