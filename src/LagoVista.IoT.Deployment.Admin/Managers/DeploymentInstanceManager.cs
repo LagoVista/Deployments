@@ -222,7 +222,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, orgId);
+            await AuthorizeOrgAccessAsync(user, orgId);
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 

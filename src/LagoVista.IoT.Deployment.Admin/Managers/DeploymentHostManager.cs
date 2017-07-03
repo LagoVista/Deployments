@@ -59,13 +59,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId,  EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, orgId, typeof(DeploymentHost));            
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentHost));            
             return await _deploymentHostRepo.GetDeploymentsForOrgAsync(orgId);
         }
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, org, typeof(DeploymentHost));
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentHost));
             return await _deploymentInstanceRepo.GetInstanceForHostAsync(hostId);
         }
 

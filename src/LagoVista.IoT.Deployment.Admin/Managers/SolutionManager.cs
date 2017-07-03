@@ -88,7 +88,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, orgId, typeof(Solution));
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(Solution));
             return await _deploymentRepo.GetSolutionsForOrgsAsync(orgId);
         }
 

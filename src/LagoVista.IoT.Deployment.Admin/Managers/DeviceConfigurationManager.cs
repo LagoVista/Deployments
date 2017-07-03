@@ -117,7 +117,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccess(user, orgId, typeof(DeviceConfiguration));        
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceConfiguration));        
             return await _deviceConfigRepo.GetDeviceConfigurationsForOrgAsync(orgId);
         }
 
