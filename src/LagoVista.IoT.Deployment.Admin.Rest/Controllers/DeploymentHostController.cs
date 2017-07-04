@@ -2,7 +2,6 @@
 using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Web.Common.Controllers;
-using LagoVista.UserAdmin.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +13,7 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.UserAdmin.Models.Users;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {

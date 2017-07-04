@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using LagoVista.Core.PlatformSupport;
-using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
-using LagoVista.UserAdmin.Models.Account;
+using LagoVista.UserAdmin.Models.Users;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 

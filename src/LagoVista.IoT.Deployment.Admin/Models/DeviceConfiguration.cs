@@ -8,7 +8,7 @@ using LagoVista.Core;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.UserAdmin.Models.Orgs;
-using LagoVista.UserAdmin.Models.Account;
+using LagoVista.UserAdmin.Models.Users;
 using LagoVista.IoT.DeviceAdmin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
