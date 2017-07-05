@@ -27,10 +27,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             if(host.HostType.Value == HostTypes.MCP)
             {
                 var mcps = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.MCP);
-                throw new InvalidConfigurationException(DeploymentErrorCodes.MCPExists);
+                if (mcps.Any())
+                {
+                    throw new InvalidConfigurationException(DeploymentErrorCodes.MCPExists);
+                }
             }
 
-            if (host.HostType.Value == HostTypes.MCP)
+            if (host.HostType.Value == HostTypes.Notification)
             {
                 var notificationsServers = await base.QueryAsync(qry => qry.HostType.Value == HostTypes.Notification);
                 if(notificationsServers.Any())
