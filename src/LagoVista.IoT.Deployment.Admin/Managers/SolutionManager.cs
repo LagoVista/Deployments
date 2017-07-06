@@ -99,7 +99,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var result = Validator.Validate(deployment, Actions.Update);
             await _deploymentRepo.UpdateSolutionAsync(deployment);
 
-            return result.ToActionResult();
+            return result.ToInvokeResult();
         }
 
         public Task<bool> QueryKeyInUse(string key, EntityHeader org)
