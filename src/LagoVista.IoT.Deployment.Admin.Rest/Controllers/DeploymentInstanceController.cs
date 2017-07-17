@@ -52,6 +52,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
         }
 
+
+
         /// <summary>
         /// Deployment Instance - Get for Org
         /// </summary>
@@ -88,6 +90,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
 
             return response;
+        }
+        
+        /// <summary>
+        /// Deployment Instance - Get Runtime Status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/runtime")]
+        public  Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceRunTimeAsync(String id)
+        {
+            return  _instanceManager.GetInstanceDetailsAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

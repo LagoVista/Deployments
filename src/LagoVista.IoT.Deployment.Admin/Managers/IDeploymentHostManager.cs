@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System;
@@ -30,5 +31,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         Task<InvokeResult> RegenerateAccessKeys(String id, EntityHeader org, EntityHeader user);
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
+
+        Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);
     }
 }

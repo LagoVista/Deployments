@@ -1,10 +1,12 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
@@ -18,11 +20,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     {
         IDeploymentHostRepo _deploymentHostRepo;
         IDeploymentInstanceRepo _deploymentInstanceRepo;
+        IDeploymentConnectorService _deploymentConnectorService;
 
-        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
+            _deploymentConnectorService = deploymentConnectorService;
         }
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
@@ -48,6 +52,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await ConfirmNoDepenenciesAsync(host);
             await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
             return InvokeResult.Success;
+        }
+
+
+        public async Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user)
+        {
+            var host = await GetDeploymentHostAsync(hostId, org, user);
+            await AuthorizeAsync(user, org, "hostDeployedInstances", hostId);
+            return await _deploymentConnectorService.GetDeployedInstancesAsync(host, org, user);
         }
 
         public async Task<DeploymentHost> GetDeploymentHostAsync(string instanceId, EntityHeader org, EntityHeader user)

@@ -12,7 +12,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public enum DeploymentInstanceStates
     {
-        [EnumLabel(DeploymentInstance.Status_NotDeployed, DeploymentAdminResources.Names.InstanceStates_NotDeployed, typeof(DeploymentAdminResources))]
+        [EnumLabel(DeploymentInstance.Status_NotDeployed, DeploymentAdminResources.Names.InstanceStates_NotDeployed, typeof(DeploymentAdminResources))] 
         NotDeployed,
         [EnumLabel(DeploymentInstance.Status_Deploying, DeploymentAdminResources.Names.InstanceStates_Deploying, typeof(DeploymentAdminResources))]
         Deploying,
@@ -39,6 +39,18 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentInstance.Status_Undeploying, DeploymentAdminResources.Names.InstanceStates_Undeploying, typeof(DeploymentAdminResources))]
         Undeploying,
     }
+
+    public enum PipelineModuleStatus
+    {
+        Idle,
+        StartingUp,
+        Running,
+        Listening,
+        Paused,
+        ShuttingDown,
+        FatalError,
+    }
+
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, Resources.DeploymentAdminResources.Names.Instance_Help, Resources.DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity

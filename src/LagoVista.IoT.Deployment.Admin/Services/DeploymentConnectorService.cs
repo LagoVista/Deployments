@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using LagoVista.Core;
 using System.Threading.Tasks;
 using LagoVista.Core.Validation;
@@ -9,12 +8,10 @@ using LagoVista.Core.PlatformSupport;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using Org.BouncyCastle.Crypto.Macs;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Crypto.Digests;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -123,6 +120,38 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             var path = $"/api/websocket/{channel}/{id}/{verbosity}";
             return Execute<string>(path, host, org, user);
+        }
+
+
+        public async Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
+        {
+            var path = $"/api/instancemanager/instances";
+            var callResponse = await Execute<ListResponse<InstanceRuntimeSummary>>(path, host, org, user);
+            if(callResponse.Successful)
+            {
+                if (callResponse.Result == null)
+                {
+                    var failedResponse = ListResponse<InstanceRuntimeSummary>.Create(null);
+                    failedResponse.Errors.Add(new ErrorMessage("Null Response From Server."));
+                    return failedResponse;
+                }
+                else
+                {
+                    return callResponse.Result;
+                }
+            }
+            else
+            {
+                var failedResponse =  ListResponse<InstanceRuntimeSummary>.Create(null);
+                failedResponse.Concat(callResponse);
+                return failedResponse;
+            }
+        }
+
+        public Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var path = $"/api/instancemanager/{instanceId}";
+            return Execute<InstanceRuntimeDetails>(path, host, org, user);
         }
 
         public Task<InvokeResult> DeployAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user)

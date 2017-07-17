@@ -17,9 +17,9 @@ using LagoVista.UserAdmin.Models.Users;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
-     /// <summary>
-     /// Manage Deployment Hosts
-     /// </summary>     
+    /// <summary>
+    /// Manage Deployment Hosts
+    /// </summary>     
     [Authorize]
     public class DeploymentHostController : LagoVistaBaseController
     {
@@ -97,12 +97,21 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<DetailResponse<DeploymentHost>> GetHostAsync(String id)
         {
             var deploymentHost = await _hostManager.GetDeploymentHostAsync(id, OrgEntityHeader, UserEntityHeader);
-
-            var response = DetailResponse<DeploymentHost>.Create(deploymentHost);
-
-            return response;
+            return DetailResponse<DeploymentHost>.Create(deploymentHost);
         }
 
+        /// <summary>
+        /// Deployment Host - Get Deployed Instances
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/deployedinstances")]
+        public Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(String id)
+        {
+            return _hostManager.GetDeployedInstancesAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+  
         /// <summary>
         /// Device Host - Key In Use
         /// </summary>
