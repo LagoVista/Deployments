@@ -519,4 +519,34 @@
   <data name="Instance_DeviceRepo_Select" xml:space="preserve">
     <value>-select device repository-</value>
   </data>
+  <data name="Host_CloudProvider" xml:space="preserve">
+    <value>Cloud Provider</value>
+  </data>
+  <data name="Host_Container" xml:space="preserve">
+    <value>Container</value>
+  </data>
+  <data name="Host_DNSName" xml:space="preserve">
+    <value>DNS Name</value>
+  </data>
+  <data name="Host_Size" xml:space="preserve">
+    <value>Image Size</value>
+  </data>
+  <data name="Host_SelectSize" xml:space="preserve">
+    <value>-select image size-</value>
+  </data>
+  <data name="HostSize_ExtraLarge" xml:space="preserve">
+    <value>Eextra Large</value>
+  </data>
+  <data name="HostSize_ExtraSmall" xml:space="preserve">
+    <value>Extra Small</value>
+  </data>
+  <data name="HostSize_Large" xml:space="preserve">
+    <value>Large</value>
+  </data>
+  <data name="HostSize_Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="HostSize_Small" xml:space="preserve">
+    <value>Small</value>
+  </data>
 </root>

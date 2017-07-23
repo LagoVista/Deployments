@@ -197,6 +197,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_CapacityStatus
 
 		public static string Host_CapacityStatus { get { return GetResourceString("Host_CapacityStatus"); } }
+//Resources:DeploymentAdminResources:Host_CloudProvider
+
+		public static string Host_CloudProvider { get { return GetResourceString("Host_CloudProvider"); } }
 //Resources:DeploymentAdminResources:Host_ComputeResource_Uri
 
 		public static string Host_ComputeResource_Uri { get { return GetResourceString("Host_ComputeResource_Uri"); } }
@@ -209,15 +212,27 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_ComputeResourceId_Help
 
 		public static string Host_ComputeResourceId_Help { get { return GetResourceString("Host_ComputeResourceId_Help"); } }
+//Resources:DeploymentAdminResources:Host_Container
+
+		public static string Host_Container { get { return GetResourceString("Host_Container"); } }
 //Resources:DeploymentAdminResources:Host_DateStampOnline
 
 		public static string Host_DateStampOnline { get { return GetResourceString("Host_DateStampOnline"); } }
 //Resources:DeploymentAdminResources:Host_Description
 
 		public static string Host_Description { get { return GetResourceString("Host_Description"); } }
+//Resources:DeploymentAdminResources:Host_DNSName
+
+		public static string Host_DNSName { get { return GetResourceString("Host_DNSName"); } }
 //Resources:DeploymentAdminResources:Host_Help
 
 		public static string Host_Help { get { return GetResourceString("Host_Help"); } }
+//Resources:DeploymentAdminResources:Host_SelectSize
+
+		public static string Host_SelectSize { get { return GetResourceString("Host_SelectSize"); } }
+//Resources:DeploymentAdminResources:Host_Size
+
+		public static string Host_Size { get { return GetResourceString("Host_Size"); } }
 //Resources:DeploymentAdminResources:Host_Status
 
 		public static string Host_Status { get { return GetResourceString("Host_Status"); } }
@@ -281,6 +296,21 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostCapacity_Underutlized
 
 		public static string HostCapacity_Underutlized { get { return GetResourceString("HostCapacity_Underutlized"); } }
+//Resources:DeploymentAdminResources:HostSize_ExtraLarge
+
+		public static string HostSize_ExtraLarge { get { return GetResourceString("HostSize_ExtraLarge"); } }
+//Resources:DeploymentAdminResources:HostSize_ExtraSmall
+
+		public static string HostSize_ExtraSmall { get { return GetResourceString("HostSize_ExtraSmall"); } }
+//Resources:DeploymentAdminResources:HostSize_Large
+
+		public static string HostSize_Large { get { return GetResourceString("HostSize_Large"); } }
+//Resources:DeploymentAdminResources:HostSize_Medium
+
+		public static string HostSize_Medium { get { return GetResourceString("HostSize_Medium"); } }
+//Resources:DeploymentAdminResources:HostSize_Small
+
+		public static string HostSize_Small { get { return GetResourceString("HostSize_Small"); } }
 //Resources:DeploymentAdminResources:HostStatus_Degraded
 
 		public static string HostStatus_Degraded { get { return GetResourceString("HostStatus_Degraded"); } }
@@ -506,13 +536,18 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_AverageMemory_30_Minutes = "Host_AverageMemory_30_Minutes";
 			public const string Host_AverageNetwork_30_Minutes = "Host_AverageNetwork_30_Minutes";
 			public const string Host_CapacityStatus = "Host_CapacityStatus";
+			public const string Host_CloudProvider = "Host_CloudProvider";
 			public const string Host_ComputeResource_Uri = "Host_ComputeResource_Uri";
 			public const string Host_ComputeResource_Uri_Help = "Host_ComputeResource_Uri_Help";
 			public const string Host_ComputeResourceId = "Host_ComputeResourceId";
 			public const string Host_ComputeResourceId_Help = "Host_ComputeResourceId_Help";
+			public const string Host_Container = "Host_Container";
 			public const string Host_DateStampOnline = "Host_DateStampOnline";
 			public const string Host_Description = "Host_Description";
+			public const string Host_DNSName = "Host_DNSName";
 			public const string Host_Help = "Host_Help";
+			public const string Host_SelectSize = "Host_SelectSize";
+			public const string Host_Size = "Host_Size";
 			public const string Host_Status = "Host_Status";
 			public const string Host_Subscription = "Host_Subscription";
 			public const string Host_SubscriptionSelect = "Host_SubscriptionSelect";
@@ -534,6 +569,11 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostCapacity_Ok = "HostCapacity_Ok";
 			public const string HostCapacity_OverCapacity = "HostCapacity_OverCapacity";
 			public const string HostCapacity_Underutlized = "HostCapacity_Underutlized";
+			public const string HostSize_ExtraLarge = "HostSize_ExtraLarge";
+			public const string HostSize_ExtraSmall = "HostSize_ExtraSmall";
+			public const string HostSize_Large = "HostSize_Large";
+			public const string HostSize_Medium = "HostSize_Medium";
+			public const string HostSize_Small = "HostSize_Small";
 			public const string HostStatus_Degraded = "HostStatus_Degraded";
 			public const string HostStatus_Failed = "HostStatus_Failed";
 			public const string HostStatus_Offline = "HostStatus_Offline";

@@ -69,9 +69,29 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         FailureImminent
     }
 
+    public enum HostSizes
+    {
+        [EnumLabel(DeploymentHost.HostSize_ExtraSmall, DeploymentAdminResources.Names.HostSize_ExtraSmall, typeof(DeploymentAdminResources))]
+        ExtraSmall,
+        [EnumLabel(DeploymentHost.HostSize_Small, DeploymentAdminResources.Names.HostSize_Small, typeof(DeploymentAdminResources))]
+        Small,
+        [EnumLabel(DeploymentHost.HostSize_Medium, DeploymentAdminResources.Names.HostSize_Medium, typeof(DeploymentAdminResources))]
+        Medium,
+        [EnumLabel(DeploymentHost.HostSize_Large, DeploymentAdminResources.Names.HostSize_Large, typeof(DeploymentAdminResources))]
+        Large,
+        [EnumLabel(DeploymentHost.HostSize_ExtraLarge, DeploymentAdminResources.Names.HostSize_ExtraLarge, typeof(DeploymentAdminResources))]
+        ExtraLarge
+    }
+
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, Resources.DeploymentAdminResources.Names.Host_Help, Resources.DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
     {
+        public const string HostSize_ExtraSmall = "extrasmall";
+        public const string HostSize_Small = "small";
+        public const string HostSize_Medium = "medium";
+        public const string HostSize_Large = "large";
+        public const string HostSize_ExtraLarge = "extralarge";
+
         public const string HostType_Free = "free";
         public const string HostType_Community = "community";
         public const string HostType_Shared = "shared";
@@ -207,6 +227,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<HostTypes> HostType { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
+        public EntityHeader<HostSizes> Size { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostStatus> Status { get; set; }
 
@@ -218,6 +242,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public bool IsPublic { get; set; }
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Container, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public EntityHeader Container { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        public string DNSHostName { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        public EntityHeader CloudProvider { get; set; }
+
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string AdminAPIUri { get; set; }
