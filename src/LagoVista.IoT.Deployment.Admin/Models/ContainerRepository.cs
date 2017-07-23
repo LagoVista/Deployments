@@ -48,6 +48,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.ContainerRepository_RepositoryName, HelpResource: Resources.DeploymentAdminResources.Names.ContainerRepository_RepositoryName_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string RepositoryName { get;  set; }
 
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.ContainerRepository_Preferred, HelpResource: Resources.DeploymentAdminResources.Names.ContainerRepository_Preferred_Help, WaterMark:Resources.DeploymentAdminResources.Names.ContainerRepository_Preferred_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:false, IsUserEditable: true)]
+        public EntityHeader PreferredTag { get; set; }
+
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.ContainerRepository_Tags,  FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<TaggedContainer> Tags{ get; set; }
 
@@ -59,13 +62,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Name = Name,
                 Description = Description,
                 IsPublic = IsPublic,
-                Key = Key
+                Key = Key,
+                PreferredTag = PreferredTag
             };
         }
     }
 
     public class ContainerRepositorySummary : SummaryData
     {
-
+        public EntityHeader PreferredTag { get; set; }
     }
 }

@@ -522,8 +522,8 @@
   <data name="Host_CloudProvider" xml:space="preserve">
     <value>Cloud Provider</value>
   </data>
-  <data name="Host_Container" xml:space="preserve">
-    <value>Container</value>
+  <data name="Host_ContainerRepository" xml:space="preserve">
+    <value>Container Repository</value>
   </data>
   <data name="Host_DNSName" xml:space="preserve">
     <value>DNS Name</value>
@@ -535,7 +535,7 @@
     <value>-select image size-</value>
   </data>
   <data name="HostSize_ExtraLarge" xml:space="preserve">
-    <value>Eextra Large</value>
+    <value>Extra Large</value>
   </data>
   <data name="HostSize_ExtraSmall" xml:space="preserve">
     <value>Extra Small</value>
@@ -632,5 +632,29 @@
   </data>
   <data name="TaggedContainer_Title" xml:space="preserve">
     <value>Tagged Containter</value>
+  </data>
+  <data name="Host_CloudProvider_Help" xml:space="preserve">
+    <value>Currently we only support Digital Ocean, more coming soon.</value>
+  </data>
+  <data name="Host_ContainerRepository_Select" xml:space="preserve">
+    <value>-select container repository-</value>
+  </data>
+  <data name="Host_ContainerTag_Select" xml:space="preserve">
+    <value>-select tag-</value>
+  </data>
+  <data name="Host_IPv4_Address" xml:space="preserve">
+    <value>IP v4 Address</value>
+  </data>
+  <data name="ContainerRepository_Preferred" xml:space="preserve">
+    <value>Preferred Tag</value>
+  </data>
+  <data name="ContainerRepository_Preferred_Help" xml:space="preserve">
+    <value>If you are creating a new host, you should select this tag unless you have a good reason not to.</value>
+  </data>
+  <data name="ContainerRepository_Preferred_Select" xml:space="preserve">
+    <value>-select preferred tag-</value>
+  </data>
+  <data name="HostType_Development" xml:space="preserve">
+    <value>Development</value>
   </data>
 </root>

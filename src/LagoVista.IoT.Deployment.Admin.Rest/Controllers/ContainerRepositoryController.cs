@@ -92,13 +92,24 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Tagged Container  - Create New
+        /// Tagged Container - Create New
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/container/tag/factory")]
-        public DetailResponse<ContainerRepository> CreateTaggedContainer()
+        public DetailResponse<TaggedContainer> CreateTaggedContainer()
         {
-            return DetailResponse<ContainerRepository>.Create();
+            return DetailResponse<TaggedContainer>.Create();
+        }
+
+        /// <summary>
+        /// Tagged Container - Get for Container
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/container/{id}/tags")]
+        public async Task<ListResponse<TaggedContainer>> GetTagsForContainer(string id)
+        {
+            var container = await _containerManager.GetContainerRepoAsync(id, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<TaggedContainer>.Create(container.Tags);
         }
     }
 }

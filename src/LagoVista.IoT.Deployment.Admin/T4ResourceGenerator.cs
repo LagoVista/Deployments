@@ -95,6 +95,15 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:ContainerRepository_Password_Help
 
 		public static string ContainerRepository_Password_Help { get { return GetResourceString("ContainerRepository_Password_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Preferred
+
+		public static string ContainerRepository_Preferred { get { return GetResourceString("ContainerRepository_Preferred"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Preferred_Help
+
+		public static string ContainerRepository_Preferred_Help { get { return GetResourceString("ContainerRepository_Preferred_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Preferred_Select
+
+		public static string ContainerRepository_Preferred_Select { get { return GetResourceString("ContainerRepository_Preferred_Select"); } }
 //Resources:DeploymentAdminResources:ContainerRepository_Registry
 
 		public static string ContainerRepository_Registry { get { return GetResourceString("ContainerRepository_Registry"); } }
@@ -242,6 +251,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_CloudProvider
 
 		public static string Host_CloudProvider { get { return GetResourceString("Host_CloudProvider"); } }
+//Resources:DeploymentAdminResources:Host_CloudProvider_Help
+
+		public static string Host_CloudProvider_Help { get { return GetResourceString("Host_CloudProvider_Help"); } }
 //Resources:DeploymentAdminResources:Host_ComputeResource_Uri
 
 		public static string Host_ComputeResource_Uri { get { return GetResourceString("Host_ComputeResource_Uri"); } }
@@ -254,12 +266,18 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_ComputeResourceId_Help
 
 		public static string Host_ComputeResourceId_Help { get { return GetResourceString("Host_ComputeResourceId_Help"); } }
-//Resources:DeploymentAdminResources:Host_Container
+//Resources:DeploymentAdminResources:Host_ContainerRepository
 
-		public static string Host_Container { get { return GetResourceString("Host_Container"); } }
+		public static string Host_ContainerRepository { get { return GetResourceString("Host_ContainerRepository"); } }
+//Resources:DeploymentAdminResources:Host_ContainerRepository_Select
+
+		public static string Host_ContainerRepository_Select { get { return GetResourceString("Host_ContainerRepository_Select"); } }
 //Resources:DeploymentAdminResources:Host_ContainerTag
 
 		public static string Host_ContainerTag { get { return GetResourceString("Host_ContainerTag"); } }
+//Resources:DeploymentAdminResources:Host_ContainerTag_Select
+
+		public static string Host_ContainerTag_Select { get { return GetResourceString("Host_ContainerTag_Select"); } }
 //Resources:DeploymentAdminResources:Host_DateStampOnline
 
 		public static string Host_DateStampOnline { get { return GetResourceString("Host_DateStampOnline"); } }
@@ -272,6 +290,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Help
 
 		public static string Host_Help { get { return GetResourceString("Host_Help"); } }
+//Resources:DeploymentAdminResources:Host_IPv4_Address
+
+		public static string Host_IPv4_Address { get { return GetResourceString("Host_IPv4_Address"); } }
 //Resources:DeploymentAdminResources:Host_SelectSize
 
 		public static string Host_SelectSize { get { return GetResourceString("Host_SelectSize"); } }
@@ -380,6 +401,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostStatus_StoppingDegraded
 
 		public static string HostStatus_StoppingDegraded { get { return GetResourceString("HostStatus_StoppingDegraded"); } }
+//Resources:DeploymentAdminResources:HostType_Development
+
+		public static string HostType_Development { get { return GetResourceString("HostType_Development"); } }
 //Resources:DeploymentAdminResources:Instance_Description
 
 		public static string Instance_Description { get { return GetResourceString("Instance_Description"); } }
@@ -586,6 +610,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string ContainerRepository_Namespace_Help = "ContainerRepository_Namespace_Help";
 			public const string ContainerRepository_Password = "ContainerRepository_Password";
 			public const string ContainerRepository_Password_Help = "ContainerRepository_Password_Help";
+			public const string ContainerRepository_Preferred = "ContainerRepository_Preferred";
+			public const string ContainerRepository_Preferred_Help = "ContainerRepository_Preferred_Help";
+			public const string ContainerRepository_Preferred_Select = "ContainerRepository_Preferred_Select";
 			public const string ContainerRepository_Registry = "ContainerRepository_Registry";
 			public const string ContainerRepository_Registry_Help = "ContainerRepository_Registry_Help";
 			public const string ContainerRepository_RepositoryName = "ContainerRepository_RepositoryName";
@@ -635,16 +662,20 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_AverageNetwork_30_Minutes = "Host_AverageNetwork_30_Minutes";
 			public const string Host_CapacityStatus = "Host_CapacityStatus";
 			public const string Host_CloudProvider = "Host_CloudProvider";
+			public const string Host_CloudProvider_Help = "Host_CloudProvider_Help";
 			public const string Host_ComputeResource_Uri = "Host_ComputeResource_Uri";
 			public const string Host_ComputeResource_Uri_Help = "Host_ComputeResource_Uri_Help";
 			public const string Host_ComputeResourceId = "Host_ComputeResourceId";
 			public const string Host_ComputeResourceId_Help = "Host_ComputeResourceId_Help";
-			public const string Host_Container = "Host_Container";
+			public const string Host_ContainerRepository = "Host_ContainerRepository";
+			public const string Host_ContainerRepository_Select = "Host_ContainerRepository_Select";
 			public const string Host_ContainerTag = "Host_ContainerTag";
+			public const string Host_ContainerTag_Select = "Host_ContainerTag_Select";
 			public const string Host_DateStampOnline = "Host_DateStampOnline";
 			public const string Host_Description = "Host_Description";
 			public const string Host_DNSName = "Host_DNSName";
 			public const string Host_Help = "Host_Help";
+			public const string Host_IPv4_Address = "Host_IPv4_Address";
 			public const string Host_SelectSize = "Host_SelectSize";
 			public const string Host_Size = "Host_Size";
 			public const string Host_Status = "Host_Status";
@@ -681,6 +712,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostStatus_Stopped = "HostStatus_Stopped";
 			public const string HostStatus_Stopping = "HostStatus_Stopping";
 			public const string HostStatus_StoppingDegraded = "HostStatus_StoppingDegraded";
+			public const string HostType_Development = "HostType_Development";
 			public const string Instance_Description = "Instance_Description";
 			public const string Instance_DeviceRepo = "Instance_DeviceRepo";
 			public const string Instance_DeviceRepo_Help = "Instance_DeviceRepo_Help";

@@ -14,12 +14,14 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Models.Users;
+using LagoVista.IoT.Web.Common.Attributes;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
     /// <summary>
     /// Manage Deployment Hosts
     /// </summary>     
+    [ConfirmedUser]
     [Authorize]
     public class DeploymentHostController : LagoVistaBaseController
     {

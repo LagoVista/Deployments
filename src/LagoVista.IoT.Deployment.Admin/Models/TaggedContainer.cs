@@ -4,6 +4,7 @@ using LagoVista.Core.Attributes;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Models;
 using LagoVista.Core;
+using Newtonsoft.Json;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -34,7 +35,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             Status = EntityHeader<TagContainer_Status>.Create(TagContainer_Status.Prerelease);
             CreationDate = DateTime.UtcNow.ToJSONString();
+            Id = Guid.NewGuid().ToId();
         }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Name { get; set; }
