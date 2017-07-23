@@ -227,7 +227,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<HostTypes> HostType { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
         public EntityHeader<HostSizes> Size { get; set; }
 
 
@@ -244,7 +244,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader OwnerUser { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Container, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public EntityHeader Container { get; set; }
+        public EntityHeader ContainerRepository { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ContainerTag, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        public String ContainerTag { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public string DNSHostName { get; set; }

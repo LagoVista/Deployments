@@ -77,6 +77,48 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Common_Notes
 
 		public static string Common_Notes { get { return GetResourceString("Common_Notes"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Description
+
+		public static string ContainerRepository_Description { get { return GetResourceString("ContainerRepository_Description"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Help
+
+		public static string ContainerRepository_Help { get { return GetResourceString("ContainerRepository_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Namespace
+
+		public static string ContainerRepository_Namespace { get { return GetResourceString("ContainerRepository_Namespace"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Namespace_Help
+
+		public static string ContainerRepository_Namespace_Help { get { return GetResourceString("ContainerRepository_Namespace_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Password
+
+		public static string ContainerRepository_Password { get { return GetResourceString("ContainerRepository_Password"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Password_Help
+
+		public static string ContainerRepository_Password_Help { get { return GetResourceString("ContainerRepository_Password_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Registry
+
+		public static string ContainerRepository_Registry { get { return GetResourceString("ContainerRepository_Registry"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Registry_Help
+
+		public static string ContainerRepository_Registry_Help { get { return GetResourceString("ContainerRepository_Registry_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_RepositoryName
+
+		public static string ContainerRepository_RepositoryName { get { return GetResourceString("ContainerRepository_RepositoryName"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_RepositoryName_Help
+
+		public static string ContainerRepository_RepositoryName_Help { get { return GetResourceString("ContainerRepository_RepositoryName_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Tags
+
+		public static string ContainerRepository_Tags { get { return GetResourceString("ContainerRepository_Tags"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_Title
+
+		public static string ContainerRepository_Title { get { return GetResourceString("ContainerRepository_Title"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_UserName
+
+		public static string ContainerRepository_UserName { get { return GetResourceString("ContainerRepository_UserName"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_UserName_Help
+
+		public static string ContainerRepository_UserName_Help { get { return GetResourceString("ContainerRepository_UserName_Help"); } }
 //Resources:DeploymentAdminResources:Deployment_Listeners
 
 		public static string Deployment_Listeners { get { return GetResourceString("Deployment_Listeners"); } }
@@ -215,6 +257,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Container
 
 		public static string Host_Container { get { return GetResourceString("Host_Container"); } }
+//Resources:DeploymentAdminResources:Host_ContainerTag
+
+		public static string Host_ContainerTag { get { return GetResourceString("Host_ContainerTag"); } }
 //Resources:DeploymentAdminResources:Host_DateStampOnline
 
 		public static string Host_DateStampOnline { get { return GetResourceString("Host_DateStampOnline"); } }
@@ -482,6 +527,45 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Solution_Title
 
 		public static string Solution_Title { get { return GetResourceString("Solution_Title"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_CreationDate
+
+		public static string TaggedContainer_CreationDate { get { return GetResourceString("TaggedContainer_CreationDate"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Description
+
+		public static string TaggedContainer_Description { get { return GetResourceString("TaggedContainer_Description"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Help
+
+		public static string TaggedContainer_Help { get { return GetResourceString("TaggedContainer_Help"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_ReleaseNotes
+
+		public static string TaggedContainer_ReleaseNotes { get { return GetResourceString("TaggedContainer_ReleaseNotes"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status
+
+		public static string TaggedContainer_Status { get { return GetResourceString("TaggedContainer_Status"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Alpha
+
+		public static string TaggedContainer_Status_Alpha { get { return GetResourceString("TaggedContainer_Status_Alpha"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Beta
+
+		public static string TaggedContainer_Status_Beta { get { return GetResourceString("TaggedContainer_Status_Beta"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Deprecated
+
+		public static string TaggedContainer_Status_Deprecated { get { return GetResourceString("TaggedContainer_Status_Deprecated"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Prerelease
+
+		public static string TaggedContainer_Status_Prerelease { get { return GetResourceString("TaggedContainer_Status_Prerelease"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Production
+
+		public static string TaggedContainer_Status_Production { get { return GetResourceString("TaggedContainer_Status_Production"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Status_Select
+
+		public static string TaggedContainer_Status_Select { get { return GetResourceString("TaggedContainer_Status_Select"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Tag
+
+		public static string TaggedContainer_Tag { get { return GetResourceString("TaggedContainer_Tag"); } }
+//Resources:DeploymentAdminResources:TaggedContainer_Title
+
+		public static string TaggedContainer_Title { get { return GetResourceString("TaggedContainer_Title"); } }
 //Resources:DeploymentAdminResources:Telemetry_ErrorQueryServer
 
 		public static string Telemetry_ErrorQueryServer { get { return GetResourceString("Telemetry_ErrorQueryServer"); } }
@@ -496,6 +580,20 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Common_Key_Validation = "Common_Key_Validation";
 			public const string Common_Name = "Common_Name";
 			public const string Common_Notes = "Common_Notes";
+			public const string ContainerRepository_Description = "ContainerRepository_Description";
+			public const string ContainerRepository_Help = "ContainerRepository_Help";
+			public const string ContainerRepository_Namespace = "ContainerRepository_Namespace";
+			public const string ContainerRepository_Namespace_Help = "ContainerRepository_Namespace_Help";
+			public const string ContainerRepository_Password = "ContainerRepository_Password";
+			public const string ContainerRepository_Password_Help = "ContainerRepository_Password_Help";
+			public const string ContainerRepository_Registry = "ContainerRepository_Registry";
+			public const string ContainerRepository_Registry_Help = "ContainerRepository_Registry_Help";
+			public const string ContainerRepository_RepositoryName = "ContainerRepository_RepositoryName";
+			public const string ContainerRepository_RepositoryName_Help = "ContainerRepository_RepositoryName_Help";
+			public const string ContainerRepository_Tags = "ContainerRepository_Tags";
+			public const string ContainerRepository_Title = "ContainerRepository_Title";
+			public const string ContainerRepository_UserName = "ContainerRepository_UserName";
+			public const string ContainerRepository_UserName_Help = "ContainerRepository_UserName_Help";
 			public const string Deployment_Listeners = "Deployment_Listeners";
 			public const string Deployment_Listeners_Help = "Deployment_Listeners_Help";
 			public const string Deployment_Planner = "Deployment_Planner";
@@ -542,6 +640,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_ComputeResourceId = "Host_ComputeResourceId";
 			public const string Host_ComputeResourceId_Help = "Host_ComputeResourceId_Help";
 			public const string Host_Container = "Host_Container";
+			public const string Host_ContainerTag = "Host_ContainerTag";
 			public const string Host_DateStampOnline = "Host_DateStampOnline";
 			public const string Host_Description = "Host_Description";
 			public const string Host_DNSName = "Host_DNSName";
@@ -631,6 +730,19 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Solution_Environment = "Solution_Environment";
 			public const string Solution_Help = "Solution_Help";
 			public const string Solution_Title = "Solution_Title";
+			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
+			public const string TaggedContainer_Description = "TaggedContainer_Description";
+			public const string TaggedContainer_Help = "TaggedContainer_Help";
+			public const string TaggedContainer_ReleaseNotes = "TaggedContainer_ReleaseNotes";
+			public const string TaggedContainer_Status = "TaggedContainer_Status";
+			public const string TaggedContainer_Status_Alpha = "TaggedContainer_Status_Alpha";
+			public const string TaggedContainer_Status_Beta = "TaggedContainer_Status_Beta";
+			public const string TaggedContainer_Status_Deprecated = "TaggedContainer_Status_Deprecated";
+			public const string TaggedContainer_Status_Prerelease = "TaggedContainer_Status_Prerelease";
+			public const string TaggedContainer_Status_Production = "TaggedContainer_Status_Production";
+			public const string TaggedContainer_Status_Select = "TaggedContainer_Status_Select";
+			public const string TaggedContainer_Tag = "TaggedContainer_Tag";
+			public const string TaggedContainer_Title = "TaggedContainer_Title";
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
 		}
 	}

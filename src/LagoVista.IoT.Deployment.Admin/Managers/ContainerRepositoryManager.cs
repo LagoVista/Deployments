@@ -5,6 +5,7 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
-    public class ContainerRepositoryManager : ManagerBase
+    public class ContainerRepositoryManager : ManagerBase, IContainerRepositoryManager
     {
         IContainerRepositoryRepo _repo;
         ISecureStorage _secureStorage;
 
-        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, ILogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) : base(logger, appConfig, dependencyManager, security)
+        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, IAdminLogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) : base(logger, appConfig, dependencyManager, security)
         {
             _repo = repo;
             _secureStorage = secureStorage;
@@ -27,11 +28,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             ValidationCheck(containerRepo, Actions.Create);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Create, user, org);
+
+            if(String.IsNullOrEmpty(containerRepo.Password))
+            {
+                return InvokeResult.FromErrors(new ErrorMessage("Password is required."));
+            }
+
             var addSecretResult = await _secureStorage.AddSecretAsync(containerRepo.Password);
             if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
             containerRepo.SecurePasswordId = addSecretResult.Result;
             containerRepo.Password = null;
+
+
             await _repo.AddContainerRepoAsync(containerRepo);
+
             return InvokeResult.Success;
         }
 
@@ -39,6 +49,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             ValidationCheck(containerRepo, Actions.Update);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Update, user, org);
+
+            if(!String.IsNullOrEmpty(containerRepo.Password))
+            {
+                await _secureStorage.RemoveSecretAsync(containerRepo.SecurePasswordId);
+
+                var addSecretResult = await _secureStorage.AddSecretAsync(containerRepo.Password);
+                if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
+                containerRepo.SecurePasswordId = addSecretResult.Result;
+                containerRepo.Password = null;
+            }
+
+
             await _repo.UpdateContainerRepoAsync(containerRepo);
             return InvokeResult.Success;
         }
@@ -52,7 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<ContainerRepositorySummary>> GetContainerReposForOrgAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(Container), Actions.Read);
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(TaggedContainer), Actions.Read);
             return await _repo.GetContainerReposForOrgAsync(orgId);
         }
     }

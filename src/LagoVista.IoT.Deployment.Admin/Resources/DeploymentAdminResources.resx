@@ -549,4 +549,88 @@
   <data name="HostSize_Small" xml:space="preserve">
     <value>Small</value>
   </data>
+  <data name="ContainerRepository_Description" xml:space="preserve">
+    <value>A Container Repository is a Location where containers can be downloaded and insatlled on Remote Compute Instances</value>
+  </data>
+  <data name="ContainerRepository_Help" xml:space="preserve">
+    <value>A Container Repository is a Location where containers can be downloaded and insatlled on Remote Compute Instances</value>
+  </data>
+  <data name="ContainerRepository_Namespace" xml:space="preserve">
+    <value>Namespace</value>
+  </data>
+  <data name="ContainerRepository_Namespace_Help" xml:space="preserve">
+    <value>The namespace of the repository as configured on the Registry</value>
+  </data>
+  <data name="ContainerRepository_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ContainerRepository_Password_Help" xml:space="preserve">
+    <value>NOTE:  This is only tempoary until we implement OAuth, the password will be used to login to repo on the remote instance to allow downloading the image and is stored in secure storage on the server.</value>
+  </data>
+  <data name="ContainerRepository_Registry" xml:space="preserve">
+    <value>Registry</value>
+  </data>
+  <data name="ContainerRepository_Registry_Help" xml:space="preserve">
+    <value>Currently only Docker Hub is Enabled</value>
+  </data>
+  <data name="ContainerRepository_RepositoryName" xml:space="preserve">
+    <value>Repository Name</value>
+  </data>
+  <data name="ContainerRepository_RepositoryName_Help" xml:space="preserve">
+    <value>The name of the repository as configured on the Registry</value>
+  </data>
+  <data name="ContainerRepository_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="ContainerRepository_Title" xml:space="preserve">
+    <value>Container Repository</value>
+  </data>
+  <data name="ContainerRepository_UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="ContainerRepository_UserName_Help" xml:space="preserve">
+    <value>NOTE:  This is only tempoary until we implement OAuth, the username will be used to login to repo on the remote instance to allow downloading the image and is stored in secure storage on the server.</value>
+  </data>
+  <data name="Host_ContainerTag" xml:space="preserve">
+    <value>Container Tag</value>
+  </data>
+  <data name="TaggedContainer_CreationDate" xml:space="preserve">
+    <value>Creation Date</value>
+  </data>
+  <data name="TaggedContainer_Description" xml:space="preserve">
+    <value>A Tagged Container is an Instance of a Container that can be Installed on a Remote Compute Instance</value>
+  </data>
+  <data name="TaggedContainer_Help" xml:space="preserve">
+    <value>A Tagged Container is an Instance of a Container that can be Installed on a Remote Compute Instance</value>
+  </data>
+  <data name="TaggedContainer_ReleaseNotes" xml:space="preserve">
+    <value>Release Notes</value>
+  </data>
+  <data name="TaggedContainer_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="TaggedContainer_Status_Alpha" xml:space="preserve">
+    <value>Alpha</value>
+  </data>
+  <data name="TaggedContainer_Status_Beta" xml:space="preserve">
+    <value>Beta</value>
+  </data>
+  <data name="TaggedContainer_Status_Deprecated" xml:space="preserve">
+    <value>Deprecated</value>
+  </data>
+  <data name="TaggedContainer_Status_Prerelease" xml:space="preserve">
+    <value>Prerelease</value>
+  </data>
+  <data name="TaggedContainer_Status_Production" xml:space="preserve">
+    <value>Production</value>
+  </data>
+  <data name="TaggedContainer_Status_Select" xml:space="preserve">
+    <value>-selet status-</value>
+  </data>
+  <data name="TaggedContainer_Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="TaggedContainer_Title" xml:space="preserve">
+    <value>Tagged Containter</value>
+  </data>
 </root>
