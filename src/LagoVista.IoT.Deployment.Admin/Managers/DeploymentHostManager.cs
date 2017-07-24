@@ -21,22 +21,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentHostRepo _deploymentHostRepo;
         IDeploymentInstanceRepo _deploymentInstanceRepo;
         IDeploymentConnectorService _deploymentConnectorService;
+        IDeploymentActivityQueueManager _deploymentActivityQueueManager;
 
-        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
             _deploymentConnectorService = deploymentConnectorService;
+            _deploymentActivityQueueManager = deploymentActivityQueueManager;
         }
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(host, Actions.Create);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Create, user, org);            
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Create, user, org);
             await _deploymentHostRepo.AddDeploymentHostAsync(host);
 
             return InvokeResult.Success;
-        }        
+        }
 
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
@@ -47,7 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> DeleteDeploymentHostAsync(String instanceId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);            
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             await ConfirmNoDepenenciesAsync(host);
             await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
@@ -68,9 +70,65 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
-        public async Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId,  EntityHeader user)
+        public async Task<InvokeResult> StartHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentHost));            
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "start");
+            if (host.Status.Value != HostStatus.Offline)
+            {
+                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
+            }
+
+            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Start)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<InvokeResult> ResetHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "reset");
+
+            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Reset)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<InvokeResult> StopHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "stop");
+            if (host.Status.Value != HostStatus.Running)
+            {
+                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStopNotRunning.ToErrorMessage());
+            }
+
+            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Stop)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,                                 
+            });
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId, EntityHeader user)
+        {
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentHost));
             return await _deploymentHostRepo.GetDeploymentsForOrgAsync(orgId);
         }
 
@@ -84,8 +142,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var host = await _deploymentHostRepo.GetMCPHostAsync();
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org, "notifications");
-            return host;            
+            return host;
         }
+
+
 
         public async Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
         {
@@ -117,7 +177,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(host, Actions.Update);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);            
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }

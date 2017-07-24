@@ -90,6 +90,42 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _hostManager.RegenerateAccessKeys(id, OrgEntityHeader, UserEntityHeader);
         }
 
+
+        /// <summary>
+        /// Deployment Host - Start
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/start")]
+        public Task<InvokeResult> StartAsync(String id)
+        {
+            return _hostManager.StartHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Host - Restart
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/reset")]
+        public Task<InvokeResult> RestartAsync(String id)
+        {
+            return _hostManager.StartHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Host - Stop
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/stop")]
+        public Task<InvokeResult> StopHostAsync(String id)
+        {
+            return _hostManager.StopHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+
         /// <summary>
         /// Deployment Host - Get
         /// </summary>

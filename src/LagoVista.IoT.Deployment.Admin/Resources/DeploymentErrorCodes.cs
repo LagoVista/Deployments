@@ -28,6 +28,10 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode MultipleNotificationServersFound => new ErrorCode() { Code = "DEP1016", Message = DeploymentAdminResources.Err_MultipleNotificationServersFound };
 
 
+        public static ErrorCode CantStartNotStopped => new ErrorCode() { Code = "DEP1017", Message = DeploymentAdminResources.Err_CouldntStart_NotOffline };
+        public static ErrorCode CantStopNotRunning => new ErrorCode() { Code = "DEP1018", Message = DeploymentAdminResources.Err_CouldntStop_NotRunning };
+
+
         public static ErrorCode CouldNotLoadSolution => new ErrorCode() { Code = "INS1000", Message = DeploymentAdminResources.Err_CouldNotLoadSolution };
 
         public static ErrorCode CouldNotLoadPlanner => new ErrorCode() { Code = "INS1001", Message = DeploymentAdminResources.Err_CouldNotLoadPlanner };
@@ -37,5 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode CouldNotLoadListener => new ErrorCode() { Code = "INS1003", Message = DeploymentAdminResources.Err_CouldNotLoadListener };
 
         public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "INS1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
+
+
     }
 }

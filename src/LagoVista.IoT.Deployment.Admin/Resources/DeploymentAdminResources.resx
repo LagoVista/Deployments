@@ -657,4 +657,10 @@
   <data name="HostType_Development" xml:space="preserve">
     <value>Development</value>
   </data>
+  <data name="Err_CouldntStart_NotOffline" xml:space="preserve">
+    <value>You can not issue a start command for this host as it is not currently offline.</value>
+  </data>
+  <data name="Err_CouldntStop_NotRunning" xml:space="preserve">
+    <value>You can not issue a stop command for this host as it is currently not running.</value>
+  </data>
 </root>

@@ -9,7 +9,6 @@ namespace LagoVista.IoT.Deployment.CloudRepos
     {
         IConnectionSettings DeploymentAdminDocDbStorage { get; set; }
         IConnectionSettings DeploymentAdminTableStorage { get; set; }
-
         bool ShouldConsolidateCollections { get; }
     }
 

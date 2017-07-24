@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.2</TargetFramework>
+    <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Crypto\**" />
@@ -8,14 +8,15 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.63-alpha1541" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="1.2.63-alpha1541" />
+    <PackageReference Include="LagoVista.Core" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.68-alpha1607" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="1.2.68-alpha1607" />
+    <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.2" />
   </ItemGroup>

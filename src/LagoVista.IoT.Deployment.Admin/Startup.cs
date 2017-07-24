@@ -19,6 +19,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeviceConfigurationManager, DeviceConfigurationManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentInstanceManager, DeploymentInstanceManager>();
+            services.AddTransient<IDeploymentActivityQueueManager, DeploymentActivityQueueManager>();            
             services.AddTransient<IInstanceValidator, InstanceValidator>();
             services.AddTransient<IDeploymentConnectorService, DeploymentConnectorService>();
 

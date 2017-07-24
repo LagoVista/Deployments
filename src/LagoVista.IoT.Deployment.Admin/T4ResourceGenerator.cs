@@ -176,6 +176,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_CouldNotLoadSolution
 
 		public static string Err_CouldNotLoadSolution { get { return GetResourceString("Err_CouldNotLoadSolution"); } }
+//Resources:DeploymentAdminResources:Err_CouldntStart_NotOffline
+
+		public static string Err_CouldntStart_NotOffline { get { return GetResourceString("Err_CouldntStart_NotOffline"); } }
+//Resources:DeploymentAdminResources:Err_CouldntStop_NotRunning
+
+		public static string Err_CouldntStop_NotRunning { get { return GetResourceString("Err_CouldntStop_NotRunning"); } }
 //Resources:DeploymentAdminResources:Err_ErrorCommunicatingWithHost
 
 		public static string Err_ErrorCommunicatingWithHost { get { return GetResourceString("Err_ErrorCommunicatingWithHost"); } }
@@ -637,6 +643,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Err_CouldNotLoadListener = "Err_CouldNotLoadListener";
 			public const string Err_CouldNotLoadPlanner = "Err_CouldNotLoadPlanner";
 			public const string Err_CouldNotLoadSolution = "Err_CouldNotLoadSolution";
+			public const string Err_CouldntStart_NotOffline = "Err_CouldntStart_NotOffline";
+			public const string Err_CouldntStop_NotRunning = "Err_CouldntStop_NotRunning";
 			public const string Err_ErrorCommunicatingWithHost = "Err_ErrorCommunicatingWithHost";
 			public const string Err_InstanceAlreadyRunning = "Err_InstanceAlreadyRunning";
 			public const string Err_InstanceNotRunning = "Err_InstanceNotRunning";

@@ -30,6 +30,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         Task<InvokeResult> RegenerateAccessKeys(String id, EntityHeader org, EntityHeader user);
 
+        Task<InvokeResult> StartHostAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> ResetHostAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> StopHostAsync(String id, EntityHeader org, EntityHeader user);
+
+
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
 
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);
