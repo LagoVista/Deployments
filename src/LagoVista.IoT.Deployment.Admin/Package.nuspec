@@ -2,22 +2,21 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Admin</id>
-    <version>1.2.68-alpha1607</version>
+    <version>1.2.63-alpha1541</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://github.com/LagoVista/IoTEngine</projectUrl>
     <iconUrl>http://bytemaster.blob.core.windows.net/icons/LagoVistaIcon.png</iconUrl>
-    <description>Provides Managers, Interfaces, Models and Repositories for Administering Deployments with the LagoVista IoT and Devices Frameworks.</description>
+    <description>Provides Managers, Interfaces, Models and Repositories for Managing Deployments with the LagoVista Devices, IoT and Home Automation Frameworks.</description>
     <releaseNotes>Initial and Unstable Release</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>HomeAutomation IoT</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="10.0.1" />
+      <dependency id="Newtonsoft.Json" version="10.0.3" />
     </dependencies>
   </metadata>
   <files>
-    <file src="ReadMe.html" target="" />
-    <file src="bin\release\netstandard1.2\*.dll" target="lib\netstandard1.2" />
+    <file src="bin\release\netstandard1.3\*.dll" target="lib\netstandard1.3" />
   </files>
 </package>
