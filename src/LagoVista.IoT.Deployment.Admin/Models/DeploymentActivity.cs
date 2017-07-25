@@ -63,6 +63,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             set { PartitionKey = value; }
         }
 
+        public string ExternalActivityId { get; set; }
+
         public String RequestedByUserId { get; set; }
         public String RequestedByUserName { get; set; }
 
