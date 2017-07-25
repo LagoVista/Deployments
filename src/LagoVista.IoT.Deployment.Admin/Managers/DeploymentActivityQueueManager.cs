@@ -28,7 +28,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _eventHubClient = EventHubClient.CreateFromConnectionString(bldr.ToString());
         }
 
-        public async Task EnqueAsync(DeploymentActivity deploymentActivity)
+        public async Task Enqueue(DeploymentActivity deploymentActivity)
         {
             await _repo.AddDeploymentActivityAsync(deploymentActivity);
 

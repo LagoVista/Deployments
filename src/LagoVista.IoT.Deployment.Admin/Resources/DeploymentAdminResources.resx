@@ -663,4 +663,10 @@
   <data name="Err_CouldntStop_NotRunning" xml:space="preserve">
     <value>You can not issue a stop command for this host as it is currently not running.</value>
   </data>
+  <data name="HostStatus_Deploying" xml:space="preserve">
+    <value>Deploying</value>
+  </data>
+  <data name="HostStatus_Destroying" xml:space="preserve">
+    <value>Destroying</value>
+  </data>
 </root>

@@ -386,6 +386,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostStatus_Degraded
 
 		public static string HostStatus_Degraded { get { return GetResourceString("HostStatus_Degraded"); } }
+//Resources:DeploymentAdminResources:HostStatus_Deploying
+
+		public static string HostStatus_Deploying { get { return GetResourceString("HostStatus_Deploying"); } }
+//Resources:DeploymentAdminResources:HostStatus_Destroying
+
+		public static string HostStatus_Destroying { get { return GetResourceString("HostStatus_Destroying"); } }
 //Resources:DeploymentAdminResources:HostStatus_Failed
 
 		public static string HostStatus_Failed { get { return GetResourceString("HostStatus_Failed"); } }
@@ -713,6 +719,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostSize_Medium = "HostSize_Medium";
 			public const string HostSize_Small = "HostSize_Small";
 			public const string HostStatus_Degraded = "HostStatus_Degraded";
+			public const string HostStatus_Deploying = "HostStatus_Deploying";
+			public const string HostStatus_Destroying = "HostStatus_Destroying";
 			public const string HostStatus_Failed = "HostStatus_Failed";
 			public const string HostStatus_Offline = "HostStatus_Offline";
 			public const string HostStatus_Running = "HostStatus_Running";

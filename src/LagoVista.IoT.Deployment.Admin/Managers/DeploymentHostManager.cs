@@ -70,16 +70,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
-        public async Task<InvokeResult> StartHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> DeployHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "start");
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "deploy");
             if (host.Status.Value != HostStatus.Offline)
             {
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Start)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Deploy)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
@@ -88,6 +88,29 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             });
 
             return InvokeResult.Success;
+        }
+
+        public Task<InvokeResult> StartHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            return Task.FromResult(InvokeResult.FromErrors(new ErrorMessage("Start currently not supported, use Deploy, start will eventually be used to power up a VM that hasn't been destoryed.")));
+            /*
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "start");
+            if (host.Status.Value != HostStatus.Running)
+            {
+                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
+            }
+
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Start)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+            */
         }
 
         public async Task<InvokeResult> ResetHostAsync(string instanceId, EntityHeader org, EntityHeader user)
@@ -95,7 +118,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "reset");
 
-            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Reset)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Reset)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
@@ -106,8 +129,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> StopHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public  Task<InvokeResult> StopHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
+            return Task.FromResult(InvokeResult.FromErrors(new ErrorMessage("Stop currently not supported, use Destroy, stop will eventually be used to power down a VM without destorying it.")));
+            /*
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "stop");
             if (host.Status.Value != HostStatus.Running)
@@ -115,12 +140,34 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStopNotRunning.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.EnqueAsync(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Stop)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Stop)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
                 RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,                                 
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+            */
+        }
+
+
+        public async Task<InvokeResult> DestroyHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "destory");
+            if (host.Status.Value != HostStatus.Running)
+            {
+                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStopNotRunning.ToErrorMessage());
+            }
+
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Destroy)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
             });
 
             return InvokeResult.Success;

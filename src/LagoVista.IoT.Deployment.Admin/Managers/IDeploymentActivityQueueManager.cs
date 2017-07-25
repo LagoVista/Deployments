@@ -4,6 +4,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 {
     public interface IDeploymentActivityQueueManager
     {
-        Task EnqueAsync(Models.DeploymentActivity deploymentActivity);
+        Task Enqueue(Models.DeploymentActivity deploymentActivity);
     }
 }

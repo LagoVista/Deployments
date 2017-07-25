@@ -40,7 +40,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             PartitionKey = resourceId;
             ResourceType = resourceType;
             Type = taskType;
-            Start = DateTime.UtcNow.ToJSONString();
+            EnqueueTimeStamp = DateTime.UtcNow.ToJSONString();
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -82,8 +82,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             return EntityHeader.Create(RequestedByOrganizationId, RequestedByOrganizationName);
         }
 
-        public string Start { get; set; }
-        public string End { get; set; }
+        public string EnqueueTimeStamp { get; set; }
+        public string StartTimeStamp { get; set; }
+        public string EndTimeStamp { get; set; }
+        public string ErrorMessage { get; set; }
         public double DurationMS { get; set; }
     }
 }

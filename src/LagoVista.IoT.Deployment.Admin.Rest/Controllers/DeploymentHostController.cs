@@ -92,6 +92,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
 
         /// <summary>
+        /// Deployment Host - Deploy
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/deploy")]
+        public Task<InvokeResult> DeplooyAsync(String id)
+        {
+            return _hostManager.DeployHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Deployment Host - Start
         /// </summary>
         /// <param name="id"></param>
@@ -108,9 +119,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/host/{id}/reset")]
-        public Task<InvokeResult> RestartAsync(String id)
+        public Task<InvokeResult> ResetAsync(String id)
         {
-            return _hostManager.StartHostAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _hostManager.ResetHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -124,7 +135,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _hostManager.StopHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
-
+        /// <summary>
+        /// Deployment Host - Destory
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/destroy")]
+        public Task<InvokeResult> DestroyHostAsync(String id)
+        {
+            return _hostManager.DestroyHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
 
         /// <summary>
         /// Deployment Host - Get

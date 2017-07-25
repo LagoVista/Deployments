@@ -20,6 +20,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return InsertAsync(deploymentActivity);
         }
 
+        protected override string GetTableName()
+        {
+            return "FailedDeploymentActivity";
+        }
+
         public Task RemoveFailedDeploymentActivityAsync(DeploymentActivity deploymentActivity)
         {
             return RemoveAsync(deploymentActivity);

@@ -17,6 +17,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         }
 
+        protected override string GetTableName()
+        {
+            return "CompletedDeploymentActivity";
+        }
+
         public Task AddCompletedDeploymentActivitiesAsync(DeploymentActivity deploymentActivity)
         {
             return InsertAsync(deploymentActivity);

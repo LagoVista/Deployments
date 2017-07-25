@@ -45,6 +45,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Stopped,
         [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
         Stopping,
+        [EnumLabel(DeploymentHost.HostStatus_Deploying, DeploymentAdminResources.Names.HostStatus_Deploying, typeof(DeploymentAdminResources))]
+        Deploying,
         [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
         Starting,
         [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
@@ -53,6 +55,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         StoppingHostStatus_Degraded,
         [EnumLabel(DeploymentHost.HostStatus_Degraded, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
         Degraded,
+        [EnumLabel(DeploymentHost.HostStatus_Destorying, DeploymentAdminResources.Names.HostStatus_Destroying, typeof(DeploymentAdminResources))]
+        Destroying,
     }
 
     public enum HostCapacityStatus
@@ -109,6 +113,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostStatus_Offline = "offline";
         public const string HostStatus_Failed = "failed";
         public const string HostStatus_Stopped = "stopped";
+        public const string HostStatus_Deploying = "deploying";
+        public const string HostStatus_Destorying = "destroying";
         public const string HostStatus_Starting = "starting";
         public const string HostStatus_Running = "running";
         public const string HostStatus_Stopping = "stopping";
@@ -134,7 +140,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             SetHostState(HostStatus.Offline);
 
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
-
             GenerateAccessKeys();
         }
 
@@ -266,13 +271,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public EntityHeader CloudProvider { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string AdminAPIUri { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string ComputeResourceUri { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
