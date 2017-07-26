@@ -79,7 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Deploy)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Create)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
@@ -162,7 +162,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStopNotRunning.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Destroy)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Remove)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,

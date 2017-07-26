@@ -9,10 +9,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     public enum DeploymentActivityTaskTypes
     {
         Deploy,
-        Stop,
+        Create,
         Start,
         Reset,
-        Destroy,
+        Stop,
+        Refresh,
+        Remove,
         Update,
     }
 

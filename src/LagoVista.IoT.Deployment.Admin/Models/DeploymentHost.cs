@@ -49,6 +49,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Deploying,
         [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
         Starting,
+        [EnumLabel(DeploymentHost.HostStatus_PendingDNSConfiguration, DeploymentAdminResources.Names.HostStatus_PendingDNSConfiguration, typeof(DeploymentAdminResources))]        
+        PendingDNSConfiguration,
         [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
         Running,
         [EnumLabel(DeploymentHost.HostStatus_StoppingDegraded, DeploymentAdminResources.Names.HostStatus_StoppingDegraded, typeof(DeploymentAdminResources))]
@@ -109,7 +111,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_Notifications = "notifications";
         public const string HostType_MCP = "mcp";
         public const string HostType_Development = "development";
-
+        
         public const string HostStatus_Offline = "offline";
         public const string HostStatus_Failed = "failed";
         public const string HostStatus_Stopped = "stopped";
@@ -120,6 +122,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostStatus_Stopping = "stopping";
         public const string HostStatus_Degraded = "degraded";
         public const string HostStatus_StoppingDegraded = "stopping-degraded";
+        public const string HostStatus_PendingDNSConfiguration = "pending-dns-Configuration";
 
         public const string HostCapacity_underutilized = "underutilized";
         public const string HostCapacity_Ok = "ok";
@@ -266,6 +269,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_IPv4_Address, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string Ipv4Address { get; set; }
+
+        public string DNSEntryId { get; set; }
 
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]

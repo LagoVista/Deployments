@@ -669,4 +669,7 @@
   <data name="HostStatus_Destroying" xml:space="preserve">
     <value>Destroying</value>
   </data>
+  <data name="HostStatus_PendingDNSConfiguration" xml:space="preserve">
+    <value>Pending DNS Configuration</value>
+  </data>
 </root>

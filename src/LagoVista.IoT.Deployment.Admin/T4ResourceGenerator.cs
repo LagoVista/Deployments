@@ -398,6 +398,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostStatus_Offline
 
 		public static string HostStatus_Offline { get { return GetResourceString("HostStatus_Offline"); } }
+//Resources:DeploymentAdminResources:HostStatus_PendingDNSConfiguration
+
+		public static string HostStatus_PendingDNSConfiguration { get { return GetResourceString("HostStatus_PendingDNSConfiguration"); } }
 //Resources:DeploymentAdminResources:HostStatus_Running
 
 		public static string HostStatus_Running { get { return GetResourceString("HostStatus_Running"); } }
@@ -723,6 +726,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostStatus_Destroying = "HostStatus_Destroying";
 			public const string HostStatus_Failed = "HostStatus_Failed";
 			public const string HostStatus_Offline = "HostStatus_Offline";
+			public const string HostStatus_PendingDNSConfiguration = "HostStatus_PendingDNSConfiguration";
 			public const string HostStatus_Running = "HostStatus_Running";
 			public const string HostStatus_Starting = "HostStatus_Starting";
 			public const string HostStatus_Stopped = "HostStatus_Stopped";
