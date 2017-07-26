@@ -634,7 +634,7 @@
     <value>Tagged Containter</value>
   </data>
   <data name="Host_CloudProvider_Help" xml:space="preserve">
-    <value>Currently we only support Digital Ocean, more coming soon.</value>
+    <value>Currently we only support Digital Ocean, Azure and AWS coming Second Half of 2017</value>
   </data>
   <data name="Host_ContainerRepository_Select" xml:space="preserve">
     <value>-select container repository-</value>

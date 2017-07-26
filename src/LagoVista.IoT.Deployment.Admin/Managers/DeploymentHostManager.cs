@@ -22,13 +22,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceRepo _deploymentInstanceRepo;
         IDeploymentConnectorService _deploymentConnectorService;
         IDeploymentActivityQueueManager _deploymentActivityQueueManager;
+        IDeploymentActivityRepo _deploymentActivityRepo;
 
-        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+        public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentActivityRepo deploymentActivityRepo,
+                IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger,
+                IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
             _deploymentConnectorService = deploymentConnectorService;
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
+            _deploymentActivityRepo = deploymentActivityRepo;
         }
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
@@ -129,7 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public  Task<InvokeResult> StopHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult> StopHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             return Task.FromResult(InvokeResult.FromErrors(new ErrorMessage("Stop currently not supported, use Destroy, stop will eventually be used to power down a VM without destorying it.")));
             /*
@@ -152,6 +156,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             */
         }
 
+        public async Task<IEnumerable<DeploymentActivity>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentHost), Actions.Read);
+
+            return await _deploymentActivityRepo.GetForResourceIdAsync(id);
+        }
 
         public async Task<InvokeResult> DestroyHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
