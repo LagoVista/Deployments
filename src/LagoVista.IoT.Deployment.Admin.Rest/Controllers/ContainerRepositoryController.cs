@@ -11,6 +11,7 @@ using LagoVista.Core.Validation;
 using System.Threading.Tasks;
 using LagoVista.Core;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -102,7 +103,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Tagged Container - Get for Container
+        /// Tagged Container - Get tags registered for use
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/container/{id}/tags")]
@@ -110,6 +111,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var container = await _containerManager.GetContainerRepoAsync(id, OrgEntityHeader, UserEntityHeader);
             return ListResponse<TaggedContainer>.Create(container.Tags);
+        }
+
+        /// <summary>
+        /// Tagged Container - Get tags from remote repository
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/container/{id}/registry/tags")]
+        public async Task<ListResponse<DockerTag>> GetTagsFromRegistryAsync(string id)
+        {
+            var container = await _containerManager.GetTagsFromRemoteRegistryAsync(id, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<DockerTag>.Create(container);
         }
     }
 }

@@ -42,4 +42,7 @@
       </Generator>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DockerSupport\" />
+  </ItemGroup>
 </Project>

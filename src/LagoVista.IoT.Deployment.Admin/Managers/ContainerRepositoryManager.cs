@@ -1,14 +1,13 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
-using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
@@ -17,11 +16,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     {
         IContainerRepositoryRepo _repo;
         ISecureStorage _secureStorage;
+        Services.IDockerRegisteryServices _dockerRegistryServices;
 
-        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, IAdminLogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) : base(logger, appConfig, dependencyManager, security)
+        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, IAdminLogger logger, Services.IDockerRegisteryServices dockerRegistryServices,
+                IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) 
+            : base(logger, appConfig, dependencyManager, security)
         {
             _repo = repo;
             _secureStorage = secureStorage;
+            _dockerRegistryServices = dockerRegistryServices;
         }
 
         public async Task<InvokeResult> AddContainerRepoAsync(ContainerRepository containerRepo, EntityHeader org, EntityHeader user)
@@ -68,7 +71,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<ContainerRepository> GetContainerRepoAsync(string id, EntityHeader org, EntityHeader user)
         {
             var containerRepo = await _repo.GetContainerRepoAsync(id);
-            await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Update, user, org);
+            await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Read, user, org);
             return containerRepo;
         }
 
@@ -76,6 +79,27 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(TaggedContainer), Actions.Read);
             return await _repo.GetContainerReposForOrgAsync(orgId);
+        }
+
+        public async Task<IEnumerable<DockerTag>> GetTagsFromRemoteRegistryAsync(string containerId, EntityHeader user, EntityHeader org)
+        {
+            var containerRepo = await _repo.GetContainerRepoAsync(containerId);
+            await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Read, user, org);
+
+            var pwdResult = await _secureStorage.GetSecretAsync(containerRepo.SecurePasswordId);
+            if(!pwdResult.Successful)
+            {
+                throw new UnauthorizedAccessException("Could not retrieve password from secure password, please check your password.");
+            }
+
+            var tokenResult = await _dockerRegistryServices.GetTokenAsync(containerRepo.UserName, pwdResult.Result);
+            if (!tokenResult.Successful)
+            {
+                throw new UnauthorizedAccessException("Could not authorize access to repostiory, please check your password.");
+            }
+
+            var tagsResult = await _dockerRegistryServices.GetTagsAsync(containerRepo.Namespace, containerRepo.RepositoryName, tokenResult.Result);
+            return tagsResult.Result.Tags;
         }
     }
 }
