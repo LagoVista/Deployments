@@ -1,11 +1,9 @@
 ﻿using LagoVista.IoT.Deployment.Admin.Repos;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 using LagoVista.CloudStorage.DocumentDB;
-using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Resources;
@@ -96,6 +94,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
             return items.First();
         }
+
 
         public async Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId)
         {

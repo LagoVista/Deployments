@@ -79,20 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         FailureImminent
     }
 
-    public enum HostSizes
-    {
-        [EnumLabel(DeploymentHost.HostSize_ExtraSmall, DeploymentAdminResources.Names.HostSize_ExtraSmall, typeof(DeploymentAdminResources))]
-        ExtraSmall,
-        [EnumLabel(DeploymentHost.HostSize_Small, DeploymentAdminResources.Names.HostSize_Small, typeof(DeploymentAdminResources))]
-        Small,
-        [EnumLabel(DeploymentHost.HostSize_Medium, DeploymentAdminResources.Names.HostSize_Medium, typeof(DeploymentAdminResources))]
-        Medium,
-        [EnumLabel(DeploymentHost.HostSize_Large, DeploymentAdminResources.Names.HostSize_Large, typeof(DeploymentAdminResources))]
-        Large,
-        [EnumLabel(DeploymentHost.HostSize_ExtraLarge, DeploymentAdminResources.Names.HostSize_ExtraLarge, typeof(DeploymentAdminResources))]
-        ExtraLarge
-    }
-
+   
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, Resources.DeploymentAdminResources.Names.Host_Help, Resources.DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
     {
@@ -242,8 +229,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<HostTypes> HostType { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, EnumType: (typeof(HostSizes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
-        public EntityHeader<HostSizes> Size { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
+        public EntityHeader Size { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]

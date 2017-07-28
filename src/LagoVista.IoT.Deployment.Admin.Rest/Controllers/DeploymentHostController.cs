@@ -15,6 +15,9 @@ using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.IoT.Web.Common.Attributes;
+using LagoVista.IoT.ProductStore;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -26,9 +29,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class DeploymentHostController : LagoVistaBaseController
     {
         IDeploymentHostManager _hostManager;
-        public DeploymentHostController(IDeploymentHostManager hostManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        IProductStore _productStore;
+        public DeploymentHostController(IDeploymentHostManager hostManager, IProductStore productStore, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _hostManager = hostManager;
+            _productStore = productStore;
         }
 
         /// <summary>
@@ -214,6 +219,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetOwnedProperties(response.Model);
 
             return response;
+        }
+
+        /// <summary>
+        /// Deployment Host - Get Types of VMS to be installed.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("/api/store/vms")]
+        public async Task<ListResponse<ProductOffering>> GetAvailableHostTypes()
+        {
+            var vms = await _productStore.GetProductsAsync("vms");
+            return ListResponse<ProductOffering>.Create(vms);
         }
     }
 }
