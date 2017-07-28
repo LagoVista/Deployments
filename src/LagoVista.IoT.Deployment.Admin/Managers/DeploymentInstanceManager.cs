@@ -8,7 +8,7 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.Core.Managers;
-using LagoVista.Core.PlatformSupport;
+using System.Linq;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services;
@@ -181,23 +181,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
-            switch(channel.ToLower())
-            {
-                case "host":
-                    await AuthorizeAsync(user, org, "monitorhost", id);
-                    break;
-
-                default:
-                    /* Anything else we will be monitoring will be a chain of id's where the first id is the instance */
-                    var instanceId = id.Split('.');
-                    await AuthorizeAsync(user, org, "monitorinstance", instanceId);
-                    break;
-            }
+            await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
 
             var host = await _hostManager.GetNotificationsHostAsync(org, user);
             return await _connector.GetRemoteMonitoringUriAsync(host, channel, id, verbosity, org, user);
         }
-
    
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
