@@ -259,7 +259,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(instance, Actions.Update);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, org, user);
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org);
 
             await _instanceRepo.UpdateInstanceAsync(instance);
 

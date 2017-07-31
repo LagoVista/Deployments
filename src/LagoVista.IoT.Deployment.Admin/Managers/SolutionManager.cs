@@ -43,14 +43,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var solution = await _deploymentRepo.GetSolutionAsync(id);
-            await AuthorizeAsync(solution, AuthorizeActions.Read, org, user);
+            await AuthorizeAsync(solution, AuthorizeActions.Read, user,org);
             return await CheckForDepenenciesAsync(solution);
         }
 
         public async Task<InvokeResult> DeleteSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
             var solution = await GetSolutionAsync(id, org, user);
-            await AuthorizeAsync(solution, AuthorizeActions.Delete, org, user);
+            await AuthorizeAsync(solution, AuthorizeActions.Delete, user, org);
             await ConfirmNoDepenenciesAsync(solution);
             await _deploymentRepo.DeleteSolutionAsync(solution.Id);
 
@@ -60,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<Solution> GetSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deployment = await _deploymentRepo.GetSolutionAsync(id);
-            await AuthorizeAsync(deployment, AuthorizeActions.Read, org, user);
+            await AuthorizeAsync(deployment, AuthorizeActions.Read, user, org);
             return deployment;
         }
 
@@ -94,7 +94,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateSolutionsAsync(Solution deployment, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeAsync(deployment, AuthorizeActions.Update, org, user);
+            await AuthorizeAsync(deployment, AuthorizeActions.Update, user, org);
 
             var result = Validator.Validate(deployment, Actions.Update);
             await _deploymentRepo.UpdateSolutionAsync(deployment);
