@@ -31,6 +31,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode CantStartNotStopped => new ErrorCode() { Code = "DEP1017", Message = DeploymentAdminResources.Err_CouldntStart_NotOffline };
         public static ErrorCode CantStopNotRunning => new ErrorCode() { Code = "DEP1018", Message = DeploymentAdminResources.Err_CouldntStop_NotRunning };
 
+        public static ErrorCode CannotDeployContainerToNonRunningHost => new ErrorCode() { Code = "DEP1019", Message = DeploymentAdminResources.Err_CantPublishNotRunning };
+
 
         public static ErrorCode CouldNotLoadSolution => new ErrorCode() { Code = "INS1000", Message = DeploymentAdminResources.Err_CouldNotLoadSolution };
 

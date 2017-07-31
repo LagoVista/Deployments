@@ -22,7 +22,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         DNS,
         Server,
-        DockerImage,
+        Container,
         LoadBalancer
     }
 

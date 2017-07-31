@@ -81,12 +81,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _repo.GetContainerReposForOrgAsync(orgId);
         }
 
-        public async Task<IEnumerable<DockerTag>> GetTagsFromRemoteRegistryAsync(string containerId, EntityHeader user, EntityHeader org)
+        public async Task<IEnumerable<DockerTag>> GetTagsFromRemoteRegistryAsync(string containerId, EntityHeader org, EntityHeader user)
         {
             var containerRepo = await _repo.GetContainerRepoAsync(containerId);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Read, user, org);
 
-            var pwdResult = await _secureStorage.GetSecretAsync(containerRepo.SecurePasswordId);
+            var pwdResult = await _secureStorage.GetSecretAsync(containerRepo.SecurePasswordId, user, org);
             if(!pwdResult.Successful)
             {
                 throw new UnauthorizedAccessException("Could not retrieve password from secure password, please check your password.");

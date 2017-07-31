@@ -12,15 +12,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     public interface IDeploymentHostManager
     {
         Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user);
-        Task<DeploymentHost> GetDeploymentHostAsync(String hostId, EntityHeader org, EntityHeader user);
+        Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user);
 
         Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user);
         Task<DeploymentHost> GetMCPHostAsync(EntityHeader org, EntityHeader user);
         Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user);
 
-        Task<DeploymentHost> LoadFullDeploymentHostAsync(String hostId);
+        Task<DeploymentHost> LoadFullDeploymentHostAsync(string hostId);
 
-        Task<InvokeResult> DeleteDeploymentHostAsync(String hostId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeleteDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user);
 
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
 
@@ -28,13 +28,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
 
-        Task<InvokeResult> RegenerateAccessKeys(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> RegenerateAccessKeys(string id, EntityHeader org, EntityHeader user);
 
-        Task<InvokeResult> DeployHostAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> StartHostAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> ResetHostAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> StopHostAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> DestroyHostAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> StartHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> ResetHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> StopHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> PublishAssociatedContainersAsync(string hostId, EntityHeader org, EntityHeader user);
+
 
         Task<IEnumerable<DeploymentActivity>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);

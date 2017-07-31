@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using LagoVista.Core;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -46,6 +44,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public double AvergeProcessingMs { get; set; }
         [JsonProperty("hostId")]
         public String HostId { get; set; }
+        [JsonProperty("version")]
+        public String Version { get; set; }
         [JsonProperty("instanceId")]
         public String InstanceId { get; set; }
         [JsonProperty("pipelineModuleId")]

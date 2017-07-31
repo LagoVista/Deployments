@@ -74,16 +74,36 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
-        public async Task<InvokeResult> DeployHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> DeployHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "deploy");
             if (host.Status.Value != HostStatus.Offline)
             {
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Create)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, hostId, DeploymentActivityTaskTypes.Create)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<InvokeResult> PublishAssociatedContainersAsync(string hostId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "deploy");
+            if (host.Status.Value != HostStatus.Running)
+            {
+                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CannotDeployContainerToNonRunningHost.ToErrorMessage());
+            }
+
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Container, hostId, DeploymentActivityTaskTypes.Deploy)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,

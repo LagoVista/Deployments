@@ -102,9 +102,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/host/{id}/deploy")]
-        public Task<InvokeResult> DeplooyAsync(String id)
+        public Task<InvokeResult> DeployAsync(String id)
         {
             return _hostManager.DeployHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Host - Deploy
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/container/deploy")]
+        public Task<InvokeResult> DeployContainerAsync(String id)
+        {
+            return _hostManager.PublishAssociatedContainersAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

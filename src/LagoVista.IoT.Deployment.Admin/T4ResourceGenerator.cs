@@ -161,6 +161,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Title
 
 		public static string DeviceConfiguration_Title { get { return GetResourceString("DeviceConfiguration_Title"); } }
+//Resources:DeploymentAdminResources:Err_CantPublishNotRunning
+
+		public static string Err_CantPublishNotRunning { get { return GetResourceString("Err_CantPublishNotRunning"); } }
 //Resources:DeploymentAdminResources:Err_CouldNotLoadDeviceConfiguration
 
 		public static string Err_CouldNotLoadDeviceConfiguration { get { return GetResourceString("Err_CouldNotLoadDeviceConfiguration"); } }
@@ -647,6 +650,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
 			public const string DeviceConfiguration_Sentinel = "DeviceConfiguration_Sentinel";
 			public const string DeviceConfiguration_Title = "DeviceConfiguration_Title";
+			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";
 			public const string Err_CouldNotLoadInstance = "Err_CouldNotLoadInstance";
 			public const string Err_CouldNotLoadListener = "Err_CouldNotLoadListener";
