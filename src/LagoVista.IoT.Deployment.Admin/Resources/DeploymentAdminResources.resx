@@ -675,4 +675,7 @@
   <data name="Err_CantPublishNotRunning" xml:space="preserve">
     <value>Sorry, your host does not appear to be running, you can't deploy a container to a non-running host.</value>
   </data>
+  <data name="Host_DedicatedInstance" xml:space="preserve">
+    <value>Dedicated Instance</value>
+  </data>
 </root>

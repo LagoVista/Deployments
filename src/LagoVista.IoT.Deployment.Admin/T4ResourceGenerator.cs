@@ -290,6 +290,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_DateStampOnline
 
 		public static string Host_DateStampOnline { get { return GetResourceString("Host_DateStampOnline"); } }
+//Resources:DeploymentAdminResources:Host_DedicatedInstance
+
+		public static string Host_DedicatedInstance { get { return GetResourceString("Host_DedicatedInstance"); } }
 //Resources:DeploymentAdminResources:Host_Description
 
 		public static string Host_Description { get { return GetResourceString("Host_Description"); } }
@@ -693,6 +696,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_ContainerTag = "Host_ContainerTag";
 			public const string Host_ContainerTag_Select = "Host_ContainerTag_Select";
 			public const string Host_DateStampOnline = "Host_DateStampOnline";
+			public const string Host_DedicatedInstance = "Host_DedicatedInstance";
 			public const string Host_Description = "Host_Description";
 			public const string Host_DNSName = "Host_DNSName";
 			public const string Host_Help = "Host_Help";

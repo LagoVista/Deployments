@@ -233,7 +233,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, orgId);
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 
