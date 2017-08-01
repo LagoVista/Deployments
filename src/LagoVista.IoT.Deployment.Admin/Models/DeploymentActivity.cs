@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Start,
         Reset,
         Stop,
-        Refresh,
+        Reload,
         Remove,
         Update,
     }
@@ -21,8 +21,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     public enum DeploymentActivityResourceTypes
     {
         DNS,
+        Instance,
+        InstanceContainer,
         Server,
-        Container,
+        ServerContainer,
         LoadBalancer
     }
 
@@ -32,6 +34,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Running,
         Completed,
         Failed,
+        PendingRetry,
     }
 
     public class DeploymentActivity : TableStorageEntity
@@ -43,6 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ResourceType = resourceType;
             Type = taskType;
             EnqueueTimeStamp = DateTime.UtcNow.ToJSONString();
+            RetryCount = 1;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -73,6 +77,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public String RequestedByOrganizationId { get; set; }
         public String RequestedByOrganizationName { get; set; }
 
+        public int RetryCount { get; set; }
+
+        public int RetryPauseSeconds { get; set; }
 
         public EntityHeader ToUserEntityHeader()
         {
@@ -86,7 +93,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public string EnqueueTimeStamp { get; set; }
         public string StartTimeStamp { get; set; }
+        public string LastAttemptTimeStamp { get; set; }
         public string EndTimeStamp { get; set; }
+        public string TimeoutTimeStamp { get; set; }
         public string ErrorMessage { get; set; }
         public double DurationMS { get; set; }
     }

@@ -44,7 +44,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpPost("/api/deployment/host")]
         public Task<InvokeResult> AddHostAsync([FromBody] DeploymentHost host)
         {
-            return _hostManager.AddDeploymentHostAsync(host, UserEntityHeader, OrgEntityHeader);
+            return _hostManager.AddDeploymentHostAsync(host, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

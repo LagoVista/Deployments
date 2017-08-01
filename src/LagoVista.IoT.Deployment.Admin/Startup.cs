@@ -23,7 +23,8 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IInstanceValidator, InstanceValidator>();
             services.AddTransient<IDeploymentConnectorService, DeploymentConnectorService>();
             services.AddTransient<IDockerRegisteryServices, DockerRegisteryServices>();
-
+            services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
+            
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
     }

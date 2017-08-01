@@ -26,6 +26,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.Running.ToString()));
         }
 
+        public Task<IEnumerable<DeploymentActivity>> GetRetryDeploymentActivitiesAsync()
+        {
+            return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.PendingRetry.ToString()));
+        }
+
         public Task<DeploymentActivity> GetDeploymentActivityAsync(string deploymentActivityId)
         {
             return GetAsync(deploymentActivityId);

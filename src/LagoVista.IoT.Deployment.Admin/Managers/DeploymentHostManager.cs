@@ -103,7 +103,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CannotDeployContainerToNonRunningHost.ToErrorMessage());
             }
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Container, hostId, DeploymentActivityTaskTypes.Deploy)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.InstanceContainer, hostId, DeploymentActivityTaskTypes.Deploy)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
