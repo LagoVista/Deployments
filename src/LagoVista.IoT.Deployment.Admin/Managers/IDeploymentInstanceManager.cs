@@ -24,9 +24,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
 
-        Task<InvokeResult> CreateAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeployAsync(String id, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user);

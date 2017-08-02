@@ -148,7 +148,29 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}/deploy")]
         public Task<InvokeResult> DeployAsync(String id)
         {
-            return _instanceManager.CreateAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.DeployAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Start
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/start")]
+        public Task<InvokeResult> StartAsync(String id)
+        {
+            return _instanceManager.StartAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Start
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/pause")]
+        public Task<InvokeResult> PauseAsync(String id)
+        {
+            return _instanceManager.PauseAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -174,12 +196,24 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Stop
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/Stop")]
+        public Task<InvokeResult> StopAsync(String id)
+        {
+            return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
         /// Deployment Instance - Remove
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{id}/remove")]
-        public Task<InvokeResult> StopAsync(String id)
+        public Task<InvokeResult> RemoveAsync(String id)
         {
             return _instanceManager.RemoveAsync(id, OrgEntityHeader, UserEntityHeader);
         }

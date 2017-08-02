@@ -96,11 +96,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org);
 
             var solution = instance.Solution.Value;
-            instance.Solution = null;
-
+            instance.Solution.Value = null;
             await _instanceRepo.UpdateInstanceAsync(instance);
-
             instance.Solution.Value = solution;
+
+            var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
+            if(host.Size.Id != instance.Size.Id ||
+               host.CloudProvider.Id != instance.CloudProvider.Id ||
+               host.Subscription.Id != instance.Subscription.Id || 
+               host.ContainerRepository.Id != instance.ContainerRepository.Id ||
+               host.ContainerTag.Id !=instance.ContainerTag.Id)
+            {
+                host.Size = instance.Size;
+                host.Subscription = instance.Subscription;
+                host.CloudProvider = instance.CloudProvider;
+                host.ContainerRepository = instance.ContainerRepository;
+                host.ContainerTag = instance.ContainerTag;
+                await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
+            }
 
             return InvokeResult.Success;
         }

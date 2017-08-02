@@ -11,6 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Deploy,
         Create,
         Start,
+        Pause,
         Reset,
         Stop,
         Reload,

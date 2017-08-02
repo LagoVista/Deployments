@@ -48,11 +48,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceRepoManager = deviceRepoManager;
         }
 
-        public async Task<InvokeResult> CreateAsync(String id, EntityHeader org, EntityHeader user)
+        private async Task<InvokeResult> PerformActionAsync(String id, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, "deployInstance");
-
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");
 
             if (instance.IsDeployed)
             {
@@ -70,60 +69,40 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult> DeployAsync(String id, EntityHeader org, EntityHeader user)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, "resetartHost");
-           
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, DeploymentActivityTaskTypes.Reset)
-            {
-                RequestedByUserId = user.Id,
-                RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
-            });
-
-            return InvokeResult.Success;
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Deploy);
         }
 
-        public async Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, "reloadSolution");
-
-
-            if (!instance.IsDeployed)
-            {
-                throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.NotDeployed);
-            }
-
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, DeploymentActivityTaskTypes.Update)
-            {
-                RequestedByUserId = user.Id,
-                RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
-            });
-
-            return InvokeResult.Success;
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Start);
         }
 
-        public async Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, "destroyInstance");
-
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, DeploymentActivityTaskTypes.Remove)
-            {
-                RequestedByUserId = user.Id,
-                RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
-            });
-
-            return InvokeResult.Success;
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Pause);
         }
-        
+
+        public Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Stop);
+        }
+
+        public Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reset);
+        }
+
+        public  Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reload);
+        }
+
+        public Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Remove);
+        }        
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {

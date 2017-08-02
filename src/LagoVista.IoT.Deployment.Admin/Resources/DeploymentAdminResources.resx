@@ -175,7 +175,7 @@
     <value>Device Configuration</value>
   </data>
   <data name="Errs_AlreadyDeployed" xml:space="preserve">
-    <value>Your isntance has already been deployed.  You can not redploy it.</value>
+    <value>Your instance has already been deployed.  You can not re-deploy it.</value>
   </data>
   <data name="Errs_InstanceBusy" xml:space="preserve">
     <value>Your instance is busy, please try again later.</value>
