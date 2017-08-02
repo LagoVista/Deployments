@@ -678,4 +678,22 @@
   <data name="Host_DedicatedInstance" xml:space="preserve">
     <value>Dedicated Instance</value>
   </data>
+  <data name="DeploymentActivity_ActivityType" xml:space="preserve">
+    <value>ActivityType</value>
+  </data>
+  <data name="DeploymentActivity_Duration" xml:space="preserve">
+    <value>Duration (ms)</value>
+  </data>
+  <data name="DeploymentActivity_ErrorMessage" xml:space="preserve">
+    <value>Error Message</value>
+  </data>
+  <data name="DeploymentActivity_ResourceType" xml:space="preserve">
+    <value>Resource Type</value>
+  </data>
+  <data name="DeploymentActivity_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="DeploymentActivity_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
 </root>

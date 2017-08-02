@@ -3,6 +3,7 @@ using System;
 using LagoVista.Core;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using LagoVista.Core.Attributes;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -99,5 +100,37 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string TimeoutTimeStamp { get; set; }
         public string ErrorMessage { get; set; }
         public double DurationMS { get; set; }
+
+        public DeploymentActivitySummary CreateSummary()
+        {
+            return new DeploymentActivitySummary()
+            {
+                Id = RowKey,
+                Start = StartTimeStamp,
+                ActivityType = Type.ToString(),
+                ResourceType = ResourceType.ToString(),
+                Status = Status.ToString(),
+                DurationMS = Math.Round(DurationMS, 2).ToString(),
+                ErrorMessage = ErrorMessage
+            };
+        }
+
+    }
+
+    public class DeploymentActivitySummary
+    {
+        public string Id { get; set; }
+        [ListColumn(HeaderResource: Resources.DeploymentAdminResources.Names.DeploymentActivity_Start, Ordinal: 1, ResourceType: typeof(Resources.DeploymentAdminResources))]
+        public string Start { get; set; }
+        [ListColumn( HeaderResource:Resources.DeploymentAdminResources.Names.DeploymentActivity_ActivityType, Ordinal:2, ResourceType:typeof(Resources.DeploymentAdminResources))]
+        public string ActivityType { get; set; }
+        [ListColumn(HeaderResource: Resources.DeploymentAdminResources.Names.DeploymentActivity_ResourceType, Ordinal: 3, ResourceType: typeof(Resources.DeploymentAdminResources))]
+        public string ResourceType { get; set; }
+        [ListColumn(HeaderResource: Resources.DeploymentAdminResources.Names.DeploymentActivity_Status, Ordinal: 4, ResourceType: typeof(Resources.DeploymentAdminResources))]
+        public string Status { get; set; }
+        [ListColumn(HeaderResource: Resources.DeploymentAdminResources.Names.DeploymentActivity_Duration, Ordinal: 5, ResourceType: typeof(Resources.DeploymentAdminResources))]
+        public string DurationMS { get; set; }
+        [ListColumn(HeaderResource: Resources.DeploymentAdminResources.Names.DeploymentActivity_ErrorMessage, Ordinal: 6, ResourceType: typeof(Resources.DeploymentAdminResources))]
+        public string ErrorMessage { get; set; }
     }
 }

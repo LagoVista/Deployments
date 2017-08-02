@@ -51,19 +51,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _eventHubClient.SendAsync(eventData);
         }
 
-        public async Task<IEnumerable<DeploymentActivity>> GetCompletedActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<DeploymentActivitySummary>> GetCompletedActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentActivity));
             return await _completedRepo.GetCompletedDeploymentActivitiesForResourceIdAsync(resourceId);
         }
 
-        public async Task<IEnumerable<DeploymentActivity>> GetFailedActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<DeploymentActivitySummary>> GetFailedActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentActivity));
             return await _failedRepo.GetFailedDeploymentActivitiesForResourceIdAsync(resourceId);
         }
 
-        public async Task<IEnumerable<DeploymentActivity>> GetActiveActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<DeploymentActivitySummary>> GetActiveActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentActivity));
             return await _repo.GetForResourceIdAsync(resourceId);

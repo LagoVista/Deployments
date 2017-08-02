@@ -176,9 +176,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             */
         }
 
-        public async Task<IEnumerable<DeploymentActivity>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentHost), Actions.Read);
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentActivitySummary), Actions.Read);
 
             return await _deploymentActivityRepo.GetForResourceIdAsync(id);
         }

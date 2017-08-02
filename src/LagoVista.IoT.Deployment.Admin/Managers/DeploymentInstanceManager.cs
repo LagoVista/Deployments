@@ -51,14 +51,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private async Task<InvokeResult> PerformActionAsync(String id, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");            
 
-            if (instance.IsDeployed)
-            {
-                throw LagoVista.IoT.Logging.Exceptions.InvalidOperationException.FromErrorCode(Resources.DeploymentErrorCodes.AlreadyDeployed);
-            }
-
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, DeploymentActivityTaskTypes.Create)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, activityType)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,

@@ -38,7 +38,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         Task<InvokeResult> PublishAssociatedContainersAsync(string hostId, EntityHeader org, EntityHeader user);
 
 
-        Task<IEnumerable<DeploymentActivity>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
+        Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
 
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);

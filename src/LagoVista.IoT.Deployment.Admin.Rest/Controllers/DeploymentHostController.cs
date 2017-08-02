@@ -116,18 +116,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult> DeployContainerAsync(String id)
         {
             return _hostManager.PublishAssociatedContainersAsync(id, OrgEntityHeader, UserEntityHeader);
-        }
-
-        /// <summary>
-        /// Deployment Host - Deploy
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/host/{id}/activities")]
-        public async Task<ListResponse<DeploymentActivity>> GetHostActivitiesAsync(String id)
-        {
-            return  ListResponse<DeploymentActivity>.Create(await _hostManager.GetHostActivitesAsync(id, OrgEntityHeader, UserEntityHeader));
-        }
+        }       
 
         /// <summary>
         /// Deployment Host - Start

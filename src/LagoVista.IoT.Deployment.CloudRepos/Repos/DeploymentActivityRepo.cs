@@ -4,7 +4,7 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Logging.Loggers;
-using System;
+using System.Linq;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -36,9 +36,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetAsync(deploymentActivityId);
         }
 
-        public Task<IEnumerable<DeploymentActivity>> GetForResourceIdAsync(string resourceId)
+        public async Task<IEnumerable<DeploymentActivitySummary>> GetForResourceIdAsync(string resourceId)
         {
-            return GetByParitionIdAsync(resourceId);
+            var records = await GetByParitionIdAsync(resourceId);
+            return from rec in records select rec.CreateSummary();
         }
 
         public Task RemoveDeploymentActivityAsync(DeploymentActivity deploymentActivity)

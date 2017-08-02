@@ -9,6 +9,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     public interface ICompletedDeploymentActivityRepo
     {
         Task AddCompletedDeploymentActivitiesAsync(DeploymentActivity deploymentActivity);
-        Task<IEnumerable<DeploymentActivity>> GetCompletedDeploymentActivitiesForResourceIdAsync(string resourceId);
+        Task<IEnumerable<DeploymentActivitySummary>> GetCompletedDeploymentActivitiesForResourceIdAsync(string resourceId);
     }
 }

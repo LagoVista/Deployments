@@ -146,6 +146,24 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Deployment_Title
 
 		public static string Deployment_Title { get { return GetResourceString("Deployment_Title"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_ActivityType
+
+		public static string DeploymentActivity_ActivityType { get { return GetResourceString("DeploymentActivity_ActivityType"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_Duration
+
+		public static string DeploymentActivity_Duration { get { return GetResourceString("DeploymentActivity_Duration"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_ErrorMessage
+
+		public static string DeploymentActivity_ErrorMessage { get { return GetResourceString("DeploymentActivity_ErrorMessage"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_ResourceType
+
+		public static string DeploymentActivity_ResourceType { get { return GetResourceString("DeploymentActivity_ResourceType"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_Start
+
+		public static string DeploymentActivity_Start { get { return GetResourceString("DeploymentActivity_Start"); } }
+//Resources:DeploymentAdminResources:DeploymentActivity_Status
+
+		public static string DeploymentActivity_Status { get { return GetResourceString("DeploymentActivity_Status"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Description
 
 		public static string DeviceConfiguration_Description { get { return GetResourceString("DeviceConfiguration_Description"); } }
@@ -648,6 +666,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Deployment_Planner_Help = "Deployment_Planner_Help";
 			public const string Deployment_Planner_Select = "Deployment_Planner_Select";
 			public const string Deployment_Title = "Deployment_Title";
+			public const string DeploymentActivity_ActivityType = "DeploymentActivity_ActivityType";
+			public const string DeploymentActivity_Duration = "DeploymentActivity_Duration";
+			public const string DeploymentActivity_ErrorMessage = "DeploymentActivity_ErrorMessage";
+			public const string DeploymentActivity_ResourceType = "DeploymentActivity_ResourceType";
+			public const string DeploymentActivity_Start = "DeploymentActivity_Start";
+			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
 			public const string DeviceConfiguration_Description = "DeviceConfiguration_Description";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
