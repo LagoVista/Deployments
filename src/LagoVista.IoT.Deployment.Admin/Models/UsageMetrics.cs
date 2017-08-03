@@ -42,12 +42,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public double MessagesPerSecond { get; set; }
         [JsonProperty("averageProcessingMS")]
         public double AvergeProcessingMs { get; set; }
-        [JsonProperty("hostId")]
-        public String HostId { get; set; }
         [JsonProperty("version")]
         public String Version { get; set; }
         [JsonProperty("instanceId")]
         public String InstanceId { get; set; }
+
+        [JsonProperty("hostId")]
+        public String HostId { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; }
         [JsonProperty("pipelineModuleId")]
         public String PipelineModuleId { get; set; }
         [JsonProperty("messagesProcessed")]

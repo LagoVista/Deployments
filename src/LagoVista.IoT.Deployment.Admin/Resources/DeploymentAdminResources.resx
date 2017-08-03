@@ -243,14 +243,11 @@
   <data name="Host_AdminEndpoint_Help" xml:space="preserve">
     <value>The full uri including the port that will be used to communicate with run time.</value>
   </data>
-  <data name="Host_AverageCPU_30_Minutes" xml:space="preserve">
-    <value>30 Minute Average CPU</value>
+  <data name="Host_AverageCPU_1_Minute" xml:space="preserve">
+    <value>1 Minute Average CPU</value>
   </data>
-  <data name="Host_AverageMemory_30_Minutes" xml:space="preserve">
-    <value>30 Minutes Average Memory</value>
-  </data>
-  <data name="Host_AverageNetwork_30_Minutes" xml:space="preserve">
-    <value>30 Minute Average Network</value>
+  <data name="Host_AverageMemory_1_Minute" xml:space="preserve">
+    <value>1 Minute Average Memory</value>
   </data>
   <data name="Host_CapacityStatus" xml:space="preserve">
     <value>Capacity Status</value>
@@ -695,5 +692,20 @@
   </data>
   <data name="DeploymentActivity_Status" xml:space="preserve">
     <value>Status</value>
+  </data>
+  <data name="Host_LastPing" xml:space="preserve">
+    <value>Last Ping</value>
+  </data>
+  <data name="Instance_LastPing" xml:space="preserve">
+    <value>Last Ping</value>
+  </data>
+  <data name="Host_MonitoringURI" xml:space="preserve">
+    <value>Monitoring URI</value>
+  </data>
+  <data name="Host_MonitoringProvider" xml:space="preserve">
+    <value>Monitoring Provider</value>
+  </data>
+  <data name="Host_StatusDetails" xml:space="preserve">
+    <value>Status Details</value>
   </data>
 </root>

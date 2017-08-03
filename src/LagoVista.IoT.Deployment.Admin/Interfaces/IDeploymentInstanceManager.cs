@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LagoVista.IoT.Deployment.Admin.Managers
+namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IDeploymentInstanceManager
     {

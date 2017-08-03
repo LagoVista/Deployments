@@ -3,7 +3,7 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 
-namespace LagoVista.IoT.Deployment.Admin.Managers
+namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IDeploymentInstanceManagerCore
     {

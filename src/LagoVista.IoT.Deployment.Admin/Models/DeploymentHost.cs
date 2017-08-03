@@ -267,23 +267,32 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string AdminAPIUri { get; set; }
 
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_MonitoringURI, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        public string MonitoringURI { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_MonitoringProvider, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        public EntityHeader MonitoringProvider { get; set; }
+
+
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }
+        
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResource_Uri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
-        public string ComputeResourceUri { get; set; }
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string LastPing { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageCPU { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageNetwork_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public string AverageNetwork { get; set; }
-
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageMemory_30_Minutes, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageMemory_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageMemory { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string StatusDetails { get; set; }
+
 
         public String HostAccessKey1 { get; set; }
 

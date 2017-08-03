@@ -5,7 +5,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 
-namespace LagoVista.IoT.Deployment.Admin.Managers
+namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IContainerRepositoryManager
     {
