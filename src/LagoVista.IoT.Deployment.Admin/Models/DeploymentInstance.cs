@@ -136,7 +136,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_Stopped = "stopped";
         public const string Status_Degraded = "degraded";
         public const string Status_FatalError = "fatalerror";
-        public const string Status_Undeploying = "undeployingr";
+        public const string Status_Undeploying = "undeploying";
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
