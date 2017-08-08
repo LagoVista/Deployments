@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -61,39 +62,65 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
             else
             {
-                _adminLogger.AddError("telemetryservice",response.ReasonPhrase, new KeyValuePair<string, string>("filter", filter));
+                _adminLogger.AddError("telemetryservice", response.ReasonPhrase, new KeyValuePair<string, string>("filter", filter));
                 throw new Exception(Resources.DeploymentAdminResources.Telemetry_ErrorQueryServer);
             }
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForHostAsync(String hostId, int take, string afterTimeStamp)
+        private string BuildQuery(string type, string id, ListRequest request, string additionalFilter = "")
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.hostId == '{hostId}' and timestamp < datetime('{afterTimeStamp}') | top {take} by timestamp desc");
+            var query = $"customEvents | where customDimensions.{type} == '{id}'";
+
+            if(string.IsNullOrEmpty(additionalFilter))
+            {
+                query += $" {additionalFilter}";
+            }
+
+            if (String.IsNullOrEmpty(request.EndDate))
+            {
+                query += $" and timestamp < datetime('{request.EndDate}')";
+            }
+
+
+            query += $" | top {request.PageSize} by timestamp desc";
+
+            return query;
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(String instanceId, int take, string afterTimeStamp)
+        public Task<IEnumerable<TelemetryReportData>> GetForHostAsync(String hostId, ListRequest request)
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.instanceId == '{instanceId}' and timestamp < datetime('{afterTimeStamp}') | top {take} by timestamp desc");
+            var query = BuildQuery("hostId", hostId, request);
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, int take, string afterTimeStamp)
+        public Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(String instanceId, ListRequest request)
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.piplineModuleId == '{pipelineModuleId}' and timestamp < datetime('{afterTimeStamp}') | top {take} by timestamp desc");
+            var query = BuildQuery("instanceId", instanceId, request);
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, int take, string afterTimeStamp)
+        public Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, ListRequest request)
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.piplineModuleId == '{pipelineModuleId}' and customDimensions.tag = 'queue' and timestamp  > datetime('{afterTimeStamp}')  | top {take} by timestamp desc");
+            var query = BuildQuery("piplineModuleId", pipelineModuleId, request);
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, int take, string afterTimeStamp)
+        public Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, ListRequest request)
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.deviceId == '{deviceId}' and timestamp  > datetime('{afterTimeStamp}') | top {take} by timestamp desc");
+            var query = BuildQuery("pipelineModuleId", pipelineModuleId, request, "and customDimensions.tag = 'queue'");
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, int take, string afterTimeStamp)
+        public Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, ListRequest request)
         {
-            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, $"customEvents | where customDimensions.deviceTypeId == '{deviceTypeId}' and timestamp  > datetime('{afterTimeStamp}') | top {take} by timestamp desc");
+            var query = BuildQuery("deviceId", deviceId, request);
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
+        }
+
+        public Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, ListRequest request)
+        {
+            var query = BuildQuery("deviceTypeId", deviceTypeId, request);
+            return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
         class Column

@@ -12,6 +12,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos
         bool ShouldConsolidateCollections { get; }
     }
 
+    public interface IUsageMetricsRepoSettings
+    {
+        IConnectionSettings UsageMetricsTableStorage { get; set; }
+    }
+
     public interface IDeploymentInstanceRepoSettings
     {
         IConnectionSettings InstanceDocDbStorage { get; set; }

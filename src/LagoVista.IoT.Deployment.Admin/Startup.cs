@@ -17,6 +17,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ISolutionManager, SolutionManager>();
             services.AddTransient<IContainerRepositoryManager, ContainerRepositoryManager>();
             services.AddTransient<IDeviceConfigurationManager, DeviceConfigurationManager>();
+            services.AddTransient<IUsageMetricsManager, UsageMetricsManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentInstanceManager, DeploymentInstanceManager>();
             services.AddTransient<IDeploymentActivityQueueManager, DeploymentActivityQueueManager>();            

@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,16 +9,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public interface ITelemetryService
     {
-        Task<IEnumerable<TelemetryReportData>> GetForHostAsync(String hostId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForHostAsync(String hostId, ListRequest request);
 
-        Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(String instanceId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(String instanceId, ListRequest request);
 
-        Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(String pipelineModuleId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(String pipelineModuleId, ListRequest request);
 
-        Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(String pipelineModuleId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(String pipelineModuleId, ListRequest request);
 
-        Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(String deviceId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(String deviceId, ListRequest request);
 
-        Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(String deviceTypeId, int take, string afterTimeStamp);
+        Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(String deviceTypeId, ListRequest request);
     }
 }
