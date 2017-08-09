@@ -141,6 +141,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Host - Update
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/update")]
+        public Task<InvokeResult> UpdateAsync(String id)
+        {
+            return _hostManager.ResetHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
         /// Deployment Host - Stop
         /// </summary>
         /// <param name="id"></param>

@@ -137,6 +137,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             */
         }
 
+        public async Task<InvokeResult> UpdateHostAsync(string hostId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "update");
+
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, hostId, DeploymentActivityTaskTypes.Update)
+            {
+                RequestedByUserId = user.Id,
+                RequestedByUserName = user.Text,
+                RequestedByOrganizationId = org.Id,
+                RequestedByOrganizationName = org.Text,
+            });
+
+            return InvokeResult.Success;
+        }
+
+
         public async Task<InvokeResult> ResetHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);

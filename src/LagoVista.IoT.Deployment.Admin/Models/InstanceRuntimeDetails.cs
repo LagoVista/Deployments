@@ -31,6 +31,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
     public abstract class InstanceDetailsBase
     {
+        [JsonProperty("fullId")]
+        public String FullId { get; set; }
+
         [JsonProperty("id")]
         public String Id { get; set; }
 
@@ -46,7 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public InstanceRuntimeDetails()
         {
-            Listeners = new ObservableCollection<PipelineInstanceSummary>();
+            Listeners = new ObservableCollection<ListenerSummary>();
             DeviceConfigurations = new ObservableCollection<DeviceConfigSummary>();
         }
 
@@ -55,7 +58,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public PipelineInstanceSummary Planner { get; set; }
 
         [JsonProperty("listeners")]
-        public ObservableCollection<PipelineInstanceSummary> Listeners { get; set; }
+        public ObservableCollection<ListenerSummary> Listeners { get; set; }
 
         [JsonProperty("deviceConfigurations")]
         public ObservableCollection<DeviceConfigSummary> DeviceConfigurations { get; set; }
@@ -96,7 +99,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public ObservableCollection<DeviceMessageTypeSummary> MessageTypes { get; set; }
     }
 
-
     public class PipelineInstanceSummary : InstanceDetailsBase
     {
         [JsonProperty("status")]
@@ -107,4 +109,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("usgaeMetrics")]
         public UsageMetrics UsageMetrics { get; set; }
     }
+
+    public class ListenerSummary : PipelineInstanceSummary
+    {
+        [JsonProperty("port")]
+        public int Port { get; set; }
+
+        [JsonProperty("listenerType")]
+        public string ListenerType{ get; set; }
+    }
+
 }
