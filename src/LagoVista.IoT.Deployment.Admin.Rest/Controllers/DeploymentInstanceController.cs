@@ -174,14 +174,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Deployment Instance - Reload
+        /// Deployment Instance - Reload Solution
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{id}/reload")]
-        public Task<InvokeResult> ReloadtHostAsync(String id)
+        public Task<InvokeResult> RealodSolutionAsync(String id)
         {
             return _instanceManager.ReloadSolutionAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Update Runtime
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/update")]
+        public Task<InvokeResult> UpdateRuntimeAsync(String id)
+        {
+            return _instanceManager.UpdateRuntimeAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

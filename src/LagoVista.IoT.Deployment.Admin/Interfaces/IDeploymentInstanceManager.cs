@@ -30,6 +30,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> UpdateRuntimeAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user);
 

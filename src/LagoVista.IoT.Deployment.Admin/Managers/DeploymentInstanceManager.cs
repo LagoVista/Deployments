@@ -89,6 +89,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reset);
         }
 
+        public Task<InvokeResult> UpdateRuntimeAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Update);
+        }
+
         public  Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user)
         {
             return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reload);

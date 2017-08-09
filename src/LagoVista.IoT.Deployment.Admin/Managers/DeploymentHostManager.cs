@@ -137,7 +137,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             */
         }
 
-        public async Task<InvokeResult> UpdateHostAsync(string hostId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> UpdateHostRuntimeAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "update");
