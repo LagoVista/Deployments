@@ -11,6 +11,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public String TimeStamp { get; set; }
 
+        [JsonProperty("itemId")]
+        public String ItemId { get; set; }
+
+        [JsonProperty("itemType")]
+        public String ItemType { get; set; }
+
+
         [JsonProperty("tag")]
         public String Tag { get; set; }
 

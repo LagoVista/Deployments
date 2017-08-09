@@ -114,7 +114,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public Task<InvokeResult> StartHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public Task<InvokeResult> StartHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             return Task.FromResult(InvokeResult.FromErrors(new ErrorMessage("Start currently not supported, use Deploy, start will eventually be used to power up a VM that hasn't been destoryed.")));
             /*
@@ -137,12 +137,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             */
         }
 
-        public async Task<InvokeResult> ResetHostAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> ResetHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "reset");
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.Reset)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, hostId, DeploymentActivityTaskTypes.Reset)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,

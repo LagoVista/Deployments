@@ -21,76 +21,88 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Telemetry Get For Host
+        /// Telemetry - Get For Host
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="hostid"></param>
+        /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/host/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForHostAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/host/{hostid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForHostAsync(string recordtype, string hostid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForHostAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForHostAsync(hostid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
-
 
         /// <summary>
-        /// Telemetry Get For Instance
+        /// Telemetry - Get For Instance
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="instanceid"></param>
+        /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/instance/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForInstanceAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/instance/{instanceid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForInstanceAsync(string recordtype, string instanceid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForInstanceAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForInstanceAsync(instanceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
-
-
+        
         /// <summary>
-        /// Telemetry Get For Pipeline Module
+        /// Telemetry - Get For Pipeline Module
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="pipelinemoduleid"></param>
+        /// <param name="recordtype"></param> 
         /// <returns></returns>
-        [HttpGet("/api/telemetry/pipeline/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/pipeline/{pipelinemoduleid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineAsync(string recordtype, string pipelinemoduleid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineModuleAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineModuleAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
-
-
+        
         /// <summary>
         /// Telemetry - Get For Pipline Queue
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="pipelinemoduleid"></param>
+        /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/pipelinequeue/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineQueueAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/pipelinequeue/{pipelinemoduleid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineQueueAsync(string recordtype, string pipelinemoduleid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineQueueAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineQueueAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
-
 
         /// <summary>
         /// Telemetry - Get For Device 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="deviceid"></param>
+        /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/deviceid/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/deviceid/{deviceid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(string recordtype, string deviceid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceAsync(deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
-
 
         /// <summary>
         /// Telemetry - Get For Device Type
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="devicetypeid"></param>
+        /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/devicetype/{id}")]
-        public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(String id)
+        [HttpGet("/api/telemetry/{recordtype}/devicetype/{devicetypeid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string devicetypeid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceTypeAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceTypeAsync(devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
 
-
+        /// <summary>
+        /// Telemetry - Get ItemDetail
+        /// </summary>
+        /// <param name="itemid"></param>
+        /// <param name="recordtype"></param>
+        /// <returns></returns>
+        [HttpGet("/api/telemetry/{recordtype}/itemdetail/{itemid}")]
+        public async Task<JsonResult> GetItemDetailAsync(string recordtype, string itemid)
+        {
+            var json = await _telemetryManager.GetItemDetailAsync(itemid, recordtype, OrgEntityHeader, UserEntityHeader);
+            return new JsonResult(json);            
+        }
     }
 }

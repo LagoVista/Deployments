@@ -189,7 +189,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/restart")]
+        [HttpGet("/api/deployment/instance/{id}/reset")]
         public Task<InvokeResult> RestartHostAsync(String id)
         {
             return _instanceManager.RestartHostAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -200,7 +200,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/Stop")]
+        [HttpGet("/api/deployment/instance/{id}/stop")]
         public Task<InvokeResult> StopAsync(String id)
         {
             return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);

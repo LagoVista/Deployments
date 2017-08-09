@@ -1,18 +1,25 @@
-﻿using LagoVista.Core.PlatformSupport;
-using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.IoT.Deployment.Admin.Models;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public static class RequestSigningService
-    {     
+    {
         public static string GetAuthHeaderValue(DeploymentHost host, string requestId, string orgId, string userId, string method, String resource, String date)
         {
+            if (host == null) throw new InvalidOperationException("Missing Host."); 
+            if (String.IsNullOrEmpty(host.HostAccessKey1)) throw new InvalidOperationException("Missing Host Access Key.");
+            
+            if (String.IsNullOrEmpty(method)) return "INVALID - MISSING HTTP METHOD";
+            if (String.IsNullOrEmpty(requestId)) return "INVALID - MISSING REQUEST ID";
+            if (String.IsNullOrEmpty(orgId)) return "INVALID - MISSGING ORG ID";
+            if (String.IsNullOrEmpty(userId)) return "INVALID - MISSING USER ID";
+            if (String.IsNullOrEmpty(date)) return "INVALID - MISSING DATE STAMP";
+
             var canonicalizedString = $"{method}\n";
             canonicalizedString += $"{requestId}\n";
             canonicalizedString += $"{orgId}\n";
@@ -35,10 +42,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 md5Sting.Append(result[i].ToString("X2"));
             }
 
-            
-
             return $"{requestId}:{md5Sting.ToString()}";
         }
-
     }
 }
