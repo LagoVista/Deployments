@@ -24,7 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceConfigurationRepo _deviceConfigRepo;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
-        
+
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceConfigRepo = deviceConfigRepo;
             _deviceAdminManager = deviceAdminManager;
             _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
-    }
+        }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
         {
@@ -55,7 +55,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DeleteDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
-            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Delete, user,org);            
+            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Delete, user, org);
             await ConfirmNoDepenenciesAsync(deviceConfiguration);
             return InvokeResult.Success;
         }
@@ -63,7 +63,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DeviceConfiguration> GetDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
         {
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
-            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Read, org, user);
+            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Read, user, org);
             return deviceConfiguration;
         }
 
@@ -81,14 +81,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task PopulateRoutes(Route route, EntityHeader org, EntityHeader user)
         {
-            if(route.MessageDefinitions != null)
+            if (route.MessageDefinitions != null)
             {
-                foreach(var msgDefinition in route.MessageDefinitions)
+                foreach (var msgDefinition in route.MessageDefinitions)
                 {
                     msgDefinition.Value = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(msgDefinition.Id);
                 }
             }
-            
+
             if (route.InputTranslator != null && route.InputTranslator.HasValue)
             {
                 route.InputTranslator.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(route.InputTranslator.Id);
@@ -117,14 +117,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceConfiguration));        
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceConfiguration));
             return await _deviceConfigRepo.GetDeviceConfigurationsForOrgAsync(orgId);
         }
 
         public async Task<InvokeResult> UpdateDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(deviceConfiguration, Actions.Update);
-            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Update, org, user);
+            await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Update, user, org);
             await _deviceConfigRepo.UpdateDeviceConfigurationAsync(deviceConfiguration);
             return InvokeResult.Success;
         }
