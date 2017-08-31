@@ -232,22 +232,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deploymentInstanceRepo.GetInstanceForHostAsync(hostId);
         }
 
-        public async Task<DeploymentHost> GetMCPHostAsync(EntityHeader org, EntityHeader user)
+        public Task<DeploymentHost> GetMCPHostAsync(EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetMCPHostAsync();
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org, "notifications");
-            return host;
+            return _deploymentHostRepo.GetMCPHostAsync();
         }
 
-
-
-        public async Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
+        public Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetNotificationsHostAsync();
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org, "mcp");
-            return host;
+            return _deploymentHostRepo.GetNotificationsHostAsync();
         }
-
 
         public Task<DeploymentHost> LoadFullDeploymentHostAsync(string id)
         {
