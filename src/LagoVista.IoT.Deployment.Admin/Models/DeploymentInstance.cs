@@ -230,6 +230,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
             };
+        }
     }
 
     public class DeploymentInstanceSummary : SummaryData
