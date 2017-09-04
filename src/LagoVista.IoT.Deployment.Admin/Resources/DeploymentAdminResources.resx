@@ -708,4 +708,10 @@
   <data name="Host_StatusDetails" xml:space="preserve">
     <value>Status Details</value>
   </data>
+  <data name="DeviceConfiguration_Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="DeviceConfiguration_Properties_Help" xml:space="preserve">
+    <value>Properties are fields that will always be assocaiated with the devices of this device configuration.  They are used to generate a user interface that will be used to configure the device.</value>
+  </data>
 </root>

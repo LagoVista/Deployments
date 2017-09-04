@@ -170,6 +170,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Help
 
 		public static string DeviceConfiguration_Help { get { return GetResourceString("DeviceConfiguration_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_Properties
+
+		public static string DeviceConfiguration_Properties { get { return GetResourceString("DeviceConfiguration_Properties"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_Properties_Help
+
+		public static string DeviceConfiguration_Properties_Help { get { return GetResourceString("DeviceConfiguration_Properties_Help"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Routes
 
 		public static string DeviceConfiguration_Routes { get { return GetResourceString("DeviceConfiguration_Routes"); } }
@@ -686,6 +692,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
 			public const string DeviceConfiguration_Description = "DeviceConfiguration_Description";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
+			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
+			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
 			public const string DeviceConfiguration_Sentinel = "DeviceConfiguration_Sentinel";
 			public const string DeviceConfiguration_Title = "DeviceConfiguration_Title";

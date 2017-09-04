@@ -12,7 +12,7 @@ using LagoVista.IoT.DeviceMessaging.Admin.Models;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, Resources.DeploymentAdminResources.Names.Route_Help, Resources.DeploymentAdminResources.Names.Route_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity
+    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor
     {
         public Route()
         {
@@ -66,6 +66,22 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string LastUpdatedDate { get; set; }
         public EntityHeader CreatedBy { get; set; }
         public EntityHeader LastUpdatedBy { get; set; }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+               nameof(Route.Name),
+               nameof(Route.Key),
+               nameof(Route.IsDefault),
+               nameof(Route.Sentinel),
+               nameof(Route.InputTranslator),
+               nameof(Route.DeviceWorkflow),
+               nameof(Route.OutputTranslator),
+               nameof(Route.Transmitter),
+               nameof(Route.Notes)
+            };
+        }
 
         public EntityHeader ToEntityHeader()
         {

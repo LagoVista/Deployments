@@ -14,7 +14,7 @@ using LagoVista.IoT.DeviceAdmin.Models;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, Resources.DeploymentAdminResources.Names.DeviceConfiguration_Help,  Resources.DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeviceConfiguration :  LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
+    public class DeviceConfiguration :  LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public DeviceConfiguration()
         {
@@ -49,6 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<Route> Routes { get; set; }
 
@@ -65,6 +66,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties, HelpResource:DeploymentAdminResources.Names.DeviceConfiguration_Properties_Help, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Properties { get; set; }
                 
         public static DeviceConfiguration Create(Organization org, AppUser appUser)
@@ -90,6 +92,18 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Name = Name,
                 Description = Description
             };
+        }
+
+        public List<string> GetFormFields()
+        {
+                return new List<string>()
+                {
+                    nameof(DeviceConfiguration.Name),
+                    nameof(DeviceConfiguration.Key),
+                    nameof(DeviceConfiguration.Description),
+                    nameof(DeviceConfiguration.Properties),
+                    nameof(DeviceConfiguration.Routes),
+                };
         }
     }
 

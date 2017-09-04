@@ -5,6 +5,7 @@ using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Models;
 using LagoVista.Core;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -23,7 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.TaggedContainer_Title, Resources.DeploymentAdminResources.Names.TaggedContainer_Help, Resources.DeploymentAdminResources.Names.TaggedContainer_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class TaggedContainer : IKeyedEntity
+    public class TaggedContainer : IKeyedEntity, IFormDescriptor
     {
         public const string TaggedContainer_Status_Prerelease = "prerelease";
         public const string TaggedContainer_Status_Alpha = "alpha";
@@ -58,5 +59,17 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.TaggedContainer_Tag, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Tag { get; set; }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(TaggedContainer.Name),
+                nameof(TaggedContainer.Key),
+                nameof(TaggedContainer.Status),
+                nameof(TaggedContainer.Tag),
+               nameof(TaggedContainer.ReleaseNotes),
+            };
+        }
     }
 }

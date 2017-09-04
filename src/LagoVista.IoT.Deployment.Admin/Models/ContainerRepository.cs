@@ -10,7 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ContainerRepository_Title, Resources.DeploymentAdminResources.Names.ContainerRepository_Help, Resources.DeploymentAdminResources.Names.ContainerRepository_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
 
-    public class ContainerRepository : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity
+    public class ContainerRepository : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor
     {
         public ContainerRepository()
         {
@@ -64,6 +64,22 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsPublic = IsPublic,
                 Key = Key,
                 PreferredTag = PreferredTag
+            };
+        }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(ContainerRepository.Name),
+                nameof(ContainerRepository.Key),
+                nameof(ContainerRepository.Registry),
+                nameof(ContainerRepository.Namespace),
+                nameof(ContainerRepository.RepositoryName),
+                nameof(ContainerRepository.PreferredTag),
+                nameof(ContainerRepository.UserName),
+                nameof(ContainerRepository.Password),
+                nameof(ContainerRepository.Tags),
             };
         }
     }

@@ -81,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
    
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, Resources.DeploymentAdminResources.Names.Host_Help, Resources.DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
+    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public const string HostSize_ExtraSmall = "extrasmall";
         public const string HostSize_Small = "small";
@@ -310,6 +310,24 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Key = Key,
                 Description = Description,
                 IsPublic = IsPublic
+            };
+        }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(DeploymentHost.Name),
+                nameof(DeploymentHost.Key),
+                nameof(DeploymentHost.Status),
+                nameof(DeploymentHost.HostType),
+                nameof(DeploymentHost.Size),
+                nameof(DeploymentHost.DnsHostName),
+                nameof(DeploymentHost.Ipv4Address),
+                nameof(DeploymentHost.Subscription),
+                nameof(DeploymentHost.CloudProvider),
+                nameof(DeploymentHost.ContainerRepository),
+                nameof(DeploymentHost.ContainerTag),
             };
         }
     }

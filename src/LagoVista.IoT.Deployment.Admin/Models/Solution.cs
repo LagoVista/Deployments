@@ -17,7 +17,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, Resources.DeploymentAdminResources.Names.Solution_Help, Resources.DeploymentAdminResources.Names.Solution_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IKeyedEntity, INoSQLEntity, IValidateable
+    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IKeyedEntity, INoSQLEntity, IValidateable, IFormDescriptor
     {
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
@@ -72,6 +72,18 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 Name = Name,
                 IsPublic = IsPublic,
                 Description = Description
+            };
+        }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(Solution.Name),
+                nameof(Solution.Key),
+                nameof(Solution.Planner),
+                nameof(Solution.Description),
+                nameof(Solution.DeviceConfigurations),
             };
         }
     }

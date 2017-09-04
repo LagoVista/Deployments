@@ -53,7 +53,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, Resources.DeploymentAdminResources.Names.Instance_Help, Resources.DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public DeploymentInstance()
         {
@@ -213,6 +213,23 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(DeploymentInstance.Name),
+                nameof(DeploymentInstance.Key),
+                nameof(DeploymentInstance.DnsHostName),
+                nameof(DeploymentInstance.Status),
+                nameof(DeploymentInstance.IsDeployed),
+                nameof(DeploymentInstance.Subscription),
+                nameof(DeploymentInstance.Size),
+                nameof(DeploymentInstance.CloudProvider),
+                nameof(DeploymentInstance.ContainerRepository),
+                nameof(DeploymentInstance.ContainerTag),
+                nameof(DeploymentInstance.DeviceRepository),
+                nameof(DeploymentInstance.Solution),
+            };
     }
 
     public class DeploymentInstanceSummary : SummaryData
