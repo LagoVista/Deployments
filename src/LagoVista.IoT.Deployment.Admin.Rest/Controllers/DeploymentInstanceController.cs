@@ -57,12 +57,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Deployment Instance - Get for Org
         /// </summary>
-        /// <param name="orgId">Organization Id</param>
         /// <returns></returns>
-        [HttpGet("/api/org/{orgid}/deployment/instances")]
-        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(String orgId)
+        [HttpGet("/api/deployment/instances")]
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync()
         {
-            var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(orgId, UserEntityHeader);
+            var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(OrgEntityHeader.Id, UserEntityHeader);
             return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
         }
 
