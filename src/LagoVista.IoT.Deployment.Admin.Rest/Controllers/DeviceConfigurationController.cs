@@ -48,14 +48,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Device Config - Get Configs for Org
+        /// Device Config - Get Configs for Current Org
         /// </summary>
-        /// <param name="orgId">Organization Id</param>
         /// <returns></returns>
-        [HttpGet("/api/org/{orgid}/deviceconfigs")]
-        public async Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync(String orgId)
+        [HttpGet("/api/deviceconfigs")]
+        public async Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync()
         {
-            var deviceConfigurations = await _deviceConfigManager.GetDeviceConfigurationsForOrgsAsync(orgId, UserEntityHeader);
+            var deviceConfigurations = await _deviceConfigManager.GetDeviceConfigurationsForOrgsAsync(OrgEntityHeader.Id, UserEntityHeader);
             var response = ListResponse<DeviceConfigurationSummary>.Create(deviceConfigurations);
 
             return response;

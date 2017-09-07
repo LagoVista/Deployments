@@ -48,14 +48,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Deployment Config - Get Configs for Org
+        /// Deployment Config - Get Configs for Current Org
         /// </summary>
-        /// <param name="id">Organization Id</param>
         /// <returns></returns>        
-        [HttpGet("/api/org/{id}/deployment/solutions")]
-        public async Task<ListResponse<SolutionSummary>> GetSolutionsForOrgAsync(String id)
+        [HttpGet("/api/deployment/solutions")]
+        public async Task<ListResponse<SolutionSummary>> GetSolutionsForOrgAsync()
         {
-            var deploymentConfiguration = await _solutionManager.GetSolutionsForOrgsAsync(id, UserEntityHeader);
+            var deploymentConfiguration = await _solutionManager.GetSolutionsForOrgsAsync(OrgEntityHeader.Id, UserEntityHeader);
             var response = ListResponse<SolutionSummary>.Create(deploymentConfiguration);
 
             return response;

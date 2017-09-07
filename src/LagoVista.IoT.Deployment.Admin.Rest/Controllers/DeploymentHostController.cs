@@ -60,14 +60,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Deployment Host - Get for Org
+        /// Deployment Host - Get for Current Org
         /// </summary>
-        /// <param name="orgId">Organization Id</param>
         /// <returns></returns>
-        [HttpGet("/api/org/{orgid}/deployment/hosts")]
-        public async Task<ListResponse<DeploymentHostSummary>> GetHostsForOrgAsync(String orgId)
+        [HttpGet("/api/deployment/hosts")]
+        public async Task<ListResponse<DeploymentHostSummary>> GetHostsForOrgAsync()
         {
-            var hostSummaries = await _hostManager.GetDeploymentHostsForOrgAsync(orgId, UserEntityHeader);
+            var hostSummaries = await _hostManager.GetDeploymentHostsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader);
             var response = ListResponse<DeploymentHostSummary>.Create(hostSummaries);
 
             return response;

@@ -65,14 +65,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Container Repo - Get Repos for Org
+        /// Container Repo - Get Repos for Current Org
         /// </summary>
-        /// <param name="id">Organization Id</param>
         /// <returns></returns>        
-        [HttpGet("/api/org/{id}/container/repos")]
-        public async Task<ListResponse<ContainerRepositorySummary>> GetContainersForOrgAsync(String id)
+        [HttpGet("/api/container/repos")]
+        public async Task<ListResponse<ContainerRepositorySummary>> GetContainersForOrgAsync()
         {
-            var containerRepos = await _containerManager.GetContainerReposForOrgAsync(id, UserEntityHeader);
+            var containerRepos = await _containerManager.GetContainerReposForOrgAsync(OrgEntityHeader.Id, UserEntityHeader);
             return ListResponse<ContainerRepositorySummary>.Create(containerRepos);
         }
 
