@@ -10,7 +10,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public DevicePipelineModuleConfiguration()
         {
             SecondaryPipelineModuleConfigurations = new List<EntityHeader>();
+            Mappings = new List<KeyValuePair<string, string>>();
         }
+
+        public List<KeyValuePair<string, string>> Mappings { get; set; }
 
         public EntityHeader PrimaryOutputPipelineModuleConfiguration { get; set; }
 
