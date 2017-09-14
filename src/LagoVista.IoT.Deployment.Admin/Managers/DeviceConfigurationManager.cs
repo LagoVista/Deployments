@@ -80,38 +80,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         }
 
         public async Task PopulateRoutes(Route route, EntityHeader org, EntityHeader user)
-        {
-            if (route.MessageDefinitions != null)
+        {            
+            route.MessageDefinition.Value = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(route.MessageDefinition.Id);
+
+            foreach (var module in route.PipelineModules)
             {
-                foreach (var msgDefinition in route.MessageDefinitions)
+                switch (module.ModuleType.Value)
                 {
-                    msgDefinition.Value = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(msgDefinition.Id);
+                    case Pipeline.Admin.Models.PipelineModuleType.InputTranslator: module.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Sentinel: module.Value = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Workflow: module.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Id, org, user); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.OutputTranslator: module.Value = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Transmitter: module.Value = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Custom: module.Value = await _pipelineModuleManager.LoadFullCustomPipelineModuleConfigurationAsync(module.Id); break;
                 }
-            }
-
-            if (route.InputTranslator != null && route.InputTranslator.HasValue)
-            {
-                route.InputTranslator.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(route.InputTranslator.Id);
-            }
-
-            if (route.Sentinel != null && route.Sentinel.HasValue)
-            {
-                route.Sentinel.Value = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(route.Sentinel.Id);
-            }
-
-            if (route.DeviceWorkflow != null && route.DeviceWorkflow.HasValue)
-            {
-                route.DeviceWorkflow.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(route.DeviceWorkflow.Id, org, user);
-            }
-
-            if (route.OutputTranslator != null && route.OutputTranslator.HasValue)
-            {
-                route.OutputTranslator.Value = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(route.OutputTranslator.Id);
-            }
-
-            if (route.Transmitter != null && route.Transmitter.HasValue)
-            {
-                route.Transmitter.Value = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(route.Transmitter.Id);
             }
         }
 

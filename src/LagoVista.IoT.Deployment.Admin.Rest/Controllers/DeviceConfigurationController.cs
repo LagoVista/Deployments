@@ -128,9 +128,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/route/factory")]
         public DetailResponse<Route> CreateRoute()
         {
-            var response = DetailResponse<Route>.Create();
-            response.Model.Id = Guid.NewGuid().ToId();
+            var route = Route.Create();
 
+            var response = DetailResponse<Route>.Create(route);
+            response.Model.Id = Guid.NewGuid().ToId();
             SetAuditProperties(response.Model);
 
             return response;

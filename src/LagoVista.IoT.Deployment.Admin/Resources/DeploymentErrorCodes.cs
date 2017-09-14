@@ -44,6 +44,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 
         public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "INS1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
 
+        public static ErrorCode NoMessageOnRoute => new ErrorCode() { Code = "RTE1001", Message = DeploymentAdminResources.Err_NoMessageDefinitionOnRoute };
+        public static ErrorCode EmptyRoute => new ErrorCode() { Code = "RTE1002", Message = DeploymentAdminResources.Err_EmptyRoute }; 
 
     }
 }

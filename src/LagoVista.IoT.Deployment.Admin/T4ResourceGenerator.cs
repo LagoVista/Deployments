@@ -209,6 +209,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_CouldntStop_NotRunning
 
 		public static string Err_CouldntStop_NotRunning { get { return GetResourceString("Err_CouldntStop_NotRunning"); } }
+//Resources:DeploymentAdminResources:Err_EmptyRoute
+
+		public static string Err_EmptyRoute { get { return GetResourceString("Err_EmptyRoute"); } }
 //Resources:DeploymentAdminResources:Err_ErrorCommunicatingWithHost
 
 		public static string Err_ErrorCommunicatingWithHost { get { return GetResourceString("Err_ErrorCommunicatingWithHost"); } }
@@ -236,6 +239,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_NoMCPServerExists
 
 		public static string Err_NoMCPServerExists { get { return GetResourceString("Err_NoMCPServerExists"); } }
+//Resources:DeploymentAdminResources:Err_NoMessageDefinitionOnRoute
+
+		public static string Err_NoMessageDefinitionOnRoute { get { return GetResourceString("Err_NoMessageDefinitionOnRoute"); } }
 //Resources:DeploymentAdminResources:Err_NoNotificationsServerExists
 
 		public static string Err_NoNotificationsServerExists { get { return GetResourceString("Err_NoNotificationsServerExists"); } }
@@ -705,6 +711,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Err_CouldNotLoadSolution = "Err_CouldNotLoadSolution";
 			public const string Err_CouldntStart_NotOffline = "Err_CouldntStart_NotOffline";
 			public const string Err_CouldntStop_NotRunning = "Err_CouldntStop_NotRunning";
+			public const string Err_EmptyRoute = "Err_EmptyRoute";
 			public const string Err_ErrorCommunicatingWithHost = "Err_ErrorCommunicatingWithHost";
 			public const string Err_InstanceAlreadyRunning = "Err_InstanceAlreadyRunning";
 			public const string Err_InstanceNotRunning = "Err_InstanceNotRunning";
@@ -714,6 +721,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Err_MultipleMCPServersFound = "Err_MultipleMCPServersFound";
 			public const string Err_MultipleNotificationServersFound = "Err_MultipleNotificationServersFound";
 			public const string Err_NoMCPServerExists = "Err_NoMCPServerExists";
+			public const string Err_NoMessageDefinitionOnRoute = "Err_NoMessageDefinitionOnRoute";
 			public const string Err_NoNotificationsServerExists = "Err_NoNotificationsServerExists";
 			public const string Err_NoPlannerHasBeenSpecified = "Err_NoPlannerHasBeenSpecified";
 			public const string Err_NotificationServerExists = "Err_NotificationServerExists";

@@ -714,4 +714,10 @@
   <data name="DeviceConfiguration_Properties_Help" xml:space="preserve">
     <value>Properties are fields that will always be assocaiated with the devices of this device configuration.  They are used to generate a user interface that will be used to configure the device.</value>
   </data>
+  <data name="Err_EmptyRoute" xml:space="preserve">
+    <value>Route requires at least one pipeline module</value>
+  </data>
+  <data name="Err_NoMessageDefinitionOnRoute" xml:space="preserve">
+    <value>Route Requires Message Definition</value>
+  </data>
 </root>

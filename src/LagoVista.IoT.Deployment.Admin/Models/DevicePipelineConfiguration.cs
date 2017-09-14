@@ -1,11 +1,12 @@
 ﻿using LagoVista.Core.Models;
 using LagoVista.IoT.DeviceAdmin.Interfaces;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
 using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    public class DevicePipelineModuleConfiguration<TPipelineModule> : EntityHeader<TPipelineModule> where TPipelineModule : IPipelineModuleConfiguration
+    public class DevicePipelineModuleConfiguration : EntityHeader
     {
         public DevicePipelineModuleConfiguration()
         {
@@ -19,7 +20,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public List<EntityHeader> SecondaryPipelineModuleConfigurations { get; set; }
 
+        public EntityHeader<PipelineModuleType> ModuleType { get; set; }
 
         public DiagramLocation DiagramLocation { get; set; }
+
+        public IPipelineModuleConfiguration Value { get; set; }
     }
 }
