@@ -251,6 +251,15 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Err_NotificationServerExists
 
 		public static string Err_NotificationServerExists { get { return GetResourceString("Err_NotificationServerExists"); } }
+//Resources:DeploymentAdminResources:Err_RouteModule_ModuleIsRequired
+
+		public static string Err_RouteModule_ModuleIsRequired { get { return GetResourceString("Err_RouteModule_ModuleIsRequired"); } }
+//Resources:DeploymentAdminResources:Err_RouteModule_ModuleTypeNotDefined
+
+		public static string Err_RouteModule_ModuleTypeNotDefined { get { return GetResourceString("Err_RouteModule_ModuleTypeNotDefined"); } }
+//Resources:DeploymentAdminResources:Err_RouteModule_NameNotDefined
+
+		public static string Err_RouteModule_NameNotDefined { get { return GetResourceString("Err_RouteModule_NameNotDefined"); } }
 //Resources:DeploymentAdminResources:Errs_AlreadyDeployed
 
 		public static string Errs_AlreadyDeployed { get { return GetResourceString("Errs_AlreadyDeployed"); } }
@@ -596,6 +605,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Route_Workflow
 
 		public static string Route_Workflow { get { return GetResourceString("Route_Workflow"); } }
+//Resources:DeploymentAdminResources:RouteModuleConfig_Unassigned
+
+		public static string RouteModuleConfig_Unassigned { get { return GetResourceString("RouteModuleConfig_Unassigned"); } }
 //Resources:DeploymentAdminResources:Solution_Description
 
 		public static string Solution_Description { get { return GetResourceString("Solution_Description"); } }
@@ -725,6 +737,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Err_NoNotificationsServerExists = "Err_NoNotificationsServerExists";
 			public const string Err_NoPlannerHasBeenSpecified = "Err_NoPlannerHasBeenSpecified";
 			public const string Err_NotificationServerExists = "Err_NotificationServerExists";
+			public const string Err_RouteModule_ModuleIsRequired = "Err_RouteModule_ModuleIsRequired";
+			public const string Err_RouteModule_ModuleTypeNotDefined = "Err_RouteModule_ModuleTypeNotDefined";
+			public const string Err_RouteModule_NameNotDefined = "Err_RouteModule_NameNotDefined";
 			public const string Errs_AlreadyDeployed = "Errs_AlreadyDeployed";
 			public const string Errs_InstanceBusy = "Errs_InstanceBusy";
 			public const string Errs_MustBeStoppedBeforeRemoving = "Errs_MustBeStoppedBeforeRemoving";
@@ -840,6 +855,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Route_Title = "Route_Title";
 			public const string Route_Transmitter = "Route_Transmitter";
 			public const string Route_Workflow = "Route_Workflow";
+			public const string RouteModuleConfig_Unassigned = "RouteModuleConfig_Unassigned";
 			public const string Solution_Description = "Solution_Description";
 			public const string Solution_DeviceConfigurations = "Solution_DeviceConfigurations";
 			public const string Solution_DeviceConfigurations_Help = "Solution_DeviceConfigurations_Help";

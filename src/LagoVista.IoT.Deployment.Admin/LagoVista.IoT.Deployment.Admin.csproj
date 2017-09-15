@@ -8,6 +8,9 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Models\DevicePipelineConfiguration.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="LagoVista.Core" Version="1.2.110-alpha1000" />
     <PackageReference Include="LagoVista.Core.Authentication" Version="1.2.110-alpha1000" />
     <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.110-alpha1000" />

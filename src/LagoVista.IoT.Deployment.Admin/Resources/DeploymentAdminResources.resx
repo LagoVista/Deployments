@@ -720,4 +720,16 @@
   <data name="Err_NoMessageDefinitionOnRoute" xml:space="preserve">
     <value>Route Requires Message Definition</value>
   </data>
+  <data name="RouteModuleConfig_Unassigned" xml:space="preserve">
+    <value>Unassigned</value>
+  </data>
+  <data name="Err_RouteModule_ModuleIsRequired" xml:space="preserve">
+    <value>Route Module requires a Pipeline Module to be assigned</value>
+  </data>
+  <data name="Err_RouteModule_ModuleTypeNotDefined" xml:space="preserve">
+    <value>Route Module Type is Required</value>
+  </data>
+  <data name="Err_RouteModule_NameNotDefined" xml:space="preserve">
+    <value>Route Module Requires a Name</value>
+  </data>
 </root>

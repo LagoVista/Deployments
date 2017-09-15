@@ -137,5 +137,14 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return response;
         }
 
+        /// <summary>
+        ///  Route - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/route/moduleconfig/factory")]
+        public DetailResponse<RouteModuleConfig> CreateRouteModuleConfig()
+        {
+            return DetailResponse<RouteModuleConfig>.Create();
+        }
     }
 }

@@ -87,12 +87,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 switch (module.ModuleType.Value)
                 {
-                    case Pipeline.Admin.Models.PipelineModuleType.InputTranslator: module.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Sentinel: module.Value = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Workflow: module.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Id, org, user); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.OutputTranslator: module.Value = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Transmitter: module.Value = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Custom: module.Value = await _pipelineModuleManager.LoadFullCustomPipelineModuleConfigurationAsync(module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.InputTranslator: module.Module.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Sentinel: module.Module.Value = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(module.Module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Workflow: module.Module.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.OutputTranslator: module.Module.Value = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(module.Module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Transmitter: module.Module.Value = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(module.Module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Custom: module.Module.Value = await _pipelineModuleManager.LoadFullCustomPipelineModuleConfigurationAsync(module.Module.Id); break;
                 }
             }
         }

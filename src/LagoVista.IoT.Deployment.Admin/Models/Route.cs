@@ -13,11 +13,11 @@ using LagoVista.Core.Validation;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, Resources.DeploymentAdminResources.Names.Route_Help, Resources.DeploymentAdminResources.Names.Route_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor
+    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor, IValidateable
     {
         public Route()
         {
-            PipelineModules = new List<DevicePipelineModuleConfiguration>();
+            PipelineModules = new List<RouteModuleConfig>();
             Id = Guid.NewGuid().ToId();
         }
 
@@ -35,7 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Route_Messages, HelpResource: Resources.DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
 
-        public List<DevicePipelineModuleConfiguration> PipelineModules { get; set; }
+        public List<RouteModuleConfig> PipelineModules { get; set; }
 
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Notes, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
@@ -62,35 +62,50 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             var route = new Route();
 
-            route.PipelineModules.Add(new DevicePipelineModuleConfiguration()
+            var sentinel = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Sentinel),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 25 }                
-            });
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 100, Y = 25 }
+            };
 
-            route.PipelineModules.Add(new DevicePipelineModuleConfiguration()
+            route.PipelineModules.Add(sentinel);
+
+            var inputTranslator = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.InputTranslator),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 150 }
-            });
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 250, Y = 125 }
+            };
 
-            route.PipelineModules.Add(new DevicePipelineModuleConfiguration()
+            sentinel.PrimaryOutput = EntityHeader.Create(inputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            route.PipelineModules.Add(inputTranslator);
+
+            var workflow = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Workflow),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 275 }
-            });
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 400, Y = 225 }
+            };
 
-            route.PipelineModules.Add(new DevicePipelineModuleConfiguration()
+            inputTranslator.PrimaryOutput = EntityHeader.Create(workflow.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            route.PipelineModules.Add(workflow);
+
+            var outputTranslator = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.OutputTranslator),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 425 }
-            });
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 550, Y = 325 }
+            };
 
-            route.PipelineModules.Add(new DevicePipelineModuleConfiguration()
+            workflow.PrimaryOutput = EntityHeader.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            route.PipelineModules.Add(outputTranslator);
+            
+
+            var transmitter = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Transmitter),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 575 }
-            });
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 700, Y = 425 }
+            };
+
+            outputTranslator.PrimaryOutput = EntityHeader.Create(transmitter.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            route.PipelineModules.Add(transmitter);
 
             return route;
         }
@@ -108,6 +123,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             if (!PipelineModules.Any())
             {
                 result.Errors.Add(DeploymentErrorCodes.EmptyRoute.ToErrorMessage());
+            }
+
+            foreach(var module in PipelineModules)
+            {
+                result.Concat(module.Validate());
             }
 
             return result;

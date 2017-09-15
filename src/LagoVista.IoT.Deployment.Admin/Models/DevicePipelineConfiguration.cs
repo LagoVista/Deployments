@@ -1,17 +1,21 @@
 ﻿using LagoVista.Core.Models;
+using LagoVista.Core;
 using LagoVista.IoT.DeviceAdmin.Interfaces;
 using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.Pipeline.Admin.Models;
+using System;
 using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    public class DevicePipelineModuleConfiguration : EntityHeader
+    public class RouteModuleConfig : EntityHeader
     {
-        public DevicePipelineModuleConfiguration()
+        public RouteModuleConfig()
         {
             SecondaryPipelineModuleConfigurations = new List<EntityHeader>();
             Mappings = new List<KeyValuePair<string, string>>();
+            Id = Guid.NewGuid().ToId();
+            Text = Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned; 
         }
 
         public List<KeyValuePair<string, string>> Mappings { get; set; }
@@ -24,6 +28,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public DiagramLocation DiagramLocation { get; set; }
 
-        public IPipelineModuleConfiguration Value { get; set; }
+        public EntityHeader<IPipelineModuleConfiguration> Value { get; set; }
     }
 }
