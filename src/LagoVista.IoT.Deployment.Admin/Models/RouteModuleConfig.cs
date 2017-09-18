@@ -9,6 +9,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Attributes;
 
+
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public class RouteModuleConfig
