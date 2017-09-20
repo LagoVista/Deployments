@@ -732,4 +732,10 @@
   <data name="Err_RouteModule_NameNotDefined" xml:space="preserve">
     <value>Route Module Requires a Name</value>
   </data>
+  <data name="Host_ShowSiteDetails" xml:space="preserve">
+    <value>Show Site Details</value>
+  </data>
+  <data name="Host_ShowSiteDetails_Help" xml:space="preserve">
+    <value>If this option is selected you will be able to get the details from your site by going to the url http://[HostServerName]/solutions</value>
+  </data>
 </root>

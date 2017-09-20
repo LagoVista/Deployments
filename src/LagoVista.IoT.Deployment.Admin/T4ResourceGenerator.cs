@@ -353,6 +353,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_SelectSize
 
 		public static string Host_SelectSize { get { return GetResourceString("Host_SelectSize"); } }
+//Resources:DeploymentAdminResources:Host_ShowSiteDetails
+
+		public static string Host_ShowSiteDetails { get { return GetResourceString("Host_ShowSiteDetails"); } }
+//Resources:DeploymentAdminResources:Host_ShowSiteDetails_Help
+
+		public static string Host_ShowSiteDetails_Help { get { return GetResourceString("Host_ShowSiteDetails_Help"); } }
 //Resources:DeploymentAdminResources:Host_Size
 
 		public static string Host_Size { get { return GetResourceString("Host_Size"); } }
@@ -771,6 +777,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_MonitoringProvider = "Host_MonitoringProvider";
 			public const string Host_MonitoringURI = "Host_MonitoringURI";
 			public const string Host_SelectSize = "Host_SelectSize";
+			public const string Host_ShowSiteDetails = "Host_ShowSiteDetails";
+			public const string Host_ShowSiteDetails_Help = "Host_ShowSiteDetails_Help";
 			public const string Host_Size = "Host_Size";
 			public const string Host_Status = "Host_Status";
 			public const string Host_StatusDetails = "Host_StatusDetails";

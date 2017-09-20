@@ -293,10 +293,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusDetails { get; set; }
 
-
         public String HostAccessKey1 { get; set; }
 
         public String HostAccessKey2 { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public bool ShowSolutionDetailsSite { get; set; }
 
         public DeploymentHostSummary CreateSummary()
         {

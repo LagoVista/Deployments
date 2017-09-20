@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using LagoVista.Core.Models;
+using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceMessaging.Admin.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -53,9 +57,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DeviceConfigurations = new ObservableCollection<DeviceConfigSummary>();
         }
 
-
         [JsonProperty("planner")]
-        public PipelineInstanceSummary Planner { get; set; }
+        public PlannerSummary Planner { get; set; }
 
         [JsonProperty("listeners")]
         public ObservableCollection<ListenerSummary> Listeners { get; set; }
@@ -66,6 +69,41 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("status")]
         [JsonConverter(typeof(StringEnumConverter))]
         public DeploymentInstanceStates Status { get; set; }
+    }
+
+    public class PlannerSummary
+    {
+        [JsonProperty("id")]
+        public string Id { get;  private set; }
+        [JsonProperty("name")]
+        public string Name { get; private set; }
+        [JsonProperty("key")]
+        public string Key { get; private set; }
+        [JsonProperty("status")]
+        public PipelineModuleStatus Status { get; set; }
+        [JsonProperty("deviceIdParsers")]
+        public List<DeviceMessageDefinitionField> DeviceIdParsers { get; private set; }
+        [JsonProperty("messageIdParsers")]
+        public List<DeviceMessageDefinitionField> MessageTypeIdParsers { get; private set; }
+
+        public static PlannerSummary Create(PlannerConfiguration planner)
+        {
+            var summary = new PlannerSummary();
+            summary.Id = planner.Id;
+            summary.Key = planner.Key;
+            summary.Name = planner.Name;
+            summary.MessageTypeIdParsers = planner.MessageTypeIdParsers;
+            summary.DeviceIdParsers = planner.DeviceIdParsers;
+            return summary;
+        }
+    }
+
+    public class WorkflowInstanceSummary : PipelineInstanceSummary
+    {
+        [JsonProperty("attributes")]
+        public List<LagoVista.IoT.DeviceAdmin.Models.Attribute> Attributes { get; set; }
+        [JsonProperty("inputCommands")]
+        public List<InputCommand> InputCommands { get; set; }
     }
 
     public class DeviceConfigSummary : InstanceDetailsBase
@@ -80,8 +118,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
     public class DeviceMessageTypeSummary : InstanceDetailsBase
-    {
-
+    { 
+        [JsonProperty("value")]
+        public DeviceMessageDefinition Value { get; set; }
     }
 
     public class RouteSummary : InstanceDetailsBase
