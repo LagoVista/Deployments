@@ -34,7 +34,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Route_Messages, HelpResource: Resources.DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
-
+        
         public List<RouteModuleConfig> PipelineModules { get; set; }
 
 
@@ -65,7 +65,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var sentinel = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Sentinel),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 100, Y = 25 }
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 50, Y = 25 }
             };
 
             route.PipelineModules.Add(sentinel);
@@ -73,7 +73,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var inputTranslator = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.InputTranslator),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 250, Y = 125 }
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 125 }
             };
 
             sentinel.PrimaryOutput = EntityHeader.Create(inputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
@@ -82,7 +82,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var workflow = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Workflow),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 400, Y = 225 }
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 350, Y = 225 }
             };
 
             inputTranslator.PrimaryOutput = EntityHeader.Create(workflow.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
@@ -91,7 +91,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var outputTranslator = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.OutputTranslator),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 550, Y = 325 }
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 500, Y = 325 }
             };
 
             workflow.PrimaryOutput = EntityHeader.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
@@ -101,7 +101,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var transmitter = new RouteModuleConfig()
             {
                 ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Transmitter),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 700, Y = 425 }
+                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 650, Y = 425 }
             };
 
             outputTranslator.PrimaryOutput = EntityHeader.Create(transmitter.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
@@ -111,10 +111,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
 
         [CustomValidator]
-        public ValidationResult Validate()
+        public void Validate(ValidationResult result)
         {
-            var result = new ValidationResult();
-
             if (EntityHeader.IsNullOrEmpty(MessageDefinition))
             {
                 result.Errors.Add(DeploymentErrorCodes.NoMessageOnRoute.ToErrorMessage());
@@ -129,8 +127,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 result.Concat(module.Validate());
             }
-
-            return result;
         }
 
         public EntityHeader ToEntityHeader()

@@ -46,7 +46,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public ValidationResult Validate()
         {
             var result = new ValidationResult();
-
             if(EntityHeader.IsNullOrEmpty(ModuleType)) result.Errors.Add(Resources.DeploymentErrorCodes.RouteModuleEmptyType.ToErrorMessage());
             if (EntityHeader.IsNullOrEmpty(Module)) result.Errors.Add(Resources.DeploymentErrorCodes.RouteModuleEmptyType.ToErrorMessage());
             return result;
