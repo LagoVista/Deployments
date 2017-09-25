@@ -54,7 +54,6 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Deployment_Planner, WaterMark: Resources.DeploymentAdminResources.Names.Deployment_Planner_Select, HelpResource: Resources.DeploymentAdminResources.Names.Deployment_Planner_Help, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
         public EntityHeader<PlannerConfiguration> Planner { get; set; }
 
-
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
 

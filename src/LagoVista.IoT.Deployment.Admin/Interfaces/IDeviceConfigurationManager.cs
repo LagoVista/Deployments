@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user);
         Task<DeviceConfiguration> GetDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<DeviceConfiguration> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<DeviceConfiguration>> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<DependentObjectCheckResult> CheckDeviceConfigInUseAsync(string id, EntityHeader org, EntityHeader user);
 

@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode AlreadyDeployed => new ErrorCode() { Code = "DEP1001", Message = DeploymentAdminResources.Errs_AlreadyDeployed };
         public static ErrorCode MustBeStoppedBeforeRemoving => new ErrorCode() { Code = "DEP1003", Message = DeploymentAdminResources.Errs_MustBeStoppedBeforeRemoving };
         public static ErrorCode InstanceBusy => new ErrorCode() { Code = "DEP1004", Message = DeploymentAdminResources.Errs_InstanceBusy };
-        public static ErrorCode InstanceAlreadyRunning  => new ErrorCode() { Code = "DEP1005", Message = DeploymentAdminResources.Err_InstanceAlreadyRunning };
+        public static ErrorCode InstanceAlreadyRunning => new ErrorCode() { Code = "DEP1005", Message = DeploymentAdminResources.Err_InstanceAlreadyRunning };
         public static ErrorCode InstanceNotRunning => new ErrorCode() { Code = "DEP1006", Message = DeploymentAdminResources.Err_InstanceNotRunning };
         public static ErrorCode ErrorCommunicatingWithhost => new ErrorCode() { Code = "DEP1007", Message = DeploymentAdminResources.Err_ErrorCommunicatingWithHost };
         public static ErrorCode InstanceWithoutHost => new ErrorCode() { Code = "DEP1008", Message = DeploymentAdminResources.Err_InstanceWithoutHost };
@@ -40,9 +40,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 
         public static ErrorCode NoPlannerSpecified => new ErrorCode() { Code = "INS1002", Message = DeploymentAdminResources.Err_NoPlannerHasBeenSpecified };
 
-        public static ErrorCode CouldNotLoadListener => new ErrorCode() { Code = "INS1003", Message = DeploymentAdminResources.Err_CouldNotLoadListener };
 
-        public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "INS1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
+
+
 
         public static ErrorCode NoMessageOnRoute => new ErrorCode() { Code = "RTE1001", Message = DeploymentAdminResources.Err_NoMessageDefinitionOnRoute };
         public static ErrorCode EmptyRoute => new ErrorCode() { Code = "RTE1002", Message = DeploymentAdminResources.Err_EmptyRoute };
@@ -50,5 +50,13 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode RouteModuleNameNotDefined => new ErrorCode() { Code = "RTE1003", Message = DeploymentAdminResources.Err_RouteModule_NameNotDefined };
         public static ErrorCode RouteModuleEmptyType => new ErrorCode() { Code = "RTE1004", Message = DeploymentAdminResources.Err_RouteModule_ModuleTypeNotDefined };
         public static ErrorCode RouteModuleEmptyModule => new ErrorCode() { Code = "RTE1005", Message = DeploymentAdminResources.Err_RouteModule_ModuleIsRequired };
+
+
+
+        /* error messages when doing full validation on a solution */
+        public static ErrorCode NoListeners => new ErrorCode() { Code = "SLN1001", Message = DeploymentAdminResources.Warning_NoListeners };
+        public static ErrorCode NoDeviceConfigs => new ErrorCode() { Code = "SLN1002", Message = DeploymentAdminResources.Warning_NoDeviceConfigs };
+        public static ErrorCode CouldNotLoadListener => new ErrorCode() { Code = "SLN1003", Message = DeploymentAdminResources.Err_CouldNotLoadListener };
+        public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "SLN1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
     }
 }

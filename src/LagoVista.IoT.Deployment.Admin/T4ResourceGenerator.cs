@@ -674,6 +674,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Telemetry_ErrorQueryServer
 
 		public static string Telemetry_ErrorQueryServer { get { return GetResourceString("Telemetry_ErrorQueryServer"); } }
+//Resources:DeploymentAdminResources:Warning_NoDeviceConfigs
+
+		public static string Warning_NoDeviceConfigs { get { return GetResourceString("Warning_NoDeviceConfigs"); } }
+//Resources:DeploymentAdminResources:Warning_NoListeners
+
+		public static string Warning_NoListeners { get { return GetResourceString("Warning_NoListeners"); } }
 
 		public static class Names
 		{
@@ -884,6 +890,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string TaggedContainer_Tag = "TaggedContainer_Tag";
 			public const string TaggedContainer_Title = "TaggedContainer_Title";
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
+			public const string Warning_NoDeviceConfigs = "Warning_NoDeviceConfigs";
+			public const string Warning_NoListeners = "Warning_NoListeners";
 		}
 	}
 }

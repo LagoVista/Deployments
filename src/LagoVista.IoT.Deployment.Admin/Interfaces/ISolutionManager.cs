@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> AddSolutionsAsync(Solution solution, EntityHeader org, EntityHeader user);
         Task<Solution> GetSolutionAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<Solution> LoadFullSolutionAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<Solution>> LoadFullSolutionAsync(string id, EntityHeader org, EntityHeader user);
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string id, EntityHeader user);

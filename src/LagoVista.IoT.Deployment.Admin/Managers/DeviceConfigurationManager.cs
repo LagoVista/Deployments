@@ -2,17 +2,13 @@
 using System.Threading.Tasks;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.DeviceAdmin.Interfaces.Repos;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Pipeline.Admin.Managers;
 using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
 using LagoVista.Core.Managers;
 using static LagoVista.Core.Models.AuthorizeResult;
-using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using System;
-using LagoVista.IoT.DeviceMessaging.Admin.Repos;
 using LagoVista.IoT.DeviceMessaging.Admin.Managers;
 using LagoVista.IoT.Logging.Loggers;
 
@@ -67,8 +63,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return deviceConfiguration;
         }
 
-        public async Task<DeviceConfiguration> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<DeviceConfiguration>> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
         {
+            var result = new InvokeResult<DeviceConfiguration>();
+
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
 
             foreach (var route in deviceConfiguration.Routes)
@@ -76,25 +74,114 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await PopulateRoutes(route, org, user);
             }
 
-            return deviceConfiguration;
+            if (result.Successful)
+            {
+                return InvokeResult<DeviceConfiguration>.Create(deviceConfiguration);
+            }
+
+            return result;
         }
 
-        public async Task PopulateRoutes(Route route, EntityHeader org, EntityHeader user)
-        {            
-            route.MessageDefinition.Value = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(route.MessageDefinition.Id);
+        public async Task<InvokeResult> PopulateRoutes(Route route, EntityHeader org, EntityHeader user)
+        {
+            var fullLoadResult = new InvokeResult();
+
+            var msgLoadResult = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(route.MessageDefinition.Id, org, user);
+            if (msgLoadResult.Successful)
+            {
+                route.MessageDefinition.Value = msgLoadResult.Result;
+            }
+            else
+            {
+                fullLoadResult.Concat(fullLoadResult);
+            }
 
             foreach (var module in route.PipelineModules)
             {
                 switch (module.ModuleType.Value)
                 {
-                    case Pipeline.Admin.Models.PipelineModuleType.InputTranslator: module.Module.Value = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Sentinel: module.Module.Value = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(module.Module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Workflow: module.Module.Value = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.OutputTranslator: module.Module.Value = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(module.Module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Transmitter: module.Module.Value = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(module.Module.Id); break;
-                    case Pipeline.Admin.Models.PipelineModuleType.Custom: module.Module.Value = await _pipelineModuleManager.LoadFullCustomPipelineModuleConfigurationAsync(module.Module.Id); break;
+                    case Pipeline.Admin.Models.PipelineModuleType.InputTranslator:
+                        {
+                            var result = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Sentinel:
+                        {
+                            var result = await _pipelineModuleManager.LoadFullSentinelConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Workflow:
+                        {
+                            var result = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.OutputTranslator:
+                        {
+                            var result = await _pipelineModuleManager.LoadFullOutputTranslatorConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Transmitter:
+                        {
+                            var result = await _pipelineModuleManager.LoadFullTransmitterConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.Custom:
+                        {
+                            var result = await _pipelineModuleManager.LoadFullCustomPipelineModuleConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
                 }
             }
+
+            return fullLoadResult;
         }
 
         public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user)

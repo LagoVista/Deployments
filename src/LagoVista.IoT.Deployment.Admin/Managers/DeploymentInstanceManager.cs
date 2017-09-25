@@ -121,15 +121,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _connector.GetInstanceDetailsAsync(host, instanceId, org, user);
         }
 
-
-
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
             return await CheckForDepenenciesAsync(instance);
         }
-
         
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user)
@@ -138,20 +135,25 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 
-        public async Task<DeploymentInstance> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
             instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
 
-            instance.Solution.Value = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
-            instance.Solution.Id = instance.Solution.Value.Id;
-            instance.Solution.Text = instance.Solution.Value.Name;
-
-            return instance;
+            var solutionResult = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
+            if (solutionResult.Successful)
+            {
+                instance.Solution.Value = solutionResult.Result;
+                instance.Solution.Id = instance.Solution.Value.Id;
+                instance.Solution.Text = instance.Solution.Value.Name;
+                return InvokeResult<DeploymentInstance>.Create(instance);
+            }
+            else
+            {
+                return InvokeResult<DeploymentInstance>.FromErrors(solutionResult.Errors.ToArray());
+            }
         }
-
-        
     }
 }

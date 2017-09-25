@@ -51,4 +51,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             return result;
         }
     }
+
+    /* Will be stuffed into the Values of the Mappings list, will deserialize and validate when it's used */
+    public class OutputCommandMapping
+    {
+        public EntityHeader OutgoingDeviceMessage { get; set; }
+
+        public List<KeyValuePair<string, string>> FieldMappings { get; set; }
+    }
 }

@@ -738,4 +738,10 @@
   <data name="Host_ShowSiteDetails_Help" xml:space="preserve">
     <value>If this option is selected you will be able to get the details from your site by going to the url http://[HostServerName]/solutions</value>
   </data>
+  <data name="Warning_NoDeviceConfigs" xml:space="preserve">
+    <value>There are no Device Configurations on your solution, you probably need at least one.</value>
+  </data>
+  <data name="Warning_NoListeners" xml:space="preserve">
+    <value>There are no Listeners on your solution, you probably need at least one.</value>
+  </data>
 </root>
