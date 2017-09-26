@@ -113,7 +113,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult<Solution>.Create(solution);
         }
 
-        public async Task<ValidationResult> ValidationSolution(string id, EntityHeader org, EntityHeader user)
+        public async Task<ValidationResult> ValidateSolution(string id, EntityHeader org, EntityHeader user)
         {
             var result = new ValidationResult();
             try

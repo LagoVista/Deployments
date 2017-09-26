@@ -50,7 +50,10 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode RouteModuleNameNotDefined => new ErrorCode() { Code = "RTE1003", Message = DeploymentAdminResources.Err_RouteModule_NameNotDefined };
         public static ErrorCode RouteModuleEmptyType => new ErrorCode() { Code = "RTE1004", Message = DeploymentAdminResources.Err_RouteModule_ModuleTypeNotDefined };
         public static ErrorCode RouteModuleEmptyModule => new ErrorCode() { Code = "RTE1005", Message = DeploymentAdminResources.Err_RouteModule_ModuleIsRequired };
-
+        public static ErrorCode RouteCouldNotFindLinkedModule => new ErrorCode() { Code = "RTE1006", Message = DeploymentAdminResources.Err_CouldNotFindDestinationModule };
+        public static ErrorCode RouteSourceModuleNull => new ErrorCode() { Code = "RTE1007", Message = "Souce Module on Route is NULL" };
+        public static ErrorCode RouteDestinationModuleNull => new ErrorCode() { Code = "RTE1008", Message = "Destination Modoule on Route is NULL" };
+        public static ErrorCode RouteMessageDefinitionNull => new ErrorCode() { Code = "RTE1009", Message = "Message Definition on Route is Null" };
 
 
         /* error messages when doing full validation on a solution */

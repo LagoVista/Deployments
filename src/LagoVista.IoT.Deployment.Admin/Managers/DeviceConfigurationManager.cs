@@ -11,6 +11,8 @@ using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.DeviceMessaging.Admin.Managers;
 using LagoVista.IoT.Logging.Loggers;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -132,6 +134,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                             if (result.Successful)
                             {
                                 module.Module.Value = result.Result;
+                                var destModuleConfig = route.PipelineModules.Where(mod => mod.Id == module.PrimaryOutput.Id).FirstOrDefault();
+
+                                if (destModuleConfig.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.OutputTranslator)
+                                {
+                                    foreach(var mapping in module.Mappings)
+                                    {
+                                        if (mapping.Value != null)
+                                        {
+                                            var mappingValue = JsonConvert.DeserializeObject<OutputCommandMapping>(mapping.Value.ToString());
+                                            if(mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
+                                            {
+                                                var outgoingMsgLoadResult = _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
+                                                module.Mappings[module.Mappings.IndexOf(mapping)] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             else
                             {

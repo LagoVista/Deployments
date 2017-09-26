@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Attributes;
-
+using LagoVista.IoT.DeviceMessaging.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -50,12 +50,22 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             if (EntityHeader.IsNullOrEmpty(Module)) result.Errors.Add(Resources.DeploymentErrorCodes.RouteModuleEmptyType.ToErrorMessage());
             return result;
         }
+
+        public void InputTranslatorToWorkflowValidation(ValidationResult result, DeviceMessageDefinition message, DeviceWorkflow workflow)
+        {
+
+        }
+
+        public void WorkflowToOutputTranslatorValidation(ValidationResult result,  DeviceWorkflow workflow, OutputTranslatorConfiguration outputTranslator)
+        {
+
+        }
     }
 
     /* Will be stuffed into the Values of the Mappings list, will deserialize and validate when it's used */
     public class OutputCommandMapping
     {
-        public EntityHeader OutgoingDeviceMessage { get; set; }
+        public EntityHeader<DeviceMessageDefinition> OutgoingDeviceMessage { get; set; }
 
         public List<KeyValuePair<string, string>> FieldMappings { get; set; }
     }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Admin", "src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj", "{88DC40A1-10EE-4812-AB91-2E2096B788F4}"
 EndProject
@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		UpdateNuspecVersion.ps1 = UpdateNuspecVersion.ps1
 		UploadResources.ps1 = UploadResources.ps1
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{232D35ED-82F3-4F18-8C55-D24F285244E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5DF47FF3-5BFF-4ADA-A7F8-3B11B55CAD3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,5 +41,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88DC40A1-10EE-4812-AB91-2E2096B788F4} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
+		{ED0E5800-C7C8-4990-B3A5-848220755BC3} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
+		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF4875F9-2A92-4250-9175-F4FB21D56D13}
 	EndGlobalSection
 EndGlobal

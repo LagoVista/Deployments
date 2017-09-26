@@ -9,6 +9,7 @@ using LagoVista.Core;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.DeviceMessaging.Admin.Models;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.DeviceAdmin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -34,7 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Route_Messages, HelpResource: Resources.DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
-        
+
         public List<RouteModuleConfig> PipelineModules { get; set; }
 
 
@@ -52,7 +53,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                nameof(Route.Name),
                nameof(Route.Key),
-                nameof(Route.MessageDefinition),
+               nameof(Route.MessageDefinition),
                nameof(Route.IsDefault),
                nameof(Route.Notes)
             };
@@ -96,7 +97,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
             workflow.PrimaryOutput = EntityHeader.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(outputTranslator);
-            
+
 
             var transmitter = new RouteModuleConfig()
             {
@@ -109,6 +110,69 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
             return route;
         }
+
+
+        /// <summary>
+        /// Perform a deep validation,normal validation only ensures that the correct properties are set but doesn't load
+        /// and objects that are loaded via relationships.  This assumes that all the modules and their dependencies have been loaded.
+        /// </summary>
+        /// <param name="result"></param>
+        public void DeepValidation(ValidationResult result)
+        {
+            // Make sure basic validation checksout.
+            foreach (var moduleConfig in PipelineModules)
+            {
+                Validate(result);
+            }
+
+            if (MessageDefinition.Value == null)
+            {
+                result.Errors.Add(Resources.DeploymentErrorCodes.RouteDestinationModuleNull.ToErrorMessage());
+            }
+
+            if (!result.Successful)
+            {
+                return;
+            }
+
+            foreach (var moduleConfig in PipelineModules)
+            {
+                if (!EntityHeader.IsNullOrEmpty(moduleConfig.PrimaryOutput))
+                {
+                    var destModuleConfig = PipelineModules.Where(mod => mod.Id == moduleConfig.PrimaryOutput.Id).FirstOrDefault();
+                    if (destModuleConfig == null)
+                    {
+                        result.Errors.Add(Resources.DeploymentErrorCodes.RouteCouldNotFindLinkedModule.ToErrorMessage($"SourceModule={moduleConfig.Name}"));
+                    }
+                    else
+                    {
+                        if (moduleConfig.Module.Value == null)
+                        {
+                            result.Errors.Add(Resources.DeploymentErrorCodes.RouteSourceModuleNull.ToErrorMessage($"SourceModule={moduleConfig.Name}"));
+                        }
+                        else if (destModuleConfig.Module.Value == null)
+                        {
+                            result.Errors.Add(Resources.DeploymentErrorCodes.RouteDestinationModuleNull.ToErrorMessage($"SourceModule={moduleConfig.Name}"));
+                        }
+                        else
+                        {
+                            if (moduleConfig.ModuleType.Value == PipelineModuleType.InputTranslator &&
+                                destModuleConfig.ModuleType.Value == PipelineModuleType.Workflow)
+                            {
+                                moduleConfig.InputTranslatorToWorkflowValidation(result, MessageDefinition.Value, destModuleConfig.Module.Value as DeviceWorkflow);
+                            }
+                            else if (moduleConfig.ModuleType.Value == PipelineModuleType.InputTranslator &&
+                               destModuleConfig.ModuleType.Value == PipelineModuleType.Workflow)
+                            {
+                                moduleConfig.WorkflowToOutputTranslatorValidation(result, moduleConfig.Module.Value as DeviceWorkflow, destModuleConfig.Module.Value as OutputTranslatorConfiguration);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
 
         [CustomValidator]
         public void Validate(ValidationResult result)
@@ -123,7 +187,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 result.Errors.Add(DeploymentErrorCodes.EmptyRoute.ToErrorMessage());
             }
 
-            foreach(var module in PipelineModules)
+            foreach (var module in PipelineModules)
             {
                 result.Concat(module.Validate());
             }
@@ -139,4 +203,3 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 }
-
