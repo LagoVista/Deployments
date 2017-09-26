@@ -125,14 +125,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Validate(result);
             }
 
-            if (MessageDefinition.Value == null)
-            {
-                result.Errors.Add(Resources.DeploymentErrorCodes.RouteDestinationModuleNull.ToErrorMessage());
-            }
-
             if (!result.Successful)
             {
                 return;
+            }
+
+            if (MessageDefinition.Value == null)
+            {
+                result.Errors.Add(Resources.DeploymentErrorCodes.RouteDestinationModuleNull.ToErrorMessage());
             }
 
             foreach (var moduleConfig in PipelineModules)
@@ -169,10 +169,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                         }
                     }
                 }
-
             }
         }
-
 
         [CustomValidator]
         public void Validate(ValidationResult result)

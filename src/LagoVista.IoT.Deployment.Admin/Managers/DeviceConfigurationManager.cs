@@ -98,6 +98,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 fullLoadResult.Concat(fullLoadResult);
             }
 
+
+
             foreach (var module in route.PipelineModules)
             {
                 switch (module.ModuleType.Value)
@@ -138,15 +140,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                                 if (destModuleConfig.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.OutputTranslator)
                                 {
-                                    foreach(var mapping in module.Mappings)
+                                    for(var idx = 0; idx < module.Mappings.Count; ++idx)
                                     {
+                                        var mapping = module.Mappings[idx];
                                         if (mapping.Value != null)
                                         {
                                             var mappingValue = JsonConvert.DeserializeObject<OutputCommandMapping>(mapping.Value.ToString());
-                                            if(mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
+                                            if (mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
                                             {
                                                 var outgoingMsgLoadResult = _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
-                                                module.Mappings[module.Mappings.IndexOf(mapping)] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
+                                                module.Mappings[idx] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
                                             }
                                         }
                                     }

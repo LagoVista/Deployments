@@ -99,8 +99,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             foreach (var listenerConfig in solution.Listeners)
             {
-                 var loadResult = await _pipelineModuleManager.LoadFullListenerConfigurationAsync(listenerConfig.Id);
-                if(loadResult.Successful)
+                var loadResult = await _pipelineModuleManager.LoadFullListenerConfigurationAsync(listenerConfig.Id);
+                if (loadResult.Successful)
                 {
                     listenerConfig.Value = loadResult.Result;
                 }
@@ -113,19 +113,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult<Solution>.Create(solution);
         }
 
-        public async Task<ValidationResult> ValidateSolution(string id, EntityHeader org, EntityHeader user)
+        public ValidationResult ValidateSolution(Solution solution)
         {
             var result = new ValidationResult();
+
             try
             {
-                var solutionLoadResult = await LoadFullSolutionAsync(id, org, user);
-                if (!solutionLoadResult.Successful)
-                {
-                    return solutionLoadResult;
-                }
-
-                var solution = solutionLoadResult.Result;
-
                 if (solution.Listeners.Count == 0) result.Warnings.Add(Resources.DeploymentErrorCodes.NoListeners.ToErrorMessage());
                 if (solution.DeviceConfigurations.Count == 0) result.Warnings.Add(Resources.DeploymentErrorCodes.NoDeviceConfigs.ToErrorMessage());
 
@@ -141,18 +134,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
 
-                foreach (var couldNotLoadDeviceConfig in solution.DeviceConfigurations)
+                foreach (var deviceConfigurations in solution.DeviceConfigurations)
                 {
-                    if (couldNotLoadDeviceConfig.Value == null)
+                    if (deviceConfigurations.Value == null)
                     {
                         result.Errors.Add(Resources.DeploymentErrorCodes.CouldNotLoadDeviceConfiguration.ToErrorMessage());
                     }
                     else
                     {
-                        result.Concat(Validator.Validate(couldNotLoadDeviceConfig.Value));
+                        deviceConfigurations.Value.DeepValidation(result);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -160,6 +152,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return result;
+        }
+
+        public async Task<ValidationResult> ValidateSolutionAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            var solutionLoadResult = await LoadFullSolutionAsync(id, org, user);
+            if (!solutionLoadResult.Successful)
+            {
+                return solutionLoadResult;
+            }
+
+            return ValidateSolution(solutionLoadResult.Result);
         }
 
         public async Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, EntityHeader user)

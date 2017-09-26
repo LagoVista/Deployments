@@ -29,8 +29,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public double ConfigurationVersion { get; set; }
 
-
-
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
         
@@ -105,6 +103,20 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.Routes),
                 };
         }
+
+        /// <summary>
+        /// Perform a deep validation,normal validation only ensures that the correct properties are set but doesn't load
+        /// and objects that are loaded via relationships.  This assumes that all the modules and their dependencies have been loaded.
+        /// </summary>
+        /// <param name="result"></param>
+        public void DeepValidation(ValidationResult result)
+        {
+            foreach(var route in Routes)
+            {
+                route.DeepValidation(result);
+            }
+        }
+
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, Resources.DeploymentAdminResources.Names.DeviceConfiguration_Help, Resources.DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]

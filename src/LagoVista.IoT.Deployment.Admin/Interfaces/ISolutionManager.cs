@@ -21,5 +21,8 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> DeleteSolutionAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<bool> QueryKeyInUse(string key, EntityHeader org);
+
+        ValidationResult ValidateSolution(Solution solution);
+        Task<ValidationResult> ValidateSolutionAsync(string id, EntityHeader org, EntityHeader user);
     }
 }

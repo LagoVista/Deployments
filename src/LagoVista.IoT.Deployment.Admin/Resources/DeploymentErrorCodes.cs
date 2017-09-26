@@ -61,5 +61,11 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode NoDeviceConfigs => new ErrorCode() { Code = "SLN1002", Message = DeploymentAdminResources.Warning_NoDeviceConfigs };
         public static ErrorCode CouldNotLoadListener => new ErrorCode() { Code = "SLN1003", Message = DeploymentAdminResources.Err_CouldNotLoadListener };
         public static ErrorCode CouldNotLoadDeviceConfiguration => new ErrorCode() { Code = "SLN1004", Message = DeploymentAdminResources.Err_CouldNotLoadDeviceConfiguration };
+
+
+        public static ErrorCode InvalidOuputCommandMapping => new ErrorCode() { Code = "SLN1005", Message = "Invalid Output Command Mapping" };
+        public static ErrorCode InvalidInputCommandMapping => new ErrorCode() { Code = "SLN1006", Message = "Invalid Input Command Mapping" };
+
+
     }
 }

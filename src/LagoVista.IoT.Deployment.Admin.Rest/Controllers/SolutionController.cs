@@ -76,6 +76,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Config - Run Full Validation on a Solution
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/solution/{id}/validate")]
+        public async Task<ValidationResult> ValidateAsync(String id)
+        {
+            return await _solutionManager.ValidateSolutionAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Deployment Config - Key In Use
         /// </summary>
         /// <returns></returns>

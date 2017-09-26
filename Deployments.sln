@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{232D35ED-82F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5DF47FF3-5BFF-4ADA-A7F8-3B11B55CAD3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LagoVista.IoT.Deployment.Tests", "tests\LagoVista.IoT.Deployment.Tests\LagoVista.IoT.Deployment.Tests.csproj", "{EA592325-B35B-49AC-9C00-FD5D787A1647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA592325-B35B-49AC-9C00-FD5D787A1647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA592325-B35B-49AC-9C00-FD5D787A1647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA592325-B35B-49AC-9C00-FD5D787A1647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA592325-B35B-49AC-9C00-FD5D787A1647}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{88DC40A1-10EE-4812-AB91-2E2096B788F4} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
 		{ED0E5800-C7C8-4990-B3A5-848220755BC3} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
 		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
+		{EA592325-B35B-49AC-9C00-FD5D787A1647} = {5DF47FF3-5BFF-4ADA-A7F8-3B11B55CAD3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF4875F9-2A92-4250-9175-F4FB21D56D13}
