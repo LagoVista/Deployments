@@ -63,7 +63,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 containerRepo.Password = null;
             }
 
-
             await _repo.UpdateContainerRepoAsync(containerRepo);
             return InvokeResult.Success;
         }
