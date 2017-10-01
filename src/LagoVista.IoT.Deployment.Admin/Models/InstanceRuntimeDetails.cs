@@ -152,7 +152,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     public class ListenerSummary : PipelineInstanceSummary
     {
         [JsonProperty("port")]
-        public int Port { get; set; }
+        public int? Port { get; set; }
 
         [JsonProperty("listenerType")]
         public string ListenerType{ get; set; }
