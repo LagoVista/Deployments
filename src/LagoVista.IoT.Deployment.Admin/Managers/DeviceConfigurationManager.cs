@@ -13,19 +13,21 @@ using LagoVista.IoT.DeviceMessaging.Admin.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using System.Linq;
 using Newtonsoft.Json;
+using LagoVista.IoT.DeviceManagement.Core.Interfaces;
+using LagoVista.IoT.DeviceManagement.Core.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
-    public class DeviceConfigurationManager : ManagerBase, IDeviceConfigurationManager
+    public class DeviceConfigurationManager : ManagerBase, IDeviceConfigurationManager, IInputCommandService
     {
         IDeviceMessageDefinitionManager _deviceMessageDefinitionManager;
         IDeviceConfigurationRepo _deviceConfigRepo;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
 
-
-        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
-            base(logger, appConfig, depmanager, security)
+        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, 
+                            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, 
+                            IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
@@ -38,7 +40,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Create, user, org);
             ValidationCheck(deviceConfiguration, Actions.Create);
             await _deviceConfigRepo.AddDeviceConfigurationAsync(deviceConfiguration);
-
             return InvokeResult.Success;
         }
 
@@ -97,8 +98,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 fullLoadResult.Concat(fullLoadResult);
             }
-
-
 
             foreach (var module in route.PipelineModules)
             {
@@ -223,6 +222,41 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<bool> QueryDeviceConfigurationKeyInUseAsync(string key, string orgId)
         {
             return _deviceConfigRepo.QueryKeyInUseAsync(key, orgId);
+        }
+
+        public async Task<InvokeResult<List<InputCommandEndPoint>>> GetInputCommandEndPointsForDeviceConfig(string deviceConfigId, EntityHeader org, EntityHeader user)
+        {
+            var result = new InvokeResult<List<InputCommandEndPoint>>();
+            result.Result = new List<InputCommandEndPoint>();
+
+            var endpoints = new List<InputCommandEndPoint>();
+            var deviceConfig = await GetDeviceConfigurationAsync(deviceConfigId, org, user);
+            foreach(var route in deviceConfig.Routes)
+            {
+                foreach(var module in route.PipelineModules)
+                {
+                    if(module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
+                    {
+                        var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                        if (wfLoadResult.Successful)
+                        {
+                            foreach(var inputCommand in wfLoadResult.Result.InputCommands)
+                            {
+                                var endPoint = new InputCommandEndPoint();
+                                endPoint.EndPoint = $"/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
+                                endPoint.InputCommand = inputCommand;
+                                result.Result.Add(endPoint);
+                            }
+                        }
+                        else
+                        {
+                            result.Concat(result);
+                        }
+                    }
+                }
+            }
+
+            return InvokeResult<List<InputCommandEndPoint>>.Create(endpoints);
         }
     }
 }
