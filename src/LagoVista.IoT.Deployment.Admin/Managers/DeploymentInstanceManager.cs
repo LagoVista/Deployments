@@ -2,19 +2,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.Core.Managers;
-using LagoVista.Core;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
-using LagoVista.UserAdmin.Managers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -35,14 +31,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceRepositoryManager _deviceRepoManager;
         IDeploymentActivityQueueManager _deploymentActivityQueueManager;
 
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
+                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager,
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager,
-                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager deploymentConfigurationManager,
-                     IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(hostManager, instanceRepo, logger, appConfig, depmanager, security)
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(hostManager, instanceRepo, deviceManagerRepo, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
-            _solutionManager = deploymentConfigurationManager;
+            _solutionManager = solutionManager;
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
             _connector = connector;
             _deviceRepoManager = deviceRepoManager;

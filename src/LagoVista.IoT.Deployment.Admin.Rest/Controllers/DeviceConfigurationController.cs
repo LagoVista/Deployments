@@ -12,6 +12,7 @@ using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.DeviceAdmin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -120,6 +121,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             return response;
         }
+
+        /// <summary>
+        ///  Device Config Property - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/property/factory")]
+        public DetailResponse<CustomField> CreateDeviceConfigProperty()
+        {
+            var response = DetailResponse<CustomField>.Create();
+            response.Model.Id = Guid.NewGuid().ToId();
+            return response;
+        }
+
 
         /// <summary>
         ///  Route - Create New

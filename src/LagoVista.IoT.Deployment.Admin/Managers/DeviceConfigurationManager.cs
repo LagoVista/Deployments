@@ -18,21 +18,23 @@ using LagoVista.IoT.DeviceManagement.Core.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
-    public class DeviceConfigurationManager : ManagerBase, IDeviceConfigurationManager, IInputCommandService
+    public class DeviceConfigurationManager : ManagerBase, IDeviceConfigurationManager, IDeviceConfigHelper
     {
         IDeviceMessageDefinitionManager _deviceMessageDefinitionManager;
         IDeviceConfigurationRepo _deviceConfigRepo;
+        IDeploymentInstanceManager _deploymentInstanceManager;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
 
-        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager, 
-                            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, 
+        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
+                            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManager deploymentInstnaceManager,
                             IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
             _deviceAdminManager = deviceAdminManager;
             _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
+            _deploymentInstanceManager = deploymentInstnaceManager;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -139,7 +141,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                                 if (destModuleConfig.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.OutputTranslator)
                                 {
-                                    for(var idx = 0; idx < module.Mappings.Count; ++idx)
+                                    for (var idx = 0; idx < module.Mappings.Count; ++idx)
                                     {
                                         var mapping = module.Mappings[idx];
                                         if (mapping.Value != null)
@@ -224,39 +226,56 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _deviceConfigRepo.QueryKeyInUseAsync(key, orgId);
         }
 
-        public async Task<InvokeResult<List<InputCommandEndPoint>>> GetInputCommandEndPointsForDeviceConfig(string deviceConfigId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
-            var result = new InvokeResult<List<InputCommandEndPoint>>();
-            result.Result = new List<InputCommandEndPoint>();
+            var result = new InvokeResult();
 
-            var endpoints = new List<InputCommandEndPoint>();
-            var deviceConfig = await GetDeviceConfigurationAsync(deviceConfigId, org, user);
-            foreach(var route in deviceConfig.Routes)
+            var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
+
+            if (instanceEH != null)
             {
-                foreach(var module in route.PipelineModules)
+                var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+                if (instance == null && instance.Status.Value == DeploymentInstanceStates.Ready)
                 {
-                    if(module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
+                    device.DeviceURI = $"http://{instance.DnsHostName}/devices/{device.Id}";
+
+                    var endpoints = new List<InputCommandEndPoint>();
+                    foreach (var route in deviceConfig.Routes)
                     {
-                        var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
-                        if (wfLoadResult.Successful)
+                        foreach (var module in route.PipelineModules)
                         {
-                            foreach(var inputCommand in wfLoadResult.Result.InputCommands)
+                            if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                             {
-                                var endPoint = new InputCommandEndPoint();
-                                endPoint.EndPoint = $"/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
-                                endPoint.InputCommand = inputCommand;
-                                result.Result.Add(endPoint);
+                                var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                                if (wfLoadResult.Successful)
+                                {
+                                    foreach (var inputCommand in wfLoadResult.Result.InputCommands)
+                                    {
+                                        var endPoint = new InputCommandEndPoint();
+                                        endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
+                                        endPoint.InputCommand = inputCommand;
+                                        endpoints.Add(endPoint);
+                                    }
+                                }
+                                else
+                                {
+                                    result.Concat(result);
+                                }
                             }
-                        }
-                        else
-                        {
-                            result.Concat(result);
                         }
                     }
                 }
             }
 
-            return InvokeResult<List<InputCommandEndPoint>>.Create(endpoints);
+            foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
+            {
+                device.PropertiesMetaData.Add(prop);
+            }
+
+
+
+            return result;
+
         }
     }
 }

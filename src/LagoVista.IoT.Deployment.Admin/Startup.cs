@@ -2,6 +2,7 @@
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Deployment.Admin.Validation;
+using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ISolutionManager, SolutionManager>();
             services.AddTransient<IContainerRepositoryManager, ContainerRepositoryManager>();
             services.AddTransient<IDeviceConfigurationManager, DeviceConfigurationManager>();
+            services.AddTransient<IDeviceConfigHelper, DeviceConfigurationManager>();            
             services.AddTransient<IUsageMetricsManager, UsageMetricsManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentHostManagerRemote, DeploymentHostManager>();
