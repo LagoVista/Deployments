@@ -22,12 +22,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     {
         IDeviceMessageDefinitionManager _deviceMessageDefinitionManager;
         IDeviceConfigurationRepo _deviceConfigRepo;
-        IDeploymentInstanceManager _deploymentInstanceManager;
+        IDeploymentInstanceManagerCore _deploymentInstanceManager;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
-                            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManager deploymentInstnaceManager,
+                            IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
                             IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
