@@ -65,6 +65,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
             await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Read, user, org);
+
+            foreach (var prop in deviceConfiguration.Properties.OrderBy(prop => prop.Order))
+            {
+                if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
+                {
+                    prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
+                }
+                else if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
+                {
+                    prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
+                }
+            }
+
             return deviceConfiguration;
         }
 
@@ -270,12 +283,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
             {
                 device.PropertiesMetaData.Add(prop);
+                if(prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
+                {
+                    prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
+                }
+                else if(prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
+                {
+                    prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
+                }
             }
 
-
-
             return result;
-
         }
     }
 }

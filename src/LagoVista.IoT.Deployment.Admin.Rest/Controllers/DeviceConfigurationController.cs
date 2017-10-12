@@ -13,6 +13,7 @@ using LagoVista.UserAdmin.Models.Users;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceAdmin.Models;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -134,6 +135,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Device Config Properpty - Get List for Config
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/{id}/properties")]
+        public async Task<List<CustomField>> GetDeviceConfigProperties(string id)
+        {
+            var config = await _deviceConfigManager.GetDeviceConfigurationAsync(id, OrgEntityHeader, UserEntityHeader);
+            return config.Properties;
+        }
 
         /// <summary>
         ///  Route - Create New
