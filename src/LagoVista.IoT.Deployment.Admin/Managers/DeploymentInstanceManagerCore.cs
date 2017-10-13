@@ -166,6 +166,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return InvokeResult.Success;
-        }        
+        }
+
+        public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            ValidationCheck(instance, Actions.Update);
+            instance.SetState(newStatus);
+            await _instanceRepo.UpdateInstanceAsync(instance);
+            return InvokeResult.Success;
+        }
     }
 }

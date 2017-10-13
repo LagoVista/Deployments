@@ -15,6 +15,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using System;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -241,56 +242,102 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("POPUPLATE DEVICe CONFIGURATION");
+
             var result = new InvokeResult();
 
-            var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
-
-            if (instanceEH != null)
+            if (EntityHeader.IsNullOrEmpty(instanceEH))
             {
-                var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
-                if (instance == null && instance.Status.Value == DeploymentInstanceStates.Ready)
-                {
-                    device.DeviceURI = $"http://{instance.DnsHostName}/devices/{device.Id}";
+                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
+                Console.WriteLine("FAIL 1");
+                return result;
+            }
 
-                    var endpoints = new List<InputCommandEndPoint>();
-                    foreach (var route in deviceConfig.Routes)
+            var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
+            if (deviceConfig == null)
+            {
+                result.AddSystemError($"Could Not Load Device Configuration with Device Configuration Id={device.DeviceConfiguration.Id}.");
+                Console.WriteLine("FAIL 2");
+                return result;
+            }
+
+            Console.WriteLine("HERE");
+
+            var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+            if (instance == null)
+                Console.WriteLine("instance null");            
+            else
+                Console.WriteLine("instance.stat" + instance.Status.Text);
+
+
+
+            if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
+            {
+                Console.WriteLine("HERE 3");
+
+                device.DeviceURI = $"http://{instance.DnsHostName}/devices/{device.Id}";
+
+                Console.WriteLine("DEP " + device.DeviceURI);
+
+                var endpoints = new List<InputCommandEndPoint>();
+                foreach (var route in deviceConfig.Routes)
+                {
+                    Console.WriteLine("ROUT 1");
+
+                    foreach (var module in route.PipelineModules)
                     {
-                        foreach (var module in route.PipelineModules)
+                        Console.WriteLine("MOD 1");
+
+                        if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
-                            if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
+
+
+                            var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                            if (wfLoadResult.Successful)
                             {
-                                var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
-                                if (wfLoadResult.Successful)
+                                foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                 {
-                                    foreach (var inputCommand in wfLoadResult.Result.InputCommands)
-                                    {
-                                        var endPoint = new InputCommandEndPoint();
-                                        endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
-                                        endPoint.InputCommand = inputCommand;
-                                        endpoints.Add(endPoint);
-                                    }
+                                    Console.WriteLine("ADD EP");
+
+                                    var endPoint = new InputCommandEndPoint();
+                                    endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
+                                    endPoint.InputCommand = inputCommand;
+                                    endpoints.Add(endPoint);
                                 }
-                                else
-                                {
-                                    result.Concat(result);
-                                }
+                            }
+                            else
+                            {
+                                result.Concat(result);
                             }
                         }
                     }
                 }
+                device.InputCommandEndPoints = endpoints;
             }
 
-            foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
+            if (deviceConfig.Properties != null)
             {
-                device.PropertiesMetaData.Add(prop);
-                if(prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
+                Console.WriteLine("PROP NO NULL");
+
+                device.PropertiesMetaData = new List<DeviceAdmin.Models.CustomField>();
+                foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
                 {
-                    prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
+                    Console.WriteLine("PROP IS SET");
+                    device.PropertiesMetaData.Add(prop);
+                    if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
+                    {
+                        prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
+                    }
+                    else if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
+                    {
+                        prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
+                    }
                 }
-                else if(prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
-                {
-                    prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
-                }
+            }
+            else
+            {
+                Console.WriteLine("PROP IS NULL");
             }
 
             return result;
