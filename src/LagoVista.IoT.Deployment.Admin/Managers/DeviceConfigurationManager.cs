@@ -301,7 +301,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                     Console.WriteLine("ADD EP");
 
                                     var endPoint = new InputCommandEndPoint();
-                                    endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}";
+                                    endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}";
                                     endPoint.InputCommand = inputCommand;
                                     endpoints.Add(endPoint);
                                 }
