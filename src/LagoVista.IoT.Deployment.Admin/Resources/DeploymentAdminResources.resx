@@ -747,4 +747,16 @@
   <data name="Err_CouldNotFindDestinationModule" xml:space="preserve">
     <value>Could not find destination pipeline module on route</value>
   </data>
+  <data name="Instance_InputCommandPort" xml:space="preserve">
+    <value>Input Command Port</value>
+  </data>
+  <data name="Instance_InputCommandPort_Help" xml:space="preserve">
+    <value>Specify the port that the listener should listen on for the Input Command web server, this is normally port 80 for non SSL listeners and 443 for SSL listeners.</value>
+  </data>
+  <data name="Instance_InputCommandSSL" xml:space="preserve">
+    <value>SSL for Input Commands</value>
+  </data>
+  <data name="Instance_InputCommandSSL_Help" xml:space="preserve">
+    <value>Specify if your input commands should only listen on an SSL port.  You may want to disable this if your clients do not support SSL.</value>
+  </data>
 </root>

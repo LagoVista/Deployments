@@ -506,6 +506,18 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Instance_Host_Watermark
 
 		public static string Instance_Host_Watermark { get { return GetResourceString("Instance_Host_Watermark"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandPort
+
+		public static string Instance_InputCommandPort { get { return GetResourceString("Instance_InputCommandPort"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandPort_Help
+
+		public static string Instance_InputCommandPort_Help { get { return GetResourceString("Instance_InputCommandPort_Help"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandSSL
+
+		public static string Instance_InputCommandSSL { get { return GetResourceString("Instance_InputCommandSSL"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandSSL_Help
+
+		public static string Instance_InputCommandSSL_Help { get { return GetResourceString("Instance_InputCommandSSL_Help"); } }
 //Resources:DeploymentAdminResources:Instance_IsDeployed
 
 		public static string Instance_IsDeployed { get { return GetResourceString("Instance_IsDeployed"); } }
@@ -837,6 +849,10 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Instance_Host = "Instance_Host";
 			public const string Instance_Host_Help = "Instance_Host_Help";
 			public const string Instance_Host_Watermark = "Instance_Host_Watermark";
+			public const string Instance_InputCommandPort = "Instance_InputCommandPort";
+			public const string Instance_InputCommandPort_Help = "Instance_InputCommandPort_Help";
+			public const string Instance_InputCommandSSL = "Instance_InputCommandSSL";
+			public const string Instance_InputCommandSSL_Help = "Instance_InputCommandSSL_Help";
 			public const string Instance_IsDeployed = "Instance_IsDeployed";
 			public const string Instance_IsDeployed_Help = "Instance_IsDeployed_Help";
 			public const string Instance_LastPing = "Instance_LastPing";

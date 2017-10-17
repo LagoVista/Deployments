@@ -163,7 +163,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                             var mappingValue = JsonConvert.DeserializeObject<OutputCommandMapping>(mapping.Value.ToString());
                                             if (mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
                                             {
-                                                var outgoingMsgLoadResult = _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
+                                                var outgoingMsgLoadResult = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
+                                                mappingValue.OutgoingDeviceMessage.Value = outgoingMsgLoadResult.Result;
                                                 module.Mappings[idx] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
                                             }
                                         }
@@ -242,9 +243,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("POPUPLATE DEVICe CONFIGURATION");
-
             var result = new InvokeResult();
 
             if (EntityHeader.IsNullOrEmpty(instanceEH))
@@ -262,44 +260,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return result;
             }
 
-            Console.WriteLine("HERE");
-
             var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
-            if (instance == null)
-                Console.WriteLine("instance null");            
-            else
-                Console.WriteLine("instance.stat" + instance.Status.Text);
-
-
 
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
-                Console.WriteLine("HERE 3");
-
                 device.DeviceURI = $"http://{instance.DnsHostName}/devices/{device.Id}";
-
-                Console.WriteLine("DEP " + device.DeviceURI);
 
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)
                 {
-                    Console.WriteLine("ROUT 1");
-
                     foreach (var module in route.PipelineModules)
                     {
-                        Console.WriteLine("MOD 1");
-
                         if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
-
-
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
                             if (wfLoadResult.Successful)
                             {
                                 foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                 {
-                                    Console.WriteLine("ADD EP");
-
                                     var endPoint = new InputCommandEndPoint();
                                     endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}";
                                     endPoint.InputCommand = inputCommand;
@@ -318,12 +296,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (deviceConfig.Properties != null)
             {
-                Console.WriteLine("PROP NO NULL");
-
                 device.PropertiesMetaData = new List<DeviceAdmin.Models.CustomField>();
                 foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
                 {
-                    Console.WriteLine("PROP IS SET");
                     device.PropertiesMetaData.Add(prop);
                     if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
                     {
@@ -334,10 +309,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine("PROP IS NULL");
             }
 
             return result;
