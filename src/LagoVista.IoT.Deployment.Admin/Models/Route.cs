@@ -77,7 +77,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 125 }
             };
 
-            sentinel.PrimaryOutput = EntityHeader.Create(inputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            sentinel.PrimaryOutput = RouteConnection.Create(inputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(inputTranslator);
 
             var workflow = new RouteModuleConfig()
@@ -86,7 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 350, Y = 225 }
             };
 
-            inputTranslator.PrimaryOutput = EntityHeader.Create(workflow.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            inputTranslator.PrimaryOutput = RouteConnection.Create(workflow.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(workflow);
 
             var outputTranslator = new RouteModuleConfig()
@@ -95,18 +95,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 500, Y = 325 }
             };
 
-            workflow.PrimaryOutput = EntityHeader.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            workflow.PrimaryOutput = RouteConnection.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(outputTranslator);
-
-
-            var transmitter = new RouteModuleConfig()
-            {
-                ModuleType = EntityHeader<PipelineModuleType>.Create(PipelineModuleType.Transmitter),
-                DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 650, Y = 425 }
-            };
-
-            outputTranslator.PrimaryOutput = EntityHeader.Create(transmitter.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
-            route.PipelineModules.Add(transmitter);
 
             return route;
         }
@@ -137,7 +127,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
             foreach (var moduleConfig in PipelineModules)
             {
-                if (!EntityHeader.IsNullOrEmpty(moduleConfig.PrimaryOutput))
+                if (moduleConfig.PrimaryOutput != null)
                 {
                     var destModuleConfig = PipelineModules.Where(mod => mod.Id == moduleConfig.PrimaryOutput.Id).FirstOrDefault();
                     if (destModuleConfig == null)

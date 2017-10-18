@@ -155,17 +155,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                                 if (destModuleConfig.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.OutputTranslator)
                                 {
-                                    for (var idx = 0; idx < module.Mappings.Count; ++idx)
+                                    if (module.PrimaryOutput != null && module.PrimaryOutput.Mappings != null)
                                     {
-                                        var mapping = module.Mappings[idx];
-                                        if (mapping.Value != null)
+                                        for (var idx = 0; idx < module.PrimaryOutput.Mappings.Count; ++idx)
                                         {
-                                            var mappingValue = JsonConvert.DeserializeObject<OutputCommandMapping>(mapping.Value.ToString());
-                                            if (mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
+                                            var mapping = module.PrimaryOutput.Mappings[idx];
+                                            if (mapping.Value != null)
                                             {
-                                                var outgoingMsgLoadResult = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
-                                                mappingValue.OutgoingDeviceMessage.Value = outgoingMsgLoadResult.Result;
-                                                module.Mappings[idx] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
+                                                var mappingValue = JsonConvert.DeserializeObject<OutputCommandMapping>(mapping.Value.ToString());
+                                                if (mappingValue != null && !EntityHeader.IsNullOrEmpty(mappingValue.OutgoingDeviceMessage))
+                                                {
+                                                    var outgoingMsgLoadResult = await _deviceMessageDefinitionManager.LoadFullDeviceMessageDefinitionAsync(mappingValue.OutgoingDeviceMessage.Id, org, user);
+                                                    mappingValue.OutgoingDeviceMessage.Value = outgoingMsgLoadResult.Result;
+                                                    module.PrimaryOutput.Mappings[idx] = new KeyValuePair<string, object>(mapping.Key, mappingValue);
+                                                }
                                             }
                                         }
                                     }
@@ -278,9 +281,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                             {
                                 foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                 {
-                                    var endPoint = new InputCommandEndPoint();
-                                    endPoint.EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}";
-                                    endPoint.InputCommand = inputCommand;
+                                    var endPoint = new InputCommandEndPoint
+                                    {
+                                        EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
+                                        InputCommand = inputCommand
+                                    };
                                     endpoints.Add(endPoint);
                                 }
                             }
