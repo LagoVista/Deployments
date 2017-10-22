@@ -159,7 +159,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var path = $"/api/instancemanager/deploy/{instanceId}";
             return Execute(path, host, org, user);
         }
-
+      
         public Task<InvokeResult> PauseAsync(DeploymentHost host, string instanceId, EntityHeader org, EntityHeader user)
         {
             var path = $"/api/instancemanager/pause/{instanceId}";

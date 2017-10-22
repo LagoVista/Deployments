@@ -206,6 +206,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Reset Container
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/resetcontainer")]
+        public Task<InvokeResult> ResetContainerAsync(String id)
+        {
+            return _instanceManager.ResetContainerAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
         /// Deployment Instance - Stop
         /// </summary>
         /// <param name="id"></param>

@@ -151,5 +151,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<DeploymentInstance>.FromErrors(solutionResult.Errors.ToArray());
             }
         }
+
+        public Task<InvokeResult> ResetContainerAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.ResetContainer);
+        }
     }
 }

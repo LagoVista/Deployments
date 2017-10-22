@@ -759,4 +759,7 @@
   <data name="Instance_InputCommandSSL_Help" xml:space="preserve">
     <value>Specify if your input commands should only listen on an SSL port.  You may want to disable this if your clients do not support SSL.</value>
   </data>
+  <data name="InstanceStates_FailedToStart" xml:space="preserve">
+    <value>Failed to Start</value>
+  </data>
 </root>
