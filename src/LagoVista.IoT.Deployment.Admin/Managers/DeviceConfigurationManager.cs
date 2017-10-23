@@ -258,7 +258,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
             if (deviceConfig == null)
             {
-                result.AddSystemError($"Could Not Load Device Configuration with Device Configuration Id={device.DeviceConfiguration.Id}.");
+                result.AddSystemError($"Could Not Load Device Configuration with Device Configuration {device.DeviceConfiguration.Text}, Id={device.DeviceConfiguration.Id}.");
                 Console.WriteLine("FAIL 2");
                 return result;
             }
@@ -267,7 +267,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
-                device.DeviceURI = $"http://{instance.DnsHostName}/devices/{device.Id}";
+                if (instance.InputCommandSSL)
+                {
+                    device.DeviceURI = $"https://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
+                }
+                else
+                {
+                    device.DeviceURI = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
+                }
 
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)

@@ -138,7 +138,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 {
                     if (deviceConfigurations.Value == null)
                     {
-                        result.Errors.Add(Resources.DeploymentErrorCodes.CouldNotLoadDeviceConfiguration.ToErrorMessage());
+                        result.Errors.Add(Resources.DeploymentErrorCodes.CouldNotLoadDeviceConfiguration.ToErrorMessage(deviceConfigurations.Text));
                     }
                     else
                     {
