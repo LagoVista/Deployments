@@ -762,4 +762,7 @@
   <data name="InstanceStates_FailedToStart" xml:space="preserve">
     <value>Failed to Start</value>
   </data>
+  <data name="InstanceStates_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
 </root>

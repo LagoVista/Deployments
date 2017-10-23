@@ -40,6 +40,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Undeploying,
         [EnumLabel(DeploymentInstance.Status_FailedToStart, DeploymentAdminResources.Names.InstanceStates_FailedToStart, typeof(DeploymentAdminResources))]
         FailedToStart,
+        [EnumLabel(DeploymentInstance.Status_Offline, DeploymentAdminResources.Names.InstanceStates_Offline, typeof(DeploymentAdminResources))]
+        Offline,
     }
 
     public enum PipelineModuleStatus
@@ -127,6 +129,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     Status.Id = Status_FailedToStart;
                     Status.Text = DeploymentAdminResources.InstanceStates_FailedToStart;
                     break;
+                case DeploymentInstanceStates.Offline:
+                    Status.Id = Status_Offline;
+                    Status.Text = DeploymentAdminResources.InstanceStates_Offline;
+                    break;
             }
         }
 
@@ -144,6 +150,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_FatalError = "fatalerror";
         public const string Status_Undeploying = "undeploying";
         public const string Status_FailedToStart = "failedtostart";
+        public const string Status_Offline = "offline";
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }

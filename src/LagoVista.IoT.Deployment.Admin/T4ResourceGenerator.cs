@@ -557,6 +557,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:InstanceStates_NotDeployed
 
 		public static string InstanceStates_NotDeployed { get { return GetResourceString("InstanceStates_NotDeployed"); } }
+//Resources:DeploymentAdminResources:InstanceStates_Offline
+
+		public static string InstanceStates_Offline { get { return GetResourceString("InstanceStates_Offline"); } }
 //Resources:DeploymentAdminResources:InstanceStates_Paused
 
 		public static string InstanceStates_Paused { get { return GetResourceString("InstanceStates_Paused"); } }
@@ -869,6 +872,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string InstanceStates_FatalError = "InstanceStates_FatalError";
 			public const string InstanceStates_Initializing = "InstanceStates_Initializing";
 			public const string InstanceStates_NotDeployed = "InstanceStates_NotDeployed";
+			public const string InstanceStates_Offline = "InstanceStates_Offline";
 			public const string InstanceStates_Paused = "InstanceStates_Paused";
 			public const string InstanceStates_Pausing = "InstanceStates_Pausing";
 			public const string InstanceStates_Ready = "InstanceStates_Ready";
