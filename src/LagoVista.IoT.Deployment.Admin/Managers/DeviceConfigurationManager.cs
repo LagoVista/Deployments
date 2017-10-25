@@ -290,7 +290,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                 {
                                     var endPoint = new InputCommandEndPoint
                                     {
-                                        EndPoint = $"http://{instance.DnsHostName}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
+                                        EndPoint = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
                                         InputCommand = inputCommand
                                     };
                                     endpoints.Add(endPoint);

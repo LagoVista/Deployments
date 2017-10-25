@@ -44,12 +44,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task RemoveDeploymentActivityAsync(DeploymentActivity deploymentActivity)
         {
-            return RemoveAsync(deploymentActivity);
+            return RemoveAsync(deploymentActivity, "*");
         }
 
-        public Task UpdateDeploymentActivityAsync(DeploymentActivity deploymentActivity)
+        public async Task UpdateDeploymentActivityAsync(DeploymentActivity deploymentActivity)
         {
-            return UpdateAsync(deploymentActivity);
+            var activity = await GetAsync(deploymentActivity.PartitionKey, deploymentActivity.RowKey);
+            await UpdateAsync(deploymentActivity, "*");
         }
     }
 }
