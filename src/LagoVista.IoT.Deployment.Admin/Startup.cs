@@ -5,6 +5,9 @@ using LagoVista.IoT.Deployment.Admin.Validation;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using System.Resources;
+
+[assembly: NeutralResourcesLanguage("en")]
 
 namespace LagoVista.IoT.Deployment.Admin
 {
