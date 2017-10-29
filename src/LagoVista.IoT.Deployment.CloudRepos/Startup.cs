@@ -1,6 +1,6 @@
-﻿using LagoVista.IoT.Deployment.Admin.Repos;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.CloudRepos.Repos;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LagoVista.IoT.Deployment.CloudRepos
 {

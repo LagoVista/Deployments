@@ -1,10 +1,10 @@
-﻿using LagoVista.IoT.Deployment.Admin.Managers;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Deployment.Admin.Validation;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using System.Resources;
 
 [assembly: NeutralResourcesLanguage("en")]

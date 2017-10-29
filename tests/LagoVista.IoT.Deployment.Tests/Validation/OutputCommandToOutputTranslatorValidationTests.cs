@@ -19,7 +19,6 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
     {
         DeviceMessageDefinition _messageDefinition;
         OutputTranslatorConfiguration _outputTranslatorConfig;
-        InputTranslatorConfiguration _inputTranslatorConfig;
         DeviceWorkflow _deviceWorkflow;
         RouteModuleConfig _moduleConfig;
 
