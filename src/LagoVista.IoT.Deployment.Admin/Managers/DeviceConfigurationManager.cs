@@ -251,7 +251,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (EntityHeader.IsNullOrEmpty(instanceEH))
             {
                 result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
-                Console.WriteLine("FAIL 1");
                 return result;
             }
 
@@ -259,7 +258,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (deviceConfig == null)
             {
                 result.AddSystemError($"Could Not Load Device Configuration with Device Configuration {device.DeviceConfiguration.Text}, Id={device.DeviceConfiguration.Id}.");
-                Console.WriteLine("FAIL 2");
                 return result;
             }
 

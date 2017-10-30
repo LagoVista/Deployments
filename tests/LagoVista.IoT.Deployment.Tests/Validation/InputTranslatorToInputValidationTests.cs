@@ -54,15 +54,6 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
             var moduleConfig = GetModuleConfig();
             moduleConfig.PrimaryOutput.Mappings[0] = new KeyValuePair<string, object>(_messageDefinition.Fields[0].Key + "XYZ", _deviceWorkflow.Inputs[0].Key);
 
-            if(moduleConfig.PrimaryOutput == null)
-            {
-                Console.WriteLine("NULL");
-            }
-            else
-            {
-                Console.WriteLine("NOT NULL");
-            }
-
             moduleConfig.InputTranslatorToWorkflowValidation(result, _messageDefinition, _deviceWorkflow);
             AssertIsInValid(result);
         }

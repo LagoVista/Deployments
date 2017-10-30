@@ -20,11 +20,11 @@
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="LagoVista.Core" Version="1.2.163-alpha0901" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.163-alpha0901" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.163-alpha0901" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.163-alpha0901" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.163-alpha0901" />
+    <PackageReference Include="LagoVista.Core" Version="1.2.166-alpha1054" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.166-alpha1054" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.166-alpha1054" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.166-alpha1054" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.166-alpha1054" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

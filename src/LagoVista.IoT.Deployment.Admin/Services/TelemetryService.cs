@@ -105,9 +105,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
 
             query += $" | top {request.PageSize} by timestamp desc";
-
-            Console.WriteLine(query);
-
             return query;
         }
 
@@ -122,9 +119,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var query = System.Net.WebUtility.UrlEncode(filter);
 
             var uri = $"https://api.applicationinsights.io/beta/apps/{appId}/query?query={query}";
-
-            Console.WriteLine(uri);
-
+           
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("x-api-key", apiKey);

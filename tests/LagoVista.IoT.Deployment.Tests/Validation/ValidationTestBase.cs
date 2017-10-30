@@ -17,7 +17,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
     {
         protected void WriteResults(ValidationResult result)
         {
-            Console.WriteLine("Errors (Expected if test Passed");
+            /*Console.WriteLine("Errors (Expected if test Passed");
             Console.WriteLine("==================================================");
 
             foreach (var err in result.Errors)
@@ -35,7 +35,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
                 {
                     Console.WriteLine(err.Message);
                 }
-            }
+            }*/
         }
 
         protected void AssertIsValid(ValidationResult result)

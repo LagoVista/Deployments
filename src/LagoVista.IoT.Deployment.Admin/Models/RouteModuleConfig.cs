@@ -53,17 +53,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public void InputTranslatorToWorkflowValidation(ValidationResult result, DeviceMessageDefinition message, DeviceWorkflow workflow)
         {
-            if(PrimaryOutput == null)
-            {
-                Console.WriteLine("HI HTERE!");
-            }
-
-            Console.WriteLine("OK");
-
             if (PrimaryOutput != null)
             {
-                Console.WriteLine("NOW HERE");
-
                 if (PrimaryOutput.Mappings == null)
                 {
                     PrimaryOutput.Mappings = new List<KeyValuePair<string, object>>();
@@ -162,8 +153,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     }
                 }
             }
-
-            Console.WriteLine("GOT HERE");
         }
 
         public void WorkflowToOutputTranslatorValidation(ValidationResult result, DeviceWorkflow workflow, OutputTranslatorConfiguration outputTranslator)
