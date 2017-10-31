@@ -53,6 +53,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(hostId);
         }
 
+        public async Task<DeploymentHost> GetDeploymentHostForDedicatedInstanceAsync(string instanceId)
+        {
+            return (await QueryAsync(host => host.DedicatedInstance.Id == instanceId)).FirstOrDefault();
+        }
+
         public async Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId)
         {
             var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);

@@ -78,7 +78,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     Status.Id = Status_Undeploying;
                     Status.Text = DeploymentAdminResources.InstanceStates_Undeploying;
                     break;
-
                 case DeploymentInstanceStates.NotDeployed:
                     Status.Id = Status_NotDeployed;
                     Status.Text = DeploymentAdminResources.InstanceStates_NotDeployed;

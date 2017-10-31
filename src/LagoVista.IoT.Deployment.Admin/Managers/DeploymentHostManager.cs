@@ -268,5 +268,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }
+
+        public async Task<DeploymentHost> GetHostForInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
+            return host;
+        }
     }
 }

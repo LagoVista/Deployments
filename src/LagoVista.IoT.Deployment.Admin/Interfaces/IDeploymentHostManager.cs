@@ -23,6 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user);
         Task<DeploymentHost> GetMCPHostAsync(EntityHeader org, EntityHeader user);
 
+        Task<DeploymentHost> GetHostForInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult> DeleteDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user);
 
