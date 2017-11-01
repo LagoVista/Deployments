@@ -11,6 +11,7 @@ using LagoVista.IoT.Pipeline.Admin.Managers;
 using System;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -19,13 +20,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         ISolutionRepo _deploymentRepo;
         IDeviceConfigurationManager _deviceConfigManager;
         IPipelineModuleManager _pipelineModuleManager;
+        ISolutionVersionRepo _solutionVersionRepo;
 
         public SolutionManager(ISolutionRepo deploymentRepo, IDeviceConfigurationManager deviceConfigManager, IPipelineModuleManager pipelineModuleManager,
-        IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+            ISolutionVersionRepo solutionVersionRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : 
+            base(logger, appConfig, depmanager, security)
         {
             _deploymentRepo = deploymentRepo;
             _deviceConfigManager = deviceConfigManager;
             _pipelineModuleManager = pipelineModuleManager;
+            _solutionVersionRepo = solutionVersionRepo;
         }
 
         public async Task<InvokeResult> AddSolutionsAsync(Solution solution, EntityHeader org, EntityHeader user)
@@ -59,6 +63,35 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(deployment, AuthorizeActions.Read, user, org);
             return deployment;
         }
+
+        public async Task<InvokeResult> PublishSolutionAsync(SolutionVersion solutionVersion, EntityHeader org, EntityHeader user)
+        {
+            var solutionForSecurityCheck = await _deploymentRepo.GetSolutionAsync(solutionVersion.SolutionId);
+            await AuthorizeAsync(solutionForSecurityCheck, AuthorizeActions.Read, user, org, "publish");
+
+            var fullSolutionLoadResult = await LoadFullSolutionAsync(solutionVersion.SolutionId, org, user);
+            if (!fullSolutionLoadResult.Successful) return fullSolutionLoadResult.ToInvokeResult();
+
+            var solution = fullSolutionLoadResult.Result;
+
+            var validationResult = ValidateSolution(solution);
+            if (!validationResult.Successful) return validationResult.ToInvokeResult();
+
+            Console.WriteLine("BEFORE GET VERSION");
+
+            await _solutionVersionRepo.PublishSolutionVersionAsync(solutionVersion, solution);
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<IEnumerable<SolutionVersion>> GetVersionsForSolutionAsync(string solutionId, EntityHeader org, EntityHeader user)
+        {
+            var solution = await _deploymentRepo.GetSolutionAsync(solutionId);
+            await AuthorizeAsync(solution, AuthorizeActions.Read, user, org);
+
+            return await _solutionVersionRepo.GetSolutionVersionsAsync(solutionId);
+        }
+
 
         public async Task<InvokeResult<Solution>> LoadFullSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {

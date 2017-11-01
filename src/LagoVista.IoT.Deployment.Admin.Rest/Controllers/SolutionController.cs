@@ -36,6 +36,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Config - Publish 
+        /// </summary>
+        /// <param name="solutionVersion"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/solution/publish")]
+        public Task<InvokeResult> PublishSolutionAsync([FromBody] SolutionVersion solutionVersion)
+        {
+            return _solutionManager.PublishSolutionAsync(solutionVersion, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Deployment Config - Update Config
         /// </summary>
         /// <param name="deploymentConfiguration"></param>
@@ -59,6 +70,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             return response;
         }
+
+        /// <summary>
+        /// Deployment Config - Get Versions for Solution Async
+        /// </summary>
+        /// <returns></returns>        
+        [HttpGet("/api/deployment/solution/{id}/versions")]
+        public async Task<ListResponse<SolutionVersion>> GetVersionsForSolutionAsync(string id)
+        {
+            var deploymentConfiguration = await _solutionManager.GetVersionsForSolutionAsync(id, OrgEntityHeader, UserEntityHeader);
+            var response = ListResponse<SolutionVersion>.Create(deploymentConfiguration);
+
+            return response;
+        }
+
 
         /// <summary>
         /// Deployment Config - Get A Configuration

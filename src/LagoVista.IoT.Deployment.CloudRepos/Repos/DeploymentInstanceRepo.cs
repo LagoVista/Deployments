@@ -38,7 +38,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string hostId)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.Host.Id == hostId);
+            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.PrimaryHost.Id == hostId);
 
             return from item in items
                    select item.CreateSummary();

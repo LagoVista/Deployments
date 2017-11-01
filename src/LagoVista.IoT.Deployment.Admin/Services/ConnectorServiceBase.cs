@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -20,11 +21,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         public const string CLIENT_VERSION = "2017-04-26";
 
         IAdminLogger _logger;
-        IDeploymentHostManager _deploymentHostManager;
-        public ConnectorServiceBase(IDeploymentHostManager deploymentHostManager, IAdminLogger logger)
+        IDeploymentHostRepo _deploymentHostManager;
+        public ConnectorServiceBase(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger)
         {
             _logger = logger;
-            _deploymentHostManager = deploymentHostManager;
+            _deploymentHostManager = deploymentHostRepo;
         }
 
         private HttpClient GetHttpClient(DeploymentHost host, EntityHeader org, EntityHeader usr, String method, String path)
@@ -84,7 +85,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult<T>> GetAsync<T>(string path, string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest = null)
         {
-            var host = await _deploymentHostManager.GetHostForInstanceAsync(instanceId, org, user);
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await GetAsync<T>(path, host, org, user);
         }
 
@@ -127,7 +128,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult> GetAsync(string path, string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest = null)
         {
-            var host = await _deploymentHostManager.GetHostForInstanceAsync(instanceId, org, user);
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId); 
             return await GetAsync(path, host, org, user);
         }
 
@@ -170,7 +171,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult> DeleteAsync(string path, string instanceId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostManager.GetHostForInstanceAsync(instanceId, org, user);
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await DeleteAsync(path, host, org, user);
         }
 
@@ -213,7 +214,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult> PostAsync<TPost>(string path, TPost post, string instanceId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostManager.GetHostForInstanceAsync(instanceId, org, user);
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await PostAsync<TPost>(path, post, host, org, user);
         }
 
@@ -256,7 +257,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult> PutAsync<TPost>(string path, TPost post, string instanceId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostManager.GetHostForInstanceAsync(instanceId, org, user);
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await PutAsync<TPost>(path, post, host, org, user);
         }
     }

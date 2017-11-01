@@ -79,7 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
             var host = CreateHost(instance);
-            instance.Host = new EntityHeader<DeploymentHost>() { Id = host.Id, Text = host.Name };
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Text = host.Name };
 
             ValidationCheck(host, Actions.Create);
             ValidationCheck(instance, Actions.Create);
@@ -147,9 +147,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _instanceRepo.UpdateInstanceAsync(instance);
             instance.Solution.Value = solution;
 
-            if (!EntityHeader.IsNullOrEmpty(instance.Host))
+            if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
             {
-                var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
+                var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
                 if (host.Size.Id != instance.Size.Id ||
                    host.CloudProvider.Id != instance.CloudProvider.Id ||
                    host.Subscription.Id != instance.Subscription.Id ||

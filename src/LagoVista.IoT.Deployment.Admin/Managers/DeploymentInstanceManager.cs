@@ -98,7 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user)
         {
             return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Remove);
-        }        
+        }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
@@ -112,7 +112,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user)
-;            var host = await _hostManager.GetDeploymentHostAsync(instance.Host.Id, org, user);
+;            var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
             return await _connector.GetInstanceDetailsAsync(host, instanceId, org, user);
         }

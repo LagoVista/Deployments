@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System;
@@ -19,7 +20,9 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string id, EntityHeader user);
         Task<InvokeResult> UpdateSolutionsAsync(Solution deployment, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteSolutionAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> PublishSolutionAsync(SolutionVersion solutionVersion, EntityHeader org, EntityHeader user);
 
+        Task<IEnumerable<SolutionVersion>> GetVersionsForSolutionAsync(string solutionId, EntityHeader org, EntityHeader user);
         Task<bool> QueryKeyInUse(string key, EntityHeader org);
 
         ValidationResult ValidateSolution(Solution solution);

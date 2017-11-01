@@ -765,4 +765,13 @@
   <data name="InstanceStates_Offline" xml:space="preserve">
     <value>Offline</value>
   </data>
+  <data name="Instance_LocalLogs" xml:space="preserve">
+    <value>Store Log Files Locally</value>
+  </data>
+  <data name="Instance_LocalMessageStorage" xml:space="preserve">
+    <value>Store Messages Locally</value>
+  </data>
+  <data name="Instance_LocalUsageStatistics" xml:space="preserve">
+    <value>Store Usage Statistics Locally</value>
+  </data>
 </root>

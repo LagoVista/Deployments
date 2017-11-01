@@ -172,6 +172,36 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: Resources.DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeploymentHost> Host { get; set; }
 
+
+        /// <summary>
+        /// This is the primary host that will be be used as an access point into the instance, if the instance consists of many machines, this will be the orchistrator.
+        /// </summary>
+        EntityHeader<DeploymentHost> _primaryHost;
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: Resources.DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader<DeploymentHost> PrimaryHost
+        {
+            get
+            {
+                if(EntityHeader.IsNullOrEmpty(_primaryHost))
+                {
+                    _primaryHost = Host;
+                    return Host;
+                }
+                else
+                {
+                    return _primaryHost;
+                }
+            }
+            set { _primaryHost = value; }
+        }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LocalUsageStatistics, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
+        public bool LocalUsageStatistics { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LocalLogs, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
+        public bool LocalLogs { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
         public EntityHeader OwnerOrganization { get; set; }

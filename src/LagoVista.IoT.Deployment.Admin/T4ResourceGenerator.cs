@@ -527,6 +527,15 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Instance_LastPing
 
 		public static string Instance_LastPing { get { return GetResourceString("Instance_LastPing"); } }
+//Resources:DeploymentAdminResources:Instance_LocalLogs
+
+		public static string Instance_LocalLogs { get { return GetResourceString("Instance_LocalLogs"); } }
+//Resources:DeploymentAdminResources:Instance_LocalMessageStorage
+
+		public static string Instance_LocalMessageStorage { get { return GetResourceString("Instance_LocalMessageStorage"); } }
+//Resources:DeploymentAdminResources:Instance_LocalUsageStatistics
+
+		public static string Instance_LocalUsageStatistics { get { return GetResourceString("Instance_LocalUsageStatistics"); } }
 //Resources:DeploymentAdminResources:Instance_Solution
 
 		public static string Instance_Solution { get { return GetResourceString("Instance_Solution"); } }
@@ -862,6 +871,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Instance_IsDeployed = "Instance_IsDeployed";
 			public const string Instance_IsDeployed_Help = "Instance_IsDeployed_Help";
 			public const string Instance_LastPing = "Instance_LastPing";
+			public const string Instance_LocalLogs = "Instance_LocalLogs";
+			public const string Instance_LocalMessageStorage = "Instance_LocalMessageStorage";
+			public const string Instance_LocalUsageStatistics = "Instance_LocalUsageStatistics";
 			public const string Instance_Solution = "Instance_Solution";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
 			public const string Instance_Status = "Instance_Status";

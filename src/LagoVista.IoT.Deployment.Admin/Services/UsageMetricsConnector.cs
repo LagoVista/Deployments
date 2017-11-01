@@ -7,12 +7,13 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public class UsageMetricsConnector : ConnectorServiceBase, IUsageMetricsConnector
     {
-        public UsageMetricsConnector(IDeploymentHostManager deploymentHostManager, IAdminLogger logger) : base(deploymentHostManager, logger)
+        public UsageMetricsConnector(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger) : base(deploymentHostRepo, logger)
         {
 
         }

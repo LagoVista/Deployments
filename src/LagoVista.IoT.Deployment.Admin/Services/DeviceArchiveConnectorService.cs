@@ -6,12 +6,13 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using System.Threading.Tasks;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public class DeviceArchiveConnectorService : ConnectorServiceBase, IDeviceArchiveConnector
     {
-        public DeviceArchiveConnectorService(IDeploymentHostManager deploymentHostManager, IAdminLogger logger) : base(deploymentHostManager, logger)
+        public DeviceArchiveConnectorService(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger) : base(deploymentHostRepo, logger)
         {
 
         }

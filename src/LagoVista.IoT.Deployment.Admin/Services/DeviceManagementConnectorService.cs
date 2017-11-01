@@ -14,13 +14,14 @@ using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public class DeviceManagementConnectorService : ConnectorServiceBase, IDeviceManagementConnector
     {
 
-        public DeviceManagementConnectorService(IDeploymentHostManager deploymentHostManager, IAdminLogger logger) : base(deploymentHostManager, logger)
+        public DeviceManagementConnectorService(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger) : base(deploymentHostRepo, logger)
         {
         }
 

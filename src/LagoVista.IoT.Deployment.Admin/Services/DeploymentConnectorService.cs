@@ -4,12 +4,13 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public class DeploymentConnectorService : ConnectorServiceBase, IDeploymentConnectorService
     {
-        public DeploymentConnectorService(IDeploymentHostManager deploymentHostManager, IAdminLogger logger) : base(deploymentHostManager, logger)
+        public DeploymentConnectorService(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger) : base(deploymentHostRepo, logger)
         {
 
         }

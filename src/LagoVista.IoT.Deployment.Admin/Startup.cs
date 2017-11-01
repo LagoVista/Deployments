@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
@@ -32,7 +33,12 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeploymentConnectorService, DeploymentConnectorService>();
             services.AddTransient<IDockerRegisteryServices, DockerRegisteryServices>();
             services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
-            
+
+            services.AddTransient<IDeviceArchiveConnector, DeviceArchiveConnectorService>();
+            services.AddTransient<IDeviceManagementConnector, DeviceManagementConnectorService>();
+            services.AddTransient<ITelemetryConnector, TelemetryConnector>();
+            services.AddTransient<IUsageMetricsConnector, UsageMetricsConnector>();
+
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
     }

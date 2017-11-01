@@ -81,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.LastUpdatedDate = DateTime.Now.ToJSONString();
             instance.Key = "abc123";
             instance.Name = "myinstance";
-            instance.Host = new EntityHeader<DeploymentHost>() { Id = "123", Text = "abc" };
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = "123", Text = "abc" };
             instance.Subscription = EntityHeader.Create("id", "text");
             instance.ContainerRepository = EntityHeader.Create("id", "text");
             instance.ContainerTag = EntityHeader.Create("id", "text");

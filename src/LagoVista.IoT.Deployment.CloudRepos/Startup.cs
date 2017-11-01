@@ -17,6 +17,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IContainerRepositoryRepo, ContainerRepositoryRepo>();
             services.AddTransient<IDeploymentInstanceRepo, DeploymentInstanceRepo>();
             services.AddTransient<IDeploymentHostRepo, DeploymentHostRepo>();
+            services.AddTransient<ISolutionVersionRepo, SolutionVersionsRepo>();
         }
     }
 }
