@@ -1,5 +1,6 @@
 ﻿using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Controllers;
 using LagoVista.UserAdmin.Models.Users;
@@ -15,9 +16,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class TelemetryController : LagoVistaBaseController
     {
         ITelemetryManager _telemetryManager;
-        public TelemetryController(ITelemetryManager telemetryManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        IDeviceRepositoryManager _repoManager;
+
+        public TelemetryController(ITelemetryManager telemetryManager, IDeviceRepositoryManager repoManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _telemetryManager = telemetryManager;
+            _repoManager = repoManager;
         }
 
         /// <summary>
@@ -72,24 +76,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Telemetry - Get For Device 
         /// </summary>
         /// <param name="deviceid"></param>
+        /// <param name="devicerepoid"></param>
         /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/deviceid/{deviceid}")]
-        public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(string recordtype, string deviceid)
+        [HttpGet("/api/telemetry/{recordtype}/devices/{devicerepoid}/{deviceid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(string recordtype, string devicerepoid, string deviceid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceAsync(deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceAsync(repo, deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
 
         /// <summary>
         /// Telemetry - Get For Device Type
         /// </summary>
         /// <param name="devicetypeid"></param>
+        /// <param name="devicerepoid"></param>
         /// <param name="recordtype"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/devicetype/{devicetypeid}")]
-        public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string devicetypeid)
+        [HttpGet("/api/telemetry/{recordtype}/devicetype/{devicerepoid}/{devicetypeid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string devicerepoid, string devicetypeid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceTypeAsync(devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
         }
 
         /// <summary>

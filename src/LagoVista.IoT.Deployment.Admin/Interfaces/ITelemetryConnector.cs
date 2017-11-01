@@ -1,13 +1,14 @@
 ﻿using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.DeviceManagement.Core.Models;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace LagoVista.IoT.Deployment.Admin
+namespace LagoVista.IoT.Deployment.Admin.Interfaces
 {
-    public interface ITelemetryManager
+    interface ITelemetryConnector
     {
         Task<IEnumerable<TelemetryReportData>> GetForHostAsync(string hostId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
@@ -17,10 +18,9 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
-        Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
+        Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
-        Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(DeviceRepository deviceRepo, string deviceTypeId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
-
-        Task<string> GetItemDetailAsync(string itemId, string recordType, EntityHeader org, EntityHeader user);
+        Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
+        Task<String> GetItemDetailsAsync(string itemId, string recordType, EntityHeader org, EntityHeader user);
     }
 }

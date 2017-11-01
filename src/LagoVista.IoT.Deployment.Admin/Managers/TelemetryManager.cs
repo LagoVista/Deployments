@@ -7,6 +7,7 @@ using LagoVista.Core.Managers;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.DeviceManagement.Core.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -19,13 +20,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _telemetryService = telemetryService;
         }
 
-        public async Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             return await _telemetryService.GetForDeviceAsync(deviceId, recordType, request);
         }
 
-        public async Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
+        public async Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(DeviceRepository deviceRepo, string deviceTypeId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             return await _telemetryService.GetForDeviceTypeAsync(deviceTypeId, recordType, request);
