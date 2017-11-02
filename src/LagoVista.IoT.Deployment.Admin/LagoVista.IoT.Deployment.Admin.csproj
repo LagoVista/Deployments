@@ -9,14 +9,14 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.168-alpha0845" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="1.2.168-alpha0845" />
+    <PackageReference Include="LagoVista.Core" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.169-alpha0547" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="1.2.169-alpha0547" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3" />
   </ItemGroup>

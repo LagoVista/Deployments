@@ -26,7 +26,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             _adminLogger = adminLogger;
         }
 
-        public CloudBlobClient CreateBlobClient(string solutionId)
+        private const string CONTAINER_ID = "solutions";
+
+        private CloudBlobClient CreateBlobClient(string solutionId)
         {
             var baseuri = $"https://{_repoSettings.AccountId}.blob.core.windows.net";
 
@@ -37,8 +39,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public async Task<Solution> GetSolutionVersionAsync(string solutionId, string versionId)
         {
             var cloudClient = CreateBlobClient(solutionId);
-            var primaryContainer = cloudClient.GetContainerReference($"app.{solutionId}");
-            var blob = primaryContainer.GetBlobReference($"{versionId}.json");
+            var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
+            var blob = primaryContainer.GetBlobReference( GetBlobName(solutionId, versionId));
             using (var ms = new MemoryStream())
             {
                 await blob.DownloadToStreamAsync(ms);
@@ -51,6 +53,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             }
         }
 
+        private string GetBlobName(string solutionId, string versionId)
+        {
+            return $"{solutionId.ToLower()}/{versionId.ToLower()}.solution";
+        }
+
         public Task<IEnumerable<SolutionVersion>> GetSolutionVersionsAsync(string solutionId)
         {
             return GetByParitionIdAsync(solutionId);
@@ -58,23 +65,17 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<SolutionVersion> PublishSolutionVersionAsync(SolutionVersion solutionVersion, Solution solution)
         {
-            Console.WriteLine("HI");
             Console.WriteLine(solutionVersion.SolutionId);
             solutionVersion.RowKey = Guid.NewGuid().ToId();
             solutionVersion.PartitionKey = solution.Id;
             solutionVersion.TimeStamp = DateTime.UtcNow.ToJSONString();
-            solutionVersion.Uri = $"https://{_repoSettings.AccountId}.blob.core.windows.net/app.{solution.Id}/{solutionVersion.RowKey}.json";
-
-
-            Console.WriteLine("HI3");
+            solutionVersion.Uri = $"https://{_repoSettings.AccountId}.blob.core.windows.net/{CONTAINER_ID}/{GetBlobName(solutionVersion.SolutionId,solutionVersion.RowKey)}";
 
             if (string.IsNullOrEmpty(solutionVersion.Status))
             {
                 solutionVersion.Status = "New";
             }
-
-            Console.WriteLine("HI4");
-
+           
             if (solutionVersion.Version == 0)
             {
                 var versions = await GetSolutionVersionsAsync(solution.Id);
@@ -88,24 +89,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 }
             }
 
-            Console.WriteLine("HI5");
-
             var cloudClient = CreateBlobClient(solution.Id);
-            Console.WriteLine("HI6");
-
-            var primaryContainer = cloudClient.GetContainerReference($"app-{solution.Id}");
-            Console.WriteLine("HI7");
+            var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
             await primaryContainer.CreateIfNotExistsAsync();
-            Console.WriteLine("HI8");
-            var blob = primaryContainer.GetBlockBlobReference($"{solutionVersion.RowKey}.json");
-            Console.WriteLine("HI9");
+            var blob = primaryContainer.GetBlockBlobReference(GetBlobName(solutionVersion.SolutionId, solutionVersion.RowKey));
             var json = JsonConvert.SerializeObject(solution);
-            Console.WriteLine("HI10");
             await blob.UploadTextAsync(json);
-            Console.WriteLine("HI11");
-
             await InsertAsync(solutionVersion);
-            Console.WriteLine("HI12");
             return solutionVersion;
         }
 

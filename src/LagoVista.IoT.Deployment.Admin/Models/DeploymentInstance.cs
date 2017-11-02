@@ -174,7 +174,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
         /// <summary>
-        /// This is the primary host that will be be used as an access point into the instance, if the instance consists of many machines, this will be the orchistrator.
+        /// This is the primary host that will be be used as an access point into the instance, if the instance consists of many machines, this will manage all the other hosts for a clustered version of an instance.
         /// </summary>
         EntityHeader<DeploymentHost> _primaryHost;
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: Resources.DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
