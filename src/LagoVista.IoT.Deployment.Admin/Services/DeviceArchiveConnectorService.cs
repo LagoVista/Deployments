@@ -25,8 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         public async Task<ListResponse<List<object>>> GetForDateRangeAsync(string instanceId, string deviceId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
             var uri = $"/api/device/archives/{deviceId}";
-            var result = await GetAsync<ListResponse<List<object>>>(uri, instanceId, org, user, listRequest);
-            return result.Result;
+            return await GetListResponseAsync<List<object>>(uri, instanceId, org, user, listRequest);
         }
     }
 }

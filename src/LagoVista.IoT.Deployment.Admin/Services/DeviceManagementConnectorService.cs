@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using LagoVista.Core;
 using LagoVista.Core.Validation;
 using System.Threading.Tasks;
-using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.Core.Models;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
 using LagoVista.IoT.Logging.Loggers;
-using LagoVista.Core.PlatformSupport;
-using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.DeviceManagement.Core.Models;
@@ -49,22 +41,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return DeleteAsync(uri,instanceId, org, user);
         }
 
-        public Task<IEnumerable<DeviceSummary>> GetDevicesForOrgIdAsync(string instanceId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        public  Task<ListResponse<DeviceSummary>> GetDevicesForOrgIdAsync(string instanceId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
             var uri = $"/api/devices";
-            throw new NotImplementedException();
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
 
-        public Task<IEnumerable<DeviceSummary>> GetDevicesForLocationIdAsync(string instanceId, string locationId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        public Task<ListResponse<DeviceSummary>> GetDevicesForLocationIdAsync(string instanceId, string locationId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Device> GetDeviceByDeviceIdAsync(string instanceId, string deviceId, EntityHeader org, EntityHeader user)
+        public async Task<Device> GetDeviceByDeviceIdAsync(string instanceId, string deviceId, EntityHeader org, EntityHeader user)
         {
             var uri = $"/api/device/deviceid/{deviceId}";
-
-            throw new NotImplementedException();
+            var result = await GetAsync<Device>(uri, instanceId, org, user);
+            return result.Result;
         }
 
         public Task<bool> CheckIfDeviceIdInUse(string instanceId, string id, EntityHeader org, EntityHeader user)
@@ -79,21 +71,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<DeviceSummary>> GetDevicesInStatusAsync(string instanceId, string status, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        public Task<ListResponse<DeviceSummary>> GetDevicesInStatusAsync(string instanceId, string status, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
-
             var uri = $"/api/devices/{status}";
-            throw new NotImplementedException();
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
 
-        public Task<IEnumerable<DeviceSummary>> GetDevicesWithConfigurationAsync(string instanceId, string configurationId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        public Task<ListResponse<DeviceSummary>> GetDevicesWithConfigurationAsync(string instanceId, string configurationId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
-            throw new NotImplementedException();
+            var uri = $"/api/devices/config/{configurationId}";
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
 
-        public Task<IEnumerable<DeviceSummary>> GetDevicesWithDeviceTypeAsync(string instanceId, string deviceTypeId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        public Task<ListResponse<DeviceSummary>> GetDevicesWithDeviceTypeAsync(string instanceId, string deviceTypeId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
-            throw new NotImplementedException();
+            var uri = $"/api/devices/{deviceTypeId}";
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
     }
 }
