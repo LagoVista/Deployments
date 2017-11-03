@@ -241,7 +241,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 try
                 {
                     var uri = new Uri($"{host.AdminAPIUri}{path}");
-                    var jsonContent = new StringContent(JsonConvert.SerializeObject(post));
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(post), System.Text.Encoding.UTF8, "application/json");
                     var response = await request.PostAsync(uri, jsonContent);
                     if (response.IsSuccessStatusCode)
                     {
@@ -285,7 +285,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 try
                 {
                     var uri = new Uri($"{host.AdminAPIUri}{path}");
-                    var jsonContent = new StringContent(JsonConvert.SerializeObject(post));
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(post), System.Text.Encoding.UTF8, "application/json");
                     var response = await request.PutAsync(uri, jsonContent);
                     if (response.IsSuccessStatusCode)
                     {
