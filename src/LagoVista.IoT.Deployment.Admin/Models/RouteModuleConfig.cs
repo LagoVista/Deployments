@@ -22,6 +22,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Id = Guid.NewGuid().ToId();
 
             Name = Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned;
+           
+            IncomingMappings = new List<KeyValuePair<string, object>>();
         }
 
         public string Id { get; set; }
@@ -32,6 +34,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
 
+        /// <summary>
+        /// Will be populated at run time, field is not persisted
+        /// </summary>
+        public List<KeyValuePair<string, object>> IncomingMappings { get; set; }
 
         public RouteConnection PrimaryOutput { get; set; }
 
