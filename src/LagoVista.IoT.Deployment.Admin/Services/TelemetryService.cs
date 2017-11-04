@@ -23,7 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         }
 
 
-        private async Task<IEnumerable<TelemetryReportData>> GetReportData(String appId, String apiKey, String filter)
+        private async Task<ListResponse<TelemetryReportData>> GetReportData(String appId, String apiKey, String filter)
         {
             using (var client = new HttpClient())
             {
@@ -41,7 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     var resultsTable = results.Tables.Where(tbl => tbl.TableName == "Table_0").FirstOrDefault();
                     if (resultsTable == null)
                     {
-                        return new List<TelemetryReportData>();
+                        return  ListResponse<TelemetryReportData>.Create(new List<TelemetryReportData>());
                     }
 
                     var customDataColumn = resultsTable.Columns.Where(col => col.ColumnName == "customDimensions").FirstOrDefault();
@@ -79,7 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                         appInsightReport.Add(reportData);
                     }
 
-                    return appInsightReport;
+                    return ListResponse<TelemetryReportData>.Create(appInsightReport);
                 }
                 else
                 {
@@ -136,37 +136,37 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForHostAsync(String hostId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForHostAsync(String hostId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "hostId", hostId, request);
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForInstanceAsync(String instanceId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForInstanceAsync(String instanceId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "instanceId", instanceId, request);
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "piplineModuleId", pipelineModuleId, request);
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "pipelineModuleId", pipelineModuleId, request, "and customDimensions.tag = 'queue'");
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForDeviceAsync(string deviceId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(string deviceId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "deviceId", deviceId, request);
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);
         }
 
-        public Task<IEnumerable<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, string recordType, ListRequest request)
+        public Task<ListResponse<TelemetryReportData>> GetForDeviceTypeAsync(string deviceTypeId, string recordType, ListRequest request)
         {
             var query = BuildQuery(recordType, "deviceTypeId", deviceTypeId, request);
             return GetReportData(_keys.InstanceAppId, _keys.InstanceAPIKey, query);

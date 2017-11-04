@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/host/{hostid}")]
         public async Task<ListResponse<TelemetryReportData>> GetTelemetryForHostAsync(string recordtype, string hostid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForHostAsync(hostid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForHostAsync(hostid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/instance/{instanceid}")]
         public async Task<ListResponse<TelemetryReportData>> GetTelemetryForInstanceAsync(string recordtype, string instanceid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForInstanceAsync(instanceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForInstanceAsync(instanceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
         
         /// <summary>
@@ -57,7 +57,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/pipeline/{pipelinemoduleid}")]
         public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineAsync(string recordtype, string pipelinemoduleid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineModuleAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForPipelineModuleAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
         
         /// <summary>
@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/pipelinequeue/{pipelinemoduleid}")]
         public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineQueueAsync(string recordtype, string pipelinemoduleid)
         {
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForPipelineQueueAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForPipelineQueueAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(string recordtype, string devicerepoid, string deviceid)
         {
             var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceAsync(repo, deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForDeviceAsync(repo, deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string devicerepoid, string devicetypeid)
         {
             var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
-            return ListResponse<TelemetryReportData>.Create(await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader));
+            return await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
