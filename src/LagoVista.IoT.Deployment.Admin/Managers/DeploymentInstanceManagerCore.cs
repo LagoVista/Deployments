@@ -18,14 +18,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceRepo _instanceRepo;
         IDeploymentHostManager _deploymentHostManager;
         IDeviceRepositoryManager _deviceManagerRepo;
+        IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
 
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-            IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+           IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo,  IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _deviceManagerRepo = deviceManagerRepo;
             _instanceRepo = instanceRepo;
             _deploymentHostManager = deploymentHostManager;
+            _deploymentInstanceStatusRepo = deploymentInstanceStatusRepo;
         }
 
         public async Task<InvokeResult> DeleteInstanceAsync(String instanceId, EntityHeader org, EntityHeader user)
@@ -52,26 +54,28 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         private DeploymentHost CreateHost(DeploymentInstance instance)
         {
-            var host = new DeploymentHost();
-            host.Id = Guid.NewGuid().ToId();
-            host.HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated);
-            host.CreatedBy = instance.CreatedBy;
-            host.Name = $"{instance.Name} Host";
-            host.LastUpdatedBy = instance.LastUpdatedBy;
-            host.OwnerOrganization = instance.OwnerOrganization;
-            host.OwnerUser = instance.OwnerUser;
-            host.CreationDate = instance.CreationDate;
-            host.LastUpdatedDate = instance.LastUpdatedDate;
-            host.DedicatedInstance = new EntityHeader() { Id = instance.Id, Text = instance.Name };
-            host.Key = instance.Key;
-            host.IsPublic = false;
-            host.Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
-            host.Size = instance.Size;
-            host.CloudProvider = instance.CloudProvider;
-            host.Subscription = instance.Subscription;
-            host.ContainerRepository = instance.ContainerRepository;
-            host.ContainerTag = instance.ContainerTag;
-            host.DnsHostName = instance.DnsHostName;
+            var host = new DeploymentHost
+            {
+                Id = Guid.NewGuid().ToId(),
+                HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated),
+                CreatedBy = instance.CreatedBy,
+                Name = $"{instance.Name} Host",
+                LastUpdatedBy = instance.LastUpdatedBy,
+                OwnerOrganization = instance.OwnerOrganization,
+                OwnerUser = instance.OwnerUser,
+                CreationDate = instance.CreationDate,
+                LastUpdatedDate = instance.LastUpdatedDate,
+                DedicatedInstance = new EntityHeader() { Id = instance.Id, Text = instance.Name },
+                Key = instance.Key,
+                IsPublic = false,
+                Status = EntityHeader<HostStatus>.Create(HostStatus.Offline),
+                Size = instance.Size,
+                CloudProvider = instance.CloudProvider,
+                Subscription = instance.Subscription,
+                ContainerRepository = instance.ContainerRepository,
+                ContainerTag = instance.ContainerTag,
+                DnsHostName = instance.DnsHostName
+            };
 
             return host;
         }
@@ -142,6 +146,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(oldRepo, org, user);
             }
 
+            if(existingInstance.Status.Value != instance.Status.Value ||
+               existingInstance.IsDeployed != instance.IsDeployed)
+            {
+                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, org, user);
+            }
+
             var solution = instance.Solution.Value;
             instance.Solution.Value = null;
             await _instanceRepo.UpdateInstanceAsync(instance);
@@ -168,11 +178,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user, string details = "")
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             ValidationCheck(instance, Actions.Update);
-            instance.SetState(newStatus);
+
+            var statusUpdate = Models.DeploymentInstanceStatus.Create(instanceId, user);
+            statusUpdate.Details = details;
+            statusUpdate.OldDeploy = instance.IsDeployed;
+            statusUpdate.NewDeploy = deployed;
+            statusUpdate.OldState = instance.Status.Value.ToString();
+            statusUpdate.NewState = newStatus.ToString();
+            await _deploymentInstanceStatusRepo.AddDeploymentInstanceStatusAsync(statusUpdate);
+
+            instance.Status = EntityHeader<DeploymentInstanceStates>.Create(newStatus);
+            instance.IsDeployed = deployed;
             await _instanceRepo.UpdateInstanceAsync(instance);
             return InvokeResult.Success;
         }

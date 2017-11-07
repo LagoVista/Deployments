@@ -26,13 +26,15 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId, EntityHeader user);
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> RegenerateAccessKeys(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "");
+
         Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> StartHostAsync(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> UpdateHostRuntimeAsync(string hostId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> ResetHostAsync(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> StopHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeployContainerAsync(string hostId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> PublishAssociatedContainersAsync(string hostId, EntityHeader org, EntityHeader user);
+
+
+        
         Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);
     }

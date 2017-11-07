@@ -410,6 +410,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Type_SharedHighPerformance
 
 		public static string Host_Type_SharedHighPerformance { get { return GetResourceString("Host_Type_SharedHighPerformance"); } }
+//Resources:DeploymentAdminResources:Host_UpSince
+
+		public static string Host_UpSince { get { return GetResourceString("Host_UpSince"); } }
 //Resources:DeploymentAdminResources:HostCapacity_75Percent
 
 		public static string HostCapacity_75Percent { get { return GetResourceString("HostCapacity_75Percent"); } }
@@ -455,15 +458,24 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostStatus_Destroying
 
 		public static string HostStatus_Destroying { get { return GetResourceString("HostStatus_Destroying"); } }
-//Resources:DeploymentAdminResources:HostStatus_Failed
+//Resources:DeploymentAdminResources:HostStatus_FailedDeployment
 
-		public static string HostStatus_Failed { get { return GetResourceString("HostStatus_Failed"); } }
+		public static string HostStatus_FailedDeployment { get { return GetResourceString("HostStatus_FailedDeployment"); } }
+//Resources:DeploymentAdminResources:HostStatus_HealthCheckFailed
+
+		public static string HostStatus_HealthCheckFailed { get { return GetResourceString("HostStatus_HealthCheckFailed"); } }
 //Resources:DeploymentAdminResources:HostStatus_Offline
 
 		public static string HostStatus_Offline { get { return GetResourceString("HostStatus_Offline"); } }
 //Resources:DeploymentAdminResources:HostStatus_PendingDNSConfiguration
 
 		public static string HostStatus_PendingDNSConfiguration { get { return GetResourceString("HostStatus_PendingDNSConfiguration"); } }
+//Resources:DeploymentAdminResources:HostStatus_QueuedForDeployment
+
+		public static string HostStatus_QueuedForDeployment { get { return GetResourceString("HostStatus_QueuedForDeployment"); } }
+//Resources:DeploymentAdminResources:HostStatus_Restarting
+
+		public static string HostStatus_Restarting { get { return GetResourceString("HostStatus_Restarting"); } }
 //Resources:DeploymentAdminResources:HostStatus_Running
 
 		public static string HostStatus_Running { get { return GetResourceString("HostStatus_Running"); } }
@@ -476,9 +488,6 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:HostStatus_Stopping
 
 		public static string HostStatus_Stopping { get { return GetResourceString("HostStatus_Stopping"); } }
-//Resources:DeploymentAdminResources:HostStatus_StoppingDegraded
-
-		public static string HostStatus_StoppingDegraded { get { return GetResourceString("HostStatus_StoppingDegraded"); } }
 //Resources:DeploymentAdminResources:HostType_Development
 
 		public static string HostType_Development { get { return GetResourceString("HostType_Development"); } }
@@ -548,18 +557,33 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Instance_Title
 
 		public static string Instance_Title { get { return GetResourceString("Instance_Title"); } }
+//Resources:DeploymentAdminResources:Instance_UpSince
+
+		public static string Instance_UpSince { get { return GetResourceString("Instance_UpSince"); } }
 //Resources:DeploymentAdminResources:InstanceStates_Degraded
 
 		public static string InstanceStates_Degraded { get { return GetResourceString("InstanceStates_Degraded"); } }
-//Resources:DeploymentAdminResources:InstanceStates_Deploying
+//Resources:DeploymentAdminResources:InstanceStates_DeployingContainer
 
-		public static string InstanceStates_Deploying { get { return GetResourceString("InstanceStates_Deploying"); } }
+		public static string InstanceStates_DeployingContainer { get { return GetResourceString("InstanceStates_DeployingContainer"); } }
+//Resources:DeploymentAdminResources:InstanceStates_DeployingRuntime
+
+		public static string InstanceStates_DeployingRuntime { get { return GetResourceString("InstanceStates_DeployingRuntime"); } }
+//Resources:DeploymentAdminResources:InstanceStates_FailedToDeploy
+
+		public static string InstanceStates_FailedToDeploy { get { return GetResourceString("InstanceStates_FailedToDeploy"); } }
 //Resources:DeploymentAdminResources:InstanceStates_FailedToStart
 
 		public static string InstanceStates_FailedToStart { get { return GetResourceString("InstanceStates_FailedToStart"); } }
 //Resources:DeploymentAdminResources:InstanceStates_FatalError
 
 		public static string InstanceStates_FatalError { get { return GetResourceString("InstanceStates_FatalError"); } }
+//Resources:DeploymentAdminResources:InstanceStates_HostFailedHealthCheck
+
+		public static string InstanceStates_HostFailedHealthCheck { get { return GetResourceString("InstanceStates_HostFailedHealthCheck"); } }
+//Resources:DeploymentAdminResources:InstanceStates_HostRestarting
+
+		public static string InstanceStates_HostRestarting { get { return GetResourceString("InstanceStates_HostRestarting"); } }
 //Resources:DeploymentAdminResources:InstanceStates_Initializing
 
 		public static string InstanceStates_Initializing { get { return GetResourceString("InstanceStates_Initializing"); } }
@@ -578,6 +602,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:InstanceStates_Ready
 
 		public static string InstanceStates_Ready { get { return GetResourceString("InstanceStates_Ready"); } }
+//Resources:DeploymentAdminResources:InstanceStates_RestartingRuntime
+
+		public static string InstanceStates_RestartingRuntime { get { return GetResourceString("InstanceStates_RestartingRuntime"); } }
 //Resources:DeploymentAdminResources:InstanceStates_Running
 
 		public static string InstanceStates_Running { get { return GetResourceString("InstanceStates_Running"); } }
@@ -593,6 +620,12 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:InstanceStates_Undeploying
 
 		public static string InstanceStates_Undeploying { get { return GetResourceString("InstanceStates_Undeploying"); } }
+//Resources:DeploymentAdminResources:InstanceStates_UpdatingRuntime
+
+		public static string InstanceStates_UpdatingRuntime { get { return GetResourceString("InstanceStates_UpdatingRuntime"); } }
+//Resources:DeploymentAdminResources:InstanceStates_UpdatingSolution
+
+		public static string InstanceStates_UpdatingSolution { get { return GetResourceString("InstanceStates_UpdatingSolution"); } }
 //Resources:DeploymentAdminResources:Route_Description
 
 		public static string Route_Description { get { return GetResourceString("Route_Description"); } }
@@ -832,6 +865,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_Type_Select = "Host_Type_Select";
 			public const string Host_Type_Shared = "Host_Type_Shared";
 			public const string Host_Type_SharedHighPerformance = "Host_Type_SharedHighPerformance";
+			public const string Host_UpSince = "Host_UpSince";
 			public const string HostCapacity_75Percent = "HostCapacity_75Percent";
 			public const string HostCapacity_90Percent = "HostCapacity_90Percent";
 			public const string HostCapacity_AtCapacity = "HostCapacity_AtCapacity";
@@ -847,14 +881,16 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string HostStatus_Degraded = "HostStatus_Degraded";
 			public const string HostStatus_Deploying = "HostStatus_Deploying";
 			public const string HostStatus_Destroying = "HostStatus_Destroying";
-			public const string HostStatus_Failed = "HostStatus_Failed";
+			public const string HostStatus_FailedDeployment = "HostStatus_FailedDeployment";
+			public const string HostStatus_HealthCheckFailed = "HostStatus_HealthCheckFailed";
 			public const string HostStatus_Offline = "HostStatus_Offline";
 			public const string HostStatus_PendingDNSConfiguration = "HostStatus_PendingDNSConfiguration";
+			public const string HostStatus_QueuedForDeployment = "HostStatus_QueuedForDeployment";
+			public const string HostStatus_Restarting = "HostStatus_Restarting";
 			public const string HostStatus_Running = "HostStatus_Running";
 			public const string HostStatus_Starting = "HostStatus_Starting";
 			public const string HostStatus_Stopped = "HostStatus_Stopped";
 			public const string HostStatus_Stopping = "HostStatus_Stopping";
-			public const string HostStatus_StoppingDegraded = "HostStatus_StoppingDegraded";
 			public const string HostType_Development = "HostType_Development";
 			public const string Instance_Description = "Instance_Description";
 			public const string Instance_DeviceRepo = "Instance_DeviceRepo";
@@ -878,21 +914,29 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
 			public const string Instance_Status = "Instance_Status";
 			public const string Instance_Title = "Instance_Title";
+			public const string Instance_UpSince = "Instance_UpSince";
 			public const string InstanceStates_Degraded = "InstanceStates_Degraded";
-			public const string InstanceStates_Deploying = "InstanceStates_Deploying";
+			public const string InstanceStates_DeployingContainer = "InstanceStates_DeployingContainer";
+			public const string InstanceStates_DeployingRuntime = "InstanceStates_DeployingRuntime";
+			public const string InstanceStates_FailedToDeploy = "InstanceStates_FailedToDeploy";
 			public const string InstanceStates_FailedToStart = "InstanceStates_FailedToStart";
 			public const string InstanceStates_FatalError = "InstanceStates_FatalError";
+			public const string InstanceStates_HostFailedHealthCheck = "InstanceStates_HostFailedHealthCheck";
+			public const string InstanceStates_HostRestarting = "InstanceStates_HostRestarting";
 			public const string InstanceStates_Initializing = "InstanceStates_Initializing";
 			public const string InstanceStates_NotDeployed = "InstanceStates_NotDeployed";
 			public const string InstanceStates_Offline = "InstanceStates_Offline";
 			public const string InstanceStates_Paused = "InstanceStates_Paused";
 			public const string InstanceStates_Pausing = "InstanceStates_Pausing";
 			public const string InstanceStates_Ready = "InstanceStates_Ready";
+			public const string InstanceStates_RestartingRuntime = "InstanceStates_RestartingRuntime";
 			public const string InstanceStates_Running = "InstanceStates_Running";
 			public const string InstanceStates_Starting = "InstanceStates_Starting";
 			public const string InstanceStates_Stopped = "InstanceStates_Stopped";
 			public const string InstanceStates_Stopping = "InstanceStates_Stopping";
 			public const string InstanceStates_Undeploying = "InstanceStates_Undeploying";
+			public const string InstanceStates_UpdatingRuntime = "InstanceStates_UpdatingRuntime";
+			public const string InstanceStates_UpdatingSolution = "InstanceStates_UpdatingSolution";
 			public const string Route_Description = "Route_Description";
 			public const string Route_Help = "Route_Help";
 			public const string Route_InputTranslator = "Route_InputTranslator";

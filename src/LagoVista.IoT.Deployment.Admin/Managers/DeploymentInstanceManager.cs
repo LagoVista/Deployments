@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
+using LagoVista.Core;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core.Interfaces;
@@ -27,14 +28,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceRepo _instanceRepo;
         ISolutionManager _solutionManager;
         IDeploymentHostManager _hostManager;
+        IDeploymentHostRepo _hostRepo;
         IDeploymentConnectorService _connector;
         IDeviceRepositoryManager _deviceRepoManager;
         IDeploymentActivityQueueManager _deploymentActivityQueueManager;
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
-                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager,
-
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(hostManager, instanceRepo, deviceManagerRepo, logger, appConfig, depmanager, security)
+                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
@@ -42,70 +43,139 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
             _connector = connector;
             _deviceRepoManager = deviceRepoManager;
+            _hostRepo = hostRepo;
         }
 
-        private async Task<InvokeResult> PerformActionAsync(String id, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType)
+        private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var timeout = DateTime.UtcNow.Add(TimeSpan.FromSeconds(timeoutSeconds));
+
+            
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");            
 
-            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, id, activityType)
+            await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, instance.Id, activityType)
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
                 RequestedByOrganizationId = org.Id,
                 RequestedByOrganizationName = org.Text,
+                TimeoutTimeStamp = timeout.ToJSONString()
             });
 
             return InvokeResult.Success;
         }
 
-        public Task<InvokeResult> DeployAsync(String id, EntityHeader org, EntityHeader user)
+        private InvokeResult CanTransitionToState(DeploymentHost host, DeploymentInstance instance, DeploymentActivityTaskTypes taskType, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Deploy);
+
+            return InvokeResult.Success;
         }
 
-        public Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> DeployHostAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Start);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployContainer, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DeployContainer);
         }
 
-        public Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Pause);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Start);
         }
 
-        public Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Stop);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Pause, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Pause);
         }
 
-        public Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reset);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Stop, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Stop);
         }
 
-        public Task<InvokeResult> UpdateRuntimeAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Update);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.RestartHost, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.RestartHost);
         }
 
-        public  Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> RestartContainerAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Reload);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.RestartContainer, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.RestartContainer);
         }
 
-        public Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> UpdateRuntimeAsync(String id, EntityHeader org, EntityHeader user)
         {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.Remove);
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.UpdateRuntime);
+        }
+
+        public  async Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.ReloadSolution, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.ReloadSolution);
+        }
+
+        public async Task<InvokeResult> DestroyHostAsync(String id, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DestroyHost, org, user);
+            if (!transitionResult.Successful) return transitionResult;
+
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DestroyHost);
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
             await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
 
-            var host = await _hostManager.GetNotificationsHostAsync(org, user);
-            return await _connector.GetRemoteMonitoringUriAsync(host, channel, id, verbosity, org, user);
+            var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
+            return await _connector.GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
         }
   
 
@@ -151,10 +221,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<DeploymentInstance>.FromErrors(solutionResult.Errors.ToArray());
             }
         }
-
-        public Task<InvokeResult> ResetContainerAsync(string id, EntityHeader org, EntityHeader user)
-        {
-            return PerformActionAsync(id, org, user, DeploymentActivityTaskTypes.ResetContainer);
-        }
+        
     }
 }

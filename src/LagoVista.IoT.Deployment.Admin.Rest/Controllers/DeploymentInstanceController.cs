@@ -144,10 +144,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/deploy")]
-        public Task<InvokeResult> DeployAsync(String id)
+        [HttpGet("/api/deployment/instance/{id}/deployhost")]
+        public Task<InvokeResult> DeployHostAsync(String id)
         {
-            return _instanceManager.DeployAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.DeployHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/reload")]
+        [HttpGet("/api/deployment/instance/{id}/reloadsolution")]
         public Task<InvokeResult> RealodSolutionAsync(String id)
         {
             return _instanceManager.ReloadSolutionAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -188,7 +188,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/update")]
+        [HttpGet("/api/deployment/instance/{id}/updateruntime")]
         public Task<InvokeResult> UpdateRuntimeAsync(String id)
         {
             return _instanceManager.UpdateRuntimeAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -199,7 +199,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/reset")]
+        [HttpGet("/api/deployment/instance/{id}/restarthost")]
         public Task<InvokeResult> RestartHostAsync(String id)
         {
             return _instanceManager.RestartHostAsync(id, OrgEntityHeader, UserEntityHeader);
@@ -210,10 +210,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/resetcontainer")]
+        [HttpGet("/api/deployment/instance/{id}/resetartcontainer")]
         public Task<InvokeResult> ResetContainerAsync(String id)
         {
-            return _instanceManager.ResetContainerAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.RestartContainerAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
 
@@ -234,10 +234,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/remove")]
+        [HttpGet("/api/deployment/instance/{id}/destroyhost")]
         public Task<InvokeResult> RemoveAsync(String id)
         {
-            return _instanceManager.RemoveAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.DestroyHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

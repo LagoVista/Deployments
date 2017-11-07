@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin
     {
         Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user);        
         Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user, string details = "");
     }
 
     public interface IDeploymentInstanceManager : IDeploymentInstanceManagerRemote
@@ -29,16 +29,16 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
 
-        Task<InvokeResult> DeployAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeployHostAsync(String id, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> PauseAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> ResetContainerAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> RestartContainerAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> ReloadSolutionAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> UpdateRuntimeAsync(String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> StopAsync(String id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> RemoveAsync(String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DestroyHostAsync(String id, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user);
         Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user);

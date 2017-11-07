@@ -12,14 +12,28 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public enum DeploymentInstanceStates
     {
-        [EnumLabel(DeploymentInstance.Status_NotDeployed, DeploymentAdminResources.Names.InstanceStates_NotDeployed, typeof(DeploymentAdminResources))] 
-        NotDeployed,
-        [EnumLabel(DeploymentInstance.Status_Deploying, DeploymentAdminResources.Names.InstanceStates_Deploying, typeof(DeploymentAdminResources))]
-        Deploying,
+        [EnumLabel(DeploymentInstance.Status_Offline, DeploymentAdminResources.Names.InstanceStates_Offline, typeof(DeploymentAdminResources))]
+        Offline,
+
+        [EnumLabel(DeploymentInstance.Status_HostRestarting, DeploymentAdminResources.Names.InstanceStates_HostRestarting, typeof(DeploymentAdminResources))]
+        HostRestarting,
+
+        [EnumLabel(DeploymentInstance.Status_HostFailedHealthCheck, DeploymentAdminResources.Names.InstanceStates_HostFailedHealthCheck, typeof(DeploymentAdminResources))]
+        HostFailedHealthCheck,
+
+    
+        [EnumLabel(DeploymentInstance.Status_DeployingRuntime, DeploymentAdminResources.Names.InstanceStates_DeployingRuntime, typeof(DeploymentAdminResources))]
+        DeployingRuntime,
+        [EnumLabel(DeploymentInstance.Status_DeployingRuntime, DeploymentAdminResources.Names.InstanceStates_UpdatingRuntime, typeof(DeploymentAdminResources))]
+        UpdatingRuntime,
+        [EnumLabel(DeploymentInstance.Status_UpdatingSolution, DeploymentAdminResources.Names.InstanceStates_UpdatingSolution, typeof(DeploymentAdminResources))]
+        UpdatingSolution,
+
+
         [EnumLabel(DeploymentInstance.Status_Initializing, DeploymentAdminResources.Names.InstanceStates_Initializing, typeof(DeploymentAdminResources))]
         Initializing,
-        [EnumLabel(DeploymentInstance.Status_Ready, DeploymentAdminResources.Names.InstanceStates_Ready, typeof(DeploymentAdminResources))]
-        Ready,
+
+
         [EnumLabel(DeploymentInstance.Status_Starting, DeploymentAdminResources.Names.InstanceStates_Starting, typeof(DeploymentAdminResources))]
         Starting,
         [EnumLabel(DeploymentInstance.Status_Running, DeploymentAdminResources.Names.InstanceStates_Running, typeof(DeploymentAdminResources))]
@@ -32,16 +46,19 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Stopping,
         [EnumLabel(DeploymentInstance.Status_Stopped, DeploymentAdminResources.Names.InstanceStates_Stopped, typeof(DeploymentAdminResources))]
         Stopped,
+
         [EnumLabel(DeploymentInstance.Status_Degraded, DeploymentAdminResources.Names.InstanceStates_Degraded, typeof(DeploymentAdminResources))]
         Degraded,
+
         [EnumLabel(DeploymentInstance.Status_FatalError, DeploymentAdminResources.Names.InstanceStates_FatalError, typeof(DeploymentAdminResources))]
         FatalError,
-        [EnumLabel(DeploymentInstance.Status_Undeploying, DeploymentAdminResources.Names.InstanceStates_Undeploying, typeof(DeploymentAdminResources))]
-        Undeploying,
+
         [EnumLabel(DeploymentInstance.Status_FailedToStart, DeploymentAdminResources.Names.InstanceStates_FailedToStart, typeof(DeploymentAdminResources))]
         FailedToStart,
-        [EnumLabel(DeploymentInstance.Status_Offline, DeploymentAdminResources.Names.InstanceStates_Offline, typeof(DeploymentAdminResources))]
-        Offline,
+
+
+        [EnumLabel(DeploymentInstance.Status_FailedToDeploy, DeploymentAdminResources.Names.InstanceStates_FailedToDeploy, typeof(DeploymentAdminResources))]
+        FailedToDeploy,
     }
 
     public enum PipelineModuleStatus
@@ -61,97 +78,42 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public DeploymentInstance()
         {
-            Status = new EntityHeader<DeploymentInstanceStates>();
-            SetState(DeploymentInstanceStates.NotDeployed);
+            Status = EntityHeader<DeploymentInstanceStates>.Create(DeploymentInstanceStates.Offline);
             InputCommandSSL = false;
             InputCommandPort = 80;
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
         }
 
-        public void SetState(DeploymentInstanceStates newState)
-        {            
-            Status.Value = newState;
 
-            switch (newState)
-            {
-                case DeploymentInstanceStates.Undeploying:
-                    Status.Id = Status_Undeploying;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Undeploying;
-                    break;
-                case DeploymentInstanceStates.NotDeployed:
-                    Status.Id = Status_NotDeployed;
-                    Status.Text = DeploymentAdminResources.InstanceStates_NotDeployed;
-                    break;
-                case DeploymentInstanceStates.Deploying:
-                    Status.Id = Status_Deploying;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Deploying;
-                    break;
-                case DeploymentInstanceStates.Initializing:
-                    Status.Id = Status_Initializing;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Initializing;
-                    break;
-                case DeploymentInstanceStates.Ready:
-                    Status.Id = Status_Ready;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Ready;
-                    break;
-                case DeploymentInstanceStates.Starting:
-                    Status.Id = Status_Starting;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Starting;
-                    break;
-                case DeploymentInstanceStates.Running:
-                    Status.Id = Status_Running;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Running;
-                    break;
-                case DeploymentInstanceStates.Pausing:
-                    Status.Id = Status_Pausing;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Pausing;
-                    break;
-                case DeploymentInstanceStates.Paused:
-                    Status.Id = Status_Paused;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Paused;
-                    break;
-                case DeploymentInstanceStates.Stopping:
-                    Status.Id = Status_Stopping;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Stopping;
-                    break;
-                case DeploymentInstanceStates.Stopped:
-                    Status.Id = Status_Stopped;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Stopped;
-                    break;
-                case DeploymentInstanceStates.Degraded:
-                    Status.Id = Status_Degraded;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Degraded;
-                    break;
-                case DeploymentInstanceStates.FatalError:
-                    Status.Id = Status_FatalError;
-                    Status.Text = DeploymentAdminResources.InstanceStates_FatalError;
-                    break;
-                case DeploymentInstanceStates.FailedToStart:
-                    Status.Id = Status_FailedToStart;
-                    Status.Text = DeploymentAdminResources.InstanceStates_FailedToStart;
-                    break;
-                case DeploymentInstanceStates.Offline:
-                    Status.Id = Status_Offline;
-                    Status.Text = DeploymentAdminResources.InstanceStates_Offline;
-                    break;
-            }
-        }
+        public const string Status_Offline = "offline";
 
-        public const string Status_NotDeployed = "notdeployed";
-        public const string Status_Deploying = "deploying";
+        public const string Status_DeployingRuntime = "deployingruntime";
+        public const string Status_HostRestarting = "hostrestarting";
+        public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
+
+        public const string Status_Stopped = "stopped";
+
         public const string Status_Initializing = "initializing";
-        public const string Status_Ready = "ready";
+        
         public const string Status_Starting = "starting";
+
+
+        public const string Status_UpdatingSolution = "updatingsolution";
+
+        
         public const string Status_Running = "running";
         public const string Status_Pausing = "pausing";
         public const string Status_Paused = "paused";
+
         public const string Status_Stopping = "stopping";
-        public const string Status_Stopped = "stopped";
-        public const string Status_Degraded = "degraded";
+
+        public const string Status_FailedToDeploy = "failedtodeploy";
         public const string Status_FatalError = "fatalerror";
         public const string Status_Undeploying = "undeploying";
         public const string Status_FailedToStart = "failedtostart";
-        public const string Status_Offline = "offline";
+        
+
+        public const string Status_Degraded = "degraded";
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
@@ -215,6 +177,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Text = Name,
             };
         }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Instance_UpSince,  FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable:false)]
+        public string UpSince { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }

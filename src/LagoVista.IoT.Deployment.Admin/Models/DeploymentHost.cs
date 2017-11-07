@@ -39,26 +39,35 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         [EnumLabel(DeploymentHost.HostStatus_Offline, DeploymentAdminResources.Names.HostStatus_Offline, typeof(DeploymentAdminResources))]
         Offline,
-        [EnumLabel(DeploymentHost.HostStatus_Failed, DeploymentAdminResources.Names.HostStatus_Failed, typeof(DeploymentAdminResources))]
-        Failed,
-        [EnumLabel(DeploymentHost.HostStatus_Stopped, DeploymentAdminResources.Names.HostStatus_Stopped, typeof(DeploymentAdminResources))]
-        Stopped,
-        [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
-        Stopping,
+
         [EnumLabel(DeploymentHost.HostStatus_Deploying, DeploymentAdminResources.Names.HostStatus_Deploying, typeof(DeploymentAdminResources))]
         Deploying,
-        [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
-        Starting,
-        [EnumLabel(DeploymentHost.HostStatus_PendingDNSConfiguration, DeploymentAdminResources.Names.HostStatus_PendingDNSConfiguration, typeof(DeploymentAdminResources))]        
+
+        [EnumLabel(DeploymentHost.HostStatus_PendingDNSConfiguration, DeploymentAdminResources.Names.HostStatus_PendingDNSConfiguration, typeof(DeploymentAdminResources))]
         PendingDNSConfiguration,
-        [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
-        Running,
-        [EnumLabel(DeploymentHost.HostStatus_StoppingDegraded, DeploymentAdminResources.Names.HostStatus_StoppingDegraded, typeof(DeploymentAdminResources))]
-        StoppingHostStatus_Degraded,
+
+        [EnumLabel(DeploymentHost.HostStatus_FailedDeployment, DeploymentAdminResources.Names.HostStatus_FailedDeployment, typeof(DeploymentAdminResources))]
+        FailedDeployment,
+        [EnumLabel(DeploymentHost.HostStatus_HealthCheckFailed, DeploymentAdminResources.Names.HostStatus_HealthCheckFailed, typeof(DeploymentAdminResources))]
+        HostHealthCheckFailed,        
         [EnumLabel(DeploymentHost.HostStatus_Degraded, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
         Degraded,
+
+        [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
+        Running,
+
         [EnumLabel(DeploymentHost.HostStatus_Destorying, DeploymentAdminResources.Names.HostStatus_Destroying, typeof(DeploymentAdminResources))]
         Destroying,
+
+        [EnumLabel(DeploymentHost.HostStatus_Restarting, DeploymentAdminResources.Names.HostStatus_Restarting, typeof(DeploymentAdminResources))]
+        Restarting,
+
+        /*        [EnumLabel(DeploymentHost.HostStatus_Stopped, DeploymentAdminResources.Names.HostStatus_Stopped, typeof(DeploymentAdminResources))]
+                Stopped,
+                [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
+                Stopping, 
+                [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
+                Starting, */
     }
 
     public enum HostCapacityStatus
@@ -100,9 +109,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_Development = "development";
         
         public const string HostStatus_Offline = "offline";
-        public const string HostStatus_Failed = "failed";
-        public const string HostStatus_Stopped = "stopped";
         public const string HostStatus_Deploying = "deploying";
+        public const string HostStatus_Restarting = "restarting";
+        public const string HostStatus_FailedDeployment = "faileddeployment";
+        public const string HostStatus_HealthCheckFailed = "healthcheckfailed";
         public const string HostStatus_Destorying = "destroying";
         public const string HostStatus_Starting = "starting";
         public const string HostStatus_Running = "running";
@@ -122,96 +132,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public DeploymentHost()
         {
-            Status = new EntityHeader<HostStatus>();
-            CapacityStatus = new EntityHeader<HostCapacityStatus>();
-            HostType = new EntityHeader<HostTypes>();
-
-            SetCapacityStatus(HostCapacityStatus.UnderUtilized);
-            SetHostState(HostStatus.Offline);
+            CapacityStatus = EntityHeader<HostCapacityStatus>.Create(HostCapacityStatus.UnderUtilized);
+            Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
 
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
             GenerateAccessKeys();
         }
-
-        public void SetHostState(HostStatus hostState)
-        {
-            Status.Value = hostState;
-
-
-            switch (hostState)
-            {
-                case HostStatus.StoppingHostStatus_Degraded:
-                    Status.Id = HostStatus_StoppingDegraded;
-                    Status.Text = DeploymentAdminResources.HostStatus_StoppingDegraded;
-                    break;
-                case HostStatus.Offline:
-                    Status.Id = HostStatus_Offline;
-                    Status.Text = DeploymentAdminResources.HostStatus_Offline;
-                    break;
-                case HostStatus.Failed:
-                    Status.Id = HostStatus_Failed;
-                    Status.Text = DeploymentAdminResources.HostStatus_Failed;
-                    break;
-                case HostStatus.Running:
-                    Status.Id = HostStatus_Running;
-                    Status.Text = DeploymentAdminResources.HostStatus_Running;
-                    break;
-                case HostStatus.Starting:
-                    Status.Id = HostStatus_Starting;
-                    Status.Text = DeploymentAdminResources.HostStatus_Starting;
-                    break;
-                case HostStatus.Stopped:
-                    Status.Id = HostStatus_Stopped;
-                    Status.Text = DeploymentAdminResources.HostStatus_Stopped;
-                    break;
-                case HostStatus.Stopping:
-                    Status.Id = HostStatus_Stopping;
-                    Status.Text = DeploymentAdminResources.HostStatus_Stopping;
-                    break;
-                case HostStatus.Degraded:
-                    Status.Id = HostStatus_Degraded;
-                    Status.Text = DeploymentAdminResources.HostStatus_Degraded;
-                    break;
-            }
-        }
-
-        public void SetCapacityStatus(HostCapacityStatus capacityStatus)
-        {
-            CapacityStatus.Value = capacityStatus;
-
-            switch (capacityStatus)
-            {
-                case HostCapacityStatus.Ok:
-                    CapacityStatus.Id = HostCapacity_Ok;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_Ok;
-                    break;
-                case HostCapacityStatus.At75Percent:
-                    CapacityStatus.Id = HostCapacity_75Percent;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_75Percent;
-                    break;
-                case HostCapacityStatus.At90Percent:
-                    CapacityStatus.Id = HostCapacity_90Percent;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_90Percent;
-                    break;
-                case HostCapacityStatus.AtCapacity:
-                    CapacityStatus.Id = HostCapacity_atcapacity;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_AtCapacity;
-                    break;
-                case HostCapacityStatus.FailureImminent:
-                    CapacityStatus.Id = HostCapacity_failureimmintent;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_FailureImminent;
-                    break;
-                case HostCapacityStatus.OverCapacity:
-                    CapacityStatus.Id = HostCapacity_overcapacity;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_OverCapacity;
-                    break;
-                case HostCapacityStatus.UnderUtilized:
-                    CapacityStatus.Id = HostCapacity_underutilized;
-                    CapacityStatus.Text = DeploymentAdminResources.HostCapacity_Underutlized;
-                    break;
-            }
-        }
-
+        
         public void GenerateAccessKeys()
         {
             HostAccessKey1 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
@@ -233,7 +160,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader Size { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: false)]
         public EntityHeader<HostStatus> Status { get; set; }
 
 
@@ -273,6 +200,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_MonitoringProvider, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public EntityHeader MonitoringProvider { get; set; }
 
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
+        public string UpSince { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }

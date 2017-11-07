@@ -213,8 +213,8 @@
   <data name="HostStatus_Degraded" xml:space="preserve">
     <value>Degraded</value>
   </data>
-  <data name="HostStatus_Failed" xml:space="preserve">
-    <value>Failed</value>
+  <data name="HostStatus_FailedDeployment" xml:space="preserve">
+    <value>Failed Deployment</value>
   </data>
   <data name="HostStatus_Offline" xml:space="preserve">
     <value>Offline</value>
@@ -471,11 +471,11 @@
   <data name="InstanceStates_Stopping" xml:space="preserve">
     <value>Stopping</value>
   </data>
-  <data name="InstanceStates_Deploying" xml:space="preserve">
-    <value>Deploying</value>
+  <data name="InstanceStates_DeployingContainer" xml:space="preserve">
+    <value>Deploying Container</value>
   </data>
-  <data name="HostStatus_StoppingDegraded" xml:space="preserve">
-    <value>Stopping - Degraded</value>
+  <data name="HostStatus_HealthCheckFailed" xml:space="preserve">
+    <value>Health Check Failed</value>
   </data>
   <data name="InstanceStates_Undeploying" xml:space="preserve">
     <value>Undeploying</value>
@@ -773,5 +773,38 @@
   </data>
   <data name="Instance_LocalUsageStatistics" xml:space="preserve">
     <value>Store Usage Statistics Locally</value>
+  </data>
+  <data name="HostStatus_QueuedForDeployment" xml:space="preserve">
+    <value>Queued for Deployment</value>
+  </data>
+  <data name="Host_UpSince" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="Instance_UpSince" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="HostStatus_Restarting" xml:space="preserve">
+    <value>Restarting</value>
+  </data>
+  <data name="InstanceStates_HostRestarting" xml:space="preserve">
+    <value>Host Restarting</value>
+  </data>
+  <data name="InstanceStates_HostFailedHealthCheck" xml:space="preserve">
+    <value>Host Failed Health Check</value>
+  </data>
+  <data name="InstanceStates_DeployingRuntime" xml:space="preserve">
+    <value>Deploying Runtime</value>
+  </data>
+  <data name="InstanceStates_FailedToDeploy" xml:space="preserve">
+    <value>Failed to Deploy</value>
+  </data>
+  <data name="InstanceStates_RestartingRuntime" xml:space="preserve">
+    <value>Restarting Runtime</value>
+  </data>
+  <data name="InstanceStates_UpdatingRuntime" xml:space="preserve">
+    <value>Updating Runtime</value>
+  </data>
+  <data name="InstanceStates_UpdatingSolution" xml:space="preserve">
+    <value>Updating Solution</value>
   </data>
 </root>
