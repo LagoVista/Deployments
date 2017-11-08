@@ -12,6 +12,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<DeploymentActivity> GetDeploymentActivityAsync(string deploymentActivityId);
         Task<IEnumerable<DeploymentActivity>> GetRetryDeploymentActivitiesAsync();
         Task<IEnumerable<DeploymentActivitySummary>> GetForResourceIdAsync(string resourceId);
-        Task<IEnumerable<DeploymentActivity>> GetActiveDeploymentActivitiesAsync();
+        Task<IEnumerable<DeploymentActivity>> GetRunningDeploymentActivitiesAsync();
+        Task<IEnumerable<DeploymentActivity>> GetScheduledDeploymentActivitiesAsync();
     }
 }

@@ -41,6 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Completed,
         Failed,
         TimedOut,
+        Scheduled,
         PendingRetry,
     }
 
@@ -98,7 +99,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         /// <summary>
         /// Time Stamp Value for how long this item should "spin" until it's executed.
         /// </summary>
-        public string PauseUntil { get; set; }
+        public string ScheduledFor { get; set; }
 
         public EntityHeader ToUserEntityHeader()
         {

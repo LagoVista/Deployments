@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Logging.Loggers;
 using System.Linq;
+using LagoVista.Core;
+using System;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -21,7 +23,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return InsertAsync(deploymentActivity);
         }
 
-        public Task<IEnumerable<DeploymentActivity>> GetActiveDeploymentActivitiesAsync()
+        public Task<IEnumerable<DeploymentActivity>> GetScheduledDeploymentActivitiesAsync()
+        {
+            return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.Scheduled.ToString()),
+                                    FilterOptions.Create(nameof(DeploymentActivity.ScheduledFor), FilterOptions.Operators.LessThan, DateTime.UtcNow.ToJSONString()));
+        }
+
+        public Task<IEnumerable<DeploymentActivity>> GetRunningDeploymentActivitiesAsync()
         {
             return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.Running.ToString()));
         }

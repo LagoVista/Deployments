@@ -17,7 +17,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="ReadMe.html" target="" />
     <file src="bin\release\netstandard1.6\*.dll" target="lib\netstandard1.6" />
   </files>
 </package>
