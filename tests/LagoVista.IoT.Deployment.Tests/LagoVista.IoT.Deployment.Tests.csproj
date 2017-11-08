@@ -9,9 +9,6 @@
     <RootNamespace>LagoVista.IoT.Deployment.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="ValidationTests\lse.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
   </ItemGroup>
   <ItemGroup>
