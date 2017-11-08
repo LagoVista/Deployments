@@ -49,7 +49,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
         {
             var timeout = DateTime.UtcNow.Add(TimeSpan.FromSeconds(timeoutSeconds));
-
             
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");            
 

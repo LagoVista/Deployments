@@ -36,7 +36,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
     public enum DeploymentActivityStatus
     {
-        Pending,
+        Queued,
+        Pending,        
         Running,
         Completed,
         Failed,
@@ -55,6 +56,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Type = taskType;
             EnqueueTimeStamp = DateTime.UtcNow.ToJSONString();
             RetryCount = 1;
+            Status = DeploymentActivityStatus.Queued;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -63,13 +65,20 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonConverter(typeof(StringEnumConverter))]
         public DeploymentActivityResourceTypes ResourceType { get; set; }
 
+        private DeploymentActivityStatus _status;
         [JsonConverter(typeof(StringEnumConverter))]
-        public DeploymentActivityStatus Status { get; set; }
-
-        public void Transition(DeploymentActivityStatus newState, string notes)
+        public DeploymentActivityStatus Status
         {
-            Status = newState;
+            get { return _status; }
+            set
+            {
+                _status = value;
+                LastUpdated = DateTime.UtcNow.ToJSONString();
+            }
         }
+        
+
+        public string LastUpdated { get; set; }
 
         public String ResourceId
         {

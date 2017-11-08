@@ -13,4 +13,3 @@
     <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.CloudRepos\LagoVista.IoT.Deployment.CloudRepos.csproj" />
   </ItemGroup>
 </Project>
-
