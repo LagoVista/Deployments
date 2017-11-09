@@ -75,10 +75,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
-            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployContainer, org, user);
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployHost, org, user);
             if (!transitionResult.Successful) return transitionResult;
 
-            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DeployContainer);
+            return await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DeployHost);
         }
 
         public async Task<InvokeResult> StartAsync(String id, EntityHeader org, EntityHeader user)

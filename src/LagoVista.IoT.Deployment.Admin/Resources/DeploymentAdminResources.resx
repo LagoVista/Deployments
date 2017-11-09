@@ -210,8 +210,8 @@
   <data name="HostCapacity_Underutlized" xml:space="preserve">
     <value>Under Utilized</value>
   </data>
-  <data name="HostStatus_Degraded" xml:space="preserve">
-    <value>Degraded</value>
+  <data name="HostStatus_DeployingContainer" xml:space="preserve">
+    <value>Deploying Container</value>
   </data>
   <data name="HostStatus_FailedDeployment" xml:space="preserve">
     <value>Failed Deployment</value>
@@ -806,5 +806,26 @@
   </data>
   <data name="InstanceStates_UpdatingSolution" xml:space="preserve">
     <value>Updating Solution</value>
+  </data>
+  <data name="Host_DebugMode" xml:space="preserve">
+    <value>Debug Mode</value>
+  </data>
+  <data name="Host_DebugMode_Help" xml:space="preserve">
+    <value>With debug mode enabled, the host will log and display considerably more telemetry as well spend less time batching that telemetry to be sent to the server. This may provide a performance penatly on a high capacity system.</value>
+  </data>
+  <data name="Instance_DebugMode" xml:space="preserve">
+    <value>Debug Mode</value>
+  </data>
+  <data name="Instance_DebugMode_Help" xml:space="preserve">
+    <value>With debug mode enabled, the host will log and display considerably more telemetry as well spend less time batching that telemetry to be sent to the server. This may provide a performance penatly on a high capacity system.</value>
+  </data>
+  <data name="Host_StatusTimeStamp" xml:space="preserve">
+    <value>Time Stamp</value>
+  </data>
+  <data name="InstanceStates_StartingRuntime" xml:space="preserve">
+    <value>Starting Runtime</value>
+  </data>
+  <data name="Instance_StatusTimeStamp" xml:space="preserve">
+    <value>Time Stamp</value>
   </data>
 </root>

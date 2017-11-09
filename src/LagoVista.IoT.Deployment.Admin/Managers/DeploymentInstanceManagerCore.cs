@@ -21,7 +21,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
 
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-           IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo,  IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+           IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _deviceManagerRepo = deviceManagerRepo;
@@ -37,7 +37,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await CheckForDepenenciesAsync(instance);
 
             var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
-            if(repo != null)
+            if (repo != null)
             {
                 /* Upon deletion release the repo so it can be used somewhere else */
                 repo.Instance = null;
@@ -90,10 +90,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Create, user, org);
 
-            if(!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
+            if (!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
             {
                 var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
-                if(EntityHeader.IsNullOrEmpty(repo.Instance))
+                if (EntityHeader.IsNullOrEmpty(repo.Instance))
                 {
                     repo.Instance = EntityHeader.Create(instance.Id, instance.Name);
                     await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
@@ -130,10 +130,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org);
 
             var existingInstance = await _instanceRepo.GetInstanceAsync(instance.Id);
-            if(existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
+            if (existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
             {
                 var newlyAssginedRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
-                if(!EntityHeader.IsNullOrEmpty(newlyAssginedRepo.Instance))
+                if (!EntityHeader.IsNullOrEmpty(newlyAssginedRepo.Instance))
                 {
                     throw new ValidationException("Device Repository In Use", new ErrorMessage($"Repository is already assigned to the instance {newlyAssginedRepo.Instance.Text}.  A Device Repository can only be assigned to one Instance at a time."));
                 }
@@ -146,7 +146,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(oldRepo, org, user);
             }
 
-            if(existingInstance.Status.Value != instance.Status.Value ||
+            if (existingInstance.Status.Value != instance.Status.Value ||
                existingInstance.IsDeployed != instance.IsDeployed)
             {
                 await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, org, user);
@@ -180,8 +180,25 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user, string details = "")
         {
+            var dateStamp = DateTime.UtcNow.ToJSONString();
+
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             ValidationCheck(instance, Actions.Update);
+
+            if (newStatus == DeploymentInstanceStates.Running &&
+                instance.Status.Value != DeploymentInstanceStates.Running)
+            {
+                instance.UpSince = dateStamp;
+            }
+
+            if (newStatus != DeploymentInstanceStates.Running &&
+                instance.Status.Value == DeploymentInstanceStates.Running)
+            {
+                instance.UpSince = null;
+            }
+
+            instance.LastUpdatedBy = user;
+            instance.LastUpdatedDate = dateStamp;
 
             var statusUpdate = Models.DeploymentInstanceStatus.Create(instanceId, user);
             statusUpdate.Details = details;

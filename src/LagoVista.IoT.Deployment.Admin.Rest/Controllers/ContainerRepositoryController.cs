@@ -44,7 +44,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/container/repo/{id}")]
-        public async Task<DetailResponse<ContainerRepository>> UpdateContainerAsync(string id)
+        public async Task<DetailResponse<ContainerRepository>> GetContainerAsync(string id)
         {
             var container = await _containerManager.GetContainerRepoAsync(id, OrgEntityHeader, UserEntityHeader);
             var detailResponse = DetailResponse<ContainerRepository>.Create(container);

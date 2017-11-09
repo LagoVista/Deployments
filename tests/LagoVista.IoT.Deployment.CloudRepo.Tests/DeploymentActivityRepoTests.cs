@@ -26,8 +26,8 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()
             {
-                AccountId = "ADD ANY TABLE STORAGE ACCOUNT ID",
-                AccessKey = "ADD ANY TABLE STORAGE KEY"
+                AccountId = "nuviotdev",
+                AccessKey = "Za6PpxUbXjXic8rhK3lbcWyUQyVY2NVsgXRRD1rVj2LAjXUnji5/ooJx7u0ob9cPKTkPu/woa74DBE6IVKsLQA=="
             });
 
             var repo = new DeploymentActivityRepo(_deploymentSettings.Object, _adminLogger.Object);
@@ -36,7 +36,7 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
             {
                 RowKey = Guid.NewGuid().ToId(),
                 Status = DeploymentActivityStatus.Scheduled,
-                ScheduledFor = DateTime.UtcNow.AddMinutes(5).ToJSONString()
+                ScheduledFor = DateTime.UtcNow.AddSeconds(2).ToJSONString()
             };
 
             await repo.AddDeploymentActivityAsync(activity);
@@ -50,8 +50,8 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()
             {
-                AccountId = "ADD ANY TABLE STORAGE ACCOUNT ID",
-                AccessKey = "ADD ANY TABLE STORAGE KEY"
+                AccountId = "nuviotdev",
+                AccessKey = "Za6PpxUbXjXic8rhK3lbcWyUQyVY2NVsgXRRD1rVj2LAjXUnji5/ooJx7u0ob9cPKTkPu/woa74DBE6IVKsLQA=="
             });
 
             var repo = new DeploymentActivityRepo(_deploymentSettings.Object, _adminLogger.Object);
@@ -60,7 +60,7 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
             {
                 RowKey = Guid.NewGuid().ToId(),
                 Status = DeploymentActivityStatus.Scheduled,
-                ScheduledFor = DateTime.UtcNow.AddMinutes(-5).ToJSONString()
+                ScheduledFor = DateTime.UtcNow.AddSeconds(-3).ToJSONString()
             };
 
             await repo.AddDeploymentActivityAsync(activity);

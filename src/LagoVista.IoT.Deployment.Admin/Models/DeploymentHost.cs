@@ -46,13 +46,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostStatus_PendingDNSConfiguration, DeploymentAdminResources.Names.HostStatus_PendingDNSConfiguration, typeof(DeploymentAdminResources))]
         PendingDNSConfiguration,
 
+        [EnumLabel(DeploymentHost.HostStatus_DeployingContainer, DeploymentAdminResources.Names.HostStatus_DeployingContainer, typeof(DeploymentAdminResources))]
+        DeployingContainer,
+
         [EnumLabel(DeploymentHost.HostStatus_FailedDeployment, DeploymentAdminResources.Names.HostStatus_FailedDeployment, typeof(DeploymentAdminResources))]
         FailedDeployment,
         [EnumLabel(DeploymentHost.HostStatus_HealthCheckFailed, DeploymentAdminResources.Names.HostStatus_HealthCheckFailed, typeof(DeploymentAdminResources))]
         HostHealthCheckFailed,        
-        [EnumLabel(DeploymentHost.HostStatus_Degraded, DeploymentAdminResources.Names.HostStatus_Degraded, typeof(DeploymentAdminResources))]
-        Degraded,
-
+        
         [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
         Running,
 
@@ -107,19 +108,25 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_Notifications = "notifications";
         public const string HostType_MCP = "mcp";
         public const string HostType_Development = "development";
-        
+
+
         public const string HostStatus_Offline = "offline";
         public const string HostStatus_Deploying = "deploying";
-        public const string HostStatus_Restarting = "restarting";
-        public const string HostStatus_FailedDeployment = "faileddeployment";
-        public const string HostStatus_HealthCheckFailed = "healthcheckfailed";
-        public const string HostStatus_Destorying = "destroying";
+
+        public const string HostStatus_PendingDNSConfiguration = "pending-dns-Configuration";
+        public const string HostStatus_DeployingContainer = "deployingcontainer";
+
         public const string HostStatus_Starting = "starting";
         public const string HostStatus_Running = "running";
         public const string HostStatus_Stopping = "stopping";
-        public const string HostStatus_Degraded = "degraded";
-        public const string HostStatus_StoppingDegraded = "stopping-degraded";
-        public const string HostStatus_PendingDNSConfiguration = "pending-dns-Configuration";
+        public const string HostStatus_Restarting = "restarting";
+
+        public const string HostStatus_Destorying = "destroying";
+
+        public const string HostStatus_FailedDeployment = "faileddeployment";
+        public const string HostStatus_HealthCheckFailed = "healthcheckfailed";
+       
+        
 
         public const string HostCapacity_underutilized = "underutilized";
         public const string HostCapacity_Ok = "ok";
@@ -160,9 +167,20 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader Size { get; set; }
 
 
+        EntityHeader<HostStatus> _status;
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Status, EnumType: (typeof(HostStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: false)]
-        public EntityHeader<HostStatus> Status { get; set; }
+        public EntityHeader<HostStatus> Status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                StatusTimeStamp = DateTime.UtcNow.ToJSONString();
+            }
+        }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string StatusTimeStamp { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }
@@ -205,6 +223,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }
+
+
         
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
@@ -225,6 +245,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public String HostAccessKey1 { get; set; }
 
         public String HostAccessKey2 { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DebugMode, HelpResource: Resources.DeploymentAdminResources.Names.Host_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public bool DebugMode { get; set; }
+
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool ShowSolutionDetailsSite { get; set; }
