@@ -162,6 +162,47 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
+        /// <summary>
+        /// The mappings between routes go from the source to the destination,
+        /// in most cases the destination is the one that needs the mappings
+        /// this method will make sure the destination has the mappings as well
+        /// </summary>
+        /// <param name="module"></param>
+        public void BackPopulateMappings(RouteModuleConfig module)
+        {
+            var incomingModule = this.PipelineModules.Where(pm => (pm.PrimaryOutput != null && pm.PrimaryOutput.Id == module.Id) ||
+                                                                pm.SecondaryOutputs != null && pm.SecondaryOutputs.Where(rt => rt.Id == module.Id).Any()).FirstOrDefault();
+            if (incomingModule != null)
+            {
+                if (incomingModule.PrimaryOutput != null)
+                {
+                    foreach (var mapping in incomingModule.PrimaryOutput.Mappings)
+                    {
+                        if (!module.IncomingMappings.Where(mod => mod.Key == mapping.Key).Any())
+                        {
+                            module.IncomingMappings.Add(mapping);
+                        }
+                    }
+                }
+
+                if (incomingModule.SecondaryOutputs != null)
+                {
+                    var incomingPath = incomingModule.SecondaryOutputs.Where(mod => mod.Id == module.Id).FirstOrDefault();
+                    if (incomingPath != null)
+                    {
+                        foreach (var mapping in incomingPath.Mappings)
+                        {
+                            if (!module.IncomingMappings.Where(mod => mod.Key == mapping.Key).Any())
+                            {
+                                module.IncomingMappings.Add(mapping);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         [CustomValidator]
         public void Validate(ValidationResult result)
         {

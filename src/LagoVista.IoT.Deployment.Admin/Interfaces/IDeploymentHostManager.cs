@@ -10,10 +10,10 @@ namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IDeploymentHostManagerRemote
     {
-        Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user);
-        Task<DeploymentHost> LoadFullDeploymentHostAsync(string hostId);
+        Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true);
         Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "");
     }
 
     public interface IDeploymentHostManager : IDeploymentHostManagerRemote
@@ -26,14 +26,11 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId, EntityHeader user);
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> RegenerateAccessKeys(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "");
-
+        
         Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeployContainerAsync(string hostId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user);
-
-
         
         Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);

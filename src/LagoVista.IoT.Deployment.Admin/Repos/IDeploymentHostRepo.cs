@@ -10,7 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddDeploymentHostAsync(DeploymentHost host);
         Task<DeploymentHost> GetDeploymentHostForDedicatedInstanceAsync(String instanceId);
-        Task<DeploymentHost> GetDeploymentHostAsync(String hostId);
+        Task<DeploymentHost> GetDeploymentHostAsync(String hostId, bool throwOnNotFound = true);
         Task<DeploymentHost> GetNotificationsHostAsync();
         Task<DeploymentHost> GetMCPHostAsync();
 

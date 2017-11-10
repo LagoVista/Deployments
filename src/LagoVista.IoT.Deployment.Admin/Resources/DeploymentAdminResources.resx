@@ -666,8 +666,8 @@
   <data name="HostStatus_Destroying" xml:space="preserve">
     <value>Destroying</value>
   </data>
-  <data name="HostStatus_PendingDNSConfiguration" xml:space="preserve">
-    <value>Pending DNS Configuration</value>
+  <data name="HostStatus_ConfiguringDNS" xml:space="preserve">
+    <value>ConfiguringDNS</value>
   </data>
   <data name="Err_CantPublishNotRunning" xml:space="preserve">
     <value>Sorry, your host does not appear to be running, you can't deploy a container to a non-running host.</value>
@@ -783,8 +783,8 @@
   <data name="Instance_UpSince" xml:space="preserve">
     <value>Started</value>
   </data>
-  <data name="HostStatus_Restarting" xml:space="preserve">
-    <value>Restarting</value>
+  <data name="HostStatus_RestartingHost" xml:space="preserve">
+    <value>Restarting Host</value>
   </data>
   <data name="InstanceStates_HostRestarting" xml:space="preserve">
     <value>Host Restarting</value>
@@ -827,5 +827,20 @@
   </data>
   <data name="Instance_StatusTimeStamp" xml:space="preserve">
     <value>Time Stamp</value>
+  </data>
+  <data name="HostStatus_RestartingContainer" xml:space="preserve">
+    <value>Restarting Container</value>
+  </data>
+  <data name="HostStatus_StartingContainer" xml:space="preserve">
+    <value>Starting Container</value>
+  </data>
+  <data name="InstanceStates_FailedToInitialize" xml:space="preserve">
+    <value>Failed to Initialize</value>
+  </data>
+  <data name="HostStatus_UpdatingRuntime" xml:space="preserve">
+    <value>Updating Runtime</value>
+  </data>
+  <data name="HostStatus_WaitingForServer" xml:space="preserve">
+    <value>Waiting Host Startup</value>
   </data>
 </root>

@@ -70,9 +70,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deploymentConnectorService.GetDeployedInstancesAsync(host, org, user);
         }
 
-        public async Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user)
+        public async Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId, throwOnNotFound);
+            if (host == null)
+            {
+                return host;
+            }
+
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             return host;
         }
@@ -181,11 +186,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
         {
             return _deploymentHostRepo.GetNotificationsHostAsync();
-        }
-
-        public Task<DeploymentHost> LoadFullDeploymentHostAsync(string id)
-        {
-            return _deploymentHostRepo.GetDeploymentHostAsync(id);
         }
 
         public Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org)

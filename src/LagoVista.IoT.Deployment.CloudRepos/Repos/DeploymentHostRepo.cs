@@ -48,9 +48,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return DeleteDocumentAsync(hostId);
         }
 
-        public Task<DeploymentHost> GetDeploymentHostAsync(string hostId)
+        public Task<DeploymentHost> GetDeploymentHostAsync(string hostId, bool throwOnNotFound = true)
         {
-            return GetDocumentAsync(hostId);
+            return GetDocumentAsync(hostId, throwOnNotFound);
         }
 
         public async Task<DeploymentHost> GetDeploymentHostForDedicatedInstanceAsync(string instanceId)

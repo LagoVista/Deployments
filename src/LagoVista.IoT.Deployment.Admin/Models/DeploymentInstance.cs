@@ -55,12 +55,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentInstance.Status_FatalError, DeploymentAdminResources.Names.InstanceStates_FatalError, typeof(DeploymentAdminResources))]
         FatalError,
 
+        [EnumLabel(DeploymentInstance.Status_FailedToInitialize, DeploymentAdminResources.Names.InstanceStates_FailedToInitialize, typeof(DeploymentAdminResources))]
+        FailedToInitialize,
+
         [EnumLabel(DeploymentInstance.Status_FailedToStart, DeploymentAdminResources.Names.InstanceStates_FailedToStart, typeof(DeploymentAdminResources))]
         FailedToStart,
-
-
-        [EnumLabel(DeploymentInstance.Status_FailedToDeploy, DeploymentAdminResources.Names.InstanceStates_FailedToDeploy, typeof(DeploymentAdminResources))]
-        FailedToDeploy,
     }
 
     public enum PipelineModuleStatus
@@ -108,6 +107,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public const string Status_FatalError = "fatalerror";
         public const string Status_FailedToDeploy = "failedtodeploy";
+        public const string Status_FailedToInitialize = "failedtoinitialize";
         public const string Status_FailedToStart = "failedtostart";
         public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
         

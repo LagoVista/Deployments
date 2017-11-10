@@ -43,16 +43,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostStatus_Deploying, DeploymentAdminResources.Names.HostStatus_Deploying, typeof(DeploymentAdminResources))]
         Deploying,
 
-        [EnumLabel(DeploymentHost.HostStatus_PendingDNSConfiguration, DeploymentAdminResources.Names.HostStatus_PendingDNSConfiguration, typeof(DeploymentAdminResources))]
-        PendingDNSConfiguration,
+        [EnumLabel(DeploymentHost.HostStatus_ConfiguringDNS, DeploymentAdminResources.Names.HostStatus_ConfiguringDNS, typeof(DeploymentAdminResources))]
+        ConfiguringDNS,
 
         [EnumLabel(DeploymentHost.HostStatus_DeployingContainer, DeploymentAdminResources.Names.HostStatus_DeployingContainer, typeof(DeploymentAdminResources))]
         DeployingContainer,
 
-        [EnumLabel(DeploymentHost.HostStatus_FailedDeployment, DeploymentAdminResources.Names.HostStatus_FailedDeployment, typeof(DeploymentAdminResources))]
-        FailedDeployment,
-        [EnumLabel(DeploymentHost.HostStatus_HealthCheckFailed, DeploymentAdminResources.Names.HostStatus_HealthCheckFailed, typeof(DeploymentAdminResources))]
-        HostHealthCheckFailed,        
+        [EnumLabel(DeploymentHost.HostStatus_StartingContainer, DeploymentAdminResources.Names.HostStatus_StartingContainer, typeof(DeploymentAdminResources))]
+        StartingContainer,
         
         [EnumLabel(DeploymentHost.HostStatus_Running, DeploymentAdminResources.Names.HostStatus_Running, typeof(DeploymentAdminResources))]
         Running,
@@ -60,15 +58,25 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostStatus_Destorying, DeploymentAdminResources.Names.HostStatus_Destroying, typeof(DeploymentAdminResources))]
         Destroying,
 
-        [EnumLabel(DeploymentHost.HostStatus_Restarting, DeploymentAdminResources.Names.HostStatus_Restarting, typeof(DeploymentAdminResources))]
-        Restarting,
+        [EnumLabel(DeploymentHost.HostStatus_RestartingHost, DeploymentAdminResources.Names.HostStatus_RestartingHost, typeof(DeploymentAdminResources))]
+        RestartingHost,
 
-        /*        [EnumLabel(DeploymentHost.HostStatus_Stopped, DeploymentAdminResources.Names.HostStatus_Stopped, typeof(DeploymentAdminResources))]
-                Stopped,
-                [EnumLabel(DeploymentHost.HostStatus_Stopping, DeploymentAdminResources.Names.HostStatus_Stopping, typeof(DeploymentAdminResources))]
-                Stopping, 
-                [EnumLabel(DeploymentHost.HostStatus_Starting, DeploymentAdminResources.Names.HostStatus_Starting, typeof(DeploymentAdminResources))]
-                Starting, */
+        [EnumLabel(DeploymentHost.HostStatus_UpdatingRuntime, DeploymentAdminResources.Names.HostStatus_UpdatingRuntime, typeof(DeploymentAdminResources))]
+        UpdatingRuntime,
+
+
+        [EnumLabel(DeploymentHost.HostStatus_WaitingForServerToStart, DeploymentAdminResources.Names.HostStatus_WaitingForServer, typeof(DeploymentAdminResources))]
+        WaitingForServerToStart,
+
+
+        [EnumLabel(DeploymentHost.HostStatus_RestartingContainer, DeploymentAdminResources.Names.HostStatus_RestartingContainer, typeof(DeploymentAdminResources))]
+        RestartingContainer,
+
+        [EnumLabel(DeploymentHost.HostStatus_FailedDeployment, DeploymentAdminResources.Names.HostStatus_FailedDeployment, typeof(DeploymentAdminResources))]
+        FailedDeployment,
+        [EnumLabel(DeploymentHost.HostStatus_HealthCheckFailed, DeploymentAdminResources.Names.HostStatus_HealthCheckFailed, typeof(DeploymentAdminResources))]
+        HostHealthCheckFailed,
+
     }
 
     public enum HostCapacityStatus
@@ -113,15 +121,19 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostStatus_Offline = "offline";
         public const string HostStatus_Deploying = "deploying";
 
-        public const string HostStatus_PendingDNSConfiguration = "pending-dns-Configuration";
+        public const string HostStatus_ConfiguringDNS = "configuringdns";
         public const string HostStatus_DeployingContainer = "deployingcontainer";
+        public const string HostStatus_StartingContainer = "startingcontainer";
+        public const string HostStatus_UpdatingRuntime = "updatingruntime";
 
-        public const string HostStatus_Starting = "starting";
         public const string HostStatus_Running = "running";
-        public const string HostStatus_Stopping = "stopping";
-        public const string HostStatus_Restarting = "restarting";
+        public const string HostStatus_RestartingHost = "restartinghost";
+        public const string HostStatus_RestartingContainer = "restartingcontainer";
 
         public const string HostStatus_Destorying = "destroying";
+
+
+        public const string HostStatus_WaitingForServerToStart = "waitingforservertostart";
 
         public const string HostStatus_FailedDeployment = "faileddeployment";
         public const string HostStatus_HealthCheckFailed = "healthcheckfailed";

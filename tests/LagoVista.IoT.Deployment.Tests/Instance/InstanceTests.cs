@@ -45,7 +45,6 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         [TestInitialize]
         public void Init()
         {
-
             _deploymentHostManager = new Mock<IDeploymentHostManager>();
             _dependencyManager = new Mock<IDependencyManager>();
             _deploymentInstanceRepo = new Mock<IDeploymentInstanceRepo>();
@@ -56,7 +55,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, _instanceStatusRepo.Object, _adminLogger.Object, _appConfig.Object, _dependencyManager.Object, _security.Object);
 
-            _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
+            _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<bool>())).Returns((string id, EntityHeader user, EntityHeader org) =>
               {
                   var instance = GetInstance();
 
