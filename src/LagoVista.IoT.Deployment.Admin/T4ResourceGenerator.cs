@@ -344,6 +344,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_DNSName
 
 		public static string Host_DNSName { get { return GetResourceString("Host_DNSName"); } }
+//Resources:DeploymentAdminResources:Host_HasSSLCert
+
+		public static string Host_HasSSLCert { get { return GetResourceString("Host_HasSSLCert"); } }
 //Resources:DeploymentAdminResources:Host_Help
 
 		public static string Host_Help { get { return GetResourceString("Host_Help"); } }
@@ -371,6 +374,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_Size
 
 		public static string Host_Size { get { return GetResourceString("Host_Size"); } }
+//Resources:DeploymentAdminResources:Host_SSLExpires
+
+		public static string Host_SSLExpires { get { return GetResourceString("Host_SSLExpires"); } }
 //Resources:DeploymentAdminResources:Host_Status
 
 		public static string Host_Status { get { return GetResourceString("Host_Status"); } }
@@ -879,6 +885,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_DedicatedInstance = "Host_DedicatedInstance";
 			public const string Host_Description = "Host_Description";
 			public const string Host_DNSName = "Host_DNSName";
+			public const string Host_HasSSLCert = "Host_HasSSLCert";
 			public const string Host_Help = "Host_Help";
 			public const string Host_IPv4_Address = "Host_IPv4_Address";
 			public const string Host_LastPing = "Host_LastPing";
@@ -888,6 +895,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_ShowSiteDetails = "Host_ShowSiteDetails";
 			public const string Host_ShowSiteDetails_Help = "Host_ShowSiteDetails_Help";
 			public const string Host_Size = "Host_Size";
+			public const string Host_SSLExpires = "Host_SSLExpires";
 			public const string Host_Status = "Host_Status";
 			public const string Host_StatusDetails = "Host_StatusDetails";
 			public const string Host_StatusTimeStamp = "Host_StatusTimeStamp";

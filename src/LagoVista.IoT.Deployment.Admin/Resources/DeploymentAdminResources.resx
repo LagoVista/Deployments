@@ -843,4 +843,10 @@
   <data name="HostStatus_WaitingForServer" xml:space="preserve">
     <value>Waiting Host Startup</value>
   </data>
+  <data name="Host_HasSSLCert" xml:space="preserve">
+    <value>Has Valid SSL Certificate</value>
+  </data>
+  <data name="Host_SSLExpires" xml:space="preserve">
+    <value>SSL Expiration Date </value>
+  </data>
 </root>
