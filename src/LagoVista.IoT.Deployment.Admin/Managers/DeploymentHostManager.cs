@@ -222,7 +222,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string statusDetails = "")
         {
             var host = await GetDeploymentHostAsync(hostId, org, user);
 
@@ -231,8 +231,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 var hostStatusUpdate = Models.DeploymentHostStatus.Create(hostId, user);
                 hostStatusUpdate.OldState = host.Status.Value.ToString();
                 hostStatusUpdate.NewState = hostStatus.ToString();
+                hostStatusUpdate.Details = statusDetails;
                 host.Status = EntityHeader<HostStatus>.Create(hostStatus);
                 host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
+                host.StatusDetails = statusDetails;
                 await _deploymentHostStatusRepo.AddDeploymentHostStatusAsync(hostStatusUpdate);
                 await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
                 host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
@@ -241,6 +243,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return InvokeResult.Success;
+        }
+
+        public async Task<ListResponse<DeploymentHostStatus>> GetDeploymentHostStatusHistoryAsync(string hostId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentHost), Actions.Read);
+            return await _deploymentHostStatusRepo.GetStatusHistoryForHostAsync(hostId, listRequest);
         }
     }
 }

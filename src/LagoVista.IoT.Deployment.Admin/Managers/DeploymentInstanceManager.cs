@@ -12,6 +12,7 @@ using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -32,6 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentConnectorService _connector;
         IDeviceRepositoryManager _deviceRepoManager;
         IDeploymentActivityQueueManager _deploymentActivityQueueManager;
+        IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
@@ -44,6 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _connector = connector;
             _deviceRepoManager = deviceRepoManager;
             _hostRepo = hostRepo;
+            _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
         }
 
         private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
@@ -198,6 +201,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
+        }
+
+        public async Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance), Actions.Read);
+            return await _deploymentInstanceStatusRepo.GetStatusHistoryForInstanceAsync(instanceId, listRequest);
         }
 
         public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)

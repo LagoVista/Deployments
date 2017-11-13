@@ -66,6 +66,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Get Status History
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/statushistory")]
+        public Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string id)
+        {
+            return  _instanceManager.GetDeploymentInstanceStatusHistoryAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+
+        /// <summary>
         /// Deployment Instance - Check in Use
         /// </summary>
         /// <param name="id"></param>

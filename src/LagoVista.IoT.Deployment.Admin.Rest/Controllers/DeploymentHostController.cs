@@ -96,6 +96,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
 
         /// <summary>
+        /// Deployment Host - Get Status History
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/statushistory")]
+        public Task<ListResponse<DeploymentHostStatus>> GetDeploymentHostStatusHistoryAsync(string id)
+        {
+            return _hostManager.GetDeploymentHostStatusHistoryAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        /// <summary>
         /// Deployment Host - Deploy
         /// </summary>
         /// <param name="id"></param>
