@@ -222,7 +222,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "")
+        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "", string cpu = "", string memory = "")
         {
             var host = await GetDeploymentHostAsync(hostId, org, user);
 
@@ -235,6 +235,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
             host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
             host.LastUpdatedBy = user;
+
+            if(string.IsNullOrEmpty(details)) host.StatusDetails = details;
+            if (string.IsNullOrEmpty(memory)) host.AverageMemory = memory;
+            if (string.IsNullOrEmpty(cpu)) host.AverageCPU = cpu;
+
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }
