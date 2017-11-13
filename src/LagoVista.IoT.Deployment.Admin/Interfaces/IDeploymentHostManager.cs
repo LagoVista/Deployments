@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true);
         Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "", string cpu = "", string memory = "");
+        Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user);
     }
 
     public interface IDeploymentHostManager : IDeploymentHostManagerRemote

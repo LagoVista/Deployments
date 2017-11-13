@@ -222,25 +222,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string details = "", string cpu = "", string memory = "")
+        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user)
         {
             var host = await GetDeploymentHostAsync(hostId, org, user);
 
-            var hostStatusUpdate = Models.DeploymentHostStatus.Create(hostId, user);
-            hostStatusUpdate.OldState = host.Status.Value.ToString();
-            hostStatusUpdate.NewState = hostStatus.ToString();
-            await _deploymentHostStatusRepo.AddDeploymentHostStatusAsync(hostStatusUpdate);
+            if (host.Status.Value != hostStatus)
+            {
+                var hostStatusUpdate = Models.DeploymentHostStatus.Create(hostId, user);
+                hostStatusUpdate.OldState = host.Status.Value.ToString();
+                hostStatusUpdate.NewState = hostStatus.ToString();
+                host.Status = EntityHeader<HostStatus>.Create(hostStatus);
+                host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
+                await _deploymentHostStatusRepo.AddDeploymentHostStatusAsync(hostStatusUpdate);
+                await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
+                host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+                host.LastUpdatedBy = user;
+                await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
+            }
 
-            host.Status = EntityHeader<HostStatus>.Create(hostStatus);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
-            host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
-            host.LastUpdatedBy = user;
-
-            if(string.IsNullOrEmpty(details)) host.StatusDetails = details;
-            if (string.IsNullOrEmpty(memory)) host.AverageMemory = memory;
-            if (string.IsNullOrEmpty(cpu)) host.AverageCPU = cpu;
-
-            await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }
     }
