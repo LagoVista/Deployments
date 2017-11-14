@@ -17,25 +17,32 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
     {
         protected void WriteResults(ValidationResult result)
         {
-            /*Console.WriteLine("Errors (Expected if test Passed");
-            Console.WriteLine("==================================================");
-
-            foreach (var err in result.Errors)
+            if (result.Errors.Any())
             {
-                Console.WriteLine(err.Message);
-            }
+                Console.WriteLine("Errors (Expected if test Passed");
+                Console.WriteLine("==================================================");
 
-            Console.WriteLine("");
-            Console.WriteLine("Warnings (Expected if test Passed");
-            Console.WriteLine("==================================================");
-
-            if (result.Warnings.Count > 0)
-            {
-                foreach (var err in result.Warnings)
+                foreach (var err in result.Errors)
                 {
                     Console.WriteLine(err.Message);
                 }
-            }*/
+                Console.WriteLine("");
+            }
+
+
+            if (result.Warnings.Any())
+            {
+                Console.WriteLine("Warnings (Expected if test Passed");
+                Console.WriteLine("==================================================");
+
+                if (result.Warnings.Count > 0)
+                {
+                    foreach (var err in result.Warnings)
+                    {
+                        Console.WriteLine(err.Message);
+                    }
+                }
+            }
         }
 
         protected void AssertIsValid(ValidationResult result)
