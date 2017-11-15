@@ -99,18 +99,5 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
             return await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
-
-        /// <summary>
-        /// Telemetry - Get ItemDetail
-        /// </summary>
-        /// <param name="itemid"></param>
-        /// <param name="recordtype"></param>
-        /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/itemdetail/{itemid}")]
-        public async Task<JsonResult> GetItemDetailAsync(string recordtype, string itemid)
-        {
-            var json = await _telemetryManager.GetItemDetailAsync(itemid, recordtype, OrgEntityHeader, UserEntityHeader);
-            return new JsonResult(json);            
-        }
     }
 }

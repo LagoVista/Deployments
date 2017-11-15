@@ -1,15 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System;
+using LagoVista.Core;
 using System.Collections.Generic;
 using System.Text;
+using LagoVista.IoT.Logging.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public class TelemetryReportData
     {
-        public String Name { get; set; }
-
+        [JsonProperty("timeStamp")]
         public String TimeStamp { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
 
         [JsonProperty("itemId")]
         public String ItemId { get; set; }
@@ -39,8 +43,45 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("level")]
         public String Level { get; set; }
 
+        internal static TelemetryReportData FromLogRecord(LogRecord logRecord, string recordType)
+        {
+            var trd = new TelemetryReportData()
+            {
+                TimeStamp = logRecord.TimeStamp.ToJSONString(),
+                Message = logRecord.Message,
+                Level = logRecord.LogLevel,
+                ItemType = recordType,
+                DeviceId = logRecord.DeviceId,
+                DeviceTypeId = logRecord.DeviceTypeId,
+                HostId = logRecord.HostId,
+                InstanceId = logRecord.InstanceId,
+                NewState = logRecord.NewState,
+                OldState = logRecord.OldState,
+                PipelineModuleId = logRecord.PipelineModuleId,
+                Tag = logRecord.Tag,     
+                Details = logRecord.Details
+            };
+
+            return trd;
+        }
+
         [JsonProperty("setting")]
         public String Setting { get; set; }
+
+        [JsonProperty("oldState")]
+        public String OldState { get; set; }
+
+        [JsonProperty("newState")]
+        public String NewState { get; set; }
+
+        [JsonProperty("details")]
+        public string Details { get; set; }
+
+
+        /* maybe add these back in at somepoint 
+         * 
+         
+        public String Name { get; set; }
 
         [JsonProperty("orgId")]
         public String OrgId { get; set; }
@@ -57,10 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("user")]
         public String User { get; set; }
 
-        [JsonProperty("oldState")]
-        public String OldState { get; set; }
+    */
 
-        [JsonProperty("newState")]
-        public String NewState { get; set; }
     }
 }

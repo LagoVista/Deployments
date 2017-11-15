@@ -54,12 +54,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             return await _telemetryService.GetForPipelineQueueAsync(pipelineModuleId, recordType, request);
-        }
-
-        public async Task<string> GetItemDetailAsync(string itemId, string recordType, EntityHeader org, EntityHeader user)
-        {
-            await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
-            return await _telemetryService.GetItemDetailsAsync(itemId, recordType);
-        }
+        }        
     }
 }

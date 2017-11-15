@@ -20,7 +20,5 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
         Task<ListResponse<TelemetryReportData>> GetForDeviceTypeAsync(DeviceRepository deviceRepo, string deviceTypeId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
-
-        Task<string> GetItemDetailAsync(string itemId, string recordType, EntityHeader org, EntityHeader user);
     }
 }
