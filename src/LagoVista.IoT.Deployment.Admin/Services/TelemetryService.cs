@@ -80,5 +80,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             return GetRecordsAsync(pipelineModuleId, recordType, request);
         }
+
+        public async Task<ListResponse<TelemetryReportData>> GetAllErrorsasync(ListRequest request)
+        {
+            var logRecords = await _logReader.GetAllErrorsAsync(request);
+            return ToTelemetryData(logRecords, "error");
+        }
     }
 }

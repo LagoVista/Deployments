@@ -19,6 +19,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             _telemetryService = telemetryService;
         }
+        
+        public Task<ListResponse<TelemetryReportData>> GetAllErrorsAsync(ListRequest request, EntityHeader org, EntityHeader user)
+        {
+            return _telemetryService.GetAllErrorsasync(request);
+        }
 
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {

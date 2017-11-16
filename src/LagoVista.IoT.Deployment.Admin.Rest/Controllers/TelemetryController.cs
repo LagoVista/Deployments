@@ -2,6 +2,7 @@
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
 using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -98,6 +99,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
             return await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Telemetry - Get Latest Errors
+        /// </summary>
+        /// <returns></returns>
+        [SystemAdmin()]
+        [HttpGet("/api/telemetry/errors")]
+        public async Task<ListResponse<TelemetryReportData>> GetAllErrorsAsync()
+        {
+            return await _telemetryManager.GetAllErrorsAsync(GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
     }
 }
