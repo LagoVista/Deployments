@@ -48,7 +48,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return await _telemetryManager.GetForInstanceAsync(instanceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
-        
+
         /// <summary>
         /// Telemetry - Get For Pipeline Module
         /// </summary>
@@ -60,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return await _telemetryManager.GetForPipelineModuleAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
-        
+
         /// <summary>
         /// Telemetry - Get For Pipline Queue
         /// </summary>
@@ -99,6 +99,30 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
             return await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Telemetry - Get Details for a Deployment Activity
+        /// </summary>
+        /// <param name="deploymentactivityid"></param>
+        /// <param name="recordtype"></param>
+        /// <returns></returns>
+        [HttpGet("/api/telemetry/{recordtype}/deploymentactivity/{deploymentactivityid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string deploymentactivityid)
+        {
+            return await _telemetryManager.GetForDeploymentActivityAsync(deploymentactivityid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Telemetry - Get For Pipeline Execution Message
+        /// </summary>
+        /// <param name="pemid"></param>
+        /// <param name="recordtype"></param>
+        /// <returns></returns>
+        [HttpGet("/api/telemetry/{recordtype}/pem/{pemid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForPemAsync(string recordtype, string pemid)
+        {
+            return await _telemetryManager.GetForPemAsync(pemid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

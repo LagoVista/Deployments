@@ -25,6 +25,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _telemetryService.GetAllErrorsasync(request);
         }
 
+        public async Task<ListResponse<TelemetryReportData>> GetForDeploymentActivityAsync(string activityid, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
+        {
+            await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
+            return await _telemetryService.GetForDeploymentActviityAsync(activityid, recordType, request);
+        }
+
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
@@ -47,6 +53,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await  base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             return await _telemetryService.GetForInstanceAsync(instanceId, recordType, request);
+        }
+
+        public async Task<ListResponse<TelemetryReportData>> GetForPemAsync(string pemId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
+        {
+            await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
+            return await _telemetryService.GetForPemAsync(pemId, recordType, request);
         }
 
         public async Task<ListResponse<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)

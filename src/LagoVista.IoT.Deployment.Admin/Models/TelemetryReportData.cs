@@ -31,6 +31,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("hostId")]
         public String HostId { get; set; }
 
+        [JsonProperty("activityId")]
+        public String ActivityId { get; set; }
+
+        [JsonProperty("pemId")]
+        public String PemId { get; set; }
+
         [JsonProperty("pipelineModuleId")]
         public String PipelineModuleId { get; set; }
 
@@ -55,11 +61,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeviceTypeId = logRecord.DeviceTypeId,
                 HostId = logRecord.HostId,
                 InstanceId = logRecord.InstanceId,
+                ActivityId = logRecord.ActivityId,
+                PemId = logRecord.PemId,
                 NewState = logRecord.NewState,
                 OldState = logRecord.OldState,
                 PipelineModuleId = logRecord.PipelineModuleId,
-                Tag = logRecord.Tag,     
-                Details = logRecord.Details
+                Tag = logRecord.Tag,
+                Details = logRecord.Details,
+                Version = logRecord.Version
             };
 
             return trd;
@@ -67,6 +76,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [JsonProperty("setting")]
         public String Setting { get; set; }
+
+        [JsonProperty("version")]
+        public String Version { get; set; }
 
         [JsonProperty("oldState")]
         public String OldState { get; set; }

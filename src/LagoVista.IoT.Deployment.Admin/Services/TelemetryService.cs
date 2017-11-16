@@ -19,7 +19,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _logReader = reader;
         }
 
-        
         private ListResponse<TelemetryReportData> ToTelemetryData(ListResponse<LogRecord> logRecords, string recordType)
         {
             var lr = new ListResponse<TelemetryReportData>
@@ -34,6 +33,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 trdList.Add(TelemetryReportData.FromLogRecord(logRecord, recordType));
             }
 
+            lr.Model = trdList;
+
             return lr;
         }
 
@@ -41,12 +42,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             if (recordType == "error")
             {
-                var logRecords = await _logReader.GetErrorsAsync(deviceId, request, ResourceType.Device);
+                var logRecords = await _logReader.GetErrorsAsync(deviceId, request, ResourceType.Any);
                 return ToTelemetryData(logRecords, recordType);
             }
             else
             {
-                var logRecords = await _logReader.GetLogRecordsAsync(deviceId, request, ResourceType.Device);
+                var logRecords = await _logReader.GetLogRecordsAsync(deviceId, request, ResourceType.Any);
                 return ToTelemetryData(logRecords, recordType);
             }
         }
@@ -81,10 +82,20 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return GetRecordsAsync(pipelineModuleId, recordType, request);
         }
 
+        public Task<ListResponse<TelemetryReportData>> GetForDeploymentActviityAsync(string activityId, string recordType, ListRequest request)
+        {
+            return GetRecordsAsync(activityId, recordType, request);
+        }
+
         public async Task<ListResponse<TelemetryReportData>> GetAllErrorsasync(ListRequest request)
         {
             var logRecords = await _logReader.GetAllErrorsAsync(request);
             return ToTelemetryData(logRecords, "error");
+        }
+
+        public Task<ListResponse<TelemetryReportData>> GetForPemAsync(string pemId, string recordType, ListRequest request)
+        {
+            return GetRecordsAsync(pemId, recordType, request);
         }
     }
 }
