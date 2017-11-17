@@ -9,6 +9,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public class TelemetryReportData
     {
+        [JsonProperty("id")]
+        public String Id { get; set; }
+
         [JsonProperty("timeStamp")]
         public String TimeStamp { get; set; }
 
@@ -53,6 +56,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             var trd = new TelemetryReportData()
             {
+                Id = logRecord.Id,
                 TimeStamp = logRecord.TimeStamp.ToJSONString(),
                 Message = logRecord.Message,
                 Level = logRecord.LogLevel,
