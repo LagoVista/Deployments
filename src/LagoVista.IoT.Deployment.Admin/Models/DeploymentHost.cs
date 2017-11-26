@@ -240,7 +240,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public bool HasSSLCert { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_SSLExpires, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public string SSLExpires { get; set; }        
+        public string SslExpires { get; set; }        
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string LastPing { get; set; }
