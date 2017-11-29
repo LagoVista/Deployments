@@ -52,6 +52,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("level")]
         public String Level { get; set; }
 
+
         internal static TelemetryReportData FromLogRecord(LogRecord logRecord, string recordType)
         {
             var trd = new TelemetryReportData()
