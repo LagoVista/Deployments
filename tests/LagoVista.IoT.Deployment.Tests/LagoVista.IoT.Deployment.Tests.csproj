@@ -16,7 +16,7 @@
     <PackageReference Include="Moq" Version="4.7.145" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta1" />
     <PackageReference Include="LagoVista.Core" Version="1.2.184-alpha1030" />
     <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="1.2.184-alpha1030" />
     <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="1.2.184-alpha1030" />
