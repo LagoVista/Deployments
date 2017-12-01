@@ -41,7 +41,8 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
         public static ErrorCode NoPlannerSpecified => new ErrorCode() { Code = "INS1002", Message = DeploymentAdminResources.Err_NoPlannerHasBeenSpecified };
 
 
-
+        public static ErrorCode CanNotDeleteMCPHost => new ErrorCode() { Code = "HST1001", Message = "The MCP Server can not be deleted" };
+        public static ErrorCode CanNotDeleteNotificationServerHost => new ErrorCode() { Code = "HST1002", Message = "The Notification Server can not be deleted" };
 
 
         public static ErrorCode NoMessageOnRoute => new ErrorCode() { Code = "RTE1001", Message = DeploymentAdminResources.Err_NoMessageDefinitionOnRoute };

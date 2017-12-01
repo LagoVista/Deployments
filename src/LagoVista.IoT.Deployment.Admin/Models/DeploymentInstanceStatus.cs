@@ -28,6 +28,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string TimeStamp { get; set; }
         public string OldState { get; set; }
         public string NewState { get; set; }
+        public string Version { get; set; }
         public string Details { get; set; }
         public string TransitionById { get; set; }
         public string TransitionByName { get; set; }

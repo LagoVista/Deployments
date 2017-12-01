@@ -57,6 +57,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DeleteDeploymentHostAsync(String instanceId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            if (host.HostType.Value == HostTypes.MCP) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteMCPHost.ToErrorMessage());
+            if (host.HostType.Value == HostTypes.Notification) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteNotificationServerHost.ToErrorMessage());
+
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
             await ConfirmNoDepenenciesAsync(host);
             await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
@@ -212,7 +215,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if(host.Status.Value != existingHost.Status.Value)
             {
-                await UpdateDeploymentHostStatusAsync(host.Id, host.Status.Value, org, user);
+                await UpdateDeploymentHostStatusAsync(host.Id, host.Status.Value, host.ContainerTag.Text, org, user);
             }
 
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
@@ -222,7 +225,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, EntityHeader org, EntityHeader user, string statusDetails = "")
+        public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, string version, EntityHeader org, EntityHeader user, string statusDetails = "")
         {
             var host = await GetDeploymentHostAsync(hostId, org, user);
 
@@ -232,6 +235,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 hostStatusUpdate.OldState = host.Status.Value.ToString();
                 hostStatusUpdate.NewState = hostStatus.ToString();
                 hostStatusUpdate.Details = statusDetails;
+                hostStatusUpdate.Version = version;
                 host.Status = EntityHeader<HostStatus>.Create(hostStatus);
                 host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
                 host.StatusDetails = statusDetails;

@@ -44,11 +44,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
             }
 
-            //TODO: Should probably also clear the Host
-
             await _instanceRepo.DeleteInstanceAsync(instanceId);
 
-            return InvokeResult.Success; ;
+            if(!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
+            {
+                var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
+                if(host.HostType.Value == HostTypes.Dedicated)
+                {
+                    await _deploymentHostManager.DeleteDeploymentHostAsync(host.Id, org, user);
+                }
+            }
+
+            return InvokeResult.Success; 
         }
 
 
@@ -149,7 +156,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (existingInstance.Status.Value != instance.Status.Value ||
                existingInstance.IsDeployed != instance.IsDeployed)
             {
-                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, org, user);
+                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text, org, user);
             }
 
             var solution = instance.Solution.Value;
@@ -178,7 +185,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user, string details = "")
+        public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, string version, EntityHeader org, EntityHeader user, string details = "")
         {
             var dateStamp = DateTime.UtcNow.ToJSONString();
 
@@ -206,6 +213,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             statusUpdate.NewDeploy = deployed;
             statusUpdate.OldState = instance.Status.Value.ToString();
             statusUpdate.NewState = newStatus.ToString();
+            statusUpdate.Version = version;
             await _deploymentInstanceStatusRepo.AddDeploymentInstanceStatusAsync(statusUpdate);
 
             instance.Status = EntityHeader<DeploymentInstanceStates>.Create(newStatus);

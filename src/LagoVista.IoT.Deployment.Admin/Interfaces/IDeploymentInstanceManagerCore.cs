@@ -12,6 +12,6 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance,  EntityHeader org, EntityHeader user);
-        Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, EntityHeader org, EntityHeader user, string details = "");
+        Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, string version, EntityHeader org, EntityHeader user, string details = "");
     }
 }

@@ -49,7 +49,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         {
             _host.Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
 
-            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, _org, _user);
+            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running,"1.2.3.4", _org, _user);
 
             _hostRepo.Verify(hsr => hsr.UpdateDeploymentHostAsync(It.Is<DeploymentHost>(hst => hst.Status.Value == HostStatus.Running)), Times.Once);
         }
@@ -59,7 +59,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         {
             _host.Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
             _host.StatusTimeStamp = DateTime.UtcNow.AddHours(-5).ToJSONString();
-            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, _org, _user);
+            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, "1.2.3.4", _org, _user);
 
             _hostRepo.Verify(hsr => hsr.UpdateDeploymentHostAsync(It.Is<DeploymentHost>(hst => hst.StatusTimeStamp.ToDateTime() > DateTime.UtcNow.AddMinutes(-5))), Times.Once);
         }
@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         {
             _host.Status = EntityHeader<HostStatus>.Create(HostStatus.Running);
 
-            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, _org, _user);
+            _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, "1.2.3.4", _org, _user);
 
             _hostRepo.Verify(hsr => hsr.UpdateDeploymentHostAsync(It.Is<DeploymentHost>(hst => hst.Status.Value == HostStatus.Running)), Times.Never);
         }

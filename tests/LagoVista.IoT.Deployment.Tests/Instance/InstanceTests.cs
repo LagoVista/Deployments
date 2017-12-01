@@ -239,7 +239,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
 
             /* Should update the new repo with the current instance */
-            _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo=>rpo.Id == NEW_DEVICE_REPO_ID && rpo.Instance.Id == DEVICE_INSTANCE_ID), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
+            _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == NEW_DEVICE_REPO_ID && rpo.Instance.Id == DEVICE_INSTANCE_ID), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
 
             /* Should clear the instance on the old repo */
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == OLD_DEVICE_REPO_ID && rpo.Instance == null), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
@@ -345,20 +345,58 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
                 });
             });
 
-            _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).Returns((string id) =>
-            {
-                return Task.FromResult<DeploymentInstance>(GetInstance());
-            });
-
+            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
+            
             var instance = GetInstance();
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
 
+            _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
+            _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
             await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
-        
+
 
             _deploymentInstanceRepo.Verify(dir => dir.DeleteInstanceAsync(DEVICE_INSTANCE_ID), Times.Once);
-            
+
             /* Didn't change, don't call method to get or update the device repo */
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == NEW_DEVICE_REPO_ID && rpo.Instance == null), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task Instance_Delete_DeletesHostIfDedicated()
+        {
+            _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });
+
+            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
+
+            var instance = GetInstance();
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
+
+            _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
+
+            _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
+
+            await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
+
+            _deploymentHostManager.Verify(dhm => dhm.DeleteDeploymentHostAsync(host.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task Instance_Delete_ShouldNotDeleteIfNotDedicated()
+        {
+            _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });
+
+            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Free) };
+
+            var instance = GetInstance();
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
+
+            _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
+
+            _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
+
+            await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
+
+            _deploymentHostManager.Verify(dhm => dhm.DeleteDeploymentHostAsync(host.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
     }
 }
