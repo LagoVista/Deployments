@@ -71,15 +71,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public DeploymentInstanceStates Status { get; set; }
     }
 
-    public class PlannerSummary
+    public class PlannerSummary : InstanceDetailsBase
     {
-        [JsonProperty("id")]
-        public string Id { get;  private set; }
-        [JsonProperty("name")]
-        public string Name { get; private set; }
-        [JsonProperty("key")]
-        public string Key { get; private set; }
         [JsonProperty("status")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public PipelineModuleStatus Status { get; set; }
         [JsonProperty("deviceIdParsers")]
         public List<DeviceMessageDefinitionField> DeviceIdParsers { get; private set; }

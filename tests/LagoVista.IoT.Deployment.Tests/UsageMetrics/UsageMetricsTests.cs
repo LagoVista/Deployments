@@ -123,7 +123,7 @@ namespace LagoVista.IoT.Deployment.Tests
 
             childMetricsmetric.Calculate();
 
-            Assert.AreEqual(20, childMetricsmetric.AvergeProcessingMs);
+            Assert.AreEqual(20, childMetricsmetric.AverageProcessingMS);
         }
     }
 }

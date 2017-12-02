@@ -42,7 +42,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("messagesPerSecond")]
         public double MessagesPerSecond { get; set; }
         [JsonProperty("averageProcessingMS")]
-        public double AvergeProcessingMs { get; set; }
+        public double AverageProcessingMS { get; set; }
         [JsonProperty("version")]
         public String Version { get; set; }
         [JsonProperty("instanceId")]
@@ -114,7 +114,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
             if (MessagesProcessed > 0)
             {
-                AvergeProcessingMs = Math.Round(ProcessingMS / MessagesProcessed, 3);
+                AverageProcessingMS = Math.Round(ProcessingMS / MessagesProcessed, 3);
             }
         }
 
