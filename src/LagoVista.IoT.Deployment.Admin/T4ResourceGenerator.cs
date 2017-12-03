@@ -302,6 +302,9 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 //Resources:DeploymentAdminResources:Host_CloudProvider_Help
 
 		public static string Host_CloudProvider_Help { get { return GetResourceString("Host_CloudProvider_Help"); } }
+//Resources:DeploymentAdminResources:Host_CloudProviders
+
+		public static string Host_CloudProviders { get { return GetResourceString("Host_CloudProviders"); } }
 //Resources:DeploymentAdminResources:Host_ComputeResource_Uri
 
 		public static string Host_ComputeResource_Uri { get { return GetResourceString("Host_ComputeResource_Uri"); } }
@@ -871,6 +874,7 @@ namespace LagoVista.IoT.Deployment.Admin.Resources
 			public const string Host_CapacityStatus = "Host_CapacityStatus";
 			public const string Host_CloudProvider = "Host_CloudProvider";
 			public const string Host_CloudProvider_Help = "Host_CloudProvider_Help";
+			public const string Host_CloudProviders = "Host_CloudProviders";
 			public const string Host_ComputeResource_Uri = "Host_ComputeResource_Uri";
 			public const string Host_ComputeResource_Uri_Help = "Host_ComputeResource_Uri_Help";
 			public const string Host_ComputeResourceId = "Host_ComputeResourceId";

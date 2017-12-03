@@ -154,6 +154,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             CapacityStatus = EntityHeader<HostCapacityStatus>.Create(HostCapacityStatus.UnderUtilized);
             Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
 
+            CloudProviders = new List<EntityHeader>()
+            {
+                new EntityHeader() { Text = "Azure", Id = "79EB47F37EFA4DE2BB99354FFB573AFC" },
+                new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" }
+            };
+
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
             GenerateAccessKeys();
         }
@@ -220,6 +226,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public EntityHeader CloudProvider { get; set; }
+
+        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProviders, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<EntityHeader> CloudProviders { get; set; }
 
         [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string AdminAPIUri { get; set; }

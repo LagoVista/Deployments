@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>LagoVista.IoT.Deployment.Admin.Tests</AssemblyName>
     <PackageId>LagoVista.IoT.DeviceAdmin.Tests</PackageId>

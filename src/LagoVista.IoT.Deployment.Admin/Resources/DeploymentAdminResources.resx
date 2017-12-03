@@ -849,4 +849,7 @@
   <data name="Host_SSLExpires" xml:space="preserve">
     <value>SSL Expiration Date </value>
   </data>
+  <data name="Host_CloudProviders" xml:space="preserve">
+    <value>Cloud Providers</value>
+  </data>
 </root>
