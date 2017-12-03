@@ -34,7 +34,7 @@ namespace LagoVista.IoT.Deployment.Tests
             Assert.AreEqual(childMetricsmetric.BytesProcessed + 500, rolledUpMetrics.BytesProcessed);
             Assert.AreEqual(childMetricsmetric.DeadLetterCount + 20, rolledUpMetrics.DeadLetterCount);
             Assert.AreEqual(childMetricsmetric.ErrorCount + 38, rolledUpMetrics.ErrorCount);
-            Assert.AreEqual(childMetricsmetric.MessagesProcessed + 20, rolledUpMetrics.MessagesProcessed);
+            Assert.AreEqual(20 , rolledUpMetrics.MessagesProcessed);
             Assert.AreEqual(childMetricsmetric.ProcessingMS + 123123, rolledUpMetrics.ProcessingMS);
             Assert.AreEqual(childMetricsmetric.WarningCount + 15, rolledUpMetrics.WarningCount);
             Assert.AreEqual(childMetricsmetric.ActiveCount + 38, rolledUpMetrics.ActiveCount);
@@ -68,6 +68,8 @@ namespace LagoVista.IoT.Deployment.Tests
             Assert.AreEqual("hostid", clonedMetric.HostId);
             Assert.AreEqual("instanceid", clonedMetric.InstanceId);
             Assert.AreEqual("piplinemoduleid", clonedMetric.PipelineModuleId);
+
+            /* Note we do not concat messages processed, since each pipeline module will report on it, we only want to report on one */
             Assert.AreEqual(1235, clonedMetric.MessagesProcessed);
             Assert.AreEqual(5, clonedMetric.ErrorCount);
             Assert.AreEqual(12345, clonedMetric.BytesProcessed);

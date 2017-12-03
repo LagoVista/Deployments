@@ -71,9 +71,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public void Concat(UsageMetrics metric)
         {
-            Debug.Assert(metric == null, "Must provide a value for metric to be clone");
-
-            MessagesProcessed += metric.MessagesProcessed;
             ErrorCount += metric.ErrorCount;
             BytesProcessed += metric.BytesProcessed;
             WarningCount += metric.WarningCount;
@@ -91,13 +88,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 InstanceId = InstanceId,
                 PipelineModuleId = PipelineModuleId,
 
-                MessagesProcessed = MessagesProcessed,
                 ErrorCount = ErrorCount,
                 BytesProcessed = BytesProcessed,
                 WarningCount = WarningCount,
                 ProcessingMS = ProcessingMS,
                 DeadLetterCount = DeadLetterCount,
                 ActiveCount = ActiveCount,
+                MessagesProcessed = MessagesProcessed
             };
 
             return clonedMetric;
