@@ -60,6 +60,19 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("planner")]
         public PlannerSummary Planner { get; set; }
 
+        [JsonProperty("archiveStorage")]
+        public EntityHeader ArchiveStorage { get; set; }
+
+        [JsonProperty("deviceRepoReader")]
+        public EntityHeader DeviceRepoReader { get; set; }
+
+        [JsonProperty("deviceRepoWriter")]
+        public EntityHeader DeviceRepoWriter{ get; set; }
+
+        [JsonProperty("pemStorage")]
+        public EntityHeader PEMStorage { get; set; }
+
+
         [JsonProperty("listeners")]
         public ObservableCollection<ListenerSummary> Listeners { get; set; }
 
