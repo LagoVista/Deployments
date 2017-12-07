@@ -302,6 +302,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentHost.ContainerTag),
             };
         }
+
+        [CustomValidator]
+        public void Validate(ValidationResult result)
+        {
+            /* Temporary...can remove, need a mechanism to add cloud providers tied to products, KDW 12/7/2017 */
+            if(CloudProviders != null)
+            {
+                CloudProviders.Clear();
+            }
+        }
     }
 
     public class DeploymentHostSummary : SummaryData

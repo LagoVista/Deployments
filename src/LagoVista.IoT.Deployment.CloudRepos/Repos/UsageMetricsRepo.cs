@@ -20,6 +20,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetPagedResultsAsync(hostId, request);
         }
 
+        public Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request)
+        {
+            return GetPagedResultsAsync(dependencyId, request);
+        }
+
         public Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, ListRequest request)
         {
             return GetPagedResultsAsync(instanceId, request);

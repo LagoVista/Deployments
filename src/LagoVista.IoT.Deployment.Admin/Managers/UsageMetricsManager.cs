@@ -20,7 +20,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             _metricsRepo = metricsRepo;
         }
-        
+
+        public async Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request, EntityHeader org, EntityHeader user)
+        {
+            await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Dependency");
+            return await _metricsRepo.GetMetricsForDependencyAsync(dependencyId, request);
+        }
+
         public async Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Host");

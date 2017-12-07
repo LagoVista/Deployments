@@ -55,5 +55,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _usageManager.GetMetricsForPipelineModuleAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
+        /// <summary>
+        /// Usage Metrics - Get For PipelineModule
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/usagemetrics/dependency/{id}")]
+        public Task<ListResponse<UsageMetrics>> GetDependencyUsageAsync(String id)
+        {
+            return _usageManager.GetMetricsForDependencyAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
     }
 }
