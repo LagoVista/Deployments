@@ -27,6 +27,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             canonicalizedString += $"{date}\n";
             canonicalizedString += resource;
 
+            Console.WriteLine($"INPUT => {canonicalizedString}");
+
             var encData = Encoding.UTF8.GetBytes(canonicalizedString);
 
             var hmac = new HMac(new Sha256Digest());
@@ -42,7 +44,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 md5Sting.Append(result[i].ToString("X2"));
             }
 
-            return $"{requestId}:{md5Sting.ToString()}";
+            var headerValue = $"{requestId}:{md5Sting.ToString()}";
+            Console.WriteLine($"HeaderValue==> {headerValue}");
+
+            return headerValue;
         }
     }
 }
