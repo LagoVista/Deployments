@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Admin", "src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj", "{88DC40A1-10EE-4812-AB91-2E2096B788F4}"
 EndProject
@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5DF47FF3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Tests", "tests\LagoVista.IoT.Deployment.Tests\LagoVista.IoT.Deployment.Tests.csproj", "{EA592325-B35B-49AC-9C00-FD5D787A1647}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LagoVista.IoT.Deployment.CloudRepo.Tests", "tests\LagoVista.IoT.Deployment.CloudRepo.Tests\LagoVista.IoT.Deployment.CloudRepo.Tests.csproj", "{B413E573-3D11-4566-8BF1-601E18C5B3F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.CloudRepo.Tests", "tests\LagoVista.IoT.Deployment.CloudRepo.Tests\LagoVista.IoT.Deployment.CloudRepo.Tests.csproj", "{B413E573-3D11-4566-8BF1-601E18C5B3F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LagoVista.IoT.Deployment.Models", "src\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj", "{40FEF995-9F91-4770-A60A-47D7DEA02E1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{B413E573-3D11-4566-8BF1-601E18C5B3F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B413E573-3D11-4566-8BF1-601E18C5B3F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B413E573-3D11-4566-8BF1-601E18C5B3F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40FEF995-9F91-4770-A60A-47D7DEA02E1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40FEF995-9F91-4770-A60A-47D7DEA02E1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40FEF995-9F91-4770-A60A-47D7DEA02E1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40FEF995-9F91-4770-A60A-47D7DEA02E1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <VersionPrefix>1.2</VersionPrefix>
     <TargetFramework>netstandard1.3</TargetFramework>
     <NetStandardImplicitPackageVersion>2.0.1</NetStandardImplicitPackageVersion>
+    <AssemblyVersion>1.2.1.1</AssemblyVersion>
+    <FileVersion>1.2.1.1</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Crypto\**" />
@@ -18,7 +21,11 @@
     <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="1.2.202-alpha0849" />
     <PackageReference Include="LagoVista.UserAdmin" Version="1.2.202-alpha0849" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="T4ResourceGenerator.tt">
@@ -37,12 +44,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Resources\DeploymentAdminResources.resx">
-      <Generator>
-      </Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\DockerSupport\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Logging;
+﻿using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;

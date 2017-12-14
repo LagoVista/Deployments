@@ -10,10 +10,11 @@ using LagoVista.Core.Interfaces;
 using LagoVista.IoT.DeviceMessaging.Admin.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, Resources.DeploymentAdminResources.Names.Route_Help, Resources.DeploymentAdminResources.Names.Route_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor, IValidateable
     {
         public Route()
@@ -24,22 +25,22 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public string Id { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Name { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Route_IsDefault, HelpResource: Resources.DeploymentAdminResources.Names.Route_IsDefault_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Route_IsDefault, HelpResource: DeploymentAdminResources.Names.Route_IsDefault_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsDefault { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Route_Messages, HelpResource: Resources.DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Route_Messages, HelpResource: DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
 
         public List<RouteModuleConfig> PipelineModules { get; set; }
 
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Notes, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Notes, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public string Notes { get; set; }
 
         public string CreationDate { get; set; }
@@ -77,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 200, Y = 125 }
             };
 
-            sentinel.PrimaryOutput = RouteConnection.Create(inputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            sentinel.PrimaryOutput = RouteConnection.Create(inputTranslator.Id, DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(inputTranslator);
 
             var workflow = new RouteModuleConfig()
@@ -86,7 +87,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 350, Y = 225 }
             };
 
-            inputTranslator.PrimaryOutput = RouteConnection.Create(workflow.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            inputTranslator.PrimaryOutput = RouteConnection.Create(workflow.Id, DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(workflow);
 
             var outputTranslator = new RouteModuleConfig()
@@ -95,7 +96,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DiagramLocation = new DeviceAdmin.Models.DiagramLocation() { Page = 1, X = 500, Y = 325 }
             };
 
-            workflow.PrimaryOutput = RouteConnection.Create(outputTranslator.Id, Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned);
+            workflow.PrimaryOutput = RouteConnection.Create(outputTranslator.Id, DeploymentAdminResources.RouteModuleConfig_Unassigned);
             route.PipelineModules.Add(outputTranslator);
 
             return route;

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using LagoVista.Core.Models;
 using Newtonsoft.Json;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -98,7 +99,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
    
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, Resources.DeploymentAdminResources.Names.Host_Help, Resources.DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public const string HostSize_ExtraSmall = "extrasmall";
@@ -166,7 +167,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
 
 
@@ -196,78 +197,78 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DedicatedInstance, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_DedicatedInstance, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public EntityHeader DedicatedInstance { get; set; }
 
         public bool IsPublic { get; set; }
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: Resources.DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerRepository { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: Resources.DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerTag { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_IPv4_Address, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_IPv4_Address, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string Ipv4Address { get; set; }
 
         public string DNSEntryId { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: Resources.DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public EntityHeader CloudProvider { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_CloudProviders, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_CloudProviders, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader> CloudProviders { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: Resources.DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_AdminAPIUri, HelpResource: DeploymentAdminResources.Names.Host_AdminAPIUri_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string AdminAPIUri { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_MonitoringURI, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_MonitoringURI, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string MonitoringURI { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_MonitoringProvider, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_MonitoringProvider, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public EntityHeader MonitoringProvider { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string UpSince { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: Resources.DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_HasSSLCert, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_HasSSLCert, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool HasSSLCert { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_SSLExpires, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_SSLExpires, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string SslExpires { get; set; }        
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string LastPing { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageCPU_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_AverageCPU_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageCPU { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_AverageMemory_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_AverageMemory_1_Minute, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string AverageMemory { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_Subscription, WaterMark: Resources.DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusDetails { get; set; }
 
         public String HostAccessKey1 { get; set; }
 
         public String HostAccessKey2 { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_DebugMode, HelpResource: Resources.DeploymentAdminResources.Names.Host_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_DebugMode, HelpResource: DeploymentAdminResources.Names.Host_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool DebugMode { get; set; }
 
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:Resources.DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool ShowSolutionDetailsSite { get; set; }
 
         public DeploymentHostSummary CreateSummary()

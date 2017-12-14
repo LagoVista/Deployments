@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using LagoVista.Core.Validation;
-using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.Core.Attributes;
 using LagoVista.IoT.DeviceMessaging.Admin.Models;
 using Newtonsoft.Json;
@@ -21,17 +21,17 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             SecondaryOutputs = new List<RouteConnection>();
             Id = Guid.NewGuid().ToId();
 
-            Name = Resources.DeploymentAdminResources.RouteModuleConfig_Unassigned;
+            Name = DeploymentAdminResources.RouteModuleConfig_Unassigned;
            
             IncomingMappings = new List<KeyValuePair<string, object>>();
         }
 
         public string Id { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Name, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Name { get; set; }
 
-        [FormField(LabelResource: Resources.DeploymentAdminResources.Names.Common_Key, HelpResource: Resources.DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: Resources.DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
 
         /// <summary>
