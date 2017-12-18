@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			{
                 if (object.ReferenceEquals(_resourceManager, null)) 
 				{
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LagoVista.IoT.Deployment.Models.DeploymentAdminResources", typeof(DeploymentAdminResources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LagoVista.IoT.Deployment.Models.Resources.DeploymentAdminResources", typeof(DeploymentAdminResources).GetTypeInfo().Assembly);
                     _resourceManager = temp;
                 }
                 return _resourceManager;
