@@ -291,7 +291,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                         EndPoint = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
                                         InputCommand = inputCommand
                                     };
-                                    endpoints.Add(endPoint);
+
+                                    if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
+                                    {
+                                        endpoints.Add(endPoint);
+                                    }
                                 }
                             }
                             else
