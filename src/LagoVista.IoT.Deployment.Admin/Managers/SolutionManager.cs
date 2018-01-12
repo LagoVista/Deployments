@@ -77,8 +77,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var validationResult = ValidateSolution(solution);
             if (!validationResult.Successful) return validationResult.ToInvokeResult();
 
-            Console.WriteLine("BEFORE GET VERSION");
-
             await _solutionVersionRepo.PublishSolutionVersionAsync(solutionVersion, solution);
 
             return InvokeResult.Success;
