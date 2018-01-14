@@ -27,6 +27,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         {
             DeviceConfigurations = new List<EntityHeader<DeviceConfiguration>>();
             Listeners = new List<EntityHeader<ListenerConfiguration>>();
+            Settings = new List<CustomField>();
         }
 
         public EntityHeader Environment
@@ -57,7 +58,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
-        public List<Parameter> Settings { get; set; }
+        public List<CustomField> Settings { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
