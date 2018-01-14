@@ -3,6 +3,7 @@ using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.Pipeline.Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,11 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Planner, WaterMark: DeploymentAdminResources.Names.Deployment_Planner_Select, HelpResource: DeploymentAdminResources.Names.Deployment_Planner_Help, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
         public EntityHeader<PlannerConfiguration> Planner { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
+        public List<Parameter> Settings { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }

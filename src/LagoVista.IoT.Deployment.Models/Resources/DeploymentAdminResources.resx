@@ -852,4 +852,13 @@
   <data name="Host_CloudProviders" xml:space="preserve">
     <value>Cloud Providers</value>
   </data>
+  <data name="Instance_SettingsValues" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Solution_Settings" xml:space="preserve">
+    <value>Solution Settings</value>
+  </data>
+  <data name="Solution_Settings_Help" xml:space="preserve">
+    <value>Solution Settings are values that can be used or changed globally that can be access by any logic used within that solution</value>
+  </data>
 </root>

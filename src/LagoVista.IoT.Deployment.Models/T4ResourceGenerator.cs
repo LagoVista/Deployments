@@ -581,6 +581,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_LocalUsageStatistics
 
 		public static string Instance_LocalUsageStatistics { get { return GetResourceString("Instance_LocalUsageStatistics"); } }
+//Resources:DeploymentAdminResources:Instance_SettingsValues
+
+		public static string Instance_SettingsValues { get { return GetResourceString("Instance_SettingsValues"); } }
 //Resources:DeploymentAdminResources:Instance_Solution
 
 		public static string Instance_Solution { get { return GetResourceString("Instance_Solution"); } }
@@ -737,6 +740,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Solution_Help
 
 		public static string Solution_Help { get { return GetResourceString("Solution_Help"); } }
+//Resources:DeploymentAdminResources:Solution_Settings
+
+		public static string Solution_Settings { get { return GetResourceString("Solution_Settings"); } }
+//Resources:DeploymentAdminResources:Solution_Settings_Help
+
+		public static string Solution_Settings_Help { get { return GetResourceString("Solution_Settings_Help"); } }
 //Resources:DeploymentAdminResources:Solution_Title
 
 		public static string Solution_Title { get { return GetResourceString("Solution_Title"); } }
@@ -967,6 +976,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_LocalLogs = "Instance_LocalLogs";
 			public const string Instance_LocalMessageStorage = "Instance_LocalMessageStorage";
 			public const string Instance_LocalUsageStatistics = "Instance_LocalUsageStatistics";
+			public const string Instance_SettingsValues = "Instance_SettingsValues";
 			public const string Instance_Solution = "Instance_Solution";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
 			public const string Instance_Status = "Instance_Status";
@@ -1019,6 +1029,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_DeviceConfigurations_Help = "Solution_DeviceConfigurations_Help";
 			public const string Solution_Environment = "Solution_Environment";
 			public const string Solution_Help = "Solution_Help";
+			public const string Solution_Settings = "Solution_Settings";
+			public const string Solution_Settings_Help = "Solution_Settings_Help";
 			public const string Solution_Title = "Solution_Title";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";

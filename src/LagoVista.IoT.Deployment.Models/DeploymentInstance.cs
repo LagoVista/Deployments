@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceAdmin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -137,6 +138,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeviceRepo, HelpResource: DeploymentAdminResources.Names.Instance_DeviceRepo_Help, WaterMark: DeploymentAdminResources.Names.Instance_DeviceRepo_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader<DeviceRepository> DeviceRepository { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_SettingsValues, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public List<AttributeValue> SettingsValues { get; set; }
+
+        public Dictionary<string, object> PropertyBag { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerRepository { get; set; }
