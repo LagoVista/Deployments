@@ -164,6 +164,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentActivity_Status
 
 		public static string DeploymentActivity_Status { get { return GetResourceString("DeploymentActivity_Status"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType
+
+		public static string DeviceConfiguration_CustomStatusType { get { return GetResourceString("DeviceConfiguration_CustomStatusType"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType_Help
+
+		public static string DeviceConfiguration_CustomStatusType_Help { get { return GetResourceString("DeviceConfiguration_CustomStatusType_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType_Watermark
+
+		public static string DeviceConfiguration_CustomStatusType_Watermark { get { return GetResourceString("DeviceConfiguration_CustomStatusType_Watermark"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Description
 
 		public static string DeviceConfiguration_Description { get { return GetResourceString("DeviceConfiguration_Description"); } }
@@ -837,6 +846,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentActivity_ResourceType = "DeploymentActivity_ResourceType";
 			public const string DeploymentActivity_Start = "DeploymentActivity_Start";
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
+			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";
+			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
+			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";
 			public const string DeviceConfiguration_Description = "DeviceConfiguration_Description";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";

@@ -861,4 +861,13 @@
   <data name="Solution_Settings_Help" xml:space="preserve">
     <value>Solution Settings are values that can be used or changed globally that can be access by any logic used within that solution</value>
   </data>
+  <data name="DeviceConfiguration_CustomStatusType" xml:space="preserve">
+    <value>Custom Status State Set</value>
+  </data>
+  <data name="DeviceConfiguration_CustomStatusType_Help" xml:space="preserve">
+    <value>You can select a state set that will be used define a custom set of state that represent the current status of the device.</value>
+  </data>
+  <data name="DeviceConfiguration_CustomStatusType_Watermark" xml:space="preserve">
+    <value>-select custom status type-</value>
+  </data>
 </root>

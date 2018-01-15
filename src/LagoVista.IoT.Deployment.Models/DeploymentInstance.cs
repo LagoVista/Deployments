@@ -21,6 +21,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Status = EntityHeader<DeploymentInstanceStates>.Create(DeploymentInstanceStates.Offline);
             InputCommandSSL = false;
             InputCommandPort = 80;
+            SettingsValues = new List<AttributeValue>();
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
         }
 

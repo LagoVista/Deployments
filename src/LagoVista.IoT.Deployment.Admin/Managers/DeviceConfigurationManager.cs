@@ -79,6 +79,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
+            if(!EntityHeader.IsNullOrEmpty(deviceConfiguration.CustomStatusType))
+            {
+                deviceConfiguration.CustomStatusType.Value = await _deviceAdminManager.GetStateSetAsync(deviceConfiguration.CustomStatusType.Id, org, user);
+            }
+
             return deviceConfiguration;
         }
 
