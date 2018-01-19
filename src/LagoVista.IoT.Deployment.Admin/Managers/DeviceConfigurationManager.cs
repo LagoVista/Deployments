@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using System;
+using LagoVista.IoT.DeviceAdmin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -85,6 +86,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return deviceConfiguration;
+        }
+
+
+        public async Task<EntityHeader<StateSet>> GetCustomDeviceStatesAsync(string deviceConfigId, EntityHeader org, EntityHeader user)
+        {
+            var deviceConfig = await GetDeviceConfigurationAsync(deviceConfigId, org, user);
+            return deviceConfig.CustomStatusType;
         }
 
         public async Task<InvokeResult<DeviceConfiguration>> LoadFullDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user)
