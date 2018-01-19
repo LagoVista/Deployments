@@ -94,5 +94,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var uri = $"/api/devices/config/{configurationId}/full";
             return GetListResponseAsync<Device>(uri, instanceId, org, user, listRequest);
         }
+
+        public Task<ListResponse<DeviceSummary>> GetDevicesInCustomStatusAsync(string instanceId, string status, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            var uri = $"/api/devices/customstatus/{status}";
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
+        }
     }
 }
