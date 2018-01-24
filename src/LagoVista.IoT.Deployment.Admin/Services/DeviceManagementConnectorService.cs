@@ -79,13 +79,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         public Task<ListResponse<DeviceSummary>> GetDevicesWithConfigurationAsync(string instanceId, string configurationId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
-            var uri = $"/api/devices/config/{configurationId}";
+            var uri = $"/api/deviceconfig/{configurationId}";
             return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
 
         public Task<ListResponse<DeviceSummary>> GetDevicesWithDeviceTypeAsync(string instanceId, string deviceTypeId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
-            var uri = $"/api/devices/{deviceTypeId}";
+            var uri = $"/api/devicetype/{deviceTypeId}";
             return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
 
@@ -98,6 +98,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         public Task<ListResponse<DeviceSummary>> GetDevicesInCustomStatusAsync(string instanceId, string status, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
             var uri = $"/api/devices/customstatus/{status}";
+            return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
+        }
+
+        public Task<ListResponse<DeviceSummary>> SearchByDeviceIdAsync(string instanceId, string search, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            var uri = $"/api/devices/search/{search}";
             return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
         }
     }
