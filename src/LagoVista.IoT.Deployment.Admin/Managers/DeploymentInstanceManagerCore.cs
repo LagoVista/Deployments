@@ -156,7 +156,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (existingInstance.Status.Value != instance.Status.Value ||
                existingInstance.IsDeployed != instance.IsDeployed)
             {
-                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text, org, user);
+                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v",string.Empty), org, user);
             }
 
             var solution = instance.Solution.Value;
