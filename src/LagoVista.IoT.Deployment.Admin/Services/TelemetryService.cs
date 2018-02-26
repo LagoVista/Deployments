@@ -6,6 +6,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Models;
+using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -19,13 +20,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _logReader = reader;
         }
 
-        private ListResponse<TelemetryReportData> ToTelemetryData(ListResponse<LogRecord> logRecords, string recordType)
+        private ListResponse<TelemetryReportData> ToTelemetryData(ListResponse<LogRecord> logRecords, ListRequest listRequest, string recordType)
         {
             var lr = new ListResponse<TelemetryReportData>
             {
                 NextPartitionKey = logRecords.NextPartitionKey,
-                NextRowKey = logRecords.NextRowKey
+                NextRowKey = logRecords.NextRowKey,
+                PageIndex = listRequest.PageIndex,
+                HasMoreRecords = !String.IsNullOrEmpty(logRecords.NextPartitionKey),
+                PageSize = logRecords.Model.Count()
+                
             };
+
 
             var trdList = new List<TelemetryReportData>();
             foreach (var logRecord in logRecords.Model)
@@ -43,12 +49,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (recordType == "error")
             {
                 var logRecords = await _logReader.GetErrorsAsync(deviceId, request, ResourceType.Any);
-                return ToTelemetryData(logRecords, recordType);
+                return ToTelemetryData(logRecords, request, recordType);
             }
             else
             {
                 var logRecords = await _logReader.GetLogRecordsAsync(deviceId, request, ResourceType.Any);
-                return ToTelemetryData(logRecords, recordType);
+                return ToTelemetryData(logRecords, request, recordType);
             }
         }
 
@@ -90,7 +96,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         public async Task<ListResponse<TelemetryReportData>> GetAllErrorsasync(ListRequest request)
         {
             var logRecords = await _logReader.GetAllErrorsAsync(request);
-            return ToTelemetryData(logRecords, "error");
+            return ToTelemetryData(logRecords, request, "error");
         }
 
         public Task<ListResponse<TelemetryReportData>> GetForPemAsync(string pemId, string recordType, ListRequest request)

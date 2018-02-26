@@ -22,10 +22,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return InsertAsync(instanceStatus);
         }
 
-        public async Task<ListResponse<DeploymentInstanceStatus>> GetStatusHistoryForInstanceAsync(string instanceId, ListRequest listRequest)
+        public Task<ListResponse<DeploymentInstanceStatus>> GetStatusHistoryForInstanceAsync(string instanceId, ListRequest listRequest)
         {
-            var response = await GetByParitionIdAsync(instanceId);
-            return ListResponse<DeploymentInstanceStatus>.Create(response);
+            return GetPagedResultsAsync(instanceId, listRequest);
         }
     }
 }
