@@ -297,6 +297,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
                             if (wfLoadResult.Successful)
                             {
+                                foreach (var attribute in wfLoadResult.Result.Attributes)
+                                {
+                                    if(!device.AttributeMetaData.Where(attr=>attr.Key == attribute.Key).Any())
+                                    {
+                                        device.AttributeMetaData.Add(attribute);
+                                    }
+                                }
+
+                                foreach (var stateMachine in wfLoadResult.Result.StateMachines)
+                                {
+                                    if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
+                                    {
+                                        device.StateMachineMetaData.Add(stateMachine);
+                                    }
+                                }
+
                                 foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                 {
                                     var endPoint = new InputCommandEndPoint
