@@ -315,9 +315,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                                 foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                 {
+                                    var protocol = instance.InputCommandSSL ? "https://" : "http://";
                                     var endPoint = new InputCommandEndPoint
-                                    {
-                                        EndPoint = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
+                                    {                                       
+                                        EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
                                         InputCommand = inputCommand
                                     };
 
