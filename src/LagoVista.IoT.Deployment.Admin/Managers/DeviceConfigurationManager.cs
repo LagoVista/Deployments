@@ -337,6 +337,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
                 device.InputCommandEndPoints = endpoints;
             }
+            else
+            {
+                device.InputCommandEndPoints = new List<InputCommandEndPoint>();
+                device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
+                device.StateMachineMetaData = new List<StateMachine>();
+            }
 
             if (deviceConfig.Properties != null)
             {
