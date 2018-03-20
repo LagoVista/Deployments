@@ -259,6 +259,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
+            Console.WriteLine("Hhhhh...eeerrre");
+
             var result = new InvokeResult();
 
             if (EntityHeader.IsNullOrEmpty(instanceEH))
@@ -266,6 +268,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
                 return result;
             }
+
+            Console.WriteLine("H1");
 
             var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
             if (deviceConfig == null)
@@ -275,6 +279,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+
+            Console.WriteLine("H2");
 
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
@@ -290,43 +296,67 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)
                 {
+                    Console.WriteLine("H3");
+
                     foreach (var module in route.PipelineModules)
                     {
+                        Console.WriteLine("H4");
+
                         if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
+                            Console.WriteLine("H4.1");
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                            Console.WriteLine("H4.2");
                             if (wfLoadResult.Successful)
                             {
-                                foreach (var attribute in wfLoadResult.Result.Attributes)
+                                Console.WriteLine("H4.3");
+                                if (wfLoadResult.Result.Attributes != null)
                                 {
-                                    if(!device.AttributeMetaData.Where(attr=>attr.Key == attribute.Key).Any())
+                                    foreach (var attribute in wfLoadResult.Result.Attributes)
                                     {
-                                        device.AttributeMetaData.Add(attribute);
+                                        if (device.AttributeMetaData == null) device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
+                                        if (!device.AttributeMetaData.Where(attr => attr.Key == attribute.Key).Any())
+                                        {
+                                            device.AttributeMetaData.Add(attribute);
+                                        }
                                     }
                                 }
 
-                                foreach (var stateMachine in wfLoadResult.Result.StateMachines)
+                                Console.WriteLine("H4.4");
+
+                                if (wfLoadResult.Result.StateMachines != null)
                                 {
-                                    if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
+                                    if (device.StateMachineMetaData == null) device.StateMachineMetaData = new List<StateMachine>();
+                                    foreach (var stateMachine in wfLoadResult.Result.StateMachines)
                                     {
-                                        device.StateMachineMetaData.Add(stateMachine);
+                                        if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
+                                        {
+                                            device.StateMachineMetaData.Add(stateMachine);
+                                        }
                                     }
                                 }
 
-                                foreach (var inputCommand in wfLoadResult.Result.InputCommands)
-                                {
-                                    var protocol = instance.InputCommandSSL ? "https://" : "http://";
-                                    var endPoint = new InputCommandEndPoint
-                                    {                                       
-                                        EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
-                                        InputCommand = inputCommand
-                                    };
+                                Console.WriteLine("H4.5");
 
-                                    if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
+                                if (wfLoadResult.Result.InputCommands != null)
+                                {
+                                    foreach (var inputCommand in wfLoadResult.Result.InputCommands)
                                     {
-                                        endpoints.Add(endPoint);
+                                        var protocol = instance.InputCommandSSL ? "https://" : "http://";
+                                        var endPoint = new InputCommandEndPoint
+                                        {
+                                            EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
+                                            InputCommand = inputCommand
+                                        };
+
+                                        if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
+                                        {
+                                            endpoints.Add(endPoint);
+                                        }
                                     }
                                 }
+
+                                Console.WriteLine("H43");
                             }
                             else
                             {
@@ -339,10 +369,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
+                Console.WriteLine("H21");
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
                 device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
                 device.StateMachineMetaData = new List<StateMachine>();
             }
+
+            Console.WriteLine("H5");
 
             if (deviceConfig.Properties != null)
             {
@@ -360,6 +393,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
             }
+
+            Console.WriteLine("H6");
 
             return result;
         }
