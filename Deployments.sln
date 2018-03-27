@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.CloudRepo.Tests", "tests\LagoVista.IoT.Deployment.CloudRepo.Tests\LagoVista.IoT.Deployment.CloudRepo.Tests.csproj", "{B413E573-3D11-4566-8BF1-601E18C5B3F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LagoVista.IoT.Deployment.Models", "src\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj", "{40FEF995-9F91-4770-A60A-47D7DEA02E1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LagoVista.IoT.Deployment.Models", "src\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj", "{40FEF995-9F91-4770-A60A-47D7DEA02E1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +66,7 @@ Global
 		{0DE83C6A-9CD5-4D99-9512-63EA28C2C351} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
 		{EA592325-B35B-49AC-9C00-FD5D787A1647} = {5DF47FF3-5BFF-4ADA-A7F8-3B11B55CAD3B}
 		{B413E573-3D11-4566-8BF1-601E18C5B3F4} = {5DF47FF3-5BFF-4ADA-A7F8-3B11B55CAD3B}
+		{40FEF995-9F91-4770-A60A-47D7DEA02E1B} = {232D35ED-82F3-4F18-8C55-D24F285244E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AF4875F9-2A92-4250-9175-F4FB21D56D13}

@@ -192,6 +192,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             ValidationCheck(instance, Actions.Update);
 
+            if(newStatus == DeploymentInstanceStates.Offline)
+            {
+                instance.LastPing = null;
+            }
+
             if (newStatus == DeploymentInstanceStates.Running &&
                 instance.Status.Value != DeploymentInstanceStates.Running)
             {
