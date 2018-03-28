@@ -17,6 +17,7 @@ using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using System;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Pipeline.Admin;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -27,8 +28,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceManagerCore _deploymentInstanceManager;
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
+        IDataStreamManager _dataStreamManager;
 
-        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
+        public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDataStreamManager dataStreamManager, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
                             IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
                             IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
@@ -37,6 +39,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceAdminManager = deviceAdminManager;
             _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
             _deploymentInstanceManager = deploymentInstnaceManager;
+            _dataStreamManager = dataStreamManager;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -135,6 +138,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     case Pipeline.Admin.Models.PipelineModuleType.InputTranslator:
                         {
                             var result = await _pipelineModuleManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id);
+                            if (result.Successful)
+                            {
+                                module.Module.Value = result.Result;
+                            }
+                            else
+                            {
+                                fullLoadResult.Concat(result);
+                            }
+                        }
+                        break;
+                    case Pipeline.Admin.Models.PipelineModuleType.DataStream:
+                        {
+                            var result = await _dataStreamManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id);
                             if (result.Successful)
                             {
                                 module.Module.Value = result.Result;
