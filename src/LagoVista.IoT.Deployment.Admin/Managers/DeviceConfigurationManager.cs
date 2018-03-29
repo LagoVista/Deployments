@@ -150,7 +150,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         break;
                     case Pipeline.Admin.Models.PipelineModuleType.DataStream:
                         {
-                            var result = await _dataStreamManager.LoadFullInputTranslatorConfigurationAsync(module.Module.Id);
+                            var result = await _dataStreamManager.LoadFullDataStreamConfigurationAsync(module.Module.Id);
                             if (result.Successful)
                             {
                                 module.Module.Value = result.Result;
