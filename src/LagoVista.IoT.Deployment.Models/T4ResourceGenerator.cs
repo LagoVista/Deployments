@@ -410,6 +410,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Host_Type
 
 		public static string Host_Type { get { return GetResourceString("Host_Type"); } }
+//Resources:DeploymentAdminResources:Host_Type_BackupMCP
+
+		public static string Host_Type_BackupMCP { get { return GetResourceString("Host_Type_BackupMCP"); } }
 //Resources:DeploymentAdminResources:Host_Type_Clustered
 
 		public static string Host_Type_Clustered { get { return GetResourceString("Host_Type_Clustered"); } }
@@ -428,6 +431,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Host_Type_Notifications
 
 		public static string Host_Type_Notifications { get { return GetResourceString("Host_Type_Notifications"); } }
+//Resources:DeploymentAdminResources:Host_Type_RemoteBackupMCP
+
+		public static string Host_Type_RemoteBackupMCP { get { return GetResourceString("Host_Type_RemoteBackupMCP"); } }
+//Resources:DeploymentAdminResources:Host_Type_RemoteMCP
+
+		public static string Host_Type_RemoteMCP { get { return GetResourceString("Host_Type_RemoteMCP"); } }
 //Resources:DeploymentAdminResources:Host_Type_Select
 
 		public static string Host_Type_Select { get { return GetResourceString("Host_Type_Select"); } }
@@ -683,6 +692,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:InstanceStates_UpdatingSolution
 
 		public static string InstanceStates_UpdatingSolution { get { return GetResourceString("InstanceStates_UpdatingSolution"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_Description
+
+		public static string RemoteDeployment_Description { get { return GetResourceString("RemoteDeployment_Description"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_Help
+
+		public static string RemoteDeployment_Help { get { return GetResourceString("RemoteDeployment_Help"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_Instances
+
+		public static string RemoteDeployment_Instances { get { return GetResourceString("RemoteDeployment_Instances"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_PrimaryMCP
+
+		public static string RemoteDeployment_PrimaryMCP { get { return GetResourceString("RemoteDeployment_PrimaryMCP"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_SecondaryMCP
+
+		public static string RemoteDeployment_SecondaryMCP { get { return GetResourceString("RemoteDeployment_SecondaryMCP"); } }
+//Resources:DeploymentAdminResources:RemoteDeployment_Title
+
+		public static string RemoteDeployment_Title { get { return GetResourceString("RemoteDeployment_Title"); } }
 //Resources:DeploymentAdminResources:Route_Description
 
 		public static string Route_Description { get { return GetResourceString("Route_Description"); } }
@@ -928,12 +955,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Host_SubscriptionSelect = "Host_SubscriptionSelect";
 			public const string Host_Title = "Host_Title";
 			public const string Host_Type = "Host_Type";
+			public const string Host_Type_BackupMCP = "Host_Type_BackupMCP";
 			public const string Host_Type_Clustered = "Host_Type_Clustered";
 			public const string Host_Type_Community = "Host_Type_Community";
 			public const string Host_Type_Dedicated = "Host_Type_Dedicated";
 			public const string Host_Type_Free = "Host_Type_Free";
 			public const string Host_Type_MCP = "Host_Type_MCP";
 			public const string Host_Type_Notifications = "Host_Type_Notifications";
+			public const string Host_Type_RemoteBackupMCP = "Host_Type_RemoteBackupMCP";
+			public const string Host_Type_RemoteMCP = "Host_Type_RemoteMCP";
 			public const string Host_Type_Select = "Host_Type_Select";
 			public const string Host_Type_Shared = "Host_Type_Shared";
 			public const string Host_Type_SharedHighPerformance = "Host_Type_SharedHighPerformance";
@@ -1019,6 +1049,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string InstanceStates_Undeploying = "InstanceStates_Undeploying";
 			public const string InstanceStates_UpdatingRuntime = "InstanceStates_UpdatingRuntime";
 			public const string InstanceStates_UpdatingSolution = "InstanceStates_UpdatingSolution";
+			public const string RemoteDeployment_Description = "RemoteDeployment_Description";
+			public const string RemoteDeployment_Help = "RemoteDeployment_Help";
+			public const string RemoteDeployment_Instances = "RemoteDeployment_Instances";
+			public const string RemoteDeployment_PrimaryMCP = "RemoteDeployment_PrimaryMCP";
+			public const string RemoteDeployment_SecondaryMCP = "RemoteDeployment_SecondaryMCP";
+			public const string RemoteDeployment_Title = "RemoteDeployment_Title";
 			public const string Route_Description = "Route_Description";
 			public const string Route_Help = "Route_Help";
 			public const string Route_InputTranslator = "Route_InputTranslator";

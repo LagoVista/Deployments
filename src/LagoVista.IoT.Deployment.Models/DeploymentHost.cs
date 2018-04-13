@@ -29,6 +29,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Clustered,
         [EnumLabel(DeploymentHost.HostType_MCP, DeploymentAdminResources.Names.Host_Type_MCP, typeof(DeploymentAdminResources))]
         MCP,
+        [EnumLabel(DeploymentHost.HostType_BackupMCP, DeploymentAdminResources.Names.Host_Type_BackupMCP, typeof(DeploymentAdminResources))]
+        BackupMCP,
+        [EnumLabel(DeploymentHost.HostType_RemoteMCP, DeploymentAdminResources.Names.Host_Type_RemoteMCP, typeof(DeploymentAdminResources))]
+        RemoteMCP,
+        [EnumLabel(DeploymentHost.HostType_RemoteBackupMCP, DeploymentAdminResources.Names.Host_Type_RemoteBackupMCP, typeof(DeploymentAdminResources))]
+        RemoteBackupMCP,
         [EnumLabel(DeploymentHost.HostType_Notifications, DeploymentAdminResources.Names.Host_Type_Notifications, typeof(DeploymentAdminResources))]
         Notification,
         [EnumLabel(DeploymentHost.HostType_Development, DeploymentAdminResources.Names.HostType_Development, typeof(DeploymentAdminResources))]
@@ -116,6 +122,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_Clustered = "clustered";
         public const string HostType_Notifications = "notifications";
         public const string HostType_MCP = "mcp";
+        public const string HostType_BackupMCP = "backupmcp";
+        public const string HostType_RemoteMCP = "remotemcp";
+        public const string HostType_RemoteBackupMCP = "remotebackupmcp";
         public const string HostType_Development = "development";
 
 

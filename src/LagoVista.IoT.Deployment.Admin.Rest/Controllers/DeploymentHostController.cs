@@ -139,6 +139,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _hostManager.RestartHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
+        //TODO: This should probably be nuked, it's either named horably or not inuse.
         /// <summary>
         /// Deployment Host - Update
         /// </summary>

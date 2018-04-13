@@ -870,4 +870,31 @@
   <data name="DeviceConfiguration_CustomStatusType_Watermark" xml:space="preserve">
     <value>-select custom status type-</value>
   </data>
+  <data name="Host_Type_BackupMCP" xml:space="preserve">
+    <value>Backup MCP</value>
+  </data>
+  <data name="Host_Type_RemoteBackupMCP" xml:space="preserve">
+    <value>Remote Backup MCP</value>
+  </data>
+  <data name="Host_Type_RemoteMCP" xml:space="preserve">
+    <value>Remote MCP</value>
+  </data>
+  <data name="RemoteDeployment_Description" xml:space="preserve">
+    <value>A Remote Deployment is an On-Premisis version of the run time where all the intances have local storage</value>
+  </data>
+  <data name="RemoteDeployment_Help" xml:space="preserve">
+    <value>A Remote Deployment is an On-Premisis version of the run time where all the intances have local storage</value>
+  </data>
+  <data name="RemoteDeployment_Instances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="RemoteDeployment_PrimaryMCP" xml:space="preserve">
+    <value>Primary MCP</value>
+  </data>
+  <data name="RemoteDeployment_SecondaryMCP" xml:space="preserve">
+    <value>Secondary MCP</value>
+  </data>
+  <data name="RemoteDeployment_Title" xml:space="preserve">
+    <value>Remote Deployment</value>
+  </data>
 </root>

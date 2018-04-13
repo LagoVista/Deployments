@@ -11,7 +11,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     public class ContainerRepositoryRepo : DocumentDBRepoBase<ContainerRepository>, IContainerRepositoryRepo
     {
         private bool _shouldConsolidateCollections;
-        public ContainerRepositoryRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger) : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
+        public ContainerRepositoryRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger) 
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
