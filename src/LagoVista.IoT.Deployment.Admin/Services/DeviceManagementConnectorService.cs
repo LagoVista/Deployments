@@ -7,6 +7,7 @@ using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.DeviceManagement.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -105,6 +106,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             var uri = $"/api/devices/search/{search}";
             return GetListResponseAsync<DeviceSummary>(uri, instanceId, org, user, listRequest);
+        }
+
+        public Task<ListResponse<DeviceSummaryData>> GetDeviceGroupSummaryDataAsync(string instanceId, string groupId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
