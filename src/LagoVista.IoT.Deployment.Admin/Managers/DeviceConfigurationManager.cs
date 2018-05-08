@@ -275,8 +275,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
-            Console.WriteLine("Hhhhh...eeerrre");
-
             var result = new InvokeResult();
 
             if (EntityHeader.IsNullOrEmpty(instanceEH))
@@ -284,8 +282,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
                 return result;
             }
-
-            Console.WriteLine("H1");
 
             var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
             if (deviceConfig == null)
@@ -295,9 +291,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
-
-            Console.WriteLine("H2");
-
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
                 if (instance.InputCommandSSL)
@@ -312,20 +305,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)
                 {
-                    Console.WriteLine("H3");
-
                     foreach (var module in route.PipelineModules)
                     {
-                        Console.WriteLine("H4");
-
                         if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
-                            Console.WriteLine("H4.1");
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
-                            Console.WriteLine("H4.2");
                             if (wfLoadResult.Successful)
                             {
-                                Console.WriteLine("H4.3");
                                 if (wfLoadResult.Result.Attributes != null)
                                 {
                                     foreach (var attribute in wfLoadResult.Result.Attributes)
@@ -338,8 +324,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                     }
                                 }
 
-                                Console.WriteLine("H4.4");
-
                                 if (wfLoadResult.Result.StateMachines != null)
                                 {
                                     if (device.StateMachineMetaData == null) device.StateMachineMetaData = new List<StateMachine>();
@@ -351,8 +335,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                         }
                                     }
                                 }
-
-                                Console.WriteLine("H4.5");
 
                                 if (wfLoadResult.Result.InputCommands != null)
                                 {
@@ -371,8 +353,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                         }
                                     }
                                 }
-
-                                Console.WriteLine("H43");
                             }
                             else
                             {
@@ -385,13 +365,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                Console.WriteLine("H21");
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
                 device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
                 device.StateMachineMetaData = new List<StateMachine>();
             }
-
-            Console.WriteLine("H5");
 
             if (deviceConfig.Properties != null)
             {
@@ -409,8 +386,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
             }
-
-            Console.WriteLine("H6");
 
             return result;
         }
