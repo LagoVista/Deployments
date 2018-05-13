@@ -214,7 +214,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
-            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
+            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(instance.DeviceRepository.Id, org, user);
 
             var solutionResult = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
             if (solutionResult.Successful)

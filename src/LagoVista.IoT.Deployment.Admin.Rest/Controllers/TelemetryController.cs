@@ -83,7 +83,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/devices/{devicerepoid}/{deviceid}")]
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceIdAsync(string recordtype, string devicerepoid, string deviceid)
         {
-            var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
             return await _telemetryManager.GetForDeviceAsync(repo, deviceid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
@@ -97,7 +97,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/telemetry/{recordtype}/devicetype/{devicerepoid}/{devicetypeid}")]
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceTypeIdAsync(string recordtype, string devicerepoid, string devicetypeid)
         {
-            var repo = await _repoManager.GetDeviceRepositoryAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(devicerepoid, OrgEntityHeader, UserEntityHeader);
             return await _telemetryManager.GetForDeviceTypeAsync(repo, devicetypeid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
