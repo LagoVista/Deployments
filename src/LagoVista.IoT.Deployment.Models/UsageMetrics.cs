@@ -1,12 +1,12 @@
-﻿using LagoVista.Core.Models;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models;
+using LagoVista.Core.PlatformSupport;
 using Newtonsoft.Json;
 using System;
-using LagoVista.Core;
-using System.Diagnostics;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    public class UsageMetrics : TableStorageEntity
+    public class UsageMetrics : TableStorageEntity, IUsageMetrics
     {
         public UsageMetrics(String hostId, String instanceId, string pipelineModuleId)
         {
@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonProperty("processingMS")]
         public double ProcessingMS { get; set; }
 
-        public void Concat(UsageMetrics metric)
+        public void Concat(IUsageMetrics metric)
         {
             ErrorCount += metric.ErrorCount;
             BytesProcessed += metric.BytesProcessed;
@@ -79,7 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ActiveCount += metric.ActiveCount;
         }
 
-        public UsageMetrics Clone()
+        public IUsageMetrics Clone()
         {
             var clonedMetric = new UsageMetrics()
             {
@@ -94,10 +94,17 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 ProcessingMS = ProcessingMS,
                 DeadLetterCount = DeadLetterCount,
                 ActiveCount = ActiveCount,
-                MessagesProcessed = MessagesProcessed
+                MessagesProcessed = MessagesProcessed,
+
+                PartitionKey = PartitionKey
             };
 
             return clonedMetric;
+        }
+
+        public void SetDatestamp(DateTime dateStamp)
+        {
+            RowKey = dateStamp.ToInverseTicksRowKey();
         }
 
         public void Calculate()

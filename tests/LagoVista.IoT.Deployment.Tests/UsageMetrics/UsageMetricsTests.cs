@@ -59,8 +59,8 @@ namespace LagoVista.IoT.Deployment.Tests
 
             var clonedMetric = metricToClone.Clone();
 
-            Assert.IsTrue(String.IsNullOrEmpty(clonedMetric.PartitionKey));
-            Assert.IsTrue(String.IsNullOrEmpty(clonedMetric.RowKey));
+            Assert.IsTrue(String.IsNullOrEmpty(((UsageMetrics)clonedMetric).PartitionKey));
+            Assert.IsTrue(String.IsNullOrEmpty(((UsageMetrics)clonedMetric).RowKey));
             Assert.IsTrue(String.IsNullOrEmpty(clonedMetric.StartTimeStamp));
             Assert.IsTrue(String.IsNullOrEmpty(clonedMetric.EndTimeStamp));
 
