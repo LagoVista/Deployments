@@ -1,6 +1,6 @@
 ﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
-using LagoVista.Core.PlatformSupport;
 using Newtonsoft.Json;
 using System;
 
@@ -125,7 +125,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public void Reset(String previousEndTime = null)
         {
-            StartTimeStamp = previousEndTime == null ? DateTime.UtcNow.ToJSONString() : previousEndTime;
+            StartTimeStamp = previousEndTime ?? DateTime.UtcNow.ToJSONString();
             EndTimeStamp = String.Empty;
 
             ElapsedMS = 0.0;
