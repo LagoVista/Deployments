@@ -23,5 +23,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public Func<bool> ValidationAction { get; set; }
         public Func<string> GetValidationErrors { get; set; }
         public Dictionary<string, string> Settings { get; set; }
+        public int TimeoutInSeconds { get; set; }
     }
 }
