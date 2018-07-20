@@ -302,6 +302,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     device.DeviceURI = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
                 }
 
+                var workflowKeys = new List<string>();
+
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)
                 {
@@ -310,8 +312,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
-                            if (wfLoadResult.Successful)
+                            if (wfLoadResult.Successful && !workflowKeys.Contains(wfLoadResult.Result.Key))
                             {
+                                workflowKeys.Add(wfLoadResult.Result.Key);
                                 if (wfLoadResult.Result.Attributes != null)
                                 {
                                     foreach (var attribute in wfLoadResult.Result.Attributes)
@@ -346,6 +349,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                             EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
                                             InputCommand = inputCommand
                                         };
+
+                                        foreach(var param in inputCommand.Parameters)
+                                        {
+                                            if(param.ParameterType.Value == ParameterTypes.State)
+                                            {
+                                                param.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(param.StateSet.Id, org, user);
+                                            }
+                                            else if(param.ParameterType.Value == ParameterTypes.ValueWithUnit)
+                                            {
+                                                param.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(param.UnitSet.Id, org, user);
+                                            }
+                                        }
 
                                         if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
                                         {
