@@ -174,7 +174,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<Solution> Solution { get; set; }
         public DeploymentInstanceSummary CreateSummary()
         {
-            return new DeploymentInstanceSummary()
+            var summary = new DeploymentInstanceSummary()
             {
                 Description = Description,
                 Name = Name,
@@ -184,6 +184,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsDeployed = IsDeployed,
                 Status = Status
             };
+
+            if(DeviceRepository != null)
+            {
+                summary.DeviceRepoId = DeviceRepository.Id;
+                summary.DeviceRepoName = DeviceRepository.Text;
+            };
+
+            return summary;
         }
 
         public List<string> GetFormFields()
@@ -210,5 +218,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }
         public bool IsDeployed { get; set; }
+
+        public string DeviceRepoId { get; set; }
+        public string DeviceRepoName { get; set; }
     }
 }
