@@ -22,7 +22,6 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
-
         public Task AddRemoteDeploymentAsync(RemoteDeployment deployment)
         {
             return CreateDocumentAsync(deployment);

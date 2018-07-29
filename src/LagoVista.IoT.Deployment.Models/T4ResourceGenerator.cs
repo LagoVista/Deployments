@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Reflection;
 
-//Resources:DeploymentAdminResources:Common_Description
+//Resources:DeploymentAdminResources:ClientApp_AppAuthKey1
 namespace LagoVista.IoT.Deployment.Models.Resources
 {
 	public class DeploymentAdminResources
@@ -55,6 +55,33 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			return new HtmlString(str);
         }*/
 		
+		public static string ClientApp_AppAuthKey1 { get { return GetResourceString("ClientApp_AppAuthKey1"); } }
+//Resources:DeploymentAdminResources:ClientApp_AppAuthKey2
+
+		public static string ClientApp_AppAuthKey2 { get { return GetResourceString("ClientApp_AppAuthKey2"); } }
+//Resources:DeploymentAdminResources:ClientApp_Description
+
+		public static string ClientApp_Description { get { return GetResourceString("ClientApp_Description"); } }
+//Resources:DeploymentAdminResources:ClientApp_DeviceConfigs
+
+		public static string ClientApp_DeviceConfigs { get { return GetResourceString("ClientApp_DeviceConfigs"); } }
+//Resources:DeploymentAdminResources:ClientApp_DeviceTypes
+
+		public static string ClientApp_DeviceTypes { get { return GetResourceString("ClientApp_DeviceTypes"); } }
+//Resources:DeploymentAdminResources:ClientApp_Help
+
+		public static string ClientApp_Help { get { return GetResourceString("ClientApp_Help"); } }
+//Resources:DeploymentAdminResources:ClientApp_Instance
+
+		public static string ClientApp_Instance { get { return GetResourceString("ClientApp_Instance"); } }
+//Resources:DeploymentAdminResources:ClientApp_SelectInstance
+
+		public static string ClientApp_SelectInstance { get { return GetResourceString("ClientApp_SelectInstance"); } }
+//Resources:DeploymentAdminResources:ClientApp_Title
+
+		public static string ClientApp_Title { get { return GetResourceString("ClientApp_Title"); } }
+//Resources:DeploymentAdminResources:Common_Description
+
 		public static string Common_Description { get { return GetResourceString("Common_Description"); } }
 //Resources:DeploymentAdminResources:Common_Id
 
@@ -836,6 +863,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 
 		public static class Names
 		{
+			public const string ClientApp_AppAuthKey1 = "ClientApp_AppAuthKey1";
+			public const string ClientApp_AppAuthKey2 = "ClientApp_AppAuthKey2";
+			public const string ClientApp_Description = "ClientApp_Description";
+			public const string ClientApp_DeviceConfigs = "ClientApp_DeviceConfigs";
+			public const string ClientApp_DeviceTypes = "ClientApp_DeviceTypes";
+			public const string ClientApp_Help = "ClientApp_Help";
+			public const string ClientApp_Instance = "ClientApp_Instance";
+			public const string ClientApp_SelectInstance = "ClientApp_SelectInstance";
+			public const string ClientApp_Title = "ClientApp_Title";
 			public const string Common_Description = "Common_Description";
 			public const string Common_Id = "Common_Id";
 			public const string Common_IsPublic = "Common_IsPublic";

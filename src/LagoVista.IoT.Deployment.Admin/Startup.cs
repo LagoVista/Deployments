@@ -34,6 +34,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeploymentConnectorService, DeploymentConnectorService>();
             services.AddTransient<IDockerRegisteryServices, DockerRegisteryServices>();
             services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
+            services.AddTransient<IClientAppManager, ClientAppManager>();
 
             services.AddTransient<IDeviceArchiveConnector, DeviceArchiveConnectorService>();
             services.AddTransient<IDeviceManagementConnector, DeviceManagementConnectorService>();
