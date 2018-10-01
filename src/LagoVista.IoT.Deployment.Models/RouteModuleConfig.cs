@@ -11,9 +11,37 @@ using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.Core.Attributes;
 using LagoVista.IoT.DeviceMessaging.Admin.Models;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
+    public class PipelineModuleConfigurationConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            throw new NotImplementedException();
+        }
+
+        readonly Type GenericTypeDefinition;
+
+
+        Type MakeGenericType(Type objectType)
+        {
+            return null;
+        }
+
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return serializer.Deserialize(reader, MakeGenericType(objectType));
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class RouteModuleConfig
     {
         public RouteModuleConfig()
@@ -47,6 +75,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public DiagramLocation DiagramLocation { get; set; }
 
+        //[JsonConverter(typeof(PipelineModuleConfigurationConverter))]
         public EntityHeader<IPipelineModuleConfiguration> Module { get; set; }
 
         public ValidationResult Validate()

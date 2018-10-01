@@ -63,6 +63,16 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetByParitionIdAsync(solutionId);
         }
 
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            // note: do not change this to auto or array or all - only works with TypeNameHandling.Objects
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Newtonsoft.Json.Formatting.None,
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+        };
+
         public async Task<SolutionVersion> PublishSolutionVersionAsync(SolutionVersion solutionVersion, Solution solution)
         {
             Console.WriteLine(solutionVersion.SolutionId);
@@ -93,7 +103,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
             await primaryContainer.CreateIfNotExistsAsync();
             var blob = primaryContainer.GetBlockBlobReference(GetBlobName(solutionVersion.SolutionId, solutionVersion.RowKey));
-            var json = JsonConvert.SerializeObject(solution);
+            var json = JsonConvert.SerializeObject(solution, _jsonSettings);
             await blob.UploadTextAsync(json);
             await InsertAsync(solutionVersion);
             return solutionVersion;
