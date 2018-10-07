@@ -1,18 +1,17 @@
-﻿using LagoVista.IoT.Web.Common.Controllers;
-
-using LagoVista.UserAdmin.Models.Users;
-using Microsoft.AspNetCore.Identity;
-using LagoVista.IoT.Deployment.Admin.Managers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using LagoVista.Core;
-using System;
-using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
-using System.Threading.Tasks;
-using LagoVista.Core.Models;
+using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Web.Common.Controllers;
+using LagoVista.UserAdmin.Models.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -27,7 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _instanceManager = instanceManager;
-        }        
+        }
 
         /// <summary>
         /// Deployment Instance - Add
@@ -73,7 +72,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}/statushistory")]
         public Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string id)
         {
-            return  _instanceManager.GetDeploymentInstanceStatusHistoryAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            return _instanceManager.GetDeploymentInstanceStatusHistoryAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
 
@@ -102,16 +101,48 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             return response;
         }
-        
+
+        /// <summary>
+        /// Deployment Instance - Get Full
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/full")]
+        public async Task<DetailResponse<DeploymentInstance>> GetFullInstanceAsync(String id)
+        {
+            var deviceInstance = await _instanceManager.LoadFullInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            if (deviceInstance.Successful)
+            {
+                return DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
+            }
+            else
+            {
+                var resp = DetailResponse<DeploymentInstance>.Create(null);
+                resp.Errors.AddRange(deviceInstance.Errors);
+                return resp;
+            }
+        }
+
+        /// <summary>
+        /// Deployment Instance - Update Status
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("/api/deployment/instance/status")]
+        public  Task<InvokeResult> UpdateInstanceStatus([FromBody] InstanceStatusUpdate statusUpdate)
+        {
+            return _instanceManager.UpdateInstanceStatusAsync(statusUpdate.Id, statusUpdate.NewStatus, statusUpdate.Deployed, statusUpdate.Version, 
+                OrgEntityHeader, UserEntityHeader, statusUpdate.Details);
+        }
+
         /// <summary>
         /// Deployment Instance - Get Runtime Status
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{id}/runtime")]
-        public  Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceRunTimeAsync(String id)
+        public Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceRunTimeAsync(String id)
         {
-            return  _instanceManager.GetInstanceDetailsAsync(id, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.GetInstanceDetailsAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

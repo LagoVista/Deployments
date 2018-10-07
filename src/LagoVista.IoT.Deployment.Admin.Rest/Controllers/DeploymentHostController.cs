@@ -59,6 +59,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _hostManager.UpdateDeploymentHostAsync(host, OrgEntityHeader, UserEntityHeader);
         }
 
+
+        /// <summary>
+        /// Deployment Host - Update Status
+        /// </summary>
+        /// <param name="host"></param>
+        /// <returns></returns>
+        [HttpPut("/api/deployment/host/status")]
+        public Task<InvokeResult> UpdateHostStatusAsync([FromBody] HostStatusUpdate host)
+        {
+            return _hostManager.UpdateDeploymentHostStatusAsync(host.Id, host.NewStatus, host.Version, OrgEntityHeader, UserEntityHeader, host.Details);
+        }
+
+
         /// <summary>
         /// Deployment Host - Get for Current Org
         /// </summary>
