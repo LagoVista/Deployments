@@ -203,6 +203,39 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Description
 
 		public static string DeviceConfiguration_Description { get { return GetResourceString("DeviceConfiguration_Description"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceIdLabel
+
+		public static string DeviceConfiguration_DeviceIdLabel { get { return GetResourceString("DeviceConfiguration_DeviceIdLabel"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceIdLabel_Default
+
+		public static string DeviceConfiguration_DeviceIdLabel_Default { get { return GetResourceString("DeviceConfiguration_DeviceIdLabel_Default"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceIdLabel_Help
+
+		public static string DeviceConfiguration_DeviceIdLabel_Help { get { return GetResourceString("DeviceConfiguration_DeviceIdLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceLabel
+
+		public static string DeviceConfiguration_DeviceLabel { get { return GetResourceString("DeviceConfiguration_DeviceLabel"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceLabel_Default
+
+		public static string DeviceConfiguration_DeviceLabel_Default { get { return GetResourceString("DeviceConfiguration_DeviceLabel_Default"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceLabel_Help
+
+		public static string DeviceConfiguration_DeviceLabel_Help { get { return GetResourceString("DeviceConfiguration_DeviceLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceNameLabel
+
+		public static string DeviceConfiguration_DeviceNameLabel { get { return GetResourceString("DeviceConfiguration_DeviceNameLabel"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceNameLabel_Default
+
+		public static string DeviceConfiguration_DeviceNameLabel_Default { get { return GetResourceString("DeviceConfiguration_DeviceNameLabel_Default"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceNameLabel_Help
+
+		public static string DeviceConfiguration_DeviceNameLabel_Help { get { return GetResourceString("DeviceConfiguration_DeviceNameLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceTypeLabel
+
+		public static string DeviceConfiguration_DeviceTypeLabel { get { return GetResourceString("DeviceConfiguration_DeviceTypeLabel"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceTypeLabel_Default
+
+		public static string DeviceConfiguration_DeviceTypeLabel_Default { get { return GetResourceString("DeviceConfiguration_DeviceTypeLabel_Default"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Help
 
 		public static string DeviceConfiguration_Help { get { return GetResourceString("DeviceConfiguration_Help"); } }
@@ -221,6 +254,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Title
 
 		public static string DeviceConfiguration_Title { get { return GetResourceString("DeviceConfiguration_Title"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
+
+		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
 //Resources:DeploymentAdminResources:Err_CantPublishNotRunning
 
 		public static string Err_CantPublishNotRunning { get { return GetResourceString("Err_CantPublishNotRunning"); } }
@@ -913,12 +949,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
 			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";
 			public const string DeviceConfiguration_Description = "DeviceConfiguration_Description";
+			public const string DeviceConfiguration_DeviceIdLabel = "DeviceConfiguration_DeviceIdLabel";
+			public const string DeviceConfiguration_DeviceIdLabel_Default = "DeviceConfiguration_DeviceIdLabel_Default";
+			public const string DeviceConfiguration_DeviceIdLabel_Help = "DeviceConfiguration_DeviceIdLabel_Help";
+			public const string DeviceConfiguration_DeviceLabel = "DeviceConfiguration_DeviceLabel";
+			public const string DeviceConfiguration_DeviceLabel_Default = "DeviceConfiguration_DeviceLabel_Default";
+			public const string DeviceConfiguration_DeviceLabel_Help = "DeviceConfiguration_DeviceLabel_Help";
+			public const string DeviceConfiguration_DeviceNameLabel = "DeviceConfiguration_DeviceNameLabel";
+			public const string DeviceConfiguration_DeviceNameLabel_Default = "DeviceConfiguration_DeviceNameLabel_Default";
+			public const string DeviceConfiguration_DeviceNameLabel_Help = "DeviceConfiguration_DeviceNameLabel_Help";
+			public const string DeviceConfiguration_DeviceTypeLabel = "DeviceConfiguration_DeviceTypeLabel";
+			public const string DeviceConfiguration_DeviceTypeLabel_Default = "DeviceConfiguration_DeviceTypeLabel_Default";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
 			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
 			public const string DeviceConfiguration_Sentinel = "DeviceConfiguration_Sentinel";
 			public const string DeviceConfiguration_Title = "DeviceConfiguration_Title";
+			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotFindDestinationModule = "Err_CouldNotFindDestinationModule";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";

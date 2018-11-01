@@ -1,27 +1,30 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using LagoVista.Core;
-using LagoVista.Core.Interfaces;
-using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
-using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.Deployment.Models.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,  DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeviceConfiguration :  LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help, DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public DeviceConfiguration()
         {
             Routes = new List<Route>();
             Properties = new List<CustomField>();
             ConfigurationVersion = 0.1;
+            DeviceTypeLabel = DeploymentAdminResources.DeviceConfiguration_DeviceTypeLabel_Default;
+            DeviceIdLabel = DeploymentAdminResources.DeviceConfiguration_DeviceIdLabel_Default;
+            DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
+            DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
         }
 
         public String DatabaseName { get; set; }
@@ -35,15 +38,28 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<StateSet> CustomStatusType { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public String DeviceLabel { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceIdLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceIdLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public String DeviceIdLabel { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceNameLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceNameLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public String DeviceNameLabel { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceTypeLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceTypeLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public String DeviceTypeLabel { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
-        
-      
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
-        
+
         public EntityHeader ToEntityHeader()
         {
             return new EntityHeader()
@@ -60,7 +76,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public Route FindRoute(string messageId)
         {
             var route = Routes.Where(rte => rte.MessageDefinition.Value.MessageId == messageId).FirstOrDefault();
-            if(route == null)
+            if (route == null)
             {
                 return Routes.Where(rte => rte.IsDefault).FirstOrDefault();
             }
@@ -70,9 +86,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties, HelpResource:DeploymentAdminResources.Names.DeviceConfiguration_Properties_Help, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties_Help, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Properties { get; set; }
-                
+
         public static DeviceConfiguration Create(Organization org, AppUser appUser)
         {
             return new DeviceConfiguration()
@@ -100,7 +116,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public List<string> GetFormFields()
         {
-                return new List<string>()
+            return new List<string>()
                 {
                     nameof(DeviceConfiguration.Name),
                     nameof(DeviceConfiguration.Key),
@@ -117,7 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         /// <param name="result"></param>
         public void DeepValidation(ValidationResult result)
         {
-            foreach(var route in Routes)
+            foreach (var route in Routes)
             {
                 route.DeepValidation(result);
             }

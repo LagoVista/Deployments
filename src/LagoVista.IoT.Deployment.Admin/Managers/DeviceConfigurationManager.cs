@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using LagoVista.Core.Models;
-using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.Core.Validation;
-using LagoVista.IoT.Pipeline.Admin.Managers;
-using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
+﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
-using static LagoVista.Core.Models.AuthorizeResult;
-using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models;
+using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.DeviceMessaging.Admin.Managers;
-using LagoVista.IoT.Logging.Loggers;
-using System.Linq;
-using Newtonsoft.Json;
+using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
+using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
-using System;
-using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceMessaging.Admin.Managers;
+using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
+using LagoVista.IoT.Pipeline.Admin.Managers;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static LagoVista.Core.Models.AuthorizeResult;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -83,9 +84,29 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
-            if(!EntityHeader.IsNullOrEmpty(deviceConfiguration.CustomStatusType))
+            if (!EntityHeader.IsNullOrEmpty(deviceConfiguration.CustomStatusType))
             {
                 deviceConfiguration.CustomStatusType.Value = await _deviceAdminManager.GetStateSetAsync(deviceConfiguration.CustomStatusType.Id, org, user);
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceTypeLabel))
+            {
+                deviceConfiguration.DeviceTypeLabel = DeploymentAdminResources.DeviceConfiguration_DeviceTypeLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceIdLabel))
+            {
+                deviceConfiguration.DeviceIdLabel = DeploymentAdminResources.DeviceConfiguration_DeviceIdLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceNameLabel))
+            {
+                deviceConfiguration.DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceLabel))
+            {
+                deviceConfiguration.DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
             }
 
             return deviceConfiguration;
@@ -103,6 +124,26 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var result = new InvokeResult<DeviceConfiguration>();
 
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceTypeLabel))
+            {
+                deviceConfiguration.DeviceTypeLabel = DeploymentAdminResources.DeviceConfiguration_DeviceTypeLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceIdLabel))
+            {
+                deviceConfiguration.DeviceIdLabel = DeploymentAdminResources.DeviceConfiguration_DeviceIdLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceNameLabel))
+            {
+                deviceConfiguration.DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
+            }
+
+            if (String.IsNullOrEmpty(deviceConfiguration.DeviceLabel))
+            {
+                deviceConfiguration.DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
+            }
 
             foreach (var route in deviceConfiguration.Routes)
             {
@@ -319,7 +360,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                 {
                                     foreach (var attribute in wfLoadResult.Result.Attributes)
                                     {
-                                        if (device.AttributeMetaData == null) device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
+                                        if (device.AttributeMetaData == null)
+                                        {
+                                            device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
+                                        }
+
                                         if (!device.AttributeMetaData.Where(attr => attr.Key == attribute.Key).Any())
                                         {
                                             device.AttributeMetaData.Add(attribute);
@@ -329,7 +374,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                                 if (wfLoadResult.Result.StateMachines != null)
                                 {
-                                    if (device.StateMachineMetaData == null) device.StateMachineMetaData = new List<StateMachine>();
+                                    if (device.StateMachineMetaData == null)
+                                    {
+                                        device.StateMachineMetaData = new List<StateMachine>();
+                                    }
+
                                     foreach (var stateMachine in wfLoadResult.Result.StateMachines)
                                     {
                                         if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
@@ -350,13 +399,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                             InputCommand = inputCommand
                                         };
 
-                                        foreach(var param in inputCommand.Parameters)
+                                        foreach (var param in inputCommand.Parameters)
                                         {
-                                            if(param.ParameterType.Value == ParameterTypes.State)
+                                            if (param.ParameterType.Value == ParameterTypes.State)
                                             {
                                                 param.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(param.StateSet.Id, org, user);
                                             }
-                                            else if(param.ParameterType.Value == ParameterTypes.ValueWithUnit)
+                                            else if (param.ParameterType.Value == ParameterTypes.ValueWithUnit)
                                             {
                                                 param.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(param.UnitSet.Id, org, user);
                                             }
