@@ -5,6 +5,7 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
 using System;

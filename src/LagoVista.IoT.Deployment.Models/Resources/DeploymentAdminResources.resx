@@ -963,4 +963,7 @@
   <data name="DeviceConfiguration_DeviceTypeLabel_Help" xml:space="preserve">
     <value>You can define what you call device types on this device configuration</value>
   </data>
+  <data name="Instance_DataStreams" xml:space="preserve">
+    <value>Data Streams</value>
+  </data>
 </root>

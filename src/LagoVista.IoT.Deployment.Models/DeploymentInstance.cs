@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -23,6 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             InputCommandPort = 80;
             SettingsValues = new List<AttributeValue>();
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
+            DataStreams = new List<EntityHeader<DataStream>>();
         }
 
 
@@ -51,18 +53,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_FailedToStart = "failedtostart";
         public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
         
-        
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
-
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
 
-
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_IsDeployed, HelpResource: DeploymentAdminResources.Names.Instance_IsDeployed_Help, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool IsDeployed { get; set; }
-
 
         private EntityHeader<DeploymentInstanceStates> _status;
 
@@ -83,7 +81,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeploymentHost> Host { get; set; }
-
 
         /// <summary>
         /// This is the primary host that will be be used as an access point into the instance, if the instance consists of many machines, this will manage all the other hosts for a clustered version of an instance.
@@ -106,6 +103,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
             set { _primaryHost = value; }
         }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        public List<EntityHeader<DataStream>> DataStreams { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LocalUsageStatistics, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool LocalUsageStatistics { get; set; }

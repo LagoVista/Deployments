@@ -605,6 +605,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:HostType_Development
 
 		public static string HostType_Development { get { return GetResourceString("HostType_Development"); } }
+//Resources:DeploymentAdminResources:Instance_DataStreams
+
+		public static string Instance_DataStreams { get { return GetResourceString("Instance_DataStreams"); } }
 //Resources:DeploymentAdminResources:Instance_DebugMode
 
 		public static string Instance_DebugMode { get { return GetResourceString("Instance_DebugMode"); } }
@@ -1086,6 +1089,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostStatus_UpdatingRuntime = "HostStatus_UpdatingRuntime";
 			public const string HostStatus_WaitingForServer = "HostStatus_WaitingForServer";
 			public const string HostType_Development = "HostType_Development";
+			public const string Instance_DataStreams = "Instance_DataStreams";
 			public const string Instance_DebugMode = "Instance_DebugMode";
 			public const string Instance_DebugMode_Help = "Instance_DebugMode_Help";
 			public const string Instance_Description = "Instance_Description";
