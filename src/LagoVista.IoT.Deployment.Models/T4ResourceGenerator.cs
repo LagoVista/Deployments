@@ -236,6 +236,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_DeviceTypeLabel_Default
 
 		public static string DeviceConfiguration_DeviceTypeLabel_Default { get { return GetResourceString("DeviceConfiguration_DeviceTypeLabel_Default"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceTypeLabel_Help
+
+		public static string DeviceConfiguration_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguration_DeviceTypeLabel_Help"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Help
 
 		public static string DeviceConfiguration_Help { get { return GetResourceString("DeviceConfiguration_Help"); } }
@@ -960,6 +963,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_DeviceNameLabel_Help = "DeviceConfiguration_DeviceNameLabel_Help";
 			public const string DeviceConfiguration_DeviceTypeLabel = "DeviceConfiguration_DeviceTypeLabel";
 			public const string DeviceConfiguration_DeviceTypeLabel_Default = "DeviceConfiguration_DeviceTypeLabel_Default";
+			public const string DeviceConfiguration_DeviceTypeLabel_Help = "DeviceConfiguration_DeviceTypeLabel_Help";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
 			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";

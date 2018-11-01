@@ -12,14 +12,14 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.435-beta1758" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.435-beta1758" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.533-beta0933" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.533-beta0933" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
@@ -28,20 +28,7 @@
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="T4ResourceGenerator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4ResourceGenerator.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="T4ResourceGenerator.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>T4ResourceGenerator.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

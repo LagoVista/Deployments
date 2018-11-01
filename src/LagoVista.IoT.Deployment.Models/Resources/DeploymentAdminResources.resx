@@ -960,4 +960,7 @@
   <data name="DeviceConfiguratoin_DeviceTypeLabel_Help" xml:space="preserve">
     <value>A device configuration can have many device types, those device types can have a customized label.</value>
   </data>
+  <data name="DeviceConfiguration_DeviceTypeLabel_Help" xml:space="preserve">
+    <value>You can define what you call device types on this device configuration</value>
+  </data>
 </root>
