@@ -37,6 +37,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         protected IDeploymentConnectorService GetConnector(DeploymentHost host, EntityHeader org)
         {
+            if (host == null)
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+
+            if (org == null)
+            {
+                throw new ArgumentNullException(nameof(org));
+            }
+
+            if (host.DedicatedInstance == null)
+            {
+                throw new ArgumentNullException(nameof(host.DedicatedInstance));
+            }
+
             return IsRpc(host)
                 ? _proxyFactory.Create<IDeploymentConnectorService>(new ProxySettings
                 {
@@ -66,6 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceRepoManager = deviceRepoManager;
             _hostRepo = hostRepo;
             _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
+            _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
 
         private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
