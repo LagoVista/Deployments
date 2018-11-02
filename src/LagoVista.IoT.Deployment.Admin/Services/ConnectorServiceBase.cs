@@ -1,34 +1,34 @@
-﻿using LagoVista.Core.Models;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
+using LagoVista.Core.PlatformSupport;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Logging.Loggers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using LagoVista.Core;
-using LagoVista.Core.Validation;
 using System.Threading.Tasks;
-using LagoVista.IoT.Logging.Loggers;
-using Newtonsoft.Json;
-using LagoVista.Core.PlatformSupport;
-using LagoVista.IoT.Deployment.Admin.Resources;
-using LagoVista.Core.Models.UIMetaData;
-using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public abstract class ConnectorServiceBase
     {
         public const string CLIENT_VERSION = "2017-04-26";
+        private readonly IAdminLogger _logger;
+        private readonly IDeploymentHostRepo _deploymentHostManager;
 
-        IAdminLogger _logger;
-        IDeploymentHostRepo _deploymentHostManager;
         public ConnectorServiceBase(IDeploymentHostRepo deploymentHostRepo, IAdminLogger logger)
         {
             _logger = logger;
             _deploymentHostManager = deploymentHostRepo;
         }
 
-        private HttpClient GetHttpClient(DeploymentHost host, EntityHeader org, EntityHeader usr, String method, String path)
+        private HttpClient GetHttpClient(DeploymentHost host, EntityHeader org, EntityHeader usr, string method, string path)
         {
             var request = new HttpClient();
             var requestId = Guid.NewGuid().ToId();
@@ -89,16 +89,32 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return await GetAsync<T>(path, host, org, user);
         }
 
-        protected async Task<ListResponse<T>> GetListResponseAsync<T>(string path, DeploymentHost host, EntityHeader org, EntityHeader user, ListRequest listRequest = null) where T: class
+        protected async Task<ListResponse<T>> GetListResponseAsync<T>(string path, DeploymentHost host, EntityHeader org, EntityHeader user, ListRequest listRequest = null) where T : class
         {
             using (var request = GetHttpClient(host, org, user, "GET", path))
             {
-                if(listRequest != null)
+                if (listRequest != null)
                 {
-                    if (!String.IsNullOrEmpty(listRequest.NextRowKey)) request.DefaultRequestHeaders.Add("x-nextrowkey", listRequest.NextRowKey);
-                    if (!String.IsNullOrEmpty(listRequest.NextPartitionKey)) request.DefaultRequestHeaders.Add("x-nextpartitionkey", listRequest.NextPartitionKey);
-                    if (!String.IsNullOrEmpty(listRequest.StartDate)) request.DefaultRequestHeaders.Add("x-filter-startdate", listRequest.StartDate);
-                    if(!String.IsNullOrEmpty(listRequest.EndDate)) request.DefaultRequestHeaders.Add("x-filter-enddate", listRequest.EndDate);
+                    if (!string.IsNullOrEmpty(listRequest.NextRowKey))
+                    {
+                        request.DefaultRequestHeaders.Add("x-nextrowkey", listRequest.NextRowKey);
+                    }
+
+                    if (!string.IsNullOrEmpty(listRequest.NextPartitionKey))
+                    {
+                        request.DefaultRequestHeaders.Add("x-nextpartitionkey", listRequest.NextPartitionKey);
+                    }
+
+                    if (!string.IsNullOrEmpty(listRequest.StartDate))
+                    {
+                        request.DefaultRequestHeaders.Add("x-filter-startdate", listRequest.StartDate);
+                    }
+
+                    if (!string.IsNullOrEmpty(listRequest.EndDate))
+                    {
+                        request.DefaultRequestHeaders.Add("x-filter-enddate", listRequest.EndDate);
+                    }
+
                     request.DefaultRequestHeaders.Add("x-pagesize", listRequest.PageSize.ToString());
                     request.DefaultRequestHeaders.Add("x-pageindex", listRequest.PageIndex.ToString());
                 }
@@ -141,7 +157,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-        protected async Task<ListResponse<T>> GetListResponseAsync<T>(string path, string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest = null) where T: class
+        protected async Task<ListResponse<T>> GetListResponseAsync<T>(string path, string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest = null) where T : class
         {
             var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await GetListResponseAsync<T>(path, host, org, user);
@@ -187,11 +203,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         protected async Task<InvokeResult> GetAsync(string path, string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest = null)
         {
-            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId); 
+            var host = await _deploymentHostManager.GetDeploymentHostForDedicatedInstanceAsync(instanceId);
             return await GetAsync(path, host, org, user);
         }
 
-        protected async Task<InvokeResult> DeleteAsync(string path, DeploymentHost  host, EntityHeader org, EntityHeader user)
+        protected async Task<InvokeResult> DeleteAsync(string path, DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             using (var request = GetHttpClient(host, org, user, "DELETE", path))
             {
