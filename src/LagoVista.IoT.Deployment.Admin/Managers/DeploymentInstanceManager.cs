@@ -19,12 +19,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 {
     public class DeploymentInstanceManager : DeploymentInstanceManagerCore, IDeploymentInstanceManager
     {
+        #region const
         public const string DeploymentAction_Deploy = "Instance.Deploy";
         public const string DeploymentAction_Start = "Instance.Start";
         public const string DeploymentAction_Pause = "Instance.Pause";
         public const string DeploymentAction_Stop = "Instance.Stop";
         public const string DeploymentAction_Remove = "Instance.Remove";
         public const string DeploymentAction_Monitor = "Instance.Monitor";
+        #endregion
+
+        #region private fields
         private IDeploymentInstanceRepo _instanceRepo;
         private ISolutionManager _solutionManager;
         private IDeploymentHostManager _hostManager;
@@ -34,39 +38,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private IDeploymentActivityQueueManager _deploymentActivityQueueManager;
         private IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
         private readonly IProxyFactory _proxyFactory;
-
-        protected IDeploymentConnectorService GetConnector(DeploymentHost host, EntityHeader org)
-        {
-            if (host == null)
-            {
-                throw new ArgumentNullException(nameof(host));
-            }
-
-            if (org == null)
-            {
-                throw new ArgumentNullException(nameof(org));
-            }
-
-            if (host.DedicatedInstance == null)
-            {
-                throw new ArgumentNullException(nameof(host.DedicatedInstance));
-            }
-
-            return IsRpc(host)
-                ? _proxyFactory.Create<IDeploymentConnectorService>(new ProxySettings
-                {
-                    OrganizationId = org.Id,
-                    InstanceId = host.DedicatedInstance.Id
-                })
-                : _connector;
-        }
-
-        protected bool IsRpc(DeploymentHost host)
-        {
-            //"v1.5" and up == rpc
-            var version = Version.Parse(host.ContainerTag.Text.ToLower().Replace("v", ""));
-            return version.Major > 1 || (version.Major == 1 && version.Minor >= 5);
-        }
+        #endregion
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
@@ -82,6 +54,34 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _hostRepo = hostRepo;
             _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
+        }
+
+        protected IDeploymentConnectorService GetConnector(DeploymentHost host, string organizationId, string instanceId)
+        {
+            if (host == null)
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+
+            return IsRpc(host)
+                ? _proxyFactory.Create<IDeploymentConnectorService>(new ProxySettings
+                {
+                    OrganizationId = organizationId ?? throw new ArgumentNullException(nameof(organizationId)),
+                    InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
+                })
+                : _connector;
+        }
+
+        protected bool IsRpc(DeploymentHost host)
+        {
+            if (host == null)
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+
+            //"v1.5" and up == rpc
+            var version = Version.Parse(host.ContainerTag.Text.ToLower().Replace("v", ""));
+            return version.Major > 1 || (version.Major == 1 && version.Minor >= 5);
         }
 
         private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
@@ -113,7 +113,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org).DeployAsync(host, id, org, user);
+                return await GetConnector(host, org.Id, id).DeployAsync(host, id, org, user);
             }
             else
             {
@@ -130,7 +130,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org).StartAsync(host, id, org, user);
+                return await GetConnector(host, org.Id, id).StartAsync(host, id, org, user);
             }
             else
             {
@@ -147,7 +147,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org).PauseAsync(host, id, org, user);
+                return await GetConnector(host, org.Id, id).PauseAsync(host, id, org, user);
             }
             else
             {
@@ -164,7 +164,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org).StopAsync(host, id, org, user);
+                return await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
             }
             else
             {
@@ -181,9 +181,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                var response = await GetConnector(host, org).StopAsync(host, id, org, user);
+                var response = await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
                 return response.Successful
-                    ? await GetConnector(host, org).StartAsync(host, id, org, user)
+                    ? await GetConnector(host, org.Id, id).StartAsync(host, id, org, user)
                     : response;
             }
             else
@@ -212,7 +212,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org).UpdateAsync(host, id, org, user);
+                return await GetConnector(host, org.Id, id).UpdateAsync(host, id, org, user);
             }
             else
             {
@@ -249,7 +249,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
-            return await GetConnector(notificationHost, org).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
+            return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
         }
 
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
@@ -257,7 +257,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await GetInstanceAsync(instanceId, org, user);
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
-            return await GetConnector(host, org).GetInstanceDetailsAsync(host, instanceId, org, user);
+            return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
         }
 
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
