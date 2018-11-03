@@ -12,17 +12,17 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.535-beta1228" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.535-beta1228" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.536-beta1557" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
@@ -35,5 +35,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="T4ResourceGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>T4ResourceGenerator.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="T4ResourceGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4ResourceGenerator.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>
