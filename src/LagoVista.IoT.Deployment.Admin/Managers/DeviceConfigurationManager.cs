@@ -331,6 +331,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return result;
             }
 
+            device.DeviceLabel = deviceConfig.DeviceLabel;
+            device.DeviceIdLabel = deviceConfig.DeviceIdLabel;
+            device.DeviceNameLabel = deviceConfig.DeviceNameLabel;
+            device.DeviceTypeLabel = deviceConfig.DeviceTypeLabel;
+
             var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
