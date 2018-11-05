@@ -42,8 +42,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security,
-                    IProxyFactory proxyFactory) : base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security
+                    ) : base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
@@ -53,6 +53,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceRepoManager = deviceRepoManager;
             _hostRepo = hostRepo;
             _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
+        }
+
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
+                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security,
+                    IProxyFactory proxyFactory) : this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
+        {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
 
