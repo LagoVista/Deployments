@@ -12,17 +12,17 @@
     <None Remove="Crypto\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.536-beta1557" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.536-beta1557" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.540-beta1400" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
