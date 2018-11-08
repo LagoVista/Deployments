@@ -118,30 +118,26 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
-            if (IsRpc(host))
-            {
-                return await GetConnector(host, org.Id, id).DeployAsync(host, id, org, user);
-            }
-            else
-            {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployHost, org, user);
-                return !transitionResult.Successful
-                    ? transitionResult
-                    : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DeployHost);
-            }
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployHost, org, user);
+            return !transitionResult.Successful
+                ? transitionResult
+                : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DeployHost);
         }
 
         public async Task<InvokeResult> StartAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org.Id, id).StartAsync(host, id, org, user);
+                return !transitionResult.Successful
+                ? transitionResult
+                : await GetConnector(host, org.Id, id).StartAsync(host, id, org, user);
             }
             else
             {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
+
                 return !transitionResult.Successful
                     ? transitionResult
                     : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Start);
@@ -152,13 +148,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org.Id, id).PauseAsync(host, id, org, user);
+                return !transitionResult.Successful
+                ? transitionResult
+                : await GetConnector(host, org.Id, id).PauseAsync(host, id, org, user);
             }
             else
             {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Pause, org, user);
                 return !transitionResult.Successful
                     ? transitionResult
                     : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Pause);
@@ -169,13 +167,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             if (IsRpc(host))
             {
-                return await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
+                return !transitionResult.Successful
+                ? transitionResult
+                : await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
             }
             else
             {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Stop, org, user);
                 return !transitionResult.Successful
                     ? transitionResult
                     : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.Stop);
@@ -186,20 +186,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
-            if (IsRpc(host))
-            {
-                var response = await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
-                return response.Successful
-                    ? await GetConnector(host, org.Id, id).StartAsync(host, id, org, user)
-                    : response;
-            }
-            else
-            {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.RestartHost, org, user);
-                return !transitionResult.Successful
-                    ? transitionResult
-                    : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.RestartHost);
-            }
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
+            return !transitionResult.Successful
+                ? transitionResult
+                : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.RestartHost);
         }
 
         public async Task<InvokeResult> RestartContainerAsync(string id, EntityHeader org, EntityHeader user)
@@ -217,28 +207,31 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
-            if (IsRpc(host))
-            {
-                return await GetConnector(host, org.Id, id).UpdateAsync(host, id, org, user);
-            }
-            else
-            {
-                var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
-                return !transitionResult.Successful
-                    ? transitionResult
-                    : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.UpdateRuntime);
-            }
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
+            return !transitionResult.Successful
+                ? transitionResult
+                : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.UpdateRuntime);
         }
 
         public async Task<InvokeResult> ReloadSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
-
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.ReloadSolution, org, user);
-            return !transitionResult.Successful
-                ? transitionResult
-                : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.ReloadSolution);
+
+            if (IsRpc(host))
+            {
+                return !transitionResult.Successful
+                    ? transitionResult
+                    : await GetConnector(host, org.Id, id).UpdateAsync(host, id, org, user);
+            }
+            else
+            {
+
+                return !transitionResult.Successful
+                    ? transitionResult
+                    : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.ReloadSolution);
+            }
         }
 
         public async Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user)
