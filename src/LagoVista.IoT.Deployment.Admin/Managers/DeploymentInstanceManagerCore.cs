@@ -81,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 Subscription = instance.Subscription,
                 ContainerRepository = instance.ContainerRepository,
                 ContainerTag = instance.ContainerTag,
-                DnsHostName = instance.DnsHostName
+                DnsHostName = instance.DnsHostName,                
             };
 
             return host;

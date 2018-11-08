@@ -88,6 +88,8 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.Solution = new EntityHeader<Solution>() { Id = "id", Text = "text" };
             instance.Size = EntityHeader.Create("id", "text");
             instance.DeviceRepository = new EntityHeader<DeviceRepository>() { Id = NEW_DEVICE_REPO_ID, Text = "Don't Care" };
+            instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
 
             return instance;
         }
