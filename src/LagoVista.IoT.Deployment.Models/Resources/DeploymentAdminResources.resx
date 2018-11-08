@@ -966,4 +966,28 @@
   <data name="Instance_DataStreams" xml:space="preserve">
     <value>Data Streams</value>
   </data>
+  <data name="DeploymentConfiguration_Kubernetes" xml:space="preserve">
+    <value>Kubernetes</value>
+  </data>
+  <data name="DeploymentConfiguration_SingleInstance" xml:space="preserve">
+    <value>Self Contained</value>
+  </data>
+  <data name="DeploymentType_Managed" xml:space="preserve">
+    <value>Managed (Cloud)</value>
+  </data>
+  <data name="DeploymentType_OnPremise" xml:space="preserve">
+    <value>On Premise (Private Network)</value>
+  </data>
+  <data name="Instance_DeploymentConfiguration" xml:space="preserve">
+    <value>Deployment Configuration</value>
+  </data>
+  <data name="Instance_DeploymentType" xml:space="preserve">
+    <value>Deployment Type</value>
+  </data>
+  <data name="Instance_DeploymentConfiguration_Select" xml:space="preserve">
+    <value>-select deployment configuration-</value>
+  </data>
+  <data name="Instance_DeploymentType_Select" xml:space="preserve">
+    <value>-select deployment type-</value>
+  </data>
 </root>

@@ -52,7 +52,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_FailedToInitialize = "failedtoinitialize";
         public const string Status_FailedToStart = "failedtostart";
         public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
-        
+
+        public const string DeploymentType_Managed = "managed";
+        public const string DeploymentType_OnPremise = "onpermise";
+
+        public const string DeploymentConfiguration_SingleInstance = "singleinstance";
+        public const string DeploymentConfiguration_Kubernetes = "kubernetes";
+
+
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
 
@@ -167,6 +174,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CloudProvider, HelpResource: DeploymentAdminResources.Names.Host_CloudProvider_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: true)]
         public EntityHeader CloudProvider { get; set; }
 
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentType, EnumType: (typeof(DeploymentTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentType_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<DeploymentTypes> DeploymentType { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentConfiguration, EnumType: (typeof(DeploymentConfigurations)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentConfiguration_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DebugMode, HelpResource: DeploymentAdminResources.Names.Instance_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool DebugMode { get; set; }
 
@@ -183,7 +198,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Id = Id,
                 IsPublic = IsPublic,
                 IsDeployed = IsDeployed,
-                Status = Status
+                Status = Status,
+                DeploymentConfiguration = EntityHeader.IsNullOrEmpty(DeploymentConfiguration) ? DeploymentAdminResources.DeploymentConfiguration_SingleInstance : DeploymentConfiguration.Text,
+                DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? DeploymentAdminResources.DeploymentType_Managed : DeploymentType.Text,
             };
 
             if(DeviceRepository != null)
@@ -201,6 +218,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentInstance.Name),
                 nameof(DeploymentInstance.Key),
+                nameof(DeploymentInstance.DeploymentType),
+                nameof(DeploymentInstance.DeploymentConfiguration),
                 nameof(DeploymentInstance.DnsHostName),
                 nameof(DeploymentInstance.Status),
                 nameof(DeploymentInstance.IsDeployed),
@@ -222,5 +241,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public string DeviceRepoId { get; set; }
         public string DeviceRepoName { get; set; }
+        public string DeploymentType { get; set; }
+        public string DeploymentConfiguration { get; set; }
     }
 }

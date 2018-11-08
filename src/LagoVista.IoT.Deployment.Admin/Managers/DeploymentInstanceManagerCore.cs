@@ -126,6 +126,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentConfiguration)) instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
             return instance;

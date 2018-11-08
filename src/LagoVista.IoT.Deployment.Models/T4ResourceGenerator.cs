@@ -191,6 +191,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentActivity_Status
 
 		public static string DeploymentActivity_Status { get { return GetResourceString("DeploymentActivity_Status"); } }
+//Resources:DeploymentAdminResources:DeploymentConfiguration_Kubernetes
+
+		public static string DeploymentConfiguration_Kubernetes { get { return GetResourceString("DeploymentConfiguration_Kubernetes"); } }
+//Resources:DeploymentAdminResources:DeploymentConfiguration_SingleInstance
+
+		public static string DeploymentConfiguration_SingleInstance { get { return GetResourceString("DeploymentConfiguration_SingleInstance"); } }
+//Resources:DeploymentAdminResources:DeploymentType_Managed
+
+		public static string DeploymentType_Managed { get { return GetResourceString("DeploymentType_Managed"); } }
+//Resources:DeploymentAdminResources:DeploymentType_OnPremise
+
+		public static string DeploymentType_OnPremise { get { return GetResourceString("DeploymentType_OnPremise"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType
 
 		public static string DeviceConfiguration_CustomStatusType { get { return GetResourceString("DeviceConfiguration_CustomStatusType"); } }
@@ -614,6 +626,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_DebugMode_Help
 
 		public static string Instance_DebugMode_Help { get { return GetResourceString("Instance_DebugMode_Help"); } }
+//Resources:DeploymentAdminResources:Instance_DeploymentConfiguration
+
+		public static string Instance_DeploymentConfiguration { get { return GetResourceString("Instance_DeploymentConfiguration"); } }
+//Resources:DeploymentAdminResources:Instance_DeploymentConfiguration_Select
+
+		public static string Instance_DeploymentConfiguration_Select { get { return GetResourceString("Instance_DeploymentConfiguration_Select"); } }
+//Resources:DeploymentAdminResources:Instance_DeploymentType
+
+		public static string Instance_DeploymentType { get { return GetResourceString("Instance_DeploymentType"); } }
+//Resources:DeploymentAdminResources:Instance_DeploymentType_Select
+
+		public static string Instance_DeploymentType_Select { get { return GetResourceString("Instance_DeploymentType_Select"); } }
 //Resources:DeploymentAdminResources:Instance_Description
 
 		public static string Instance_Description { get { return GetResourceString("Instance_Description"); } }
@@ -951,6 +975,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentActivity_ResourceType = "DeploymentActivity_ResourceType";
 			public const string DeploymentActivity_Start = "DeploymentActivity_Start";
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
+			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
+			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
+			public const string DeploymentType_Managed = "DeploymentType_Managed";
+			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
 			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";
 			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
 			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";
@@ -1092,6 +1120,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_DataStreams = "Instance_DataStreams";
 			public const string Instance_DebugMode = "Instance_DebugMode";
 			public const string Instance_DebugMode_Help = "Instance_DebugMode_Help";
+			public const string Instance_DeploymentConfiguration = "Instance_DeploymentConfiguration";
+			public const string Instance_DeploymentConfiguration_Select = "Instance_DeploymentConfiguration_Select";
+			public const string Instance_DeploymentType = "Instance_DeploymentType";
+			public const string Instance_DeploymentType_Select = "Instance_DeploymentType_Select";
 			public const string Instance_Description = "Instance_Description";
 			public const string Instance_DeviceRepo = "Instance_DeviceRepo";
 			public const string Instance_DeviceRepo_Help = "Instance_DeviceRepo_Help";

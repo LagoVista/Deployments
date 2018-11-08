@@ -255,6 +255,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentConfiguration)) instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
@@ -282,6 +285,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            if(EntityHeader.IsNullOrEmpty( instance.DeploymentConfiguration)) instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            if(EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
             instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(instance.DeviceRepository.Id, org, user);
