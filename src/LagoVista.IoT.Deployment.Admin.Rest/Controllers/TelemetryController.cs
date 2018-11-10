@@ -52,25 +52,27 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Telemetry - Get For Pipeline Module
         /// </summary>
-        /// <param name="pipelinemoduleid"></param>
         /// <param name="recordtype"></param> 
+        /// <param name="instanceid"></param> 
+        /// <param name="pipelinemoduleid"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/pipeline/{pipelinemoduleid}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineAsync(string recordtype, string pipelinemoduleid)
+        [HttpGet("/api/telemetry/{recordtype}/{instanceid}/pipeline/{pipelinemoduleid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineAsync(string recordtype, string instanceid, string pipelinemoduleid)
         {
-            return await _telemetryManager.GetForPipelineModuleAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+            return await _telemetryManager.GetForPipelineModuleAsync(instanceid, pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
         /// Telemetry - Get For Pipline Queue
         /// </summary>
-        /// <param name="pipelinemoduleid"></param>
         /// <param name="recordtype"></param>
+        /// <param name="instanceid"></param> 
+        /// <param name="pipelinemoduleid"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/pipelinequeue/{pipelinemoduleid}")]
-        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineQueueAsync(string recordtype, string pipelinemoduleid)
+        [HttpGet("/api/telemetry/{recordtype}/{instanceid}pipelinequeue/{pipelinemoduleid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetTelemetryForPipelineQueueAsync(string recordtype, string instanceid, string pipelinemoduleid)
         {
-            return await _telemetryManager.GetForPipelineQueueAsync(pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+            return await _telemetryManager.GetForPipelineQueueAsync(instanceid, pipelinemoduleid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -116,13 +118,14 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Telemetry - Get For Pipeline Execution Message
         /// </summary>
-        /// <param name="pemid"></param>
         /// <param name="recordtype"></param>
+        /// <param name="instanceid"></param>
+        /// <param name="pemid"></param>
         /// <returns></returns>
-        [HttpGet("/api/telemetry/{recordtype}/pem/{pemid}")]
-        public async Task<ListResponse<TelemetryReportData>> GetForPemAsync(string recordtype, string pemid)
+        [HttpGet("/api/telemetry/{recordtype}/{instanceid}/pem/{pemid}")]
+        public async Task<ListResponse<TelemetryReportData>> GetForPemAsync(string recordtype, string instanceid, string pemid)
         {
-            return await _telemetryManager.GetForPemAsync(pemid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+            return await _telemetryManager.GetForPemAsync(instanceid, pemid, recordtype, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

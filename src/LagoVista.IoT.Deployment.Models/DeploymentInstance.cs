@@ -113,14 +113,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DataStream>> DataStreams { get; set; }
-
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LocalUsageStatistics, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
-        public bool LocalUsageStatistics { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LocalLogs, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
-        public bool LocalLogs { get; set; }
-
+        
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }

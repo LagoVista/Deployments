@@ -47,23 +47,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Usage Metrics - Get For PipelineModule
         /// </summary>
+        /// <param name="instanceid"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/usagemetrics/pipelinemodule/{id}")]
-        public Task<ListResponse<UsageMetrics>> GetPiplelineModuleUsageAsync(String id)
+        [HttpGet("/api/usagemetrics/{instanceid}/pipelinemodule/{id}")]
+        public Task<ListResponse<UsageMetrics>> GetPiplelineModuleUsageAsync(string instanceid, string id)
         {
-            return _usageManager.GetMetricsForPipelineModuleAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+            return _usageManager.GetMetricsForPipelineModuleAsync(instanceid, id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
         /// Usage Metrics - Get For PipelineModule
         /// </summary>
+        /// <param name="instanceid"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/usagemetrics/dependency/{id}")]
-        public Task<ListResponse<UsageMetrics>> GetDependencyUsageAsync(String id)
+        [HttpGet("/api/usagemetrics/{instanceid}/dependency/{id}")]
+        public Task<ListResponse<UsageMetrics>> GetDependencyUsageAsync(string instanceid, string id)
         {
-            return _usageManager.GetMetricsForDependencyAsync(id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+            return _usageManager.GetMetricsForDependencyAsync(instanceid, id, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
     }

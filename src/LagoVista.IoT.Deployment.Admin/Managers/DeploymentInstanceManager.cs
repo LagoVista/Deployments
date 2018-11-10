@@ -279,7 +279,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance), Actions.Read);
-            return await _deploymentInstanceStatusRepo.GetStatusHistoryForInstanceAsync(instanceId, listRequest);
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            {
+                var proxy = _proxyFactory.Create<IDeploymentInstanceStatusRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
+                return await proxy.GetStatusHistoryForInstanceAsync(instanceId, listRequest);
+            }
+            else
+            {
+                return await _deploymentInstanceStatusRepo.GetStatusHistoryForInstanceAsync(instanceId, listRequest);
+            }
         }
 
         public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)

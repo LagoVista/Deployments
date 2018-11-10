@@ -1,48 +1,86 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
+using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.Core.Rpc.Client;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using LagoVista.Core.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
     public class UsageMetricsManager : ManagerBase, IUsageMetricsManager
     {
         IUsageMetricsRepo _metricsRepo;
+        IProxyFactory _proxyFactory;
+        IDeploymentInstanceRepo _deploymentInstanceRepo;
 
-        public UsageMetricsManager(IAdminLogger adminLogger, IAppConfig appConfig, IUsageMetricsRepo metricsRepo, IDependencyManager dependencyManager, ISecurity security) : base(adminLogger, appConfig, dependencyManager, security)
+        public UsageMetricsManager(IAdminLogger adminLogger, IAppConfig appConfig, IDeploymentInstanceRepo deploymentInstanceMgr,
+            IProxyFactory proxyFactory, IUsageMetricsRepo metricsRepo, IDependencyManager dependencyManager, ISecurity security) :
+            base(adminLogger, appConfig, dependencyManager, security)
         {
             _metricsRepo = metricsRepo;
-        }
-
-        public async Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request, EntityHeader org, EntityHeader user)
-        {
-            await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Dependency");
-            return await _metricsRepo.GetMetricsForDependencyAsync(dependencyId, request);
+            _deploymentInstanceRepo = deploymentInstanceMgr;
+            _proxyFactory = proxyFactory;
         }
 
         public async Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Host");
-            return await  _metricsRepo.GetMetricsForHostAsync(hostId, request);
+            return await _metricsRepo.GetMetricsForHostAsync(hostId, request);
         }
 
         public async Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, ListRequest request, EntityHeader org, EntityHeader user)
         {
+            var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
+
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Instance");
-            return await _metricsRepo.GetMetricsForInstanceAsync(instanceId, request);
+
+            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            {
+                var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
+                return await proxy.GetMetricsForInstanceAsync(instanceId, request);
+            }
+            else
+            {
+                return await _metricsRepo.GetMetricsForInstanceAsync(instanceId, request);
+            }
         }
 
-        public async Task<ListResponse<UsageMetrics>> GetMetricsForPipelineModuleAsync(string pipelineModuleId, ListRequest request, EntityHeader org, EntityHeader user)
+        public async Task<ListResponse<UsageMetrics>> GetMetricsForPipelineModuleAsync(string instanceId, string pipelineModuleId, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "PipelineModule");
-            return await _metricsRepo.GetMetricsForPipelineModuleAsync(pipelineModuleId, request);
+
+            var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
+
+            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            {
+                var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
+                return await proxy.GetMetricsForPipelineModuleAsync(pipelineModuleId, request);
+            }
+            else
+            {
+                return await _metricsRepo.GetMetricsForPipelineModuleAsync(pipelineModuleId, request);
+            }
         }
+
+        public async Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string instanceId, string dependencyId, ListRequest request, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
+
+            await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Dependency");
+
+            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            {
+                var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
+                return await proxy.GetMetricsForDependencyAsync(dependencyId, request);
+            }
+            else
+            {
+                return await _metricsRepo.GetMetricsForDependencyAsync(dependencyId, request);
+            }
+        }
+
     }
 }

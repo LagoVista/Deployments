@@ -13,9 +13,9 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<ListResponse<TelemetryReportData>> GetForInstanceAsync(string instanceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
-        Task<ListResponse<TelemetryReportData>> GetForPipelineModuleAsync(string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
+        Task<ListResponse<TelemetryReportData>> GetForPipelineModuleAsync(string instanceId, string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
-        Task<ListResponse<TelemetryReportData>> GetForPipelineQueueAsync(string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
+        Task<ListResponse<TelemetryReportData>> GetForPipelineQueueAsync(string instanceId, string pipelineModuleId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
         Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
@@ -25,7 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<ListResponse<TelemetryReportData>> GetForDeploymentActivityAsync(string activityid, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
-        Task<ListResponse<TelemetryReportData>> GetForPemAsync(string pemId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
+        Task<ListResponse<TelemetryReportData>> GetForPemAsync(string instanceId, string pemId, string recordType, ListRequest request, EntityHeader org, EntityHeader user);
 
     }
 }

@@ -22,9 +22,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             throw new NotImplementedException();
         }
 
-        readonly Type GenericTypeDefinition;
-
-
         Type MakeGenericType(Type objectType)
         {
             return null;
