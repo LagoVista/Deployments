@@ -990,4 +990,22 @@
   <data name="Instance_DeploymentType_Select" xml:space="preserve">
     <value>-select deployment type-</value>
   </data>
+  <data name="DeploymentQueueType_InMemory" xml:space="preserve">
+    <value>In Memory</value>
+  </data>
+  <data name="DeploymentQueueType_Kafka" xml:space="preserve">
+    <value>Kafka</value>
+  </data>
+  <data name="DeploymentQueueType_QueueTechnologing" xml:space="preserve">
+    <value>PEM Queue Technology</value>
+  </data>
+  <data name="DeploymentQueueType_QueueTechnologing_Help" xml:space="preserve">
+    <value>Select the type of technology that will be used to queue PEMS (pipeline execution messages) as they are processed by Pipeline Modules</value>
+  </data>
+  <data name="DeploymentQueueType_QueueTechnologing_Select" xml:space="preserve">
+    <value>-select pem queue technology-</value>
+  </data>
+  <data name="DeploymentQueueType_ServiceBus" xml:space="preserve">
+    <value>Azure Service Bus</value>
+  </data>
 </root>

@@ -59,6 +59,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string DeploymentConfiguration_SingleInstance = "singleinstance";
         public const string DeploymentConfiguration_Kubernetes = "kubernetes";
 
+        public const string DeploymentQueueType_InMemory = "inmemory";
+        public const string DeploymentQueueType_Kafka = "kafka";
+        public const string DeploymentQueueType_ServiceBus = "servicebus";
+
+
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
@@ -173,6 +178,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentConfiguration, EnumType: (typeof(DeploymentConfigurations)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentConfiguration_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, EnumType: (typeof(QueueType)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, HelpResource:DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing_Help, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<QueueType> QueueType { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DebugMode, HelpResource: DeploymentAdminResources.Names.Instance_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]

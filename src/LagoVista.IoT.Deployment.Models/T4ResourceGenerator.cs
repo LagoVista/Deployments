@@ -197,6 +197,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentConfiguration_SingleInstance
 
 		public static string DeploymentConfiguration_SingleInstance { get { return GetResourceString("DeploymentConfiguration_SingleInstance"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
+
+		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_Kafka
+
+		public static string DeploymentQueueType_Kafka { get { return GetResourceString("DeploymentQueueType_Kafka"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing
+
+		public static string DeploymentQueueType_QueueTechnologing { get { return GetResourceString("DeploymentQueueType_QueueTechnologing"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing_Help
+
+		public static string DeploymentQueueType_QueueTechnologing_Help { get { return GetResourceString("DeploymentQueueType_QueueTechnologing_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing_Select
+
+		public static string DeploymentQueueType_QueueTechnologing_Select { get { return GetResourceString("DeploymentQueueType_QueueTechnologing_Select"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_ServiceBus
+
+		public static string DeploymentQueueType_ServiceBus { get { return GetResourceString("DeploymentQueueType_ServiceBus"); } }
 //Resources:DeploymentAdminResources:DeploymentType_Managed
 
 		public static string DeploymentType_Managed { get { return GetResourceString("DeploymentType_Managed"); } }
@@ -977,6 +995,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
+			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
+			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
+			public const string DeploymentQueueType_QueueTechnologing = "DeploymentQueueType_QueueTechnologing";
+			public const string DeploymentQueueType_QueueTechnologing_Help = "DeploymentQueueType_QueueTechnologing_Help";
+			public const string DeploymentQueueType_QueueTechnologing_Select = "DeploymentQueueType_QueueTechnologing_Select";
+			public const string DeploymentQueueType_ServiceBus = "DeploymentQueueType_ServiceBus";
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
 			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";

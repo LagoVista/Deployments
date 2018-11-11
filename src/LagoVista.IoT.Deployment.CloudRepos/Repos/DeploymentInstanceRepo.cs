@@ -7,6 +7,7 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.IoT.Logging.Loggers;
 using System;
+using LagoVista.Core.Models;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -31,9 +32,15 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return DeleteDocumentAsync(instanceId);
         }
 
-        public Task<DeploymentInstance> GetInstanceAsync(string instanceId)
+        public async Task<DeploymentInstance> GetInstanceAsync(string instanceId)
         {
-            return GetDocumentAsync(instanceId);
+            var instance = await GetDocumentAsync(instanceId);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentConfiguration)) instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+            if (EntityHeader.IsNullOrEmpty(instance.QueueType)) instance.QueueType = EntityHeader<QueueType>.Create(QueueType.InMemory);
+
+            return instance;
+
         }
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string hostId)
