@@ -157,6 +157,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerTag { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey1, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string SharedAccessKey1 { get; set; }
+        public string SharedAccessKeySecureId1 { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey2, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string SharedAccessKey2{ get; set; }
+        public string SharedAccessKeySecureId2 { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string LastPing { get; set; }
 
@@ -232,6 +240,22 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
             };
+        }
+
+        [CustomValidator]
+        public void Validate(ValidationResult result, Actions action)
+        {
+            if(action == Actions.Create)
+            {
+                if (String.IsNullOrEmpty(SharedAccessKey1)) result.AddSystemError("Upon creation, Shared Access Key 1 is Required.");
+                if (String.IsNullOrEmpty(SharedAccessKey2)) result.AddSystemError("Upon creation, Shared Access Key 2 is Required.");
+            }
+
+            if (action == Actions.Update)
+            {
+                if (String.IsNullOrEmpty(SharedAccessKey1) && String.IsNullOrEmpty(SharedAccessKeySecureId1)) result.AddSystemError("Upon creation, Shared Access Key 1 or Shared Access Secure Id 1 is Required.");
+                if (String.IsNullOrEmpty(SharedAccessKey2) && String.IsNullOrEmpty(SharedAccessKeySecureId2)) result.AddSystemError("Upon updates, Shared Access Key 2 or Shared Access Secure Id 2 is Required.");
+            }
         }
     }
 

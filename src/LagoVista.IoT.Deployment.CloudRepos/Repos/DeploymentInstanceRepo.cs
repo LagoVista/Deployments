@@ -24,6 +24,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task AddInstanceAsync(DeploymentInstance instance)
         {
+            instance.SharedAccessKey1 = null;
+            instance.SharedAccessKey2 = null;
+
             return CreateDocumentAsync(instance);
         }
 
@@ -72,6 +75,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task UpdateInstanceAsync(DeploymentInstance instance)
         {
+            instance.SharedAccessKey1 = null;
+            instance.SharedAccessKey2 = null;
+
             return UpsertDocumentAsync(instance);
         }
     }

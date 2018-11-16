@@ -8,21 +8,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Crypto\**" />
+    <Compile Remove="Resources\**" />
     <EmbeddedResource Remove="Crypto\**" />
+    <EmbeddedResource Remove="Resources\**" />
     <None Remove="Crypto\**" />
+    <None Remove="Resources\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.540-beta1400" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.540-beta1400" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.Core.Rpc" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.549-beta1819" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.549-beta1819" />
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
@@ -32,9 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="T4ResourceGenerator.cs">

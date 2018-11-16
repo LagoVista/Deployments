@@ -1008,4 +1008,13 @@
   <data name="DeploymentQueueType_ServiceBus" xml:space="preserve">
     <value>Azure Service Bus</value>
   </data>
+  <data name="DeploymentInstance_SharedAccessKey1" xml:space="preserve">
+    <value>Shared Access Key 1</value>
+  </data>
+  <data name="DeploymentInstance_SharedAccessKey2" xml:space="preserve">
+    <value>Shared Access Key 2</value>
+  </data>
+  <data name="DeploymentInstance_SharedAccessKey_Help" xml:space="preserve">
+    <value>Your access key will only be visible when you create your instance or when you regenerate it.  The access key will be need to be added to your instance if you deploy it on premise.</value>
+  </data>
 </root>

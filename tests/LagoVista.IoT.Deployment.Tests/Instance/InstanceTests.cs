@@ -1,5 +1,8 @@
-﻿using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core;
+using LagoVista.Core.Exceptions;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Models;
@@ -10,9 +13,7 @@ using LagoVista.IoT.Logging.Loggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using LagoVista.Core;
 using System.Threading.Tasks;
-using LagoVista.Core.Exceptions;
 
 namespace LagoVista.IoT.Deployment.Tests.Instance
 {
@@ -38,6 +39,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         Mock<IDeviceRepositoryManager> _deviceRepoManager;
         Mock<IAdminLogger> _adminLogger;
         Mock<IDependencyManager> _dependencyManager;
+        Mock<ISecureStorage> _secureStorage;
         Mock<ISecurity> _security;
         Mock<IAppConfig> _appConfig;
         Mock<IDeploymentInstanceStatusRepo> _instanceStatusRepo = new Mock<IDeploymentInstanceStatusRepo>();
@@ -51,9 +53,12 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deviceRepoManager = new Mock<IDeviceRepositoryManager>();
             _adminLogger = new Mock<IAdminLogger>();
             _security = new Mock<ISecurity>();
+            _secureStorage = new Mock<ISecureStorage>();
             _appConfig = new Mock<IAppConfig>();
 
-            _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, _instanceStatusRepo.Object, _adminLogger.Object, _appConfig.Object, _dependencyManager.Object, _security.Object);
+            _secureStorage.Setup(ss => ss.AddSecretAsync(It.IsAny<EntityHeader>(), It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("XXXX"));
+
+            _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, _instanceStatusRepo.Object, _adminLogger.Object, _appConfig.Object, _dependencyManager.Object, _secureStorage.Object, _security.Object);
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<bool>())).Returns((string id, EntityHeader user, EntityHeader org, bool throwOnError) =>
               {
@@ -90,7 +95,9 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.DeviceRepository = new EntityHeader<DeviceRepository>() { Id = NEW_DEVICE_REPO_ID, Text = "Don't Care" };
             instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
             instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
-
+            instance.QueueType = EntityHeader<QueueType>.Create(QueueType.InMemory);
+            instance.SharedAccessKey1 = "ABC123";
+            instance.SharedAccessKey2 = "ABC123";
             return instance;
         }
 
@@ -231,7 +238,6 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             updatedInstance.DeviceRepository.Id = NEW_DEVICE_REPO_ID;
             await _instanceManager.UpdateInstanceAsync(updatedInstance, null, null);
 
-
             _deploymentInstanceRepo.Verify(dir => dir.UpdateInstanceAsync(It.IsAny<DeploymentInstance>()), Times.Once);
 
             /* Hosting atts, didn't change, so don't update the host */
@@ -348,7 +354,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             });
 
             var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
-            
+
             var instance = GetInstance();
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
 

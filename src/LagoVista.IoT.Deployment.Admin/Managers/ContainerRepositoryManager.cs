@@ -37,7 +37,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromErrors(new ErrorMessage("Password is required."));
             }
 
-            var addSecretResult = await _secureStorage.AddSecretAsync(containerRepo.Password);
+            var addSecretResult = await _secureStorage.AddSecretAsync(org, containerRepo.Password);
             if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
             containerRepo.SecurePasswordId = addSecretResult.Result;
             containerRepo.Password = null;
@@ -55,9 +55,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if(!String.IsNullOrEmpty(containerRepo.Password))
             {
-                await _secureStorage.RemoveSecretAsync(containerRepo.SecurePasswordId);
+                await _secureStorage.RemoveSecretAsync(org, containerRepo.SecurePasswordId);
 
-                var addSecretResult = await _secureStorage.AddSecretAsync(containerRepo.Password);
+                var addSecretResult = await _secureStorage.AddSecretAsync(org, containerRepo.Password);
                 if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
                 containerRepo.SecurePasswordId = addSecretResult.Result;
                 containerRepo.Password = null;
@@ -85,7 +85,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var containerRepo = await _repo.GetContainerRepoAsync(containerId);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Read, user, org);
 
-            var pwdResult = await _secureStorage.GetSecretAsync(containerRepo.SecurePasswordId, user, org);
+            var pwdResult = await _secureStorage.GetSecretAsync(org, containerRepo.SecurePasswordId, user);
             if(!pwdResult.Successful)
             {
                 throw new UnauthorizedAccessException("Could not retrieve password from secure password, please check your password.");

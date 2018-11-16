@@ -51,8 +51,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
         }
 
-
-
         /// <summary>
         /// Deployment Instance - Get for Org
         /// </summary>
@@ -111,6 +109,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<DetailResponse<DeploymentInstance>> GetFullInstanceAsync(String id)
         {
             var deviceInstance = await _instanceManager.LoadFullInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            if (deviceInstance.Successful)
+            {
+                return DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
+            }
+            else
+            {
+                var resp = DetailResponse<DeploymentInstance>.Create(null);
+                resp.Errors.AddRange(deviceInstance.Errors);
+                return resp;
+            }
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get Full with version
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="versionid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/{versionid}/full")]
+        public async Task<DetailResponse<DeploymentInstance>> GetFullInstanceAsync(string id, string versionid)
+        {
+            var deviceInstance = await _instanceManager.LoadFullInstanceWithVersionAsync(id, versionid, OrgEntityHeader, UserEntityHeader);
             if (deviceInstance.Successful)
             {
                 return DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
@@ -294,6 +314,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
         {
             return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Request a key from a run time.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("/api/wsuri/{channel}/{id}/{verbosity}")]
+        public Task<InvokeResult<string>> RequestKeyAsync([FromBody] KeyRequest request)
+        {
+            return _instanceManager.GetKeyAsync(request, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

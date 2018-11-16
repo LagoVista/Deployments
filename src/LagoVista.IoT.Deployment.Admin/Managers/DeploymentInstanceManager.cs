@@ -1,6 +1,7 @@
 ﻿//#define WEBSERVERSIDECHECK
 
 using LagoVista.Core;
+using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
@@ -29,10 +30,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         #endregion
 
         #region private fields
+        private ISecureStorage _secureStorage;
         private IDeploymentInstanceRepo _instanceRepo;
         private ISolutionManager _solutionManager;
         private IDeploymentHostManager _hostManager;
         private IDeploymentHostRepo _hostRepo;
+        private ISolutionVersionRepo _solutionVersionRepo;
         private readonly IDeploymentConnectorService _connector;
         private IDeviceRepositoryManager _deviceRepoManager;
         private IDeploymentActivityQueueManager _deploymentActivityQueueManager;
@@ -42,23 +45,25 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security
-                    ) : base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo) :
+            base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager,secureStorage, security)
         {
             _hostManager = hostManager;
             _instanceRepo = instanceRepo;
             _solutionManager = solutionManager;
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
+            _solutionVersionRepo = solutionVersionRepo;
             _connector = connector;
             _deviceRepoManager = deviceRepoManager;
             _hostRepo = hostRepo;
+            _secureStorage = secureStorage;
             _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security,
-                    IProxyFactory proxyFactory) : this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
+                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
+            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -311,6 +316,43 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 return InvokeResult<DeploymentInstance>.FromErrors(solutionResult.Errors.ToArray());
             }
+        }
+
+        public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceWithVersionAsync(string id, string version, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
+
+            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(instance.DeviceRepository.Id, org, user);
+
+            var solution = await _solutionVersionRepo.GetSolutionVersionAsync(id, version);
+            instance.Solution.Value = solution;
+            instance.Solution.Id = instance.Solution.Value.Id;
+            instance.Solution.Text = instance.Solution.Value.Name;
+            return InvokeResult<DeploymentInstance>.Create(instance);
+        }
+
+        public async Task<InvokeResult<string>> GetKeyAsync(KeyRequest request, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(request.InstanceId);
+
+            if (String.IsNullOrEmpty(request.Key)) throw new InvalidDataException("Missing Request Key");
+            if (request.Key.Length != 32) throw new InvalidDataException("Invalid Request Key Length");
+            if (String.IsNullOrEmpty(request.InstanceId)) throw new InvalidDataException("Invalid Instance Key");
+            if (request.InstanceId.Length != 32) throw new InvalidDataException("Invalid Instance Key");
+
+            var key1 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
+            if(key1.Result != request.InstanceAccessKey)
+            {
+                var key2 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKeySecureId2, user);
+                if(key2.Result != request.InstanceAccessKey)
+                {
+                    throw new UnauthorizedAccessException("Could not validate instance access key.");
+                }
+            }
+
+            return await _secureStorage.GetSecretAsync(org, request.Key, user);
         }
     }
 }

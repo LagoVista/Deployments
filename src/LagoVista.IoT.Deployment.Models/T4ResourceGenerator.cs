@@ -197,6 +197,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentConfiguration_SingleInstance
 
 		public static string DeploymentConfiguration_SingleInstance { get { return GetResourceString("DeploymentConfiguration_SingleInstance"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_SharedAccessKey_Help
+
+		public static string DeploymentInstance_SharedAccessKey_Help { get { return GetResourceString("DeploymentInstance_SharedAccessKey_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_SharedAccessKey1
+
+		public static string DeploymentInstance_SharedAccessKey1 { get { return GetResourceString("DeploymentInstance_SharedAccessKey1"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_SharedAccessKey2
+
+		public static string DeploymentInstance_SharedAccessKey2 { get { return GetResourceString("DeploymentInstance_SharedAccessKey2"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
 
 		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
@@ -995,6 +1004,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
+			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";
+			public const string DeploymentInstance_SharedAccessKey1 = "DeploymentInstance_SharedAccessKey1";
+			public const string DeploymentInstance_SharedAccessKey2 = "DeploymentInstance_SharedAccessKey2";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
 			public const string DeploymentQueueType_QueueTechnologing = "DeploymentQueueType_QueueTechnologing";
