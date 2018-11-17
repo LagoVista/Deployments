@@ -13,6 +13,7 @@ using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         #region private fields
         private ISecureStorage _secureStorage;
+        private IAdminLogger _adminLogger;
         private IDeploymentInstanceRepo _instanceRepo;
         private ISolutionManager _solutionManager;
         private IDeploymentHostManager _hostManager;
@@ -48,10 +50,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo) :
-            base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, secureStorage, security)
+            base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager;
             _appConfig = appConfig;
+            _adminLogger = logger;
             _instanceRepo = instanceRepo;
             _solutionManager = solutionManager;
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
@@ -395,7 +398,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 var addKeyOneResult = await _secureStorage.AddSecretAsync(org, key1);
                 if (!addKeyOneResult.Successful)
                 {
-                    return InvokeResult<DeploymentSettings>.FromError("Could generate access key 1, please try again later.");
+                    _adminLogger.AddError("DeploymentInstanceManager_GetDeploymentSettingsAsync_AddKeyOne", addKeyOneResult.Errors.First().Message);
+                    return InvokeResult<DeploymentSettings>.FromError("Could generate access key 1, please try again later: " + addKeyOneResult.Errors.First().Message);
                 }
 
                 instance.SharedAccessKeySecureId1 = key1;
@@ -404,10 +408,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                var getKeyOneResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
+                var getKeyOneResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKeySecureId1, user);
                 if (!getKeyOneResult.Successful)
                 {
-                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 1, please try again later.");
+                    _adminLogger.AddError("DeploymentInstanceManager_GetDeploymentSettingsAsync_GetKeyOne", getKeyOneResult.Errors.First().Message);
+                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 1, please try again later: " + getKeyOneResult.Errors.First().Message);
                 }
 
                 settings.SharedAccessKey1 = getKeyOneResult.Result;
@@ -419,7 +424,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 var addKeyTwoResult = await _secureStorage.AddSecretAsync(org, key2);
                 if (!addKeyTwoResult.Successful)
                 {
-                    return InvokeResult<DeploymentSettings>.FromError("Could generate access key 2, please try again later.");
+                    _adminLogger.AddError("DeploymentInstanceManager_GetDeploymentSettingsAsync_AddKeyTwo", addKeyTwoResult.Errors.First().Message);
+                    return InvokeResult<DeploymentSettings>.FromError("Could not add access key 2, please try again later: " + addKeyTwoResult.Errors.First().Message);
                 }
 
                 instance.SharedAccessKeySecureId2 = key2;
@@ -428,13 +434,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                var getKeyOneResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
-                if (!getKeyOneResult.Successful)
+                var getKeyTwoResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKeySecureId2, user);
+                if (!getKeyTwoResult.Successful)
                 {
-                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 2, please try again later.");
+                    _adminLogger.AddError("DeploymentInstanceManager_GetDeploymentSettingsAsync_GetKeyTwo", getKeyTwoResult.Errors.First().Message);
+                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 2, please try again later: " + getKeyTwoResult.Errors.First().Message);
                 }
 
-                settings.SharedAccessKey2 = getKeyOneResult.Result;
+                settings.SharedAccessKey2 = getKeyTwoResult.Result;
             }
 
             if (keyUpdated)
@@ -449,36 +456,62 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             settings.InstanceId = instance.Id;
             settings.HostId = instance.PrimaryHost?.Id;
 
-            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
+            Console.WriteLine("1");
+
+            var getSolutionRsult = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
+            if(!getSolutionRsult.Successful)
+            {
+                _adminLogger.AddError("DeploymentInstanceManager_GetDeploymentSettingsAsync_LoadFullSolutionAsync", getSolutionRsult.Errors.First().Message);
+                return InvokeResult<DeploymentSettings>.FromError("Could not get access key 2, please try again later: " + getSolutionRsult.Errors.First().Message);
+            }
 
             var cmd = new StringBuilder("docker run -d ");
-            foreach (var listener in solution.Listeners)
+            foreach (var listener in getSolutionRsult.Result.Listeners)
             {
                 if (listener.Value.ListenOnPort.HasValue)
                 {
-                    cmd.Append(listener.Value.ListenOnPort.ToString());
+                    var port = listener.Value.ListenOnPort.Value;
+
+                    cmd.Append($"-p {port}:{port} ");
                 }
             }
 
+            Console.WriteLine("2");
+
+            cmd.Append($"-p {instance.InputCommandPort}:{instance.InputCommandPort} ");
             cmd.Append($"-e InstanceId={instanceId} ");
+
+            Console.WriteLine("3");
 
             if (instance.PrimaryHost != null)
             {
                 cmd.Append($"-e HostId={instance.PrimaryHost.Id} ");
             }
+
+            Console.WriteLine("4");
+
             cmd.Append($"-e Environment={_appConfig.Environment.ToString()} ");
 
-            cmd.Append($"-e DeploymentType={instance.DeploymentType.Value.ToString()} ");
-            cmd.Append($"-e DeploymentConfig={instance.DeploymentType.Value.ToString()} ");
-            cmd.Append($"-e QueueType={instance.QueueType.Value.ToString()} ");
+            Console.WriteLine("5");
+
+            cmd.Append($"-e DeploymentType={instance.DeploymentType.Id} ");
+            cmd.Append($"-e DeploymentConfig={instance.DeploymentConfiguration.Id} ");
+            cmd.Append($"-e QueueType={instance.QueueType.Id} ");
+            cmd.Append($"-e AccessKey={settings.SharedAccessKey1} ");
             cmd.Append($"--name={instance.Key} ");
             cmd.Append("--restart unless-stopped ");
             cmd.Append($"{instance.ContainerRepository.Id}:{instance.ContainerTag.Id}");
+
+            Console.WriteLine("6");
 
             settings.QueueType = instance.QueueType;
             settings.DeploymentType = instance.DeploymentType;
             settings.DeploymentConfiguration = instance.DeploymentConfiguration;
             settings.DockerCommandLine = cmd.ToString();
+            Console.WriteLine("7");
+            settings.Name = instance.Name;
+            settings.Key = instance.Key;
+            
 
             return InvokeResult<DeploymentSettings>.Create(settings);
         }

@@ -66,7 +66,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _repo.GetRemoteDeploymentsForOrgsAsync(orgId);
         }
 
-        public async Task<RemoteDeployment> LoadFullRemoteDeploymentAsync(string id, EntityHeader org, EntityHeader user)
+        public Task<RemoteDeployment> LoadFullRemoteDeploymentAsync(string id, EntityHeader org, EntityHeader user)
         {
             throw new NotImplementedException();
         }

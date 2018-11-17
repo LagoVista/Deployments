@@ -8,6 +8,9 @@ namespace LagoVista.IoT.Deployment
 {
     public class DeploymentSettings
     {
+        public string Name { get; set; }
+        public string Key { get; set; }
+        
         public string InstanceId { get; set; }
         public string HostId { get; set; }
 

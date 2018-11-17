@@ -1,15 +1,15 @@
-﻿using LagoVista.Core;
-using LagoVista.Core.Exceptions;
-using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.Core;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Threading.Tasks;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.Core.Exceptions;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -18,18 +18,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentInstanceRepo _instanceRepo;
         IDeploymentHostManager _deploymentHostManager;
         IDeviceRepositoryManager _deviceManagerRepo;
-        IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
         ISecureStorage _secureStorage;
+        IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
 
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-           IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecureStorage secureStorage, ISecurity security) :
+           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _deviceManagerRepo = deviceManagerRepo;
             _instanceRepo = instanceRepo;
+            _secureStorage = secureStorage;
             _deploymentHostManager = deploymentHostManager;
             _deploymentInstanceStatusRepo = deploymentInstanceStatusRepo;
-            _secureStorage = secureStorage;
         }
 
         public async Task<InvokeResult> DeleteInstanceAsync(String instanceId, EntityHeader org, EntityHeader user)
@@ -48,16 +48,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await _instanceRepo.DeleteInstanceAsync(instanceId);
 
-            if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
+            if(!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
             {
                 var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
-                if (host.HostType.Value == HostTypes.Dedicated)
+                if(host.HostType.Value == HostTypes.Dedicated)
                 {
                     await _deploymentHostManager.DeleteDeploymentHostAsync(host.Id, org, user);
                 }
             }
 
-            return InvokeResult.Success;
+            return InvokeResult.Success; 
         }
 
 
@@ -83,7 +83,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 Subscription = instance.Subscription,
                 ContainerRepository = instance.ContainerRepository,
                 ContainerTag = instance.ContainerTag,
-                DnsHostName = instance.DnsHostName,
+                DnsHostName = instance.DnsHostName,                
             };
 
             return host;
@@ -122,13 +122,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
-            var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);
-            if (!addResult.Successful) return addResult.ToInvokeResult();
-            instance.SharedAccessKeySecureId1 = addResult.Result;
+            var keyAddResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);
+            if (!keyAddResult.Successful) return keyAddResult.ToInvokeResult();
+            instance.SharedAccessKey1 = null;
+            instance.SharedAccessKeySecureId1 = keyAddResult.Result;
 
-            addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);
-            if (!addResult.Successful) return addResult.ToInvokeResult();
-            instance.SharedAccessKeySecureId2 = addResult.Result;
+            keyAddResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);
+            if (!keyAddResult.Successful) return keyAddResult.ToInvokeResult();
+            instance.SharedAccessKey2 = null;
+            instance.SharedAccessKeySecureId2 = keyAddResult.Result;
 
             await _instanceRepo.AddInstanceAsync(instance);
             await _deploymentHostManager.AddDeploymentHostAsync(host, org, user);
@@ -148,14 +150,30 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
+            var keysUpdated = false;
+
             if (String.IsNullOrEmpty(instance.SharedAccessKeySecureId1))
             {
-                instance.SharedAccessKey1 = GenerateRandomKey();
+                keysUpdated = true;
+                var key = GenerateRandomKey();
+                var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
+                if (!keyAddResult.Successful) return null;
+                instance.SharedAccessKeySecureId1 = keyAddResult.Result;
             }
 
             if (String.IsNullOrEmpty(instance.SharedAccessKeySecureId2))
             {
-                instance.SharedAccessKey2 = GenerateRandomKey();
+                keysUpdated = true;
+                var key = GenerateRandomKey();
+                var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
+                if (!keyAddResult.Successful) return null;
+                instance.SharedAccessKeySecureId2 = keyAddResult.Result;
+            }
+
+            if(keysUpdated)
+            {
+                await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, "Added Missing Keys");
+                await _instanceRepo.UpdateInstanceAsync(instance);
             }
 
             return instance;
@@ -185,35 +203,38 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (!String.IsNullOrEmpty(instance.SharedAccessKey1))
             {
+                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);
+                if (!addResult.Successful) return addResult.ToInvokeResult();
+
                 if (!String.IsNullOrEmpty(instance.SharedAccessKeySecureId1))
                 {
                     var removeResult = await _secureStorage.RemoveSecretAsync(org, instance.SharedAccessKeySecureId1);
                     if (!removeResult.Successful) return removeResult;
                 }
 
-                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);
-                if (!addResult.Successful) return addResult.ToInvokeResult();
                 instance.SharedAccessKey1 = null;
                 instance.SharedAccessKeySecureId1 = addResult.Result;
             }
 
             if (!String.IsNullOrEmpty(instance.SharedAccessKey2))
             {
+                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);                
+                if (!addResult.Successful) return addResult.ToInvokeResult();
+
                 if (!String.IsNullOrEmpty(instance.SharedAccessKeySecureId2))
                 {
                     var removeResult = await _secureStorage.RemoveSecretAsync(org, instance.SharedAccessKeySecureId2);
                     if (!removeResult.Successful) return removeResult;
                 }
 
-                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);
                 instance.SharedAccessKey2 = null;
-                if (!addResult.Successful) return addResult.ToInvokeResult();
                 instance.SharedAccessKeySecureId2 = addResult.Result;
             }
 
-            if (existingInstance.Status.Value != instance.Status.Value || existingInstance.IsDeployed != instance.IsDeployed)
+            if (existingInstance.Status.Value != instance.Status.Value ||
+               existingInstance.IsDeployed != instance.IsDeployed)
             {
-                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v", string.Empty), org, user);
+                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v",string.Empty), org, user);
             }
 
             var solution = instance.Solution.Value;
@@ -249,7 +270,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             ValidationCheck(instance, Actions.Update);
 
-            if (newStatus == DeploymentInstanceStates.Offline)
+            if(newStatus == DeploymentInstanceStates.Offline)
             {
                 instance.LastPing = null;
             }

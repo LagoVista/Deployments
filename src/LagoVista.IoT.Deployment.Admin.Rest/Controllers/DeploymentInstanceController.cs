@@ -197,6 +197,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var response = DetailResponse<DeploymentInstance>.Create();
             response.Model.Id = Guid.NewGuid().ToId();
+            response.Model.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            response.Model.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+            response.Model.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
+            response.Model.SharedAccessKey1 = _instanceManager.GenerateAccessKey();
+            response.Model.SharedAccessKey2 = _instanceManager.GenerateAccessKey();
+
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
 
