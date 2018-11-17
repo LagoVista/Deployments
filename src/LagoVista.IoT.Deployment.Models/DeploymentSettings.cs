@@ -1,34 +1,23 @@
-﻿using LagoVista.Core.Attributes;
-using LagoVista.IoT.Deployment.Models.Resources;
+﻿using LagoVista.Core.Models;
+using LagoVista.IoT.Deployment.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LagoVista.IoT.Deployment.Admin.Models
+namespace LagoVista.IoT.Deployment
 {
-    public enum DeploymentTypes
+    public class DeploymentSettings
     {
-        [EnumLabel(DeploymentInstance.DeploymentType_Managed, DeploymentAdminResources.Names.DeploymentType_Managed, typeof(DeploymentAdminResources))]
-        Managed,
-        [EnumLabel(DeploymentInstance.DeploymentType_OnPremise, DeploymentAdminResources.Names.DeploymentType_OnPremise, typeof(DeploymentAdminResources))]
-        OnPremise,
-    }
+        public string InstanceId { get; set; }
+        public string HostId { get; set; }
 
-    public enum DeploymentConfigurations
-    {
-        [EnumLabel(DeploymentInstance.DeploymentConfiguration_SingleInstance, DeploymentAdminResources.Names.DeploymentConfiguration_SingleInstance, typeof(DeploymentAdminResources))]
-        SingleInstance,
-        [EnumLabel(DeploymentInstance.DeploymentConfiguration_Kubernetes, DeploymentAdminResources.Names.DeploymentConfiguration_Kubernetes, typeof(DeploymentAdminResources))]
-        Kubernetes,
-    }
+        public string SharedAccessKey1 { get; set; }
+        public string SharedAccessKey2 { get; set; }
 
-    public enum QueueType
-    {
-        [EnumLabel(DeploymentInstance.DeploymentQueueType_InMemory, DeploymentAdminResources.Names.DeploymentQueueType_InMemory, typeof(DeploymentAdminResources))]
-        InMemory,
-        [EnumLabel(DeploymentInstance.DeploymentQueueType_Kafka, DeploymentAdminResources.Names.DeploymentQueueType_Kafka, typeof(DeploymentAdminResources))]
-        Kafka,
-        [EnumLabel(DeploymentInstance.DeploymentQueueType_ServiceBus, DeploymentAdminResources.Names.DeploymentQueueType_ServiceBus, typeof(DeploymentAdminResources))]
-        ServiceBus,
+        public string DockerCommandLine { get; set; }
+
+        public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
+        public EntityHeader<DeploymentTypes> DeploymentType { get; set; }
+        public EntityHeader<QueueTypes> QueueType { get; set; }
     }
 }

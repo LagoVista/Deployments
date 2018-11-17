@@ -46,5 +46,9 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         Task<InvokeResult<string>> GetKeyAsync(KeyRequest request, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user);
+
+        string GenerateAccessKey();
     }
 }

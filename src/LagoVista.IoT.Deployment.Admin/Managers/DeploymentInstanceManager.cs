@@ -14,6 +14,7 @@ using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
@@ -35,6 +36,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private ISolutionManager _solutionManager;
         private IDeploymentHostManager _hostManager;
         private IDeploymentHostRepo _hostRepo;
+        private IAppConfig _appConfig;
         private ISolutionVersionRepo _solutionVersionRepo;
         private readonly IDeploymentConnectorService _connector;
         private IDeviceRepositoryManager _deviceRepoManager;
@@ -46,9 +48,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo) :
-            base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager,secureStorage, security)
+            base(hostManager, instanceRepo, deviceManagerRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, secureStorage, security)
         {
             _hostManager = hostManager;
+            _appConfig = appConfig;
             _instanceRepo = instanceRepo;
             _solutionManager = solutionManager;
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
@@ -259,7 +262,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
-            var instance = await GetInstanceAsync(instanceId, org, user);            
+            var instance = await GetInstanceAsync(instanceId, org, user);
 
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
@@ -297,8 +300,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
-            if(EntityHeader.IsNullOrEmpty( instance.DeploymentConfiguration)) instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
-            if(EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentConfiguration))
+            {
+                instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            }
+
+            if (EntityHeader.IsNullOrEmpty(instance.DeploymentType))
+            {
+                instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+            }
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
@@ -337,22 +347,145 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(request.InstanceId);
 
-            if (String.IsNullOrEmpty(request.Key)) throw new InvalidDataException("Missing Request Key");
-            if (request.Key.Length != 32) throw new InvalidDataException("Invalid Request Key Length");
-            if (String.IsNullOrEmpty(request.InstanceId)) throw new InvalidDataException("Invalid Instance Key");
-            if (request.InstanceId.Length != 32) throw new InvalidDataException("Invalid Instance Key");
+            if (String.IsNullOrEmpty(request.Key))
+            {
+                throw new InvalidDataException("Missing Request Key");
+            }
+
+            if (request.Key.Length != 32)
+            {
+                throw new InvalidDataException("Invalid Request Key Length");
+            }
+
+            if (String.IsNullOrEmpty(request.InstanceId))
+            {
+                throw new InvalidDataException("Invalid Instance Key");
+            }
+
+            if (request.InstanceId.Length != 32)
+            {
+                throw new InvalidDataException("Invalid Instance Key");
+            }
 
             var key1 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
-            if(key1.Result != request.InstanceAccessKey)
+            if (key1.Result != request.InstanceAccessKey)
             {
                 var key2 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKeySecureId2, user);
-                if(key2.Result != request.InstanceAccessKey)
+                if (key2.Result != request.InstanceAccessKey)
                 {
                     throw new UnauthorizedAccessException("Could not validate instance access key.");
                 }
             }
 
             return await _secureStorage.GetSecretAsync(org, request.Key, user);
+        }
+
+        public async Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            var settings = new DeploymentSettings();
+
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org, "fullDeploymentSettings");
+
+            var keyUpdated = false;
+
+            if (String.IsNullOrEmpty(instance.SharedAccessKeySecureId1))
+            {
+                var key1 = GenerateRandomKey();
+                var addKeyOneResult = await _secureStorage.AddSecretAsync(org, key1);
+                if (!addKeyOneResult.Successful)
+                {
+                    return InvokeResult<DeploymentSettings>.FromError("Could generate access key 1, please try again later.");
+                }
+
+                instance.SharedAccessKeySecureId1 = key1;
+                settings.SharedAccessKey1 = key1;
+                keyUpdated = true;
+            }
+            else
+            {
+                var getKeyOneResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
+                if (!getKeyOneResult.Successful)
+                {
+                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 1, please try again later.");
+                }
+
+                settings.SharedAccessKey1 = getKeyOneResult.Result;
+            }
+
+            if (String.IsNullOrEmpty(instance.SharedAccessKeySecureId2))
+            {
+                var key2 = GenerateRandomKey();
+                var addKeyTwoResult = await _secureStorage.AddSecretAsync(org, key2);
+                if (!addKeyTwoResult.Successful)
+                {
+                    return InvokeResult<DeploymentSettings>.FromError("Could generate access key 2, please try again later.");
+                }
+
+                instance.SharedAccessKeySecureId2 = key2;
+                settings.SharedAccessKey2 = key2;
+                keyUpdated = true;
+            }
+            else
+            {
+                var getKeyOneResult = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
+                if (!getKeyOneResult.Successful)
+                {
+                    return InvokeResult<DeploymentSettings>.FromError("Could not get access key 2, please try again later.");
+                }
+
+                settings.SharedAccessKey2 = getKeyOneResult.Result;
+            }
+
+            if (keyUpdated)
+            {
+                await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, "Generate Shared Access Keys");
+
+                instance.LastUpdatedBy = user;
+                instance.LastUpdatedDate = DateTime.Now.ToJSONString();
+                await _instanceRepo.UpdateInstanceAsync(instance);
+            }
+
+            settings.InstanceId = instance.Id;
+            settings.HostId = instance.PrimaryHost?.Id;
+
+            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
+
+            var cmd = new StringBuilder("docker run -d ");
+            foreach (var listener in solution.Listeners)
+            {
+                if (listener.Value.ListenOnPort.HasValue)
+                {
+                    cmd.Append(listener.Value.ListenOnPort.ToString());
+                }
+            }
+
+            cmd.Append($"-e InstanceId={instanceId} ");
+
+            if (instance.PrimaryHost != null)
+            {
+                cmd.Append($"-e HostId={instance.PrimaryHost.Id} ");
+            }
+            cmd.Append($"-e Environment={_appConfig.Environment.ToString()} ");
+
+            cmd.Append($"-e DeploymentType={instance.DeploymentType.Value.ToString()} ");
+            cmd.Append($"-e DeploymentConfig={instance.DeploymentType.Value.ToString()} ");
+            cmd.Append($"-e QueueType={instance.QueueType.Value.ToString()} ");
+            cmd.Append($"--name={instance.Key} ");
+            cmd.Append("--restart unless-stopped ");
+            cmd.Append($"{instance.ContainerRepository.Id}:{instance.ContainerTag.Id}");
+
+            settings.QueueType = instance.QueueType;
+            settings.DeploymentType = instance.DeploymentType;
+            settings.DeploymentConfiguration = instance.DeploymentConfiguration;
+            settings.DockerCommandLine = cmd.ToString();
+
+            return InvokeResult<DeploymentSettings>.Create(settings);
+        }
+
+        public string GenerateAccessKey()
+        {
+            return GenerateRandomKey();
         }
     }
 }

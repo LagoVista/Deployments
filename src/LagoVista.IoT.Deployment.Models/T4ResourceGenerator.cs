@@ -191,6 +191,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentActivity_Status
 
 		public static string DeploymentActivity_Status { get { return GetResourceString("DeploymentActivity_Status"); } }
+//Resources:DeploymentAdminResources:DeploymentConfiguration_DockerSwarm
+
+		public static string DeploymentConfiguration_DockerSwarm { get { return GetResourceString("DeploymentConfiguration_DockerSwarm"); } }
 //Resources:DeploymentAdminResources:DeploymentConfiguration_Kubernetes
 
 		public static string DeploymentConfiguration_Kubernetes { get { return GetResourceString("DeploymentConfiguration_Kubernetes"); } }
@@ -1002,6 +1005,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentActivity_ResourceType = "DeploymentActivity_ResourceType";
 			public const string DeploymentActivity_Start = "DeploymentActivity_Start";
 			public const string DeploymentActivity_Status = "DeploymentActivity_Status";
+			public const string DeploymentConfiguration_DockerSwarm = "DeploymentConfiguration_DockerSwarm";
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
 			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";

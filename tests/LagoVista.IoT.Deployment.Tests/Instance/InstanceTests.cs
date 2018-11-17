@@ -95,7 +95,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.DeviceRepository = new EntityHeader<DeviceRepository>() { Id = NEW_DEVICE_REPO_ID, Text = "Don't Care" };
             instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
             instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
-            instance.QueueType = EntityHeader<QueueType>.Create(QueueType.InMemory);
+            instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
             instance.SharedAccessKey1 = "ABC123";
             instance.SharedAccessKey2 = "ABC123";
             return instance;

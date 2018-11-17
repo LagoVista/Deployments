@@ -91,9 +91,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         private static Random _rnd = new Random();
 
-        private string GenerateRandomKey()
+        protected string GenerateRandomKey(byte len = 64)
         {
-            var buffer = new byte[64];
+            var buffer = new byte[len];
             _rnd.NextBytes(buffer);
             return Convert.ToBase64String(buffer);
         }

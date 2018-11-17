@@ -25,6 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     /// Manage Deployment Hosts
     /// </summary>     
     [ConfirmedUser]
+    [OrgAdmin]
     [Authorize]
     public class DeploymentHostController : LagoVistaBaseController
     {

@@ -5,6 +5,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
 using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     /// <summary>
     /// Manage Deployment Instances 
     /// </summary>
+    [ConfirmedUser]
+    [OrgAdmin]
     [Authorize]
     public class DeploymentInstanceController : LagoVistaBaseController
     {
@@ -321,10 +324,31 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("/api/wsuri/{channel}/{id}/{verbosity}")]
+        [HttpPost("/api/deployment/instance/key")]
         public Task<InvokeResult<string>> RequestKeyAsync([FromBody] KeyRequest request)
         {
             return _instanceManager.GetKeyAsync(request, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Generate a random 64 bit access key.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/key/generate")]
+        public string GenrateAccessKey()
+        {
+            return _instanceManager.GenerateAccessKey();
+        }
+
+        /// <summary>
+        /// Get Deployment Settings
+        /// </summary>
+        /// <param name="instanceid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{instanceid}/settings")]
+        public Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceid)
+        {
+            return _instanceManager.GetDeploymentSettingsAsync(instanceid, OrgEntityHeader, UserEntityHeader);
         }
     }
 }
