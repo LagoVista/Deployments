@@ -48,6 +48,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             }
         }
 
+        private string GetSignature(string requestId, string key, string source)
+        {
+            var encData = Encoding.UTF8.GetBytes(source);
+
+            var hmac = new HMac(new Sha256Digest());
+        
+            hmac.Init(new KeyParameter(Encoding.UTF8.GetBytes(key)));
+
+            var resultBytes = new byte[hmac.GetMacSize()];
+            hmac.BlockUpdate(encData, 0, encData.Length);
+            hmac.DoFinal(resultBytes, 0);
+
+            var b64Str = System.Convert.ToBase64String(resultBytes);
+            return $"SAS {requestId}:{b64Str}";
+        }
+
         protected async Task ValidateRequest(HttpRequest request)
         {
             CheckHeader(request, REQUEST_ID);
@@ -80,9 +96,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             bldr.AppendLine(userId);
             bldr.AppendLine(instanceId);
 
-            Console.Write(bldr.ToString());
-
-            var encData = Encoding.UTF8.GetBytes(bldr.ToString());
 
             OrgEntityHeader = EntityHeader.Create(orgId, org);
             UserEntityHeader = EntityHeader.Create(userId, user);
@@ -90,25 +103,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             var instance = await _instanceManager.GetInstanceAsync(instanceId, OrgEntityHeader, UserEntityHeader);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
-        
-            if(!key1.Successful)
+            if(!key1.Successful) throw new Exception(key1.Errors.First().Message);
+
+            var calculatedFromFirst = GetSignature(requestId, key1.Result, bldr.ToString());
+
+            if(calculatedFromFirst != authheader)
             {
-                throw new Exception(key1.Errors.First().Message);
+                var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
+                if (!key2.Successful) throw new Exception(key1.Errors.First().Message);
+                var calculatedFromSecond = GetSignature(requestId, key2.Result, bldr.ToString());
+                if(calculatedFromSecond != authheader)
+                {
+                    throw new UnauthorizedAccessException("Invalid signature.");
+                }
             }
-
-            var hmac = new HMac(new Sha256Digest());
-            hmac.Init(new KeyParameter(Encoding.UTF8.GetBytes(key1.Result)));
-            Console.WriteLine(key1.Result);
-
-            var resultBytes = new byte[hmac.GetMacSize()];
-            hmac.BlockUpdate(encData, 0, encData.Length);
-            hmac.DoFinal(resultBytes, 0);
-
-            var b64Str = System.Convert.ToBase64String(resultBytes);
-            var sharedSignature = $"SAS {requestId}:{b64Str}";
-
-            Console.WriteLine(sharedSignature);
-            Console.WriteLine(authheader);
         }
 
         protected EntityHeader OrgEntityHeader { get; private set; }
