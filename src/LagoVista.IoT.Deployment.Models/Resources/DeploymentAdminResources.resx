@@ -1020,4 +1020,13 @@
   <data name="DeploymentConfiguration_DockerSwarm" xml:space="preserve">
     <value>Docker Swarm</value>
   </data>
+  <data name="DeploymentInstance_Version" xml:space="preserve">
+    <value>Solution Version</value>
+  </data>
+  <data name="DeploymentInstance_Version_Help" xml:space="preserve">
+    <value>You can optionally select a version to deploy.  If you leave this blank it will deploy the most recent version.</value>
+  </data>
+  <data name="DeploymentInstance_Version_Select" xml:space="preserve">
+    <value>-select solution version-</value>
+  </data>
 </root>

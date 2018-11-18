@@ -13,8 +13,8 @@ using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -346,42 +346,77 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult<DeploymentInstance>.Create(instance);
         }
 
-        public async Task<InvokeResult<string>> GetKeyAsync(KeyRequest request, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<string>> GetKeyAsync(string keyId, EntityHeader instance, EntityHeader org)
         {
-            var instance = await _instanceRepo.GetInstanceAsync(request.InstanceId);
+            if (EntityHeader.IsNullOrEmpty(org)) throw new InvalidDataException("Missing Org");
+            if (EntityHeader.IsNullOrEmpty(instance)) throw new InvalidDataException("Missing Instance");
+            if (String.IsNullOrEmpty(keyId)) throw new InvalidDataException("Missing Request Key");
+            if (keyId.Length != 32) throw new InvalidDataException("Invalid Request Key Length");
 
-            if (String.IsNullOrEmpty(request.Key))
-            {
-                throw new InvalidDataException("Missing Request Key");
-            }
-
-            if (request.Key.Length != 32)
-            {
-                throw new InvalidDataException("Invalid Request Key Length");
-            }
-
-            if (String.IsNullOrEmpty(request.InstanceId))
-            {
-                throw new InvalidDataException("Invalid Instance Key");
-            }
-
-            if (request.InstanceId.Length != 32)
-            {
-                throw new InvalidDataException("Invalid Instance Key");
-            }
-
-            var key1 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKey1, user);
-            if (key1.Result != request.InstanceAccessKey)
-            {
-                var key2 = await _secureStorage.GetSecretAsync(org, instance.SharedAccessKeySecureId2, user);
-                if (key2.Result != request.InstanceAccessKey)
-                {
-                    throw new UnauthorizedAccessException("Could not validate instance access key.");
-                }
-            }
-
-            return await _secureStorage.GetSecretAsync(org, request.Key, user);
+            await LogEntityActionAsync(keyId, "Key", "Access", org, instance);
+        
+            return await _secureStorage.GetSecretAsync(org, keyId, instance);
         }
+
+        public async Task<InvokeResult<string>> RegenerateKeyAsync(string instanceId, string keyName, EntityHeader org, EntityHeader user)
+        {
+            if (String.IsNullOrEmpty(keyName)) return InvokeResult<string>.FromError("Key Name is a Required Field.");
+
+            keyName = keyName.ToLower();
+            if (keyName != "key1" && keyName != "key2") return InvokeResult<string>.FromError($"Currently only [key1] and [key2] are supported, you provided {keyName}.");
+
+            var instance = await GetInstanceAsync(instanceId, org, user);
+
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, $"RegenerateKey-{keyName}");
+
+            var key = GenerateRandomKey();
+            var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
+            if (!keyAddResult.Successful)
+            {
+                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Add", keyAddResult.Errors.First().Message);
+                return InvokeResult<string>.FromError($"Could not add key to secure storage.");
+            }
+
+            switch(keyName)
+            {
+                case "key1":
+                    {
+                        if (!String.IsNullOrEmpty(instance.SharedAccessKeySecureId1))
+                        {
+                            //If this fails don't fail the entire method.
+                           var removeKeyResult = await _secureStorage.RemoveSecretAsync(org, instance.SharedAccessKeySecureId1);
+                            if(!removeKeyResult.Successful)
+                            {
+                                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Remove", removeKeyResult.Errors.First().Message);
+                            }
+                        }
+                        instance.SharedAccessKeySecureId1 = keyAddResult.Result;
+                    }
+                    break;
+                case "key2":
+                    {
+                        if (!String.IsNullOrEmpty(instance.SharedAccessKeySecureId2))
+                        {
+                            //If this fails don't fail the entire method.
+                            var removeKeyResult = await _secureStorage.RemoveSecretAsync(org, instance.SharedAccessKeySecureId2);
+                            if (!removeKeyResult.Successful)
+                            {
+                                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Remove", removeKeyResult.Errors.First().Message);
+                            }
+                        }
+                        instance.SharedAccessKeySecureId2 = keyAddResult.Result;
+                    }
+                    break;
+            }
+
+            instance.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            instance.LastUpdatedBy = user;
+
+            await _instanceRepo.UpdateInstanceAsync(instance);
+
+            return InvokeResult<string>.Create(key);
+        }
+
 
         public async Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
@@ -402,7 +437,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     return InvokeResult<DeploymentSettings>.FromError("Could generate access key 1, please try again later: " + addKeyOneResult.Errors.First().Message);
                 }
 
-                instance.SharedAccessKeySecureId1 = key1;
+                instance.SharedAccessKeySecureId1 = addKeyOneResult.Result;
                 settings.SharedAccessKey1 = key1;
                 keyUpdated = true;
             }
@@ -428,7 +463,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     return InvokeResult<DeploymentSettings>.FromError("Could not add access key 2, please try again later: " + addKeyTwoResult.Errors.First().Message);
                 }
 
-                instance.SharedAccessKeySecureId2 = key2;
+                instance.SharedAccessKeySecureId2 = addKeyTwoResult.Result;
                 settings.SharedAccessKey2 = key2;
                 keyUpdated = true;
             }
@@ -456,8 +491,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             settings.InstanceId = instance.Id;
             settings.HostId = instance.PrimaryHost?.Id;
 
-            Console.WriteLine("1");
-
             var getSolutionRsult = await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user);
             if(!getSolutionRsult.Successful)
             {
@@ -476,23 +509,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
-            Console.WriteLine("2");
-
             cmd.Append($"-p {instance.InputCommandPort}:{instance.InputCommandPort} ");
-            cmd.Append($"-e InstanceId={instanceId} ");
 
-            Console.WriteLine("3");
+            cmd.Append($"-e InstanceId={instanceId} ");
+            cmd.Append($"-e OrgId={org.Id} ");
+
+            if(!EntityHeader.IsNullOrEmpty(instance.Version))
+            {
+                cmd.Append($"-e VersionId={instance.Version.Id} ");
+            }
 
             if (instance.PrimaryHost != null)
             {
                 cmd.Append($"-e HostId={instance.PrimaryHost.Id} ");
             }
 
-            Console.WriteLine("4");
-
             cmd.Append($"-e Environment={_appConfig.Environment.ToString()} ");
-
-            Console.WriteLine("5");
 
             cmd.Append($"-e DeploymentType={instance.DeploymentType.Id} ");
             cmd.Append($"-e DeploymentConfig={instance.DeploymentConfiguration.Id} ");
@@ -502,13 +534,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             cmd.Append("--restart unless-stopped ");
             cmd.Append($"{instance.ContainerRepository.Id}:{instance.ContainerTag.Id}");
 
-            Console.WriteLine("6");
-
             settings.QueueType = instance.QueueType;
             settings.DeploymentType = instance.DeploymentType;
             settings.DeploymentConfiguration = instance.DeploymentConfiguration;
             settings.DockerCommandLine = cmd.ToString();
-            Console.WriteLine("7");
             settings.Name = instance.Name;
             settings.Key = instance.Key;
             

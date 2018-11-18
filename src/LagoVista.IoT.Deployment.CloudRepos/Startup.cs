@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Interfaces;
+using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.CloudRepos.Repos;
 
@@ -16,6 +17,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IFailedDeploymentActivityRepo, FailedDeploymentActivityRepo>();
             services.AddTransient<ICompletedDeploymentActivityRepo, CompletedDeploymentActivityRepo>();
             services.AddTransient<IContainerRepositoryRepo, ContainerRepositoryRepo>();
+            services.AddTransient<IDeviceRepoTokenBroker, DeviceRepoTokenBroker>();
             services.AddTransient<IDeploymentInstanceRepo, DeploymentInstanceRepo>();
             services.AddTransient<IDeploymentHostRepo, DeploymentHostRepo>();
             services.AddTransient<ISolutionVersionRepo, SolutionVersionsRepo>();

@@ -209,6 +209,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentInstance_SharedAccessKey2
 
 		public static string DeploymentInstance_SharedAccessKey2 { get { return GetResourceString("DeploymentInstance_SharedAccessKey2"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_Version
+
+		public static string DeploymentInstance_Version { get { return GetResourceString("DeploymentInstance_Version"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_Version_Help
+
+		public static string DeploymentInstance_Version_Help { get { return GetResourceString("DeploymentInstance_Version_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_Version_Select
+
+		public static string DeploymentInstance_Version_Select { get { return GetResourceString("DeploymentInstance_Version_Select"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
 
 		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
@@ -1011,6 +1020,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";
 			public const string DeploymentInstance_SharedAccessKey1 = "DeploymentInstance_SharedAccessKey1";
 			public const string DeploymentInstance_SharedAccessKey2 = "DeploymentInstance_SharedAccessKey2";
+			public const string DeploymentInstance_Version = "DeploymentInstance_Version";
+			public const string DeploymentInstance_Version_Help = "DeploymentInstance_Version_Help";
+			public const string DeploymentInstance_Version_Select = "DeploymentInstance_Version_Select";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
 			public const string DeploymentQueueType_QueueTechnologing = "DeploymentQueueType_QueueTechnologing";

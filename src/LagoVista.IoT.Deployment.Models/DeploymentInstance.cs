@@ -152,6 +152,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public Dictionary<string, object> PropertyBag { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Version, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_Version_Help, WaterMark: DeploymentAdminResources.Names.DeploymentInstance_Version_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+        public EntityHeader Version { get; set; }
+    
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerRepository { get; set; }
 

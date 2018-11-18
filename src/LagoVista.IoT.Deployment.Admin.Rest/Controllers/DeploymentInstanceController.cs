@@ -325,26 +325,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
 
+       
         /// <summary>
-        /// Request a key from a run time.
+        /// Deployment Instance - Regenreate and update access key.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("/api/deployment/instance/key")]
-        public Task<InvokeResult<string>> RequestKeyAsync([FromBody] KeyRequest request)
+        /// <param name="instanceid"></param>
+        /// <param name="key">Currently support either key1 or key2</param>
+        /// <returns>Newly Generated Access Key</returns>
+        [HttpGet("/api/deployment/instance/{instanceid}/generate/{key}")]
+        public Task<InvokeResult<string>> GenrateAccessKey(String instanceid, string key)
         {
-            return _instanceManager.GetKeyAsync(request, OrgEntityHeader, UserEntityHeader);
+            return _instanceManager.RegenerateKeyAsync(instanceid, key, OrgEntityHeader, UserEntityHeader);
         }
 
-        /// <summary>
-        /// Generate a random 64 bit access key.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/key/generate")]
-        public string GenrateAccessKey()
-        {
-            return _instanceManager.GenerateAccessKey();
-        }
 
         /// <summary>
         /// Get Deployment Settings
