@@ -13,6 +13,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using LagoVista.IoT.Deployment.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -144,6 +145,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _deviceRepoTokenBroker.GetDeviceRepoTokenAsync(InstanceEntityHeader, OrgEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get Full
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/full")]
+        public async Task<InvokeResult<DeploymentInstance>> GetFullInstanceAsync(String id)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var deviceInstance = await _instanceManager.LoadFullInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            if (deviceInstance.Successful)
+            {
+                return InvokeResult<DeploymentInstance>.Create(deviceInstance.Result);
+            }
+            else
+            {
+                var resp = InvokeResult<DeploymentInstance>.Create(null);
+                resp.Errors.AddRange(deviceInstance.Errors);
+                return resp;
+            }
         }
     }
 }

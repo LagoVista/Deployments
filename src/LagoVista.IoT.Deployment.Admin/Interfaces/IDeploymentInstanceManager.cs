@@ -11,7 +11,6 @@ namespace LagoVista.IoT.Deployment.Admin
     public interface IDeploymentInstanceManagerRemote
     {
         Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<DeploymentInstance>> LoadFullInstanceWithVersionAsync(string id, string versionId, EntityHeader org, EntityHeader user);
         Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, string version, EntityHeader org, EntityHeader user, string details = "");
     }

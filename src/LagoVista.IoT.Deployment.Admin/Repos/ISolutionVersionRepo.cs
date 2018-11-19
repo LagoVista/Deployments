@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 
         Task UpdateSolutionVersionStatusAsync(string solutionId, string versionId, string newStatus);
 
-        Task<Solution> GetSolutionVersionAsync(string solutionId, string versionId);
+        Task<InvokeResult<Solution>> GetSolutionVersionAsync(string solutionId, string versionId);
     }
 }

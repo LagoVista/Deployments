@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using LagoVista.Core;
 using System.Linq;
 using System.IO;
+using LagoVista.Core.Validation;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -36,20 +37,27 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return new CloudBlobClient(uri, new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(_repoSettings.AccountId, _repoSettings.AccessKey));
         }
 
-        public async Task<Solution> GetSolutionVersionAsync(string solutionId, string versionId)
+        public async Task<InvokeResult<Solution>> GetSolutionVersionAsync(string solutionId, string versionId)
         {
-            var cloudClient = CreateBlobClient(solutionId);
-            var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
-            var blob = primaryContainer.GetBlobReference( GetBlobName(solutionId, versionId));
-            using (var ms = new MemoryStream())
+            try
             {
-                await blob.DownloadToStreamAsync(ms);
-                using (var rdr = new StreamReader(ms))
-                using (var jsonTextReader = new JsonTextReader(rdr))
+                var cloudClient = CreateBlobClient(solutionId);
+                var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
+                var blob = primaryContainer.GetBlobReference(GetBlobName(solutionId, versionId));
+                using (var ms = new MemoryStream())
                 {
-                    var serializer = new JsonSerializer();
-                    return serializer.Deserialize<Solution>(jsonTextReader);
+                    await blob.DownloadToStreamAsync(ms);
+                    using (var rdr = new StreamReader(ms))
+                    using (var jsonTextReader = new JsonTextReader(rdr))
+                    {
+                        var serializer = new JsonSerializer();
+                        return InvokeResult<Solution>.Create(serializer.Deserialize<Solution>(jsonTextReader));
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                return InvokeResult<Solution>.FromError(ex.Message);
             }
         }
 

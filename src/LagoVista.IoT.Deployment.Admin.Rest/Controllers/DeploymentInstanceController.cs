@@ -101,50 +101,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
 
             return response;
-        }
-
-        /// <summary>
-        /// Deployment Instance - Get Full
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/full")]
-        public async Task<DetailResponse<DeploymentInstance>> GetFullInstanceAsync(String id)
-        {
-            var deviceInstance = await _instanceManager.LoadFullInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
-            if (deviceInstance.Successful)
-            {
-                return DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
-            }
-            else
-            {
-                var resp = DetailResponse<DeploymentInstance>.Create(null);
-                resp.Errors.AddRange(deviceInstance.Errors);
-                return resp;
-            }
-        }
-
-        /// <summary>
-        /// Deployment Instance - Get Full with version
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="versionid"></param>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/{versionid}/full")]
-        public async Task<DetailResponse<DeploymentInstance>> GetFullInstanceAsync(string id, string versionid)
-        {
-            var deviceInstance = await _instanceManager.LoadFullInstanceWithVersionAsync(id, versionid, OrgEntityHeader, UserEntityHeader);
-            if (deviceInstance.Successful)
-            {
-                return DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
-            }
-            else
-            {
-                var resp = DetailResponse<DeploymentInstance>.Create(null);
-                resp.Errors.AddRange(deviceInstance.Errors);
-                return resp;
-            }
-        }
+        }        
 
         /// <summary>
         /// Deployment Instance - Update Status
