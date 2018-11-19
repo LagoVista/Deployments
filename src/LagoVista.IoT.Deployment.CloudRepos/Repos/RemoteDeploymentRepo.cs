@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class RemoteDeploymentRepo : DocumentDBRepoBase<RemoteDeployment>, IRemoteDeploymentRepo
     {
-        private bool _shouldConsolidateCollections;
+        readonly bool _shouldConsolidateCollections;
         public RemoteDeploymentRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
         {

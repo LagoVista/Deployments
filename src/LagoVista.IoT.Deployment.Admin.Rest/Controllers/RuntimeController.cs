@@ -2,8 +2,10 @@
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
-using System.Linq;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.Deployment.Models.Settings;
 using LagoVista.IoT.Logging.Loggers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +13,9 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LagoVista.IoT.Deployment.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -21,8 +23,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     {
 
         IDeploymentInstanceManager _instanceManager;
-        IDeviceRepoTokenBroker _deviceRepoTokenBroker;
         ISecureStorage _secureStorage;
+        IRuntimeTokenManager _runtimeTokenManager;
 
         public const string REQUEST_ID = "x-nuviot-runtime-request-id";
         public const string ORG_ID = "x-nuviot-orgid";
@@ -34,11 +36,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string DATE = "x-nuviot-date";
         public const string VERSION = "x-nuviot-version";
 
-        public RuntimeController(IDeploymentInstanceManager instanceManager, IDeviceRepoTokenBroker tokenBroker, ISecureStorage secureStorage, IAdminLogger logger)
+        public RuntimeController(IDeploymentInstanceManager instanceManager,IRuntimeTokenManager runtimeTokenManager,
+            ISecureStorage secureStorage, IAdminLogger logger)
         {
             _instanceManager = instanceManager;
-            _deviceRepoTokenBroker = tokenBroker;
             _secureStorage = secureStorage;
+            _runtimeTokenManager = runtimeTokenManager;
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -135,18 +138,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             return await _instanceManager.GetKeyAsync(keyid, InstanceEntityHeader, OrgEntityHeader);
         }
-
-        /// <summary>
-        /// Runtime Controller - Request a token to use NuvIoT repo.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/devicerepo/token")]
-        public async Task<InvokeResult<DeviceRepoToken>> GetDeviceRepoTokenAsync()
-        {
-            await ValidateRequest(HttpContext.Request);
-            return await _deviceRepoTokenBroker.GetDeviceRepoTokenAsync(InstanceEntityHeader, OrgEntityHeader);
-        }
-
+     
         /// <summary>
         /// Deployment Instance - Get Full
         /// </summary>
@@ -167,6 +159,74 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 resp.Errors.AddRange(deviceInstance.Errors);
                 return resp;
             }
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for Usage Storage Storage
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/usage/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetUsageStorageConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for Web Socket Notify Connection
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/wsnotify/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetWSNotifyConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for RPC Service Bus Connection
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/rpc/settings")]
+        public async Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetRPCConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get PEM Storage Connection 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/pem/settings")]
+        public async Task<InvokeResult<PEMStorageSettings>> GetPEMStorageConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetPEMStorageSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get PEM Storage Connection 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/devicestorage/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetDeviceStorageAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetDeviceStorageConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get PEM Storage Connection 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/devicedata/settings")]
+        public async Task<InvokeResult<DeviceDataStorageSettings>> GetDeviceArchiveStorageConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetDataStorageSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+
         }
     }
 }
