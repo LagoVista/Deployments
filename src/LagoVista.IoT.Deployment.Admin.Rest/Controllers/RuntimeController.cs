@@ -114,7 +114,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             if(calculatedFromFirst != authheader)
             {
                 var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
-                if (!key2.Successful) throw new Exception(key1.Errors.First().Message);
+                if (!key2.Successful) throw new Exception(key2.Errors.First().Message);
                 var calculatedFromSecond = GetSignature(requestId, key2.Result, bldr.ToString());
                 if(calculatedFromSecond != authheader)
                 {
