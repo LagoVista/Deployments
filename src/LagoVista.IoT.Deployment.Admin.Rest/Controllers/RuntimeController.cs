@@ -4,11 +4,11 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
 using LagoVista.IoT.Logging.Loggers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -36,7 +36,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string DATE = "x-nuviot-date";
         public const string VERSION = "x-nuviot-version";
 
-        public RuntimeController(IDeploymentInstanceManager instanceManager,IRuntimeTokenManager runtimeTokenManager,
+        public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             ISecureStorage secureStorage, IAdminLogger logger)
         {
             _instanceManager = instanceManager;
@@ -57,7 +57,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var encData = Encoding.UTF8.GetBytes(source);
 
             var hmac = new HMac(new Sha256Digest());
-        
+
             hmac.Init(new KeyParameter(Encoding.UTF8.GetBytes(key)));
 
             var resultBytes = new byte[hmac.GetMacSize()];
@@ -79,7 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             CheckHeader(request, INSTANCE);
             CheckHeader(request, DATE);
             CheckHeader(request, VERSION);
-     
+
             var authheader = request.Headers["Authorization"];
 
             var requestId = request.Headers[REQUEST_ID];
@@ -107,16 +107,23 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             var instance = await _instanceManager.GetInstanceAsync(instanceId, OrgEntityHeader, UserEntityHeader);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
-            if(!key1.Successful) throw new Exception(key1.Errors.First().Message);
+            if (!key1.Successful)
+            {
+                throw new Exception(key1.Errors.First().Message);
+            }
 
             var calculatedFromFirst = GetSignature(requestId, key1.Result, bldr.ToString());
 
-            if(calculatedFromFirst != authheader)
+            if (calculatedFromFirst != authheader)
             {
                 var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
-                if (!key2.Successful) throw new Exception(key2.Errors.First().Message);
+                if (!key2.Successful)
+                {
+                    throw new Exception(key2.Errors.First().Message);
+                }
+
                 var calculatedFromSecond = GetSignature(requestId, key2.Result, bldr.ToString());
-                if(calculatedFromSecond != authheader)
+                if (calculatedFromSecond != authheader)
                 {
                     throw new UnauthorizedAccessException("Invalid signature.");
                 }
@@ -138,27 +145,26 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             return await _instanceManager.GetKeyAsync(keyid, InstanceEntityHeader, OrgEntityHeader);
         }
-     
+
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Newtonsoft.Json.Formatting.None,
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+        };
+
         /// <summary>
         /// Deployment Instance - Get Full
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/full")]
-        public async Task<InvokeResult<DeploymentInstance>> GetFullInstanceAsync(String id)
+        [HttpGet("/api/deployment/instance/full")]
+        public async Task<string> GetFullInstanceAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            var deviceInstance = await _instanceManager.LoadFullInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
-            if (deviceInstance.Successful)
-            {
-                return InvokeResult<DeploymentInstance>.Create(deviceInstance.Result);
-            }
-            else
-            {
-                var resp = InvokeResult<DeploymentInstance>.Create(null);
-                resp.Errors.AddRange(deviceInstance.Errors);
-                return resp;
-            }
+            var deviceInstanceResponse = await _instanceManager.LoadFullInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return JsonConvert.SerializeObject(deviceInstanceResponse, _jsonSettings);
         }
 
         /// <summary>
@@ -199,7 +205,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/pem/settings")]
-        public async Task<InvokeResult<PEMStorageSettings>> GetPEMStorageConnectionAsync()
+        public async Task<InvokeResult<ConnectionSettings>> GetPEMStorageConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetPEMStorageSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
@@ -226,6 +232,61 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetDataStorageSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get PEM Storage Connection 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/logging/settings")]
+        public async Task<InvokeResult<LoggingSettings>> GetLoggingSettings()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetLoggingSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get Instance Solution Versionn 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/solutionversion")]
+        public async Task<InvokeResult<string>> GetSolutionVersionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            var instance = await _instanceManager.GetInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            if (EntityHeader.IsNullOrEmpty(instance.Version))
+            {
+                return InvokeResult<string>.Create("latest");
+            }
+            else
+            {
+                return InvokeResult<string>.Create(instance.Version.Id);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Runtime Controller - pdate Status Async
+        /// </summary>
+        /// <param name="status">New Stauts must be one of DeploymentInstanceStates </param>
+        /// <param name="isdeployed">true/false</param>
+        /// <param name="version">Current version of runtime.</param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/status/{status}/{isdeployed}/{version}")]
+        public async Task<InvokeResult> UpdateInstanceStatusAsync(String status, bool isdeployed, string version)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (Enum.TryParse<DeploymentInstanceStates>(status, out DeploymentInstanceStates newStatus))
+            {
+                return await _instanceManager.UpdateInstanceStatusAsync(InstanceEntityHeader.Id, newStatus, isdeployed, version, OrgEntityHeader, UserEntityHeader);
+            }
+            else
+            {
+                return InvokeResult.FromError($"Could not parse [status] to DeploymentInstanceStates");
+            }
 
         }
     }

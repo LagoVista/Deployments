@@ -43,20 +43,33 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             {
                 var cloudClient = CreateBlobClient(solutionId);
                 var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
-                var blob = primaryContainer.GetBlobReference(GetBlobName(solutionId, versionId));
+
+                var blobName = GetBlobName(solutionId, versionId);
+                var blob = primaryContainer.GetBlobReference(blobName);
+                
                 using (var ms = new MemoryStream())
                 {
                     await blob.DownloadToStreamAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
                     using (var rdr = new StreamReader(ms))
                     using (var jsonTextReader = new JsonTextReader(rdr))
                     {
-                        var serializer = new JsonSerializer();
-                        return InvokeResult<Solution>.Create(serializer.Deserialize<Solution>(jsonTextReader));
+                        var serializer = JsonSerializer.Create(_jsonSettings);
+                        var solution = serializer.Deserialize<Solution>(jsonTextReader);
+                        if (solution == null)
+                        {
+                            return InvokeResult<Solution>.FromError("Could not deserialize solution.");
+                        }
+                        else
+                        {
+                            return InvokeResult<Solution>.Create(solution);
+                        }
                     }
                 }
             }
             catch(Exception ex)
             {
+                Console.WriteLine("Exception deserializeing: " + ex.Message);
                 return InvokeResult<Solution>.FromError(ex.Message);
             }
         }

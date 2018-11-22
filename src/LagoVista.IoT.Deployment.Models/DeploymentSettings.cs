@@ -13,6 +13,7 @@ namespace LagoVista.IoT.Deployment
         
         public string InstanceId { get; set; }
         public string HostId { get; set; }
+        public string OrgId { get; set; }
 
         public string SharedAccessKey1 { get; set; }
         public string SharedAccessKey2 { get; set; }

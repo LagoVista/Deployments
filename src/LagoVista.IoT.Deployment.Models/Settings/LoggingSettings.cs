@@ -5,8 +5,9 @@ using System.Text;
 
 namespace LagoVista.IoT.Deployment.Models.Settings
 {
-    public class PEMStorageSettings
+    public class LoggingSettings
     {
-
+        public ConnectionSettings ErrorLogger { get; set; }
+        public ConnectionSettings EventLogger { get; set; }
     }
 }

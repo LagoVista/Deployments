@@ -318,17 +318,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
-            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(instance.DeviceRepository.Id, org, user);
+            instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
 
             var solutionResult = EntityHeader.IsNullOrEmpty(instance.Version) ?
                              await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user) :
-                             await _solutionVersionRepo.GetSolutionVersionAsync(id, instance.Version.Id);
+                             await _solutionVersionRepo.GetSolutionVersionAsync(instance.Solution.Id, instance.Version.Id);
 
             if (solutionResult.Successful)
             {
                 instance.Solution.Value = solutionResult.Result;
-                instance.Solution.Id = instance.Solution.Value.Id;
-                instance.Solution.Text = instance.Solution.Value.Name;
                 return InvokeResult<DeploymentInstance>.Create(instance);
             }
             else
@@ -434,6 +432,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             var settings = new DeploymentSettings();
+            settings.OrgId = org.Id;
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org, "fullDeploymentSettings");
 

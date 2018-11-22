@@ -14,7 +14,8 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<PEMStorageSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<LoggingSettings>> GetLoggingSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<DeviceDataStorageSettings>> GetDataStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
     }
 }
