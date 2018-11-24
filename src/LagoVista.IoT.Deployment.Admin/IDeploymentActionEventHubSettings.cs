@@ -8,7 +8,5 @@ namespace LagoVista.IoT.Deployment.Admin
     public interface IDeploymentActionEventHubSettings
     {
         IConnectionSettings DeploymentActivityEventHubConnection { get; set; }
-
-        string DeploymentActivityHubName { get; set; }
     }
 }

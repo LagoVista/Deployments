@@ -19,7 +19,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentActivityRepo _repo;
         IDeploymentActionEventHubSettings _settings;
 
-        const string EhConnectionString = "Endpoint=sb://{0}.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey={1}";
+        const string EhConnectionString = "Endpoint=sb://{0}.servicebus.windows.net/;SharedAccessKeyName={1};SharedAccessKey={2}";
         EventHubClient _eventHubClient;
 
 
@@ -34,9 +34,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             
             _settings = settings;
 
-            var bldr = new EventHubsConnectionStringBuilder(string.Format(EhConnectionString, _settings.DeploymentActivityEventHubConnection.Name, _settings.DeploymentActivityEventHubConnection.AccessKey))
+            var bldr = new EventHubsConnectionStringBuilder(string.Format(EhConnectionString,
+                _settings.DeploymentActivityEventHubConnection.AccountId,
+                _settings.DeploymentActivityEventHubConnection.UserName,
+                _settings.DeploymentActivityEventHubConnection.AccessKey))
             {
-                EntityPath = _settings.DeploymentActivityHubName
+                EntityPath = _settings.DeploymentActivityEventHubConnection.ResourceName
             };
 
             _eventHubClient = EventHubClient.CreateFromConnectionString(bldr.ToString());
