@@ -1029,4 +1029,19 @@
   <data name="DeploymentInstance_Version_Select" xml:space="preserve">
     <value>-select solution version-</value>
   </data>
+  <data name="Deployment_Logging" xml:space="preserve">
+    <value>Log Storage</value>
+  </data>
+  <data name="Deployment_Logging_Cloud" xml:space="preserve">
+    <value>Cloud</value>
+  </data>
+  <data name="Deployment_Logging_Help" xml:space="preserve">
+    <value>Cloud will publish your usage statistics and diagnostics logs in the cloud.  Local will store them in local storage on your on premise installation.</value>
+  </data>
+  <data name="Deployment_Logging_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Deployment_Logging_Select" xml:space="preserve">
+    <value>-select log storage  location-</value>
+  </data>
 </root>

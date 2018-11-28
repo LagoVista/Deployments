@@ -161,6 +161,21 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Deployment_Listeners_Help
 
 		public static string Deployment_Listeners_Help { get { return GetResourceString("Deployment_Listeners_Help"); } }
+//Resources:DeploymentAdminResources:Deployment_Logging
+
+		public static string Deployment_Logging { get { return GetResourceString("Deployment_Logging"); } }
+//Resources:DeploymentAdminResources:Deployment_Logging_Cloud
+
+		public static string Deployment_Logging_Cloud { get { return GetResourceString("Deployment_Logging_Cloud"); } }
+//Resources:DeploymentAdminResources:Deployment_Logging_Help
+
+		public static string Deployment_Logging_Help { get { return GetResourceString("Deployment_Logging_Help"); } }
+//Resources:DeploymentAdminResources:Deployment_Logging_Local
+
+		public static string Deployment_Logging_Local { get { return GetResourceString("Deployment_Logging_Local"); } }
+//Resources:DeploymentAdminResources:Deployment_Logging_Select
+
+		public static string Deployment_Logging_Select { get { return GetResourceString("Deployment_Logging_Select"); } }
 //Resources:DeploymentAdminResources:Deployment_Planner
 
 		public static string Deployment_Planner { get { return GetResourceString("Deployment_Planner"); } }
@@ -1004,6 +1019,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ContainerRepository_UserName_Help = "ContainerRepository_UserName_Help";
 			public const string Deployment_Listeners = "Deployment_Listeners";
 			public const string Deployment_Listeners_Help = "Deployment_Listeners_Help";
+			public const string Deployment_Logging = "Deployment_Logging";
+			public const string Deployment_Logging_Cloud = "Deployment_Logging_Cloud";
+			public const string Deployment_Logging_Help = "Deployment_Logging_Help";
+			public const string Deployment_Logging_Local = "Deployment_Logging_Local";
+			public const string Deployment_Logging_Select = "Deployment_Logging_Select";
 			public const string Deployment_Planner = "Deployment_Planner";
 			public const string Deployment_Planner_Help = "Deployment_Planner_Help";
 			public const string Deployment_Planner_Select = "Deployment_Planner_Select";

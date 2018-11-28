@@ -49,7 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(deviceRepo.Instance.Id);
 
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = deviceRepo.Instance.Id });
                 return await proxy.GetForPemAsync(deviceId, recordType, request);
@@ -70,7 +70,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(deviceRepo.Instance.Id);
 
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = deviceRepo.Instance.Id });
                 return await proxy.GetForDeviceTypeAsync(deviceTypeId, recordType, request);
@@ -92,7 +92,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await  base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
 
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetForInstanceAsync(instanceId, recordType, request);
@@ -107,7 +107,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {        
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetForPemAsync(pemId, recordType, request);
@@ -123,7 +123,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
 
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetForPipelineModuleAsync(pipelineModuleId, recordType, request);
@@ -139,7 +139,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
 
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<ITelemetryService>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetForPipelineQueueAsync(pipelineModuleId, recordType, request);

@@ -33,4 +33,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentInstance.DeploymentQueueType_ServiceBus, DeploymentAdminResources.Names.DeploymentQueueType_ServiceBus, typeof(DeploymentAdminResources))]
         ServiceBus,
     }
+
+    public enum LogStorage
+    {
+        [EnumLabel(DeploymentInstance.Deployment_Logging_Local, DeploymentAdminResources.Names.Deployment_Logging_Local, typeof(DeploymentAdminResources))]
+        Local,
+        [EnumLabel(DeploymentInstance.Deployment_Logging_Cloud, DeploymentAdminResources.Names.Deployment_Logging_Cloud, typeof(DeploymentAdminResources))]
+        Cloud,
+    }
 }

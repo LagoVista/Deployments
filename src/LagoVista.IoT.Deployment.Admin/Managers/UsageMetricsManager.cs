@@ -37,7 +37,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Instance");
 
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetMetricsForInstanceAsync(instanceId, request);
@@ -54,7 +54,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceId);
 
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetMetricsForPipelineModuleAsync(pipelineModuleId, request);
@@ -71,7 +71,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Dependency");
 
-            if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
+            if (instance.LogStorage.Value == LogStorage.Local)
             {
                 var proxy = _proxyFactory.Create<IUsageMetricsRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
                 return await proxy.GetMetricsForDependencyAsync(dependencyId, request);

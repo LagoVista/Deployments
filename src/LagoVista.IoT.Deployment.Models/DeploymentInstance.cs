@@ -64,6 +64,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string DeploymentQueueType_Kafka = "kafka";
         public const string DeploymentQueueType_ServiceBus = "servicebus";
 
+        public const string Deployment_Logging_Local = "local";
+        public const string Deployment_Logging_Cloud = "cloud";
 
 
         public string DatabaseName { get; set; }
@@ -194,6 +196,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, HelpResource:DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<QueueTypes> QueueType { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Logging, EnumType: (typeof(LogStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Deployment_Logging_Select, HelpResource: DeploymentAdminResources.Names.Deployment_Logging_Help, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<LogStorage> LogStorage { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DebugMode, HelpResource: DeploymentAdminResources.Names.Instance_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool DebugMode { get; set; }
