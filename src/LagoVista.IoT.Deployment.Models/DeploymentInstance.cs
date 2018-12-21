@@ -1,16 +1,14 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
-using LagoVista.Core;
 using LagoVista.Core.Validation;
-using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
+using LagoVista.IoT.Pipeline.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using LagoVista.IoT.Deployment.Models.Resources;
-using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.Pipeline.Admin.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -25,6 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             SettingsValues = new List<AttributeValue>();
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
             DataStreams = new List<EntityHeader<DataStream>>();
+            ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
         }
 
 
@@ -36,7 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public const string Status_Initializing = "initializing";
         public const string Status_Starting = "starting";
-        
+
         public const string Status_Running = "running";
 
         public const string Status_Paused = "paused";
@@ -54,7 +53,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
 
         public const string DeploymentType_Managed = "managed";
-        public const string DeploymentType_OnPremise = "onpermise";
+        public const string DeploymentType_OnPremise = "onpremise";
 
         public const string DeploymentConfiguration_SingleInstance = "singleinstance";
         public const string DeploymentConfiguration_Kubernetes = "kubernetes";
@@ -106,7 +105,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             get
             {
-                if(EntityHeader.IsNullOrEmpty(_primaryHost))
+                if (EntityHeader.IsNullOrEmpty(_primaryHost))
                 {
                     _primaryHost = Host;
                     return Host;
@@ -121,7 +120,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DataStream>> DataStreams { get; set; }
-        
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
+
+
+
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
@@ -137,7 +142,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_UpSince,  FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable:false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string UpSince { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
@@ -156,7 +161,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Version, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_Version_Help, WaterMark: DeploymentAdminResources.Names.DeploymentInstance_Version_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public EntityHeader Version { get; set; }
-    
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader ContainerRepository { get; set; }
 
@@ -168,7 +173,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string SharedAccessKeySecureId1 { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey2, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public string SharedAccessKey2{ get; set; }
+        public string SharedAccessKey2 { get; set; }
         public string SharedAccessKeySecureId2 { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_LastPing, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
@@ -177,7 +182,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandSSL, FieldType: FieldTypes.CheckBox, HelpResource:DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandSSL, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool InputCommandSSL { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandPort, FieldType: FieldTypes.Integer, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandPort_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
@@ -187,16 +192,27 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader CloudProvider { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_PrimaryCacheType, EnumType: (typeof(CacheTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_PrimaryCacheType_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<CacheTypes> PrimaryCacheType { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_PrimaryCache, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_PrimaryCache_Select, IsRequired: false, IsUserEditable: true)]
+        public EntityHeader<ApplicationCache> PrimaryCache { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentType, EnumType: (typeof(DeploymentTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentType_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<DeploymentTypes> DeploymentType { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentConfiguration, EnumType: (typeof(DeploymentConfigurations)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentConfiguration_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing, HelpResource:DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnologing_Help, IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), 
+            WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Select, HelpResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<QueueTypes> QueueType { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Logging, EnumType: (typeof(LogStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Deployment_Logging_Select, HelpResource: DeploymentAdminResources.Names.Deployment_Logging_Help, IsRequired: true, IsUserEditable: true)]
+
+        public EntityHeader<IConnectionSettings> QueueConnection { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Logging, EnumType: (typeof(LogStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), 
+            WaterMark: DeploymentAdminResources.Names.Deployment_Logging_Select, HelpResource: DeploymentAdminResources.Names.Deployment_Logging_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<LogStorage> LogStorage { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DebugMode, HelpResource: DeploymentAdminResources.Names.Instance_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
@@ -220,7 +236,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? DeploymentAdminResources.DeploymentType_Managed : DeploymentType.Text,
             };
 
-            if(DeviceRepository != null)
+            if (DeviceRepository != null)
             {
                 summary.DeviceRepoId = DeviceRepository.Id;
                 summary.DeviceRepoName = DeviceRepository.Text;
@@ -253,16 +269,38 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [CustomValidator]
         public void Validate(ValidationResult result, Actions action)
         {
-            if(action == Actions.Create)
+            if (action == Actions.Create)
             {
-                if (String.IsNullOrEmpty(SharedAccessKey1)) result.AddSystemError("Upon creation, Shared Access Key 1 is Required.");
-                if (String.IsNullOrEmpty(SharedAccessKey2)) result.AddSystemError("Upon creation, Shared Access Key 2 is Required.");
+                if (String.IsNullOrEmpty(SharedAccessKey1))
+                {
+                    result.AddSystemError("Upon creation, Shared Access Key 1 is Required.");
+                }
+
+                if (String.IsNullOrEmpty(SharedAccessKey2))
+                {
+                    result.AddSystemError("Upon creation, Shared Access Key 2 is Required.");
+                }
             }
 
             if (action == Actions.Update)
             {
-                if (String.IsNullOrEmpty(SharedAccessKey1) && String.IsNullOrEmpty(SharedAccessKeySecureId1)) result.AddSystemError("Upon creation, Shared Access Key 1 or Shared Access Secure Id 1 is Required.");
-                if (String.IsNullOrEmpty(SharedAccessKey2) && String.IsNullOrEmpty(SharedAccessKeySecureId2)) result.AddSystemError("Upon updates, Shared Access Key 2 or Shared Access Secure Id 2 is Required.");
+                if (String.IsNullOrEmpty(SharedAccessKey1) && String.IsNullOrEmpty(SharedAccessKeySecureId1))
+                {
+                    result.AddSystemError("Upon creation, Shared Access Key 1 or Shared Access Secure Id 1 is Required.");
+                }
+
+                if (String.IsNullOrEmpty(SharedAccessKey2) && String.IsNullOrEmpty(SharedAccessKeySecureId2))
+                {
+                    result.AddSystemError("Upon updates, Shared Access Key 2 or Shared Access Secure Id 2 is Required.");
+                }
+            }
+
+            if (!EntityHeader.IsNullOrEmpty(PrimaryCacheType) && PrimaryCacheType.Value == CacheTypes.Redis)
+            {
+                if (EntityHeader.IsNullOrEmpty(PrimaryCache))
+                {
+                    result.AddSystemError("Must provide primary cache type.");
+                }
             }
         }
     }

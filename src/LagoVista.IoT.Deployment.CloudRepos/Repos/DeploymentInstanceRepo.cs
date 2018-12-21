@@ -8,6 +8,7 @@ using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using LagoVista.Core.Models;
+using LagoVista.IoT.Pipeline.Models;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -42,6 +43,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             if (EntityHeader.IsNullOrEmpty(instance.DeploymentType)) instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
             if (EntityHeader.IsNullOrEmpty(instance.QueueType)) instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
             if (EntityHeader.IsNullOrEmpty(instance.LogStorage)) instance.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
+            if (EntityHeader.IsNullOrEmpty(instance.PrimaryCacheType)) instance.PrimaryCacheType = EntityHeader<CacheTypes>.Create(CacheTypes.LocalInMemory);
 
             return instance;
         }

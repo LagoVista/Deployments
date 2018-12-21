@@ -996,13 +996,13 @@
   <data name="DeploymentQueueType_Kafka" xml:space="preserve">
     <value>Kafka</value>
   </data>
-  <data name="DeploymentQueueType_QueueTechnologing" xml:space="preserve">
+  <data name="DeploymentQueueType_QueueTechnology" xml:space="preserve">
     <value>PEM Queue Technology</value>
   </data>
-  <data name="DeploymentQueueType_QueueTechnologing_Help" xml:space="preserve">
+  <data name="DeploymentQueueType_QueueTechnology_Help" xml:space="preserve">
     <value>Select the type of technology that will be used to queue PEMS (pipeline execution messages) as they are processed by Pipeline Modules</value>
   </data>
-  <data name="DeploymentQueueType_QueueTechnologing_Select" xml:space="preserve">
+  <data name="DeploymentQueueType_QueueTechnology_Select" xml:space="preserve">
     <value>-select pem queue technology-</value>
   </data>
   <data name="DeploymentQueueType_ServiceBus" xml:space="preserve">
@@ -1043,5 +1043,23 @@
   </data>
   <data name="Deployment_Logging_Select" xml:space="preserve">
     <value>-select log storage  location-</value>
+  </data>
+  <data name="Instance_Caches" xml:space="preserve">
+    <value>Caches</value>
+  </data>
+  <data name="Instance_PrimaryCache" xml:space="preserve">
+    <value>Primary Cache</value>
+  </data>
+  <data name="Instance_PrimaryCacheType" xml:space="preserve">
+    <value>Primary Cache Type</value>
+  </data>
+  <data name="Instance_PrimaryCacheType_Select" xml:space="preserve">
+    <value>-select primary cache type-</value>
+  </data>
+  <data name="Instance_PrimaryCache_Select" xml:space="preserve">
+    <value>-select cache-</value>
+  </data>
+  <data name="Instance_QueueConnection" xml:space="preserve">
+    <value>Queue Connection</value>
   </data>
 </root>

@@ -239,15 +239,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentQueueType_Kafka
 
 		public static string DeploymentQueueType_Kafka { get { return GetResourceString("DeploymentQueueType_Kafka"); } }
-//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnology
 
-		public static string DeploymentQueueType_QueueTechnologing { get { return GetResourceString("DeploymentQueueType_QueueTechnologing"); } }
-//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing_Help
+		public static string DeploymentQueueType_QueueTechnology { get { return GetResourceString("DeploymentQueueType_QueueTechnology"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnology_Help
 
-		public static string DeploymentQueueType_QueueTechnologing_Help { get { return GetResourceString("DeploymentQueueType_QueueTechnologing_Help"); } }
-//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnologing_Select
+		public static string DeploymentQueueType_QueueTechnology_Help { get { return GetResourceString("DeploymentQueueType_QueueTechnology_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnology_Select
 
-		public static string DeploymentQueueType_QueueTechnologing_Select { get { return GetResourceString("DeploymentQueueType_QueueTechnologing_Select"); } }
+		public static string DeploymentQueueType_QueueTechnology_Select { get { return GetResourceString("DeploymentQueueType_QueueTechnology_Select"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_ServiceBus
 
 		public static string DeploymentQueueType_ServiceBus { get { return GetResourceString("DeploymentQueueType_ServiceBus"); } }
@@ -671,6 +671,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:HostType_Development
 
 		public static string HostType_Development { get { return GetResourceString("HostType_Development"); } }
+//Resources:DeploymentAdminResources:Instance_Caches
+
+		public static string Instance_Caches { get { return GetResourceString("Instance_Caches"); } }
 //Resources:DeploymentAdminResources:Instance_DataStreams
 
 		public static string Instance_DataStreams { get { return GetResourceString("Instance_DataStreams"); } }
@@ -746,6 +749,21 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_LocalUsageStatistics
 
 		public static string Instance_LocalUsageStatistics { get { return GetResourceString("Instance_LocalUsageStatistics"); } }
+//Resources:DeploymentAdminResources:Instance_PrimaryCache
+
+		public static string Instance_PrimaryCache { get { return GetResourceString("Instance_PrimaryCache"); } }
+//Resources:DeploymentAdminResources:Instance_PrimaryCache_Select
+
+		public static string Instance_PrimaryCache_Select { get { return GetResourceString("Instance_PrimaryCache_Select"); } }
+//Resources:DeploymentAdminResources:Instance_PrimaryCacheType
+
+		public static string Instance_PrimaryCacheType { get { return GetResourceString("Instance_PrimaryCacheType"); } }
+//Resources:DeploymentAdminResources:Instance_PrimaryCacheType_Select
+
+		public static string Instance_PrimaryCacheType_Select { get { return GetResourceString("Instance_PrimaryCacheType_Select"); } }
+//Resources:DeploymentAdminResources:Instance_QueueConnection
+
+		public static string Instance_QueueConnection { get { return GetResourceString("Instance_QueueConnection"); } }
 //Resources:DeploymentAdminResources:Instance_SettingsValues
 
 		public static string Instance_SettingsValues { get { return GetResourceString("Instance_SettingsValues"); } }
@@ -1045,9 +1063,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentInstance_Version_Select = "DeploymentInstance_Version_Select";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
-			public const string DeploymentQueueType_QueueTechnologing = "DeploymentQueueType_QueueTechnologing";
-			public const string DeploymentQueueType_QueueTechnologing_Help = "DeploymentQueueType_QueueTechnologing_Help";
-			public const string DeploymentQueueType_QueueTechnologing_Select = "DeploymentQueueType_QueueTechnologing_Select";
+			public const string DeploymentQueueType_QueueTechnology = "DeploymentQueueType_QueueTechnology";
+			public const string DeploymentQueueType_QueueTechnology_Help = "DeploymentQueueType_QueueTechnology_Help";
+			public const string DeploymentQueueType_QueueTechnology_Select = "DeploymentQueueType_QueueTechnology_Select";
 			public const string DeploymentQueueType_ServiceBus = "DeploymentQueueType_ServiceBus";
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
@@ -1189,6 +1207,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostStatus_UpdatingRuntime = "HostStatus_UpdatingRuntime";
 			public const string HostStatus_WaitingForServer = "HostStatus_WaitingForServer";
 			public const string HostType_Development = "HostType_Development";
+			public const string Instance_Caches = "Instance_Caches";
 			public const string Instance_DataStreams = "Instance_DataStreams";
 			public const string Instance_DebugMode = "Instance_DebugMode";
 			public const string Instance_DebugMode_Help = "Instance_DebugMode_Help";
@@ -1214,6 +1233,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_LocalLogs = "Instance_LocalLogs";
 			public const string Instance_LocalMessageStorage = "Instance_LocalMessageStorage";
 			public const string Instance_LocalUsageStatistics = "Instance_LocalUsageStatistics";
+			public const string Instance_PrimaryCache = "Instance_PrimaryCache";
+			public const string Instance_PrimaryCache_Select = "Instance_PrimaryCache_Select";
+			public const string Instance_PrimaryCacheType = "Instance_PrimaryCacheType";
+			public const string Instance_PrimaryCacheType_Select = "Instance_PrimaryCacheType_Select";
+			public const string Instance_QueueConnection = "Instance_QueueConnection";
 			public const string Instance_SettingsValues = "Instance_SettingsValues";
 			public const string Instance_Solution = "Instance_Solution";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";

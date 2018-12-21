@@ -212,7 +212,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Runtime Controller - Get PEM Storage Connection 
+        /// Runtime Controller - Get Device Storage Settings
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/devicestorage/settings")]
@@ -224,7 +224,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Runtime Controller - Get PEM Storage Connection 
+        /// Runtime Controller - Get Device Data Settings
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/devicedata/settings")]
@@ -235,7 +235,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Runtime Controller - Get PEM Storage Connection 
+        /// Runtime Controller - Get Logging Settings
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/logging/settings")]
@@ -243,7 +243,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetLoggingSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
 
+        /// <summary>
+        /// Runtime Controller - Get Cache Settings
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/cache/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetCacheSettings()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetNuvIoTCacheSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -264,9 +274,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 return InvokeResult<string>.Create(instance.Version.Id);
             }
         }
-
-
-
 
         /// <summary>
         /// Runtime Controller - pdate Status Async

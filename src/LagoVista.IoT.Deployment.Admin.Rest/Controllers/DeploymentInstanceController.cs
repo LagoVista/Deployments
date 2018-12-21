@@ -5,6 +5,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Pipeline.Models;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
 using LagoVista.UserAdmin.Models.Users;
@@ -157,6 +158,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.Model.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
             response.Model.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
             response.Model.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
+            response.Model.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
+            response.Model.PrimaryCacheType = EntityHeader<CacheTypes>.Create(CacheTypes.LocalInMemory);
             response.Model.SharedAccessKey1 = _instanceManager.GenerateAccessKey();
             response.Model.SharedAccessKey2 = _instanceManager.GenerateAccessKey();
 
