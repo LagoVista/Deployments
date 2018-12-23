@@ -93,10 +93,12 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.ContainerTag = EntityHeader.Create("id", "text");
             instance.Solution = new EntityHeader<Solution>() { Id = "id", Text = "text" };
             instance.Size = EntityHeader.Create("id", "text");
+            instance.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
             instance.DeviceRepository = new EntityHeader<DeviceRepository>() { Id = NEW_DEVICE_REPO_ID, Text = "Don't Care" };
             instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
             instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
             instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
+            instance.PrimaryCacheType = EntityHeader<Pipeline.Models.CacheTypes>.Create(Pipeline.Models.CacheTypes.LocalInMemory);
             instance.SharedAccessKey1 = "ABC123";
             instance.SharedAccessKey2 = "ABC123";
             return instance;
@@ -176,6 +178,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             try
             {
                 await _instanceManager.AddInstanceAsync(instance, null, null);
+          
             }
             catch (ValidationException) { }
 
