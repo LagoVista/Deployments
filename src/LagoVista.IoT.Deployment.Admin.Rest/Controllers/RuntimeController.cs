@@ -95,12 +95,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var bldr = new StringBuilder();
             //Adding the \r\n manualy ensures that the we don't have any 
             //platform specific code messing with our signature.
-            bldr.AppendLine($"{requestId}\r\n");
-            bldr.AppendLine($"{dateStamp}\r\n");
-            bldr.AppendLine($"{version}\r\n");
-            bldr.AppendLine($"{orgId}\r\n");
-            bldr.AppendLine($"{userId}\r\n");
-            bldr.AppendLine($"{instanceId}\r\n");
+            bldr.Append($"{requestId}\r\n");
+            bldr.Append($"{dateStamp}\r\n");
+            bldr.Append($"{version}\r\n");
+            bldr.Append($"{orgId}\r\n");
+            bldr.Append($"{userId}\r\n");
+            bldr.Append($"{instanceId}\r\n");
 
             OrgEntityHeader = EntityHeader.Create(orgId, org);
             UserEntityHeader = EntityHeader.Create(userId, user);
