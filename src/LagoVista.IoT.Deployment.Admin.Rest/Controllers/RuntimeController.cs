@@ -46,7 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         private void CheckHeader(HttpRequest request, String header)
         {
-            if (!request.Headers.Keys.Contains(header))
+            if (!request.Headers.Keys.Contains(header) || String.IsNullOrEmpty(request.Headers[header].ToString()))
             {
                 throw new NotAuthorizedException($"Missing request id header: {header}");
             }
