@@ -61,6 +61,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public const string DeploymentQueueType_InMemory = "inmemory";
         public const string DeploymentQueueType_Kafka = "kafka";
+        public const string DeploymentQueueType_RabbitMQ = "rabbitmq";
         public const string DeploymentQueueType_ServiceBus = "servicebus";
 
         public const string Deployment_Logging_Local = "local";

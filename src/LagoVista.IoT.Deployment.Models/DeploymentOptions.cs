@@ -32,6 +32,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Kafka,
         [EnumLabel(DeploymentInstance.DeploymentQueueType_ServiceBus, DeploymentAdminResources.Names.DeploymentQueueType_ServiceBus, typeof(DeploymentAdminResources))]
         ServiceBus,
+        [EnumLabel(DeploymentInstance.DeploymentQueueType_RabbitMQ, DeploymentAdminResources.Names.DeploymentQueueType_RabbitMQ, typeof(DeploymentAdminResources))]
+        RabbitMQ,
     }
 
     public enum LogStorage

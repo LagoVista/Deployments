@@ -1062,4 +1062,7 @@
   <data name="Instance_QueueConnection" xml:space="preserve">
     <value>Queue Connection</value>
   </data>
+  <data name="DeploymentQueueType_RabbitMQ" xml:space="preserve">
+    <value>Rabbit MQ</value>
+  </data>
 </root>
