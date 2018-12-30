@@ -248,6 +248,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentQueueType_QueueTechnology_Select
 
 		public static string DeploymentQueueType_QueueTechnology_Select { get { return GetResourceString("DeploymentQueueType_QueueTechnology_Select"); } }
+//Resources:DeploymentAdminResources:DeploymentQueueType_RabbitMQ
+
+		public static string DeploymentQueueType_RabbitMQ { get { return GetResourceString("DeploymentQueueType_RabbitMQ"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_ServiceBus
 
 		public static string DeploymentQueueType_ServiceBus { get { return GetResourceString("DeploymentQueueType_ServiceBus"); } }
@@ -1066,6 +1069,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentQueueType_QueueTechnology = "DeploymentQueueType_QueueTechnology";
 			public const string DeploymentQueueType_QueueTechnology_Help = "DeploymentQueueType_QueueTechnology_Help";
 			public const string DeploymentQueueType_QueueTechnology_Select = "DeploymentQueueType_QueueTechnology_Select";
+			public const string DeploymentQueueType_RabbitMQ = "DeploymentQueueType_RabbitMQ";
 			public const string DeploymentQueueType_ServiceBus = "DeploymentQueueType_ServiceBus";
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
