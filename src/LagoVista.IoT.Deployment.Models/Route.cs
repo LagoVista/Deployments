@@ -1,16 +1,16 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceMessaging.Admin.Models;
 using LagoVista.IoT.Pipeline.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LagoVista.Core;
-using LagoVista.Core.Interfaces;
-using LagoVista.IoT.DeviceMessaging.Admin.Models;
-using LagoVista.Core.Validation;
-using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -171,13 +171,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         /// <param name="module"></param>
         public void BackPopulateMappings(RouteModuleConfig module)
         {
-            var incomingModule = this.PipelineModules.Where(pm => (pm.PrimaryOutput != null && pm.PrimaryOutput.Id == module.Id) ||
-                                                                pm.SecondaryOutputs != null && pm.SecondaryOutputs.Where(rt => rt.Id == module.Id).Any()).FirstOrDefault();
-            if (incomingModule != null)
+            var primaryIncomingModule = this.PipelineModules.Where(pm => (pm.PrimaryOutput != null && pm.PrimaryOutput.Id == module.Id)).FirstOrDefault();
+
+            if (primaryIncomingModule != null)
             {
-                if (incomingModule.PrimaryOutput != null)
+                if (primaryIncomingModule.PrimaryOutput != null)
                 {
-                    foreach (var mapping in incomingModule.PrimaryOutput.Mappings)
+                    foreach (var mapping in primaryIncomingModule.PrimaryOutput.Mappings)
                     {
                         if (!module.IncomingMappings.Where(mod => mod.Key == mapping.Key).Any())
                         {
@@ -185,18 +185,19 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                         }
                     }
                 }
+            }
 
-                if (incomingModule.SecondaryOutputs != null)
+            var secondaryIncomingModule = this.PipelineModules.Where(pm => (pm.SecondaryOutputs != null && pm.SecondaryOutputs.Where(rt => rt.Id == module.Id).Any())).FirstOrDefault();
+            if (secondaryIncomingModule?.SecondaryOutputs != null)
+            {
+                var incomingPath = secondaryIncomingModule.SecondaryOutputs.Where(mod => mod.Id == module.Id).FirstOrDefault();
+                if (incomingPath != null)
                 {
-                    var incomingPath = incomingModule.SecondaryOutputs.Where(mod => mod.Id == module.Id).FirstOrDefault();
-                    if (incomingPath != null)
+                    foreach (var mapping in incomingPath.Mappings)
                     {
-                        foreach (var mapping in incomingPath.Mappings)
+                        if (!module.IncomingMappings.Where(mod => mod.Key == mapping.Key).Any())
                         {
-                            if (!module.IncomingMappings.Where(mod => mod.Key == mapping.Key).Any())
-                            {
-                                module.IncomingMappings.Add(mapping);
-                            }
+                            module.IncomingMappings.Add(mapping);
                         }
                     }
                 }
