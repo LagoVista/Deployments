@@ -24,6 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         IDeploymentInstanceManager _instanceManager;
         ISecureStorage _secureStorage;
+        IDeploymentHostManager _hostManager;
         IRuntimeTokenManager _runtimeTokenManager;
 
         public const string REQUEST_ID = "x-nuviot-runtime-request-id";
@@ -37,11 +38,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string VERSION = "x-nuviot-version";
 
         public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
-            ISecureStorage secureStorage, IAdminLogger logger)
+            IDeploymentHostManager hostManager, ISecureStorage secureStorage, IAdminLogger logger)
         {
             _instanceManager = instanceManager;
             _secureStorage = secureStorage;
             _runtimeTokenManager = runtimeTokenManager;
+            _hostManager = hostManager;
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -273,6 +275,31 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             else
             {
                 return InvokeResult<string>.Create(instance.Version.Id);
+            }
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get Instance Solution Versionn 
+        /// </summary>
+        /// <param name="hostid">ID Of the Host </param>
+        /// <param name="status">true/false</param>
+        /// <param name="version">Current version of runtime.</param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{hostid}/{status}/{version}")]
+        public async Task<InvokeResult> UpdateHostStatusAsync(string hostid, string status, string version)
+        {
+            if (String.IsNullOrEmpty(hostid)) return InvokeResult.FromError("host id is a required field.");
+
+            await ValidateRequest(HttpContext.Request);
+            var instance = await _instanceManager.GetInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+
+            if (Enum.TryParse<HostStatus>(status, out HostStatus hostStatus))
+            {
+                return await _hostManager.UpdateDeploymentHostStatusAsync(hostid, hostStatus, version, OrgEntityHeader, UserEntityHeader);
+            }
+            else
+            {
+                return InvokeResult.FromError($"Could not parse [status] to DeploymentInstanceStates");
             }
         }
 
