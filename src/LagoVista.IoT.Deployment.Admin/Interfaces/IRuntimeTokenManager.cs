@@ -18,5 +18,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<ConnectionSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetNuvIoTCacheSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<DeviceDataStorageSettings>> GetDataStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetEHCheckPointStorageSttings(String instanceId, EntityHeader org, EntityHeader user);
     }
 }

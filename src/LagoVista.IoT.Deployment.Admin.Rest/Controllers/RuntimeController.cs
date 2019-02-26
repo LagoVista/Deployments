@@ -204,6 +204,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Runtime Controller - Get Storage Settings for EH Check Point
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/ehcheckpoint/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetEHCheckPointSettingsAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetEHCheckPointStorageSttings(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
         /// Runtime Controller - Get PEM Storage Connection 
         /// </summary>
         /// <returns></returns>
