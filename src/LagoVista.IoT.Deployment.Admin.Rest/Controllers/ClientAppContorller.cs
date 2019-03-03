@@ -1,15 +1,13 @@
-﻿using LagoVista.Core.Models.UIMetaData;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models.UIMetaData;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Controllers;
 using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using LagoVista.Core;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using LagoVista.Core.Validation;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -29,7 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="clientApp"></param>
         /// <returns></returns>
         [HttpPost("/api/clientapp")]
-        public Task<InvokeResult> AddClietnAppAsync([FromBody] ClientApp clientApp)
+        public Task<InvokeResult> AddClientAppAsync([FromBody] ClientApp clientApp)
         {
             return _clientAppManager.AddClientAppAsync(clientApp, OrgEntityHeader, UserEntityHeader);
         }
@@ -54,7 +52,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpDelete("/api/clientapp/{id}")]
         public Task<InvokeResult> DeleteClientApp(string id)
         {
-            return _clientAppManager.DeleteClientAppAsync(id, OrgEntityHeader, UserEntityHeader);         
+            return _clientAppManager.DeleteClientAppAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -74,10 +72,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>        
         [HttpGet("/api/clientapps")]
-        public  Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync()
+        public Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync()
         {
             return _clientAppManager.GetClientAppsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
         }
+
 
         /// <summary>
         /// Client Apps - Create New
@@ -88,10 +87,35 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var response = DetailResponse<ClientApp>.Create();
             response.Model.Id = Guid.NewGuid().ToId();
+
+            response.Model.AppAuthKeyPrimary = _clientAppManager.GenerateAPIKey();
+            response.Model.AppAuthKeySecondary = _clientAppManager.GenerateAPIKey();
+
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
 
             return response;
-        }      
+        }
+
+        /// <summary>
+        /// Generate a new API Key to be used on client app
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/clientapp/apikey/generate")]
+        public InvokeResult<string> GenerateRandomKey()
+        {
+            return InvokeResult<string>.Create(_clientAppManager.GenerateAPIKey());
+        }
+
+        /// <summary>
+        /// Client Apps = Get API Keys
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/clientapp/{id}/secrets")]
+        public Task<InvokeResult<ClientAppSecrets>> GetSecrets(String id)
+        {
+            return _clientAppManager.GetClientAppSecretsAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
     }
 }

@@ -6,7 +6,6 @@ using LagoVista.IoT.Deployment.Models.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
@@ -30,12 +29,17 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
 
+        public EntityHeader ClientAppUser { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Text,ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable:false)]
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Secret, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public String AppAuthKeyPrimary { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey2, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable:false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey2, FieldType: FieldTypes.Secret, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public String AppAuthKeySecondary { get; set; }
+
+        public string AppAuthKeyPrimarySecureId { get; set; }
+        public string AppAuthKeySecondarySecureId { get; set; }
 
         public EntityHeader ToEntityHeader()
         {
@@ -69,18 +73,53 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Key = Key,
                 Name = Name,
                 InstanceId = DeploymentInstance.Id,
-                InstanceName = DeploymentInstance.Text                
+                InstanceName = DeploymentInstance.Text
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark:DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader DeploymentInstance { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceTypes { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceConfigs, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
-        public ObservableCollection<EntityHeader> DeviceConfigurations { get; set; }       
+        public ObservableCollection<EntityHeader> DeviceConfigurations { get; set; }
+
+        [CustomValidator]
+        public void Validate(ValidationResult result, Actions action)
+        {
+            if (action == Actions.Create)
+            {
+                if (String.IsNullOrEmpty(AppAuthKeyPrimary))
+                {
+                    result.AddUserError("AppAuthKeyPrimary is required when creating a client app.");
+                }
+
+                if (String.IsNullOrEmpty(AppAuthKeySecondary))
+                {
+                    result.AddUserError("AppAuthKeySecondary is required when creating a client app.");
+                }
+            }
+            else if (action == Actions.Update)
+            {
+                if (String.IsNullOrEmpty(AppAuthKeyPrimary) && String.IsNullOrEmpty(AppAuthKeyPrimarySecureId))
+                {
+                    result.AddUserError("AppAuthKeyPrimary or AppAuthKeyPrimarySecureId is required when creating a client app.");
+                }
+
+                if (String.IsNullOrEmpty(AppAuthKeySecondary) && String.IsNullOrEmpty(AppAuthKeySecondarySecureId))
+                {
+                    result.AddUserError("AppAuthKeySecondary or AppAuthKeySecondarySecureId is required when creating a client app.");
+                }
+            }
+        }
+    }
+
+    public class ClientAppSecrets
+    {
+        public string AppAuthKeyPrimary { get; set; }
+        public string AppAuthKeySecondary { get; set; }
     }
 
     public class ClientAppSummary : SummaryData
