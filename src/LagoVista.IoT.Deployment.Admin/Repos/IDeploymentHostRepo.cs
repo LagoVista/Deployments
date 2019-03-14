@@ -17,6 +17,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task UpdateDeploymentHostAsync(DeploymentHost host);
         Task DeleteDeploymentHostAsync(String hostId);
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId);
-        Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId);
+        Task<bool> QueryHostKeyInUse(string key, string orgId);
     }
 }

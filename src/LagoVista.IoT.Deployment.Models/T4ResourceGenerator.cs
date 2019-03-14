@@ -860,6 +860,45 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:InstanceStates_UpdatingSolution
 
 		public static string InstanceStates_UpdatingSolution { get { return GetResourceString("InstanceStates_UpdatingSolution"); } }
+//Resources:DeploymentAdminResources:Integeration_APIKey
+
+		public static string Integeration_APIKey { get { return GetResourceString("Integeration_APIKey"); } }
+//Resources:DeploymentAdminResources:Integration_Description
+
+		public static string Integration_Description { get { return GetResourceString("Integration_Description"); } }
+//Resources:DeploymentAdminResources:Integration_FromAddress
+
+		public static string Integration_FromAddress { get { return GetResourceString("Integration_FromAddress"); } }
+//Resources:DeploymentAdminResources:Integration_Help
+
+		public static string Integration_Help { get { return GetResourceString("Integration_Help"); } }
+//Resources:DeploymentAdminResources:Integration_SMS
+
+		public static string Integration_SMS { get { return GetResourceString("Integration_SMS"); } }
+//Resources:DeploymentAdminResources:Integration_SMTP
+
+		public static string Integration_SMTP { get { return GetResourceString("Integration_SMTP"); } }
+//Resources:DeploymentAdminResources:Integration_Title
+
+		public static string Integration_Title { get { return GetResourceString("Integration_Title"); } }
+//Resources:DeploymentAdminResources:Integration_Uri
+
+		public static string Integration_Uri { get { return GetResourceString("Integration_Uri"); } }
+//Resources:DeploymentAdminResources:IntegrationType
+
+		public static string IntegrationType { get { return GetResourceString("IntegrationType"); } }
+//Resources:DeploymentAdminResources:IntegrationType_PagerDuty
+
+		public static string IntegrationType_PagerDuty { get { return GetResourceString("IntegrationType_PagerDuty"); } }
+//Resources:DeploymentAdminResources:IntegrationType_Select_Watermark
+
+		public static string IntegrationType_Select_Watermark { get { return GetResourceString("IntegrationType_Select_Watermark"); } }
+//Resources:DeploymentAdminResources:IntegrationType_SendGrid
+
+		public static string IntegrationType_SendGrid { get { return GetResourceString("IntegrationType_SendGrid"); } }
+//Resources:DeploymentAdminResources:IntegrationType_Twillio
+
+		public static string IntegrationType_Twillio { get { return GetResourceString("IntegrationType_Twillio"); } }
 //Resources:DeploymentAdminResources:RemoteDeployment_Description
 
 		public static string RemoteDeployment_Description { get { return GetResourceString("RemoteDeployment_Description"); } }
@@ -1273,6 +1312,19 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string InstanceStates_Undeploying = "InstanceStates_Undeploying";
 			public const string InstanceStates_UpdatingRuntime = "InstanceStates_UpdatingRuntime";
 			public const string InstanceStates_UpdatingSolution = "InstanceStates_UpdatingSolution";
+			public const string Integeration_APIKey = "Integeration_APIKey";
+			public const string Integration_Description = "Integration_Description";
+			public const string Integration_FromAddress = "Integration_FromAddress";
+			public const string Integration_Help = "Integration_Help";
+			public const string Integration_SMS = "Integration_SMS";
+			public const string Integration_SMTP = "Integration_SMTP";
+			public const string Integration_Title = "Integration_Title";
+			public const string Integration_Uri = "Integration_Uri";
+			public const string IntegrationType = "IntegrationType";
+			public const string IntegrationType_PagerDuty = "IntegrationType_PagerDuty";
+			public const string IntegrationType_Select_Watermark = "IntegrationType_Select_Watermark";
+			public const string IntegrationType_SendGrid = "IntegrationType_SendGrid";
+			public const string IntegrationType_Twillio = "IntegrationType_Twillio";
 			public const string RemoteDeployment_Description = "RemoteDeployment_Description";
 			public const string RemoteDeployment_Help = "RemoteDeployment_Help";
 			public const string RemoteDeployment_Instances = "RemoteDeployment_Instances";

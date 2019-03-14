@@ -101,7 +101,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         }
 
 
-        public async Task<bool> QueryInstanceKeyInUseAsync(string key, string orgId)
+        public async Task<bool> QueryHostKeyInUse(string key, string orgId)
         {
             var items = await base.QueryAsync(attr => (attr.OwnerOrganization.Id == orgId || attr.IsPublic == true) && attr.Key == key);
             return items.Any();
