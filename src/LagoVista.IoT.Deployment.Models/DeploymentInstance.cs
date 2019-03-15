@@ -24,6 +24,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
             DataStreams = new List<EntityHeader<DataStream>>();
             ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
+            Integrations = new List<EntityHeader<Integration>>();
         }
 
 
@@ -130,6 +131,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public bool IsPublic { get; set; }
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        public List<EntityHeader<Integration>> Integrations { get; set; }
 
         public EntityHeader ToEntityHeader()
         {

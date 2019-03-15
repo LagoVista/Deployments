@@ -2,9 +2,8 @@
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
-using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
@@ -23,7 +22,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor
     {
-        public const string IntegrationType_Twillio = "twilio";
+        public const string IntegrationType_Twillio = "twillio";
         public const string IntegrationType_PagerDuty = "pagerduty";
         public const string IntegrationType_SendGrid = "sendgrid";
 
@@ -40,43 +39,66 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public List<string> GetFormFields()
         {
-            throw new NotImplementedException();
+            return new List<string>()
+            {
+                nameof(Integration.Name),
+                nameof(Integration.Key),
+                nameof(Integration.IntegrationType),
+                nameof(Integration.AccountId),
+                nameof(Integration.FromAddress),
+                nameof(Integration.URI),
+                nameof(Integration.SMS),
+                nameof(Integration.SMTP),
+                nameof(Integration.ApiKey),
+                nameof(Integration.Description),
+            };
         }
 
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.IntegrationType, FieldType: FieldTypes.Picker, EnumType: typeof(IntegrationTypes), ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false, WaterMark: DeploymentAdminResources.Names.IntegrationType_Select_Watermark)]
-        public string IntegrationType
+        [FormField(LabelResource: DeploymentAdminResources.Names.IntegrationType, FieldType: FieldTypes.Picker, EnumType: typeof(IntegrationTypes), ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true, WaterMark: DeploymentAdminResources.Names.IntegrationType_Select_Watermark)]
+        public EntityHeader IntegrationType
         {
             get; set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string ApiKey
         {
             get; set;
         }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_Uri, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_Uri, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string URI
         {
             get; set;
         }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_FromAddress, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_AccountId, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public string AccountId
+        {
+            get; set;
+        }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_FromAddress, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string FromAddress
         {
             get; set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMS, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMS, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string SMS
         {
             get; set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMTP, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_RoutingKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public string RoutingKey
+        {
+            get; set;
+        }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMTP, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string SMTP
         {
             get; set;
@@ -86,6 +108,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             get; set;
         }
+
+
 
         public IntegrationSummary CreateSummary()
         {

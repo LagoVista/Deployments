@@ -215,6 +215,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentConfiguration_SingleInstance
 
 		public static string DeploymentConfiguration_SingleInstance { get { return GetResourceString("DeploymentConfiguration_SingleInstance"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_Integrations
+
+		public static string DeploymentInstance_Integrations { get { return GetResourceString("DeploymentInstance_Integrations"); } }
 //Resources:DeploymentAdminResources:DeploymentInstance_SharedAccessKey_Help
 
 		public static string DeploymentInstance_SharedAccessKey_Help { get { return GetResourceString("DeploymentInstance_SharedAccessKey_Help"); } }
@@ -863,6 +866,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Integeration_APIKey
 
 		public static string Integeration_APIKey { get { return GetResourceString("Integeration_APIKey"); } }
+//Resources:DeploymentAdminResources:Integration_AccountId
+
+		public static string Integration_AccountId { get { return GetResourceString("Integration_AccountId"); } }
 //Resources:DeploymentAdminResources:Integration_Description
 
 		public static string Integration_Description { get { return GetResourceString("Integration_Description"); } }
@@ -872,6 +878,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Integration_Help
 
 		public static string Integration_Help { get { return GetResourceString("Integration_Help"); } }
+//Resources:DeploymentAdminResources:Integration_RoutingKey
+
+		public static string Integration_RoutingKey { get { return GetResourceString("Integration_RoutingKey"); } }
 //Resources:DeploymentAdminResources:Integration_SMS
 
 		public static string Integration_SMS { get { return GetResourceString("Integration_SMS"); } }
@@ -1097,6 +1106,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentConfiguration_DockerSwarm = "DeploymentConfiguration_DockerSwarm";
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
+			public const string DeploymentInstance_Integrations = "DeploymentInstance_Integrations";
 			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";
 			public const string DeploymentInstance_SharedAccessKey1 = "DeploymentInstance_SharedAccessKey1";
 			public const string DeploymentInstance_SharedAccessKey2 = "DeploymentInstance_SharedAccessKey2";
@@ -1313,9 +1323,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string InstanceStates_UpdatingRuntime = "InstanceStates_UpdatingRuntime";
 			public const string InstanceStates_UpdatingSolution = "InstanceStates_UpdatingSolution";
 			public const string Integeration_APIKey = "Integeration_APIKey";
+			public const string Integration_AccountId = "Integration_AccountId";
 			public const string Integration_Description = "Integration_Description";
 			public const string Integration_FromAddress = "Integration_FromAddress";
 			public const string Integration_Help = "Integration_Help";
+			public const string Integration_RoutingKey = "Integration_RoutingKey";
 			public const string Integration_SMS = "Integration_SMS";
 			public const string Integration_SMTP = "Integration_SMTP";
 			public const string Integration_Title = "Integration_Title";

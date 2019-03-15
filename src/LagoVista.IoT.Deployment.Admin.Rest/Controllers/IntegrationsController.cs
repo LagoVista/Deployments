@@ -82,9 +82,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/integration/{id}")]
-        public Task<Integration> GetIntegrationAsync(string id)
+        public async Task<DetailResponse<Integration>> GetIntegrationAsync(string id)
         {
-            return _integrationManager.GetIntegrationAsync(id, OrgEntityHeader, UserEntityHeader);
+            var integration = await _integrationManager.GetIntegrationAsync(id, OrgEntityHeader, UserEntityHeader);
+            return DetailResponse<Integration>.Create(integration);
+        }
+
+        /// <summary>
+        /// Integration - Create new
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/integration/factory")]
+        public DetailResponse<Integration> CreateNewIntegration(string id)
+        {
+            var integration = DetailResponse<Integration>.Create();
+            SetAuditProperties(integration.Model);
+            SetOwnedProperties(integration.Model);
+            return integration;
+
         }
 
         /// <summary>

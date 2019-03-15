@@ -1066,7 +1066,7 @@
     <value>Rabbit MQ</value>
   </data>
   <data name="Integeration_APIKey" xml:space="preserve">
-    <value>APIKey</value>
+    <value>API Key</value>
   </data>
   <data name="IntegrationType" xml:space="preserve">
     <value>Integration Type</value>
@@ -1103,5 +1103,14 @@
   </data>
   <data name="Integration_Uri" xml:space="preserve">
     <value>Url</value>
+  </data>
+  <data name="DeploymentInstance_Integrations" xml:space="preserve">
+    <value>Integrations</value>
+  </data>
+  <data name="Integration_AccountId" xml:space="preserve">
+    <value>Account Id</value>
+  </data>
+  <data name="Integration_RoutingKey" xml:space="preserve">
+    <value>Routing Key</value>
   </data>
 </root>
