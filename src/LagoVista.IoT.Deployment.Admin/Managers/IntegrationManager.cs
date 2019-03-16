@@ -49,14 +49,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             ValidationCheck(integration, Actions.Update);
             await AuthorizeAsync(integration, AuthorizeResult.AuthorizeActions.Update, user, org);
 
-            if (!String.IsNullOrEmpty(integration.ApiKeySecretId))
+            if (!String.IsNullOrEmpty(integration.ApiKey))
             {
-                await _secureStorage.RemoveSecretAsync(org, integration.ApiKeySecretId);
+                var oldSecretId = integration.ApiKeySecretId;                
 
                 var updateSecret = await _secureStorage.AddSecretAsync(org, integration.ApiKey);
                 if (!updateSecret.Successful) return updateSecret.ToInvokeResult();
                 integration.ApiKeySecretId = updateSecret.Result;
                 integration.ApiKey = null;
+
+                if(!string.IsNullOrEmpty(oldSecretId))
+                {
+                    await _secureStorage.RemoveSecretAsync(org, oldSecretId);
+                }
             }
 
             await _repo.UpdateIntegrationAsync(integration);

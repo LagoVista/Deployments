@@ -46,9 +46,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(Integration.IntegrationType),
                 nameof(Integration.AccountId),
                 nameof(Integration.FromAddress),
-                nameof(Integration.URI),
-                nameof(Integration.SMS),
-                nameof(Integration.SMTP),
+                nameof(Integration.Uri),
+                nameof(Integration.Sms),
+                nameof(Integration.SmtpAddress),
                 nameof(Integration.ApiKey),
                 nameof(Integration.Description),
             };
@@ -60,15 +60,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             get; set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string ApiKey
         {
             get; set;
         }
 
-
         [FormField(LabelResource: DeploymentAdminResources.Names.Integration_Uri, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public string URI
+        public string Uri
         {
             get; set;
         }
@@ -87,7 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMS, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public string SMS
+        public string Sms
         {
             get; set;
         }
@@ -99,7 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Integration_SMTP, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public string SMTP
+        public string SmtpAddress
         {
             get; set;
         }
@@ -119,13 +118,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Id = Id,
                 IsPublic = IsPublic,
                 Key = Key,
-                Name = Name
+                Name = Name,
+                IntegrationType = IntegrationType.Text
             };
         }
     }
 
     public class IntegrationSummary : SummaryData
     {
-
+        public string IntegrationType { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using LagoVista.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -97,6 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public DetailResponse<Integration> CreateNewIntegration(string id)
         {
             var integration = DetailResponse<Integration>.Create();
+            integration.Model.Id = Guid.NewGuid().ToId();
             SetAuditProperties(integration.Model);
             SetOwnedProperties(integration.Model);
             return integration;
