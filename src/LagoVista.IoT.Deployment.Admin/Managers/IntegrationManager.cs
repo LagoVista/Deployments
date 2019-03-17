@@ -93,7 +93,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _repo.QueryKeyInUseAsync(key, org.Id);
         }
 
-        public async Task DeleteIntegrationAsync(string id, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> DeleteIntegrationAsync(string id, EntityHeader org, EntityHeader user)
         {
             var integration = await _repo.GetIntegrationAsync(id);
             await AuthorizeAsync(integration, AuthorizeResult.AuthorizeActions.Delete   , user, org);
@@ -104,6 +104,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             await _repo.DeleteIntegrationAsync(id);
+
+            return InvokeResult.Success;
         }
     }
 }

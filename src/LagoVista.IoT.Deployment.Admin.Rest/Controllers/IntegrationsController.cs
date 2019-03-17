@@ -61,7 +61,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("/api/integration/{id}")]
-        public Task DeleteIntegrationAsync(string id)
+        public Task<InvokeResult> DeleteIntegrationAsync(string id)
         {
             return _integrationManager.DeleteIntegrationAsync(id, OrgEntityHeader, UserEntityHeader);
         }

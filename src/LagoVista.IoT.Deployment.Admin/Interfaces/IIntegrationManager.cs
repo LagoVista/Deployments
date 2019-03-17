@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin
     {
         Task<InvokeResult> AddIntegrationAsync(Integration containerRepo, EntityHeader org, EntityHeader user);
         Task<Integration> GetIntegrationAsync(string id, EntityHeader org, EntityHeader user);
-        Task DeleteIntegrationAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> DeleteIntegrationAsync(string id, EntityHeader org, EntityHeader user);
         Task<IEnumerable<IntegrationSummary>> GetIntegrationsForOrgAsync(string orgId, EntityHeader user);
         Task<InvokeResult> UpdateIntegrationAsync(Integration integration, EntityHeader org, EntityHeader user);
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
