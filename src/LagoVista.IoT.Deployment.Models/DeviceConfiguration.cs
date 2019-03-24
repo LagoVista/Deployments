@@ -55,11 +55,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public String Key { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default_Help, FieldType: FieldTypes.CheckBox, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public bool WatchdogEnabledDefault { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public int? WatchDogSeconds { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+        public int? WatchdogSeconds { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
@@ -150,13 +150,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [CustomValidator]
         public void Validate(ValidationResult result)
         {
-            if(WatchdogEnabledDefault && !WatchDogSeconds.HasValue)
+            if(WatchdogEnabledDefault && !WatchdogSeconds.HasValue)
             {
                 result.AddUserError("Watchdog Internal is required.");
             }
-            else if(WatchdogEnabledDefault)
+            else if(!WatchdogEnabledDefault)
             {
-                WatchDogSeconds = null;
+                WatchdogSeconds = null;
             }
         }
     }

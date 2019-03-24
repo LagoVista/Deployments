@@ -1117,12 +1117,12 @@
     <value>Enable Watchdog by Default</value>
   </data>
   <data name="DeviceConfiguration_WatchDogEnabled_Default_Help" xml:space="preserve">
-    <value>If you enabled the watchdog a timer will ensure that your devices communicates within the watchdog interval.  If it does not you will receive a notification.</value>
+    <value>If you enable the watchdog, a timer will ensure that your devices communicates within the watchdog interval.  If it does not you will receive a notification.</value>
   </data>
   <data name="DeviceConfiguration_WatchDogTimeout" xml:space="preserve">
-    <value>Watchdog TImeout</value>
+    <value>Watchdog TImeout (seconds)</value>
   </data>
   <data name="DeviceConfiguration_WatchDogTimeout_Help" xml:space="preserve">
-    <value>Number of seconds before the watch dog will timeout.</value>
+    <value>Number of seconds before the watch dog will timeout and send a notification.</value>
   </data>
 </root>
