@@ -329,6 +329,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Title
 
 		public static string DeviceConfiguration_Title { get { return GetResourceString("DeviceConfiguration_Title"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_WatchDogEnabled_Default
+
+		public static string DeviceConfiguration_WatchDogEnabled_Default { get { return GetResourceString("DeviceConfiguration_WatchDogEnabled_Default"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_WatchDogEnabled_Default_Help
+
+		public static string DeviceConfiguration_WatchDogEnabled_Default_Help { get { return GetResourceString("DeviceConfiguration_WatchDogEnabled_Default_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_WatchDogTimeout
+
+		public static string DeviceConfiguration_WatchDogTimeout { get { return GetResourceString("DeviceConfiguration_WatchDogTimeout"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_WatchDogTimeout_Help
+
+		public static string DeviceConfiguration_WatchDogTimeout_Help { get { return GetResourceString("DeviceConfiguration_WatchDogTimeout_Help"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
@@ -1144,6 +1156,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
 			public const string DeviceConfiguration_Sentinel = "DeviceConfiguration_Sentinel";
 			public const string DeviceConfiguration_Title = "DeviceConfiguration_Title";
+			public const string DeviceConfiguration_WatchDogEnabled_Default = "DeviceConfiguration_WatchDogEnabled_Default";
+			public const string DeviceConfiguration_WatchDogEnabled_Default_Help = "DeviceConfiguration_WatchDogEnabled_Default_Help";
+			public const string DeviceConfiguration_WatchDogTimeout = "DeviceConfiguration_WatchDogTimeout";
+			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotFindDestinationModule = "Err_CouldNotFindDestinationModule";

@@ -11,6 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
     public interface IRuntimeTokenManager
     {
         Task<InvokeResult<ConnectionSettings>> GetDeviceStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetDeviceWatchdogConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);

@@ -1113,4 +1113,16 @@
   <data name="Integration_RoutingKey" xml:space="preserve">
     <value>Routing Key</value>
   </data>
+  <data name="DeviceConfiguration_WatchDogEnabled_Default" xml:space="preserve">
+    <value>Enable Watchdog by Default</value>
+  </data>
+  <data name="DeviceConfiguration_WatchDogEnabled_Default_Help" xml:space="preserve">
+    <value>If you enabled the watchdog a timer will ensure that your devices communicates within the watchdog interval.  If it does not you will receive a notification.</value>
+  </data>
+  <data name="DeviceConfiguration_WatchDogTimeout" xml:space="preserve">
+    <value>Watchdog TImeout</value>
+  </data>
+  <data name="DeviceConfiguration_WatchDogTimeout_Help" xml:space="preserve">
+    <value>Number of seconds before the watch dog will timeout.</value>
+  </data>
 </root>

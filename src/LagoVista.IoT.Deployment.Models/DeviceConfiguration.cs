@@ -5,7 +5,6 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.Pipeline.Admin.Models;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
 using System;
@@ -54,6 +53,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default_Help, FieldType: FieldTypes.CheckBox, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public bool WatchdogEnabledDefault { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public int? WatchDogSeconds { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
@@ -140,7 +146,21 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
+
+        [CustomValidator]
+        public void Validate(ValidationResult result)
+        {
+            if(WatchdogEnabledDefault && !WatchDogSeconds.HasValue)
+            {
+                result.AddUserError("Watchdog Internal is required.");
+            }
+            else if(WatchdogEnabledDefault)
+            {
+                WatchDogSeconds = null;
+            }
+        }
     }
+
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help, DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeviceConfigurationSummary : LagoVista.Core.Models.SummaryData

@@ -171,6 +171,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Runtime Controller - Request Connection for device watchdog timer
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/devicewatchdog/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetDeviceWatchdogConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetDeviceWatchdogConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Runtime Controller - Request Connection for Usage Storage Storage
         /// </summary>
         /// <returns></returns>
