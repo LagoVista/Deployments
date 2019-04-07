@@ -6,6 +6,9 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.Core;
+using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
+using LagoVista.UserAdmin.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -16,6 +19,8 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LagoVista.UserAdmin.Models.Users;
+using LagoVista.UserAdmin.Interfaces.Managers;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -26,6 +31,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         ISecureStorage _secureStorage;
         IDeploymentHostManager _hostManager;
         IRuntimeTokenManager _runtimeTokenManager;
+        IAppUserManagerReadOnly _userManager;
+        IOrgUserRepo _orgUserRepo;
+        IEmailSender _emailSender;
+        ISmsSender _smsSender;
 
         public const string REQUEST_ID = "x-nuviot-runtime-request-id";
         public const string ORG_ID = "x-nuviot-orgid";
@@ -38,12 +47,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string VERSION = "x-nuviot-version";
 
         public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
-            IDeploymentHostManager hostManager, ISecureStorage secureStorage, IAdminLogger logger)
+            IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
+            IEmailSender emailSender, ISmsSender smsSendeer,
+            ISecureStorage secureStorage, IAdminLogger logger)
         {
+            _userManager = userManager;
+            _orgUserRepo = orgUserRepo;
             _instanceManager = instanceManager;
             _secureStorage = secureStorage;
             _runtimeTokenManager = runtimeTokenManager;
             _hostManager = hostManager;
+            _emailSender = emailSender;
+            _smsSender = smsSendeer;
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -223,6 +238,70 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetEHCheckPointStorageSttings(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get User by User Id, user must belong to the org that has the deployment that is requesting the data, no sensitive data will be sent.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/usernotifinfo/{id}")]
+        public async Task<InvokeResult<UserNotificationInfo>> GetUserAsync(string id)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if (await _orgUserRepo.QueryOrgHasUserAsync(OrgEntityHeader.Id, id))
+            {
+                var user = await _userManager.GetUserByIdAsync(id, OrgEntityHeader, UserEntityHeader);
+                if(user == null)
+                {
+                    return InvokeResult<UserNotificationInfo>.FromError("Could not find requested user by user id");
+                }
+                else
+                {
+                    return InvokeResult<UserNotificationInfo>.Create(new UserNotificationInfo()
+                    {
+                        Id = id,
+                        Email = user.Email.ToLower(),
+                        Phone = user.PhoneNumber
+                    });
+                }
+            }
+            else
+            {
+                return InvokeResult<UserNotificationInfo>.FromError("Requested user does not belong to deployment org");
+            }
+        }
+
+        [HttpPost("/api/deployment/user/message")]
+        public async Task SentUserMessageAsync([FromBody] UserMessage message)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if(String.IsNullOrEmpty(message.UserId))
+            {
+                throw new InvalidDataException("Missing User Id of user to notify.");
+            }
+
+            var getUserResult = await GetUserAsync(message.UserId);
+            if(!getUserResult.Successful)
+            {
+                throw new InvalidDataException(getUserResult.Errors.First().Message);
+            }
+
+            switch(message.MessageType)
+            {
+                case MessageTypes.Email:
+                    await _emailSender.SendAsync(getUserResult.Result.Email, message.Subject, message.Body);
+                    break;
+                case MessageTypes.SMS:
+                    await _smsSender.SendAsync(getUserResult.Result.Phone, message.Body);
+                    break;
+                case MessageTypes.SMSAndEmail:
+                    await _smsSender.SendAsync(getUserResult.Result.Phone, message.Body);
+                    await _emailSender.SendAsync(getUserResult.Result.Email, message.Subject, message.Body);
+                    break;
+            }
         }
 
 
