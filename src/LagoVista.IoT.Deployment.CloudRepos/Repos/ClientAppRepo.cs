@@ -31,7 +31,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
 
         public Task<ClientApp> GetClientAppAsync(string id)
         {
-            return GetDocumentAsync(id);
+            return GetDocumentAsync(id, false);
         }
 
         public async Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, ListRequest requst)
