@@ -265,71 +265,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
             return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
         }
-
-        private void MapInstanceProperties(DeploymentInstance instance)
-        {
-            if (EntityHeader<NuvIoTEditions>.IsNullOrEmpty(instance.NuvIoTEdition))
-            {
-                switch (instance.DeploymentConfiguration.Value)
-                {
-                    case DeploymentConfigurations.DockerSwarm:
-                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
-                        break;
-                    case DeploymentConfigurations.Kubernetes:
-                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Cluster);
-                        break;
-                    case DeploymentConfigurations.SingleInstance:
-                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
-                        break;
-                    case DeploymentConfigurations.UWP:
-                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.App);
-                        break;
-                }
-
-                instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
-            }
-
-            if(EntityHeader<WorkingStorage>.IsNullOrEmpty(instance.WorkingStorage))
-            {
-                if(instance.NuvIoTEdition.Value == NuvIoTEditions.App)
-                {
-                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Local);
-                }
-                else
-                {
-                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Cloud);
-                }
-            }
-
-            if (EntityHeader<DeploymentTypes>.IsNullOrEmpty(instance.DeploymentType))
-            {
-                if (instance.NuvIoTEdition.Value == NuvIoTEditions.App)
-                {
-                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.OnPremise);
-                }
-                else if(instance.NuvIoTEdition.Value == NuvIoTEditions.Container)
-                {
-                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
-                }
-                else
-                {
-                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Cloud);
-                }                
-            }
-
-            if(EntityHeader<QueueTypes>.IsNullOrEmpty(instance.QueueType))
-            {
-                if (instance.NuvIoTEdition.Value == NuvIoTEditions.Cluster)
-                {
-                    instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.RabbitMQ);
-                }
-                else
-                {
-                        instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
-                }
-            }
-        }
-
+        
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
@@ -378,6 +314,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<DeploymentInstance>> LoadFullInstanceAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            MapInstanceProperties(instance);
             if (EntityHeader.IsNullOrEmpty(instance.DeploymentConfiguration))
             {
                 instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);

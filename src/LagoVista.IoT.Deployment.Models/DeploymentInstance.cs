@@ -253,13 +253,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsPublic = IsPublic,
                 IsDeployed = IsDeployed,
                 Status = Status,
-                NuvIoTEdition = EntityHeader.IsNullOrEmpty(DeploymentConfiguration) ? "???" : NuvIoTEdition.Text,
+                NuvIoTEdition = EntityHeader.IsNullOrEmpty(NuvIoTEdition) ? "???" : NuvIoTEdition.Text,
                 DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? "???" : DeploymentType.Text,
                 WorkingStorage = EntityHeader.IsNullOrEmpty(WorkingStorage) ? "???" : WorkingStorage.Text,
                 QueueType = EntityHeader.IsNullOrEmpty(QueueType) ? "???" : QueueType.Text
             };
 
-            if (DeviceRepository != null)
+            if (EntityHeader.IsNullOrEmpty(DeviceRepository))
             {
                 summary.DeviceRepoId = DeviceRepository.Id;
                 summary.DeviceRepoName = DeviceRepository.Text;

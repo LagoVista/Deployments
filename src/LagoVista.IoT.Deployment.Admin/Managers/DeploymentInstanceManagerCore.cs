@@ -138,6 +138,70 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success;
         }
 
+        protected void MapInstanceProperties(DeploymentInstance instance)
+        {
+            if (EntityHeader<NuvIoTEditions>.IsNullOrEmpty(instance.NuvIoTEdition))
+            {
+                switch (instance.DeploymentConfiguration.Value)
+                {
+                    case DeploymentConfigurations.DockerSwarm:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+                        break;
+                    case DeploymentConfigurations.Kubernetes:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Cluster);
+                        break;
+                    case DeploymentConfigurations.SingleInstance:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+                        break;
+                    case DeploymentConfigurations.UWP:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.App);
+                        break;
+                }
+
+                instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+            }
+
+            if (EntityHeader<WorkingStorage>.IsNullOrEmpty(instance.WorkingStorage))
+            {
+                if (instance.NuvIoTEdition.Value == NuvIoTEditions.App)
+                {
+                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Local);
+                }
+                else
+                {
+                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Cloud);
+                }
+            }
+
+            if (EntityHeader<DeploymentTypes>.IsNullOrEmpty(instance.DeploymentType))
+            {
+                if (instance.NuvIoTEdition.Value == NuvIoTEditions.App)
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.OnPremise);
+                }
+                else if (instance.NuvIoTEdition.Value == NuvIoTEditions.Container)
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+                }
+                else
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Cloud);
+                }
+            }
+
+            if (EntityHeader<QueueTypes>.IsNullOrEmpty(instance.QueueType))
+            {
+                if (instance.NuvIoTEdition.Value == NuvIoTEditions.Cluster)
+                {
+                    instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.RabbitMQ);
+                }
+                else
+                {
+                    instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
+                }
+            }
+        }
+
 
         public Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org)
         {
@@ -148,6 +212,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
 
+            MapInstanceProperties(instance);
+
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
             var keysUpdated = false;
@@ -157,7 +223,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 keysUpdated = true;
                 var key = GenerateRandomKey();
                 var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
-                if (!keyAddResult.Successful) return null;
+                if (!keyAddResult.Successful) return null; 
                 instance.SharedAccessKeySecureId1 = keyAddResult.Result;
             }
 
