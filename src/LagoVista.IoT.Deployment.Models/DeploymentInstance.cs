@@ -53,9 +53,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Status_FailedToStart = "failedtostart";
         public const string Status_HostFailedHealthCheck = "hostfailedhealthcheck";
 
+        public const string DeploymentType_Cloud = "cloud";
         public const string DeploymentType_Managed = "managed";
         public const string DeploymentType_OnPremise = "onpremise";
 
+        public const string DeploymentConfiguration_UWP = "uwp";
         public const string DeploymentConfiguration_SingleInstance = "singleinstance";
         public const string DeploymentConfiguration_Kubernetes = "kubernetes";
         public const string DeploymentConfiguration_DockerSwarm = "dockerswarm";
@@ -68,6 +70,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string Deployment_Logging_Local = "local";
         public const string Deployment_Logging_Cloud = "cloud";
 
+        public const string Deployment_WorkingStorage_Local = "local";
+        public const string Deployment_WorkingStorage_Cloud = "cloud";
+
+        public const string Deployment_MessageArchiveStorage_FileSystem = "local";
+        public const string Deployment_MessageArchiveStorage_Cloud = "cloud";
+        public const string Deployment_MessageArchiveStorage_Elastic = "elastic";
+
+        public const string NuvIoTEdition_App = "app";
+        public const string NuvIoTEdition_Container = "container";
+        public const string NuvIoTEdition_Cluster = "cluster";
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
@@ -125,7 +137,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
-        
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
@@ -206,14 +218,21 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeploymentConfiguration, EnumType: (typeof(DeploymentConfigurations)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_DeploymentConfiguration_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), 
+        [FormField(LabelResource: DeploymentAdminResources.Names.NuvIoT_Edition, EnumType: (typeof(NuvIoTEditions)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.NuvIoTEdition_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<NuvIoTEditions> NuvIoTEdition { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.WorkingStorage, EnumType: (typeof(WorkingStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.WorkingStorage_Select, IsRequired: true, IsUserEditable: true)]
+        public EntityHeader<WorkingStorage> WorkingStorage { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources),
             WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Select, HelpResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<QueueTypes> QueueType { get; set; }
 
 
         public EntityHeader<IConnectionSettings> QueueConnection { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Logging, EnumType: (typeof(LogStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Logging, EnumType: (typeof(LogStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources),
             WaterMark: DeploymentAdminResources.Names.Deployment_Logging_Select, HelpResource: DeploymentAdminResources.Names.Deployment_Logging_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<LogStorage> LogStorage { get; set; }
 
@@ -234,8 +253,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsPublic = IsPublic,
                 IsDeployed = IsDeployed,
                 Status = Status,
-                DeploymentConfiguration = EntityHeader.IsNullOrEmpty(DeploymentConfiguration) ? DeploymentAdminResources.DeploymentConfiguration_SingleInstance : DeploymentConfiguration.Text,
-                DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? DeploymentAdminResources.DeploymentType_Managed : DeploymentType.Text,
+                NuvIoTEdition = EntityHeader.IsNullOrEmpty(DeploymentConfiguration) ? "???" : NuvIoTEdition.Text,
+                DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? "???" : DeploymentType.Text,
+                WorkingStorage = EntityHeader.IsNullOrEmpty(WorkingStorage) ? "???" : WorkingStorage.Text,
+                QueueType = EntityHeader.IsNullOrEmpty(QueueType) ? "???" : QueueType.Text
             };
 
             if (DeviceRepository != null)
@@ -311,10 +332,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }
         public bool IsDeployed { get; set; }
+        public string NuvIoTEdition { get; set; }
+        public string DeploymentType { get; set; }
+        public string WorkingStorage { get; set; }
+        public string QueueType { get; set; }
 
         public string DeviceRepoId { get; set; }
         public string DeviceRepoName { get; set; }
-        public string DeploymentType { get; set; }
-        public string DeploymentConfiguration { get; set; }
     }
 }

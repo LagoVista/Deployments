@@ -16,6 +16,8 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string id);
 
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string id);
+
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string id);
         
 

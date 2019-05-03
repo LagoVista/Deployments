@@ -20,8 +20,9 @@ namespace LagoVista.IoT.Deployment
 
         public string DockerCommandLine { get; set; }
 
-        public EntityHeader<DeploymentConfigurations> DeploymentConfiguration { get; set; }
+
+        public EntityHeader<NuvIoTEditions> NuvIoTEdition { get; set; }
+        public EntityHeader<WorkingStorage> WorkingStorage { get; set; }
         public EntityHeader<DeploymentTypes> DeploymentType { get; set; }
-        public EntityHeader<QueueTypes> QueueType { get; set; }
     }
 }

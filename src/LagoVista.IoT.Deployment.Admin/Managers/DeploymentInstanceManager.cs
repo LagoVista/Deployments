@@ -266,10 +266,74 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
         }
 
+        private void MapInstanceProperties(DeploymentInstance instance)
+        {
+            if (EntityHeader<NuvIoTEditions>.IsNullOrEmpty(instance.NuvIoTEdition))
+            {
+                switch (instance.DeploymentConfiguration.Value)
+                {
+                    case DeploymentConfigurations.DockerSwarm:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+                        break;
+                    case DeploymentConfigurations.Kubernetes:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Cluster);
+                        break;
+                    case DeploymentConfigurations.SingleInstance:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+                        break;
+                    case DeploymentConfigurations.UWP:
+                        instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.App);
+                        break;
+                }
+
+                instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+            }
+
+            if(EntityHeader<WorkingStorage>.IsNullOrEmpty(instance.WorkingStorage))
+            {
+                if(instance.NuvIoTEdition.Value == NuvIoTEditions.App)
+                {
+                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Local);
+                }
+                else
+                {
+                    instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Cloud);
+                }
+            }
+
+            if (EntityHeader<DeploymentTypes>.IsNullOrEmpty(instance.DeploymentType))
+            {
+                if (instance.NuvIoTEdition.Value == NuvIoTEditions.App)
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.OnPremise);
+                }
+                else if(instance.NuvIoTEdition.Value == NuvIoTEditions.Container)
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
+                }
+                else
+                {
+                    instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Cloud);
+                }                
+            }
+
+            if(EntityHeader<QueueTypes>.IsNullOrEmpty(instance.QueueType))
+            {
+                if (instance.NuvIoTEdition.Value == NuvIoTEditions.Cluster)
+                {
+                    instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.RabbitMQ);
+                }
+                else
+                {
+                        instance.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
+                }
+            }
+        }
+
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
-
+            MapInstanceProperties(instance);
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
@@ -288,10 +352,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _instanceRepo.GetInstanceForOrgAsync(orgId);
         }
 
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user)
+        {
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
+            return await _instanceRepo.GetInstanceForOrgAsync(edition, orgId);
+        }
+
         public async Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance), Actions.Read);
+         
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            MapInstanceProperties(instance);
             if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
             {
                 var proxy = _proxyFactory.Create<IDeploymentInstanceStatusRepo>(new ProxySettings { OrganizationId = org.Id, InstanceId = instanceId });
@@ -315,6 +387,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 instance.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
             }
+
+            MapInstanceProperties(instance);
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
@@ -431,6 +505,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            MapInstanceProperties(instance);
             var settings = new DeploymentSettings();
             settings.OrgId = org.Id;
 
@@ -509,50 +584,54 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<DeploymentSettings>.FromError("Could not get access key 2, please try again later: " + getSolutionRsult.Errors.First().Message);
             }
 
-            var cmd = new StringBuilder("docker run -d ");
-            foreach (var listener in getSolutionRsult.Result.Listeners)
+            if (instance.NuvIoTEdition.Value == NuvIoTEditions.Container)
             {
-                if (listener.Value.ListenOnPort.HasValue)
+                var cmd = new StringBuilder("docker run -d ");
+                foreach (var listener in getSolutionRsult.Result.Listeners)
                 {
-                    var port = listener.Value.ListenOnPort.Value;
+                    if (listener.Value.ListenOnPort.HasValue)
+                    {
+                        var port = listener.Value.ListenOnPort.Value;
 
-                    cmd.Append($"-p {port}:{port} ");
+                        cmd.Append($"-p {port}:{port} ");
+                    }
                 }
+
+                cmd.Append($"-p {instance.InputCommandPort}:{instance.InputCommandPort} ");
+
+                cmd.Append($"-e InstanceId={instanceId} ");
+                cmd.Append($"-e OrgId={org.Id} ");
+
+                if (!EntityHeader.IsNullOrEmpty(instance.Version))
+                {
+                    cmd.Append($"-e VersionId={instance.Version.Id} ");
+                }
+
+                if (instance.PrimaryHost != null)
+                {
+                    cmd.Append($"-e HostId={instance.PrimaryHost.Id} ");
+                }
+
+                cmd.Append($"-e Environment={_appConfig.Environment.ToString()} ");
+
+                cmd.Append($"-e DeploymentType={instance.DeploymentType.Id} ");
+                cmd.Append($"-e DeploymentConfig={instance.DeploymentConfiguration.Id} ");
+                cmd.Append($"-e QueueType={instance.QueueType.Id} ");
+                cmd.Append($"-e AccessKey={settings.SharedAccessKey1} ");
+                cmd.Append($"--name={instance.Key} ");
+                cmd.Append("--restart unless-stopped ");
+
+                var containerRepo = await _containerRepoMgr.GetContainerRepoAsync(instance.ContainerRepository.Id, org, user);
+                var imageName = $"{containerRepo.Namespace}/{containerRepo.RepositoryName}";
+
+                cmd.Append($"{imageName}:{instance.ContainerTag.Text}");
+                settings.DockerCommandLine = cmd.ToString();
             }
 
-            cmd.Append($"-p {instance.InputCommandPort}:{instance.InputCommandPort} ");
-
-            cmd.Append($"-e InstanceId={instanceId} ");
-            cmd.Append($"-e OrgId={org.Id} ");
-
-            if (!EntityHeader.IsNullOrEmpty(instance.Version))
-            {
-                cmd.Append($"-e VersionId={instance.Version.Id} ");
-            }
-
-            if (instance.PrimaryHost != null)
-            {
-                cmd.Append($"-e HostId={instance.PrimaryHost.Id} ");
-            }
-
-            cmd.Append($"-e Environment={_appConfig.Environment.ToString()} ");
-
-            cmd.Append($"-e DeploymentType={instance.DeploymentType.Id} ");
-            cmd.Append($"-e DeploymentConfig={instance.DeploymentConfiguration.Id} ");
-            cmd.Append($"-e QueueType={instance.QueueType.Id} ");
-            cmd.Append($"-e AccessKey={settings.SharedAccessKey1} ");
-            cmd.Append($"--name={instance.Key} ");
-            cmd.Append("--restart unless-stopped ");
-
-            var containerRepo = await _containerRepoMgr.GetContainerRepoAsync(instance.ContainerRepository.Id, org, user);
-            var imageName = $"{containerRepo.Namespace}/{containerRepo.RepositoryName}";
-
-            cmd.Append($"{imageName}:{instance.ContainerTag.Text}");
-
-            settings.QueueType = instance.QueueType;
+            settings.WorkingStorage = instance.WorkingStorage;
             settings.DeploymentType = instance.DeploymentType;
-            settings.DeploymentConfiguration = instance.DeploymentConfiguration;
-            settings.DockerCommandLine = cmd.ToString();
+            settings.NuvIoTEdition = instance.NuvIoTEdition;
+            
             settings.Name = instance.Name;
             settings.Key = instance.Key;
 

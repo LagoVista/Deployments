@@ -215,6 +215,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentConfiguration_SingleInstance
 
 		public static string DeploymentConfiguration_SingleInstance { get { return GetResourceString("DeploymentConfiguration_SingleInstance"); } }
+//Resources:DeploymentAdminResources:DeploymentConfiguration_UWPApp
+
+		public static string DeploymentConfiguration_UWPApp { get { return GetResourceString("DeploymentConfiguration_UWPApp"); } }
 //Resources:DeploymentAdminResources:DeploymentInstance_Integrations
 
 		public static string DeploymentInstance_Integrations { get { return GetResourceString("DeploymentInstance_Integrations"); } }
@@ -257,6 +260,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentQueueType_ServiceBus
 
 		public static string DeploymentQueueType_ServiceBus { get { return GetResourceString("DeploymentQueueType_ServiceBus"); } }
+//Resources:DeploymentAdminResources:DeploymentType_Cloud
+
+		public static string DeploymentType_Cloud { get { return GetResourceString("DeploymentType_Cloud"); } }
 //Resources:DeploymentAdminResources:DeploymentType_Managed
 
 		public static string DeploymentType_Managed { get { return GetResourceString("DeploymentType_Managed"); } }
@@ -920,6 +926,21 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:IntegrationType_Twillio
 
 		public static string IntegrationType_Twillio { get { return GetResourceString("IntegrationType_Twillio"); } }
+//Resources:DeploymentAdminResources:NuvIoT_Edition
+
+		public static string NuvIoT_Edition { get { return GetResourceString("NuvIoT_Edition"); } }
+//Resources:DeploymentAdminResources:NuvIoTEdition_App
+
+		public static string NuvIoTEdition_App { get { return GetResourceString("NuvIoTEdition_App"); } }
+//Resources:DeploymentAdminResources:NuvIoTEdition_Cluster
+
+		public static string NuvIoTEdition_Cluster { get { return GetResourceString("NuvIoTEdition_Cluster"); } }
+//Resources:DeploymentAdminResources:NuvIoTEdition_Container
+
+		public static string NuvIoTEdition_Container { get { return GetResourceString("NuvIoTEdition_Container"); } }
+//Resources:DeploymentAdminResources:NuvIoTEdition_Select
+
+		public static string NuvIoTEdition_Select { get { return GetResourceString("NuvIoTEdition_Select"); } }
 //Resources:DeploymentAdminResources:RemoteDeployment_Description
 
 		public static string RemoteDeployment_Description { get { return GetResourceString("RemoteDeployment_Description"); } }
@@ -1061,6 +1082,21 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Warning_NoListeners
 
 		public static string Warning_NoListeners { get { return GetResourceString("Warning_NoListeners"); } }
+//Resources:DeploymentAdminResources:WorkingStorage
+
+		public static string WorkingStorage { get { return GetResourceString("WorkingStorage"); } }
+//Resources:DeploymentAdminResources:WorkingStorage_Cloud
+
+		public static string WorkingStorage_Cloud { get { return GetResourceString("WorkingStorage_Cloud"); } }
+//Resources:DeploymentAdminResources:WorkingStorage_Help
+
+		public static string WorkingStorage_Help { get { return GetResourceString("WorkingStorage_Help"); } }
+//Resources:DeploymentAdminResources:WorkingStorage_Local
+
+		public static string WorkingStorage_Local { get { return GetResourceString("WorkingStorage_Local"); } }
+//Resources:DeploymentAdminResources:WorkingStorage_Select
+
+		public static string WorkingStorage_Select { get { return GetResourceString("WorkingStorage_Select"); } }
 
 		public static class Names
 		{
@@ -1118,6 +1154,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentConfiguration_DockerSwarm = "DeploymentConfiguration_DockerSwarm";
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
+			public const string DeploymentConfiguration_UWPApp = "DeploymentConfiguration_UWPApp";
 			public const string DeploymentInstance_Integrations = "DeploymentInstance_Integrations";
 			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";
 			public const string DeploymentInstance_SharedAccessKey1 = "DeploymentInstance_SharedAccessKey1";
@@ -1132,6 +1169,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentQueueType_QueueTechnology_Select = "DeploymentQueueType_QueueTechnology_Select";
 			public const string DeploymentQueueType_RabbitMQ = "DeploymentQueueType_RabbitMQ";
 			public const string DeploymentQueueType_ServiceBus = "DeploymentQueueType_ServiceBus";
+			public const string DeploymentType_Cloud = "DeploymentType_Cloud";
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
 			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";
@@ -1353,6 +1391,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string IntegrationType_Select_Watermark = "IntegrationType_Select_Watermark";
 			public const string IntegrationType_SendGrid = "IntegrationType_SendGrid";
 			public const string IntegrationType_Twillio = "IntegrationType_Twillio";
+			public const string NuvIoT_Edition = "NuvIoT_Edition";
+			public const string NuvIoTEdition_App = "NuvIoTEdition_App";
+			public const string NuvIoTEdition_Cluster = "NuvIoTEdition_Cluster";
+			public const string NuvIoTEdition_Container = "NuvIoTEdition_Container";
+			public const string NuvIoTEdition_Select = "NuvIoTEdition_Select";
 			public const string RemoteDeployment_Description = "RemoteDeployment_Description";
 			public const string RemoteDeployment_Help = "RemoteDeployment_Help";
 			public const string RemoteDeployment_Instances = "RemoteDeployment_Instances";
@@ -1400,6 +1443,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
 			public const string Warning_NoDeviceConfigs = "Warning_NoDeviceConfigs";
 			public const string Warning_NoListeners = "Warning_NoListeners";
+			public const string WorkingStorage = "WorkingStorage";
+			public const string WorkingStorage_Cloud = "WorkingStorage_Cloud";
+			public const string WorkingStorage_Help = "WorkingStorage_Help";
+			public const string WorkingStorage_Local = "WorkingStorage_Local";
+			public const string WorkingStorage_Select = "WorkingStorage_Select";
 		}
 	}
 }

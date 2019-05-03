@@ -67,6 +67,23 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Get for Org
+        /// </summary>
+        /// <param name="edition"
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instances/{edition}")]
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string str)
+        {
+            if (Enum.TryParse<NuvIoTEditions>(str, out NuvIoTEditions edition))
+            {
+                var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(edition, OrgEntityHeader.Id, UserEntityHeader);
+                return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
+            }
+
+            throw new InvalidOperationException($"{str} is not a valid edition");            
+        }
+
+        /// <summary>
         /// Deployment Instance - Get Status History
         /// </summary>
         /// <param name="id"></param>

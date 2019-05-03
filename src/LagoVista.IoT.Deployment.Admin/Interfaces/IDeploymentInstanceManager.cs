@@ -25,6 +25,8 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user);
 
+        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user);
+
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
 

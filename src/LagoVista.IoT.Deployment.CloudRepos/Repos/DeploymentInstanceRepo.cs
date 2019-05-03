@@ -58,7 +58,15 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
+            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId);
+
+            return from item in items
+                   select item.CreateSummary();
+        }
+
+        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId)
+        {
+            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition));
 
             return from item in items
                    select item.CreateSummary();
