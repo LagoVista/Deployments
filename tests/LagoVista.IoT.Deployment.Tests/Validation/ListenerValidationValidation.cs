@@ -30,6 +30,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
                 OwnerOrganization = EntityHeader.Create("1112403B28644ED180465C0393F0CA14", "USER"),
                 Key = "instancekey",
                 Name = "MyInstance",
+                NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.App),
                 ContainerRepository = new EntityHeader() { Id = "2212403B28644ED180465C0393F0CA14", Text = "Container" },
                 ContainerTag = new EntityHeader() { Id = "3312403B28644ED180465C0393F0CA14", Text = "ContainerTag" },
                 CloudProvider = new EntityHeader() { Id = "4412403B28644ED180465C0393F0CA14", Text = "CloudProvider" },

@@ -44,6 +44,10 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         Mock<IAppConfig> _appConfig;
         Mock<IDeploymentInstanceStatusRepo> _instanceStatusRepo = new Mock<IDeploymentInstanceStatusRepo>();
 
+
+        EntityHeader ORG = EntityHeader.Create("FB4C4FD759E3497180DF1B28FFCB7ACD", "MyOrg");
+        EntityHeader USER = EntityHeader.Create("{B050B8F2B72D46E8-8555BCE178111218", "MyUser");
+
         [TestInitialize]
         public void Init()
         {
@@ -119,7 +123,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
 
-            await _instanceManager.AddInstanceAsync(instance, null, null);
+            await _instanceManager.AddInstanceAsync(instance, ORG, USER);
 
             _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
             _deploymentHostManager.Verify(dir => dir.AddDeploymentHostAsync(It.IsAny<DeploymentHost>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
@@ -142,7 +146,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
             instance.DeviceRepository = null;
-            await _instanceManager.AddInstanceAsync(instance, null, null);
+            await _instanceManager.AddInstanceAsync(instance, ORG, USER);
         }
 
 
@@ -161,7 +165,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
 
-            await _instanceManager.AddInstanceAsync(instance, null, null);
+            await _instanceManager.AddInstanceAsync(instance, ORG, USER);
         }
 
         [TestMethod]
@@ -179,7 +183,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             try
             {
-                await _instanceManager.AddInstanceAsync(instance, null, null);
+                await _instanceManager.AddInstanceAsync(instance, ORG, USER);
           
             }
             catch (ValidationException) { }
@@ -199,7 +203,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
 
-            await _instanceManager.UpdateInstanceAsync(instance, null, null);
+            await _instanceManager.UpdateInstanceAsync(instance, ORG, USER);
 
 
             _deploymentInstanceRepo.Verify(dir => dir.UpdateInstanceAsync(It.IsAny<DeploymentInstance>()), Times.Once);
@@ -242,7 +246,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var updatedInstance = GetInstance();
             updatedInstance.DeviceRepository.Id = NEW_DEVICE_REPO_ID;
-            await _instanceManager.UpdateInstanceAsync(updatedInstance, null, null);
+            await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
 
             _deploymentInstanceRepo.Verify(dir => dir.UpdateInstanceAsync(It.IsAny<DeploymentInstance>()), Times.Once);
 
@@ -291,7 +295,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var updatedInstance = GetInstance();
             updatedInstance.DeviceRepository.Id = NEW_DEVICE_REPO_ID;
-            await _instanceManager.UpdateInstanceAsync(updatedInstance, null, null);
+            await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
         }
 
         [TestMethod]
@@ -327,7 +331,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             try
             {
-                await _instanceManager.UpdateInstanceAsync(updatedInstance, null, null);
+                await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
             }
             catch (ValidationException) { }
 
@@ -366,7 +370,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
             _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
-            await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
+            await _instanceManager.DeleteInstanceAsync(instance.Id, ORG, USER);
 
 
             _deploymentInstanceRepo.Verify(dir => dir.DeleteInstanceAsync(DEVICE_INSTANCE_ID), Times.Once);
@@ -389,7 +393,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
 
-            await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
+            await _instanceManager.DeleteInstanceAsync(instance.Id, ORG, USER);
 
             _deploymentHostManager.Verify(dhm => dhm.DeleteDeploymentHostAsync(host.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
         }
@@ -408,7 +412,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(instance.PrimaryHost.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<Boolean>())).ReturnsAsync(host);
 
-            await _instanceManager.DeleteInstanceAsync(instance.Id, null, null);
+            await _instanceManager.DeleteInstanceAsync(instance.Id, ORG, USER);
 
             _deploymentHostManager.Verify(dhm => dhm.DeleteDeploymentHostAsync(host.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
