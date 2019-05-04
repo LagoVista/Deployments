@@ -93,6 +93,8 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.ContainerTag = EntityHeader.Create("id", "text");
             instance.Solution = new EntityHeader<Solution>() { Id = "id", Text = "text" };
             instance.Size = EntityHeader.Create("id", "text");
+            instance.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.App);
+            instance.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Cloud);
             instance.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
             instance.DeviceRepository = new EntityHeader<DeviceRepository>() { Id = NEW_DEVICE_REPO_ID, Text = "Don't Care" };
             instance.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
