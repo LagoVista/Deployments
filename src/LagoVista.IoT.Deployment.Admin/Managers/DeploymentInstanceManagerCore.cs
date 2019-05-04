@@ -247,10 +247,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
+            if (instance == null) throw new ArgumentNullException("Null Reference Provided for instance.");
+            if (org == null) throw new ArgumentNullException("Null Reference Provided for org.");
+            if (user == null) throw new ArgumentNullException("Null Reference Provided for user.");
+
             ValidationCheck(instance, Actions.Update);
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org);
 
             var existingInstance = await _instanceRepo.GetInstanceAsync(instance.Id);
+            if (existingInstance == null) throw new RecordNotFoundException(typeof(DeploymentInstance).Name, instance.Id);
+            
             if (existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
             {
                 var newlyAssginedRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
@@ -311,11 +317,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
             {
                 var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
-                if (host.Size.Id != instance.Size.Id ||
+                if (host.Size?.Id != instance.Size?.Id ||
                    host.CloudProvider.Id != instance.CloudProvider.Id ||
                    host.Subscription.Id != instance.Subscription.Id ||
-                   host.ContainerRepository.Id != instance.ContainerRepository.Id ||
-                   host.ContainerTag.Id != instance.ContainerTag.Id)
+                   host.ContainerRepository?.Id != instance.ContainerRepository?.Id ||
+                   host.ContainerTag?.Id != instance.ContainerTag?.Id)
                 {
                     host.Size = instance.Size;
                     host.Subscription = instance.Subscription;

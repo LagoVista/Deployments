@@ -162,7 +162,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize, IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize)]
         public EntityHeader Size { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeviceRepo, HelpResource: DeploymentAdminResources.Names.Instance_DeviceRepo_Help, WaterMark: DeploymentAdminResources.Names.Instance_DeviceRepo_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
@@ -221,7 +221,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.NuvIoT_Edition, EnumType: (typeof(NuvIoTEditions)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.NuvIoTEdition_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<NuvIoTEditions> NuvIoTEdition { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.WorkingStorage, EnumType: (typeof(WorkingStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.WorkingStorage_Select, IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.WorkingStorage, EnumType: (typeof(WorkingStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.WorkingStorage_Select, IsUserEditable: true)]
         public EntityHeader<WorkingStorage> WorkingStorage { get; set; }
 
 
@@ -315,6 +315,23 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 if(EntityHeader.IsNullOrEmpty(ContainerTag))
                 {
                     result.AddSystemError("Container Tag Is Required for NuvIoT Container Editions.");
+                }
+
+                if (EntityHeader.IsNullOrEmpty(Size))
+                {
+                    result.AddSystemError("Image Size is a Required FIeld.");
+                }
+
+                if (EntityHeader.IsNullOrEmpty(WorkingStorage))
+                {
+                    result.AddSystemError("Image Size is a Required FIeld.");
+                }
+            }
+            else if(NuvIoTEdition.Value == NuvIoTEditions.Cluster)
+            {
+                if (EntityHeader.IsNullOrEmpty(WorkingStorage))
+                {
+                    result.AddSystemError("Image Size is a Required FIeld.");
                 }
             }
 
