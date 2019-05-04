@@ -176,10 +176,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Version, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_Version_Help, WaterMark: DeploymentAdminResources.Names.DeploymentInstance_Version_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public EntityHeader Version { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerRepository { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerTag { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey1, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_SharedAccessKey_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
@@ -302,6 +302,19 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 if (String.IsNullOrEmpty(SharedAccessKey2))
                 {
                     result.AddSystemError("Upon creation, Shared Access Key 2 is Required.");
+                }
+            }
+
+            if(NuvIoTEdition.Value == NuvIoTEditions.Container)
+            {
+                if(EntityHeader.IsNullOrEmpty(ContainerRepository))
+                {
+                    result.AddSystemError("Container Repository Is Required for NuvIoT Container Editions.");
+                }
+
+                if(EntityHeader.IsNullOrEmpty(ContainerTag))
+                {
+                    result.AddSystemError("Container Tag Is Required for NuvIoT Container Editions.");
                 }
             }
 
