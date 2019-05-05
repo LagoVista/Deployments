@@ -33,6 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult> StartAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> ResetAppAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> PauseAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartContainerAsync(string id, EntityHeader org, EntityHeader user);

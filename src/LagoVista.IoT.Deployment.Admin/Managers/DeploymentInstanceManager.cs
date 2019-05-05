@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _containerRepoMgr = containerRepoMgr;
         }
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, 
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
             this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
@@ -158,8 +158,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
         }
 
+        public async Task<InvokeResult> ResetAppAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
+            var instance = await _instanceRepo.GetInstanceAsync(id);
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+            await UpdateInstanceStatusAsync(id, DeploymentInstanceStates.Offline, false, null, org, user, "Forcing to offline");
+            await _hostManager.UpdateDeploymentHostStatusAsync(instance.PrimaryHost.Id, HostStatus.Offline, null, org, user, "Forcing to offline.");
+
+            return InvokeResult.Success;
+        }
+
         public async Task<InvokeResult> PauseAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
@@ -179,6 +193,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> StopAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
@@ -198,6 +214,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
@@ -208,6 +226,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartContainerAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
@@ -219,6 +239,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateRuntimeAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
@@ -229,6 +251,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> ReloadSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.ReloadSolution, org, user);
@@ -250,6 +274,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
@@ -260,7 +286,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
-        {
+        {           
             await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
             return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
@@ -268,6 +294,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
+
             var instance = await GetInstanceAsync(instanceId, org, user);
             MapInstanceProperties(instance);
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);

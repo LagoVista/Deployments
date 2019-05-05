@@ -369,7 +369,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             statusUpdate.NewDeploy = deployed;
             statusUpdate.OldState = instance.Status.Value.ToString();
             statusUpdate.NewState = newStatus.ToString();
-            statusUpdate.Version = version;
+            statusUpdate.Version = version ?? "-";
             await _deploymentInstanceStatusRepo.AddDeploymentInstanceStatusAsync(statusUpdate);
 
             instance.Status = EntityHeader<DeploymentInstanceStates>.Create(newStatus);

@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Deployment Instance - Get for Org
         /// </summary>
-        /// <param name="edition"
+        /// <param name="str" />
         /// <returns></returns>
         [HttpGet("/api/deployment/instances/{edition}")]
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string str)
@@ -208,6 +208,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult> StartAsync(String id)
         {
             return _instanceManager.StartAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Reset
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/reset")]
+        public Task<InvokeResult> ResetAsync(String id)
+        {            
+            return _instanceManager.ResetAppAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

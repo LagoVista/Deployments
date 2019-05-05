@@ -235,7 +235,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 hostStatusUpdate.OldState = host.Status.Value.ToString();
                 hostStatusUpdate.NewState = hostStatus.ToString();
                 hostStatusUpdate.Details = statusDetails;
-                hostStatusUpdate.Version = version;
+                hostStatusUpdate.Version = version ?? "-";
                 host.Status = EntityHeader<HostStatus>.Create(hostStatus);
                 host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
                 host.StatusDetails = statusDetails;
