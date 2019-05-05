@@ -340,6 +340,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var dateStamp = DateTime.UtcNow.ToJSONString();
 
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            MapInstanceProperties(instance);
             ValidationCheck(instance, Actions.Update);
 
             if(newStatus == DeploymentInstanceStates.Offline)

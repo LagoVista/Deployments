@@ -305,14 +305,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 }
             }
 
-            if(NuvIoTEdition.Value == NuvIoTEditions.Container)
+            if (NuvIoTEdition?.Value == NuvIoTEditions.Container)
             {
-                if(EntityHeader.IsNullOrEmpty(ContainerRepository))
+                if (EntityHeader.IsNullOrEmpty(ContainerRepository))
                 {
                     result.AddSystemError("Container Repository Is Required for NuvIoT Container Editions.");
                 }
 
-                if(EntityHeader.IsNullOrEmpty(ContainerTag))
+                if (EntityHeader.IsNullOrEmpty(ContainerTag))
                 {
                     result.AddSystemError("Container Tag Is Required for NuvIoT Container Editions.");
                 }
@@ -327,7 +327,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     result.AddSystemError("Image Size is a Required FIeld.");
                 }
             }
-            else if(NuvIoTEdition.Value == NuvIoTEditions.Cluster)
+            else if (NuvIoTEdition?.Value == NuvIoTEditions.Cluster)
             {
                 if (EntityHeader.IsNullOrEmpty(WorkingStorage))
                 {
