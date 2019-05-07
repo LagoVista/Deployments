@@ -71,7 +71,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="str" />
         /// <returns></returns>
-        [HttpGet("/api/deployment/instances/{edition}")]
+        [HttpGet("/api/deployment/instances/{str}")]
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string str)
         {
             if (Enum.TryParse<NuvIoTEditions>(str, out NuvIoTEditions edition))
