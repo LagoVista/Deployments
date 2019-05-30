@@ -16,6 +16,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string UserId { get; set; }
         public MessageTypes MessageType { get; set; }
 
+        public string Email { get; set; }
+
+        public string Phone { get; set; }
+
         public string Body { get; set; }
         public string Subject { get; set; }
     }

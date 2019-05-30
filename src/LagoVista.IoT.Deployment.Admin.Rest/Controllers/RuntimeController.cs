@@ -280,26 +280,50 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             if(String.IsNullOrEmpty(message.UserId))
             {
-                throw new InvalidDataException("Missing User Id of user to notify.");
+                if((message.MessageType == MessageTypes.Email || message.MessageType == MessageTypes.SMSAndEmail) && String.IsNullOrEmpty(message.Email))
+                {
+                    throw new InvalidDataException("Missing User Id AND Email and attempt to send an email.");
+                }
+                else if((message.MessageType == MessageTypes.SMS || message.MessageType == MessageTypes.SMSAndEmail) && String.IsNullOrEmpty(message.Phone))
+                {
+                    throw new InvalidDataException("Missing User Id AND Phone and attempt to send an SMS Message.");
+                }
+                else
+                {
+                    throw new InvalidDataException("Missing User Id of user to send message if Phone or Email is not supplied.");
+                }
             }
 
-            var getUserResult = await GetUserAsync(message.UserId);
-            if(!getUserResult.Successful)
+            if (!String.IsNullOrEmpty(message.UserId))
             {
-                throw new InvalidDataException(getUserResult.Errors.First().Message);
+                var getUserResult = await GetUserAsync(message.UserId);
+                if (!getUserResult.Successful)
+                {
+                    throw new InvalidDataException(getUserResult.Errors.First().Message);
+                }
+                
+                if(String.IsNullOrEmpty(message.Phone))
+                {
+                    message.Phone = getUserResult.Result.Phone;
+                }
+
+                if (String.IsNullOrEmpty(message.Email))
+                {
+                    message.Phone = getUserResult.Result.Email;
+                }
             }
 
             switch(message.MessageType)
             {
                 case MessageTypes.Email:
-                    await _emailSender.SendAsync(getUserResult.Result.Email, message.Subject, message.Body);
+                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                     break;
                 case MessageTypes.SMS:
-                    await _smsSender.SendAsync(getUserResult.Result.Phone, message.Body);
+                    await _smsSender.SendAsync(message.Phone, message.Body);
                     break;
                 case MessageTypes.SMSAndEmail:
-                    await _smsSender.SendAsync(getUserResult.Result.Phone, message.Body);
-                    await _emailSender.SendAsync(getUserResult.Result.Email, message.Subject, message.Body);
+                    await _smsSender.SendAsync(message.Phone, message.Body);
+                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                     break;
             }
         }
