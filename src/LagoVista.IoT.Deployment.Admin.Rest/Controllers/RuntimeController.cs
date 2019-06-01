@@ -274,32 +274,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpPost("/api/deployment/user/message")]
-        public async Task SentUserMessageAsync([FromBody] UserMessage message)
+        public async Task<InvokeResult> SentUserMessageAsync([FromBody] UserMessage message)
         {
             await ValidateRequest(HttpContext.Request);
-
-            if(String.IsNullOrEmpty(message.UserId))
-            {
-                if((message.MessageType == MessageTypes.Email || message.MessageType == MessageTypes.SMSAndEmail) && String.IsNullOrEmpty(message.Email))
-                {
-                    throw new InvalidDataException("Missing User Id AND Email and attempt to send an email.");
-                }
-                else if((message.MessageType == MessageTypes.SMS || message.MessageType == MessageTypes.SMSAndEmail) && String.IsNullOrEmpty(message.Phone))
-                {
-                    throw new InvalidDataException("Missing User Id AND Phone and attempt to send an SMS Message.");
-                }
-                else
-                {
-                    throw new InvalidDataException("Missing User Id of user to send message if Phone or Email is not supplied.");
-                }
-            }
 
             if (!String.IsNullOrEmpty(message.UserId))
             {
                 var getUserResult = await GetUserAsync(message.UserId);
                 if (!getUserResult.Successful)
                 {
-                    throw new InvalidDataException(getUserResult.Errors.First().Message);
+                    throw new InvalidDataException("RuntimeController_SendUserMessageAsync", getUserResult.Errors.Select(er=>er.Message).ToArray());
                 }
                 
                 if(String.IsNullOrEmpty(message.Phone))
@@ -313,19 +297,48 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 }
             }
 
-            switch(message.MessageType)
+            if (String.IsNullOrEmpty(message.Phone) && (message.MessageType == MessageTypes.SMS || message.MessageType == MessageTypes.SMSAndEmail))
+            {
+                throw new InvalidDataException(errors: new string[] { "Missing User Id AND Phone when attempting to send an SMS Message." });
+            }
+
+            if (String.IsNullOrEmpty(message.Email) && (message.MessageType == MessageTypes.Email || message.MessageType == MessageTypes.SMSAndEmail))
+            {
+                throw new InvalidDataException(errors:new string[] { "Missing User Id AND Email when attempting to send an email." });
+            }
+
+
+            switch (message.MessageType)
             {
                 case MessageTypes.Email:
+                    if (String.IsNullOrEmpty(message.Body) || String.IsNullOrEmpty(message.Subject))
+                    {
+                        throw new InvalidDataException(errors: new string[] { "Body and Subject are required to send an email." });
+                    }
+
                     await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                     break;
                 case MessageTypes.SMS:
+                    if(String.IsNullOrEmpty(message.Body))
+                    {
+                        throw new InvalidDataException(errors:new string[] { "Body is required to send an SMS Message." });
+                    }
+
                     await _smsSender.SendAsync(message.Phone, message.Body);
+                    
                     break;
                 case MessageTypes.SMSAndEmail:
+                    if (String.IsNullOrEmpty(message.Body) || String.IsNullOrEmpty(message.Subject))
+                    {
+                        throw new InvalidDataException(errors: new string[] { "Body and Subject are required." });
+                    }
+
                     await _smsSender.SendAsync(message.Phone, message.Body);
                     await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                     break;
             }
+
+            return InvokeResult.Success;
         }
 
 
