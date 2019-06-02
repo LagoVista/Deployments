@@ -30,10 +30,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
         IDataStreamManager _dataStreamManager;
+        IDeviceTypeManager _deviceTypeManager;
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDataStreamManager dataStreamManager, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
                             IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
-                            IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+                            IDeviceTypeManager deviceTypeManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
@@ -41,6 +42,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
             _deploymentInstanceManager = deploymentInstnaceManager;
             _dataStreamManager = dataStreamManager;
+            _deviceTypeManager = deviceTypeManager;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -317,6 +319,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
             var result = new InvokeResult();
+
+
+            device.DeviceType.Value = await _deviceTypeManager.GetDeviceTypeAsync(device.DeviceType.Id, org, user);
 
             if (EntityHeader.IsNullOrEmpty(instanceEH))
             {
