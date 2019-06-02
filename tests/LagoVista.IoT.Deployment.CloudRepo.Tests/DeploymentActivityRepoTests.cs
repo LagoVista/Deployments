@@ -26,8 +26,8 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()
             {
-                AccountId = "nuviotdev",
-                AccessKey = "Za6PpxUbXjXic8rhK3lbcWyUQyVY2NVsgXRRD1rVj2LAjXUnji5/ooJx7u0ob9cPKTkPu/woa74DBE6IVKsLQA=="
+                AccountId = Environment.GetEnvironmentVariable("TEST_AZURESTORAGE_ACCOUNTID", EnvironmentVariableTarget.User),
+                AccessKey = Environment.GetEnvironmentVariable("TEST_AZURESTORAGE_ACCESSKEY", EnvironmentVariableTarget.User)
             });
 
             var repo = new DeploymentActivityRepo(_deploymentSettings.Object, _adminLogger.Object);
@@ -50,8 +50,8 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()
             {
-                AccountId = "nuviotdev",
-                AccessKey = "Za6PpxUbXjXic8rhK3lbcWyUQyVY2NVsgXRRD1rVj2LAjXUnji5/ooJx7u0ob9cPKTkPu/woa74DBE6IVKsLQA=="
+                AccountId = Environment.GetEnvironmentVariable("TEST_AZURESTORAGE_ACCOUNTID", EnvironmentVariableTarget.User),
+                AccessKey = Environment.GetEnvironmentVariable("TEST_AZURESTORAGE_ACCESSKEY", EnvironmentVariableTarget.User)
             });
 
             var repo = new DeploymentActivityRepo(_deploymentSettings.Object, _adminLogger.Object);
