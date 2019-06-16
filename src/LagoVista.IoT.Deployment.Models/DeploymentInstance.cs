@@ -25,6 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DataStreams = new List<EntityHeader<DataStream>>();
             ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
             Integrations = new List<EntityHeader<Integration>>();
+            HealthCheckEnabled = true;
         }
 
 
@@ -178,6 +179,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerRepository { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_HealthCheckEnabled, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_HealthCheckEnabled, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool HealthCheckEnabled { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerTag { get; set; }

@@ -218,6 +218,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentConfiguration_UWPApp
 
 		public static string DeploymentConfiguration_UWPApp { get { return GetResourceString("DeploymentConfiguration_UWPApp"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_HealthCheckEnabled
+
+		public static string DeploymentInstance_HealthCheckEnabled { get { return GetResourceString("DeploymentInstance_HealthCheckEnabled"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_HealthCheckEnabled_Help
+
+		public static string DeploymentInstance_HealthCheckEnabled_Help { get { return GetResourceString("DeploymentInstance_HealthCheckEnabled_Help"); } }
 //Resources:DeploymentAdminResources:DeploymentInstance_Integrations
 
 		public static string DeploymentInstance_Integrations { get { return GetResourceString("DeploymentInstance_Integrations"); } }
@@ -1155,6 +1161,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentConfiguration_Kubernetes = "DeploymentConfiguration_Kubernetes";
 			public const string DeploymentConfiguration_SingleInstance = "DeploymentConfiguration_SingleInstance";
 			public const string DeploymentConfiguration_UWPApp = "DeploymentConfiguration_UWPApp";
+			public const string DeploymentInstance_HealthCheckEnabled = "DeploymentInstance_HealthCheckEnabled";
+			public const string DeploymentInstance_HealthCheckEnabled_Help = "DeploymentInstance_HealthCheckEnabled_Help";
 			public const string DeploymentInstance_Integrations = "DeploymentInstance_Integrations";
 			public const string DeploymentInstance_SharedAccessKey_Help = "DeploymentInstance_SharedAccessKey_Help";
 			public const string DeploymentInstance_SharedAccessKey1 = "DeploymentInstance_SharedAccessKey1";

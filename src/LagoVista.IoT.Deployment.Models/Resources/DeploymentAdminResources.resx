@@ -1161,4 +1161,10 @@
   <data name="WorkingStorage_Select" xml:space="preserve">
     <value>-select working store location-</value>
   </data>
+  <data name="DeploymentInstance_HealthCheckEnabled" xml:space="preserve">
+    <value>Health Check Enabled</value>
+  </data>
+  <data name="DeploymentInstance_HealthCheckEnabled_Help" xml:space="preserve">
+    <value>By defaulf if your instance is in a running state, a service will ensure that it is online. if it is not every hour the primary contact for the instance will receive a text message and an email.  With health check enabled not set, you will only receive an email or text message when it is determined that the instance is online.</value>
+  </data>
 </root>
