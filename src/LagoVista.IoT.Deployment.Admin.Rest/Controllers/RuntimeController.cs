@@ -35,6 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         IOrgUserRepo _orgUserRepo;
         IEmailSender _emailSender;
         ISmsSender _smsSender;
+        IServiceTicketCreator _ticketCreator;
 
         public const string REQUEST_ID = "x-nuviot-runtime-request-id";
         public const string ORG_ID = "x-nuviot-orgid";
@@ -48,9 +49,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
-            IEmailSender emailSender, ISmsSender smsSendeer,
+            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             ISecureStorage secureStorage, IAdminLogger logger)
         {
+            _ticketCreator = ticketCreator;
             _userManager = userManager;
             _orgUserRepo = orgUserRepo;
             _instanceManager = instanceManager;
@@ -341,6 +343,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return InvokeResult.Success;
         }
 
+        /// <summary>
+        /// Runtime Controller - Create a Service Ticket
+        /// </summary>
+        /// <param name="templateid">Template Id of Ticket to Create</param>
+        /// <param name="repoid">Device Repository for the device that the ticket will be creatd for.</param>
+        /// <param name="deviceid">Device Id (32 byte unique id) of the device for the ticket </param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/fslite/{templateid}/{repoid}/{deviceid}")]
+        public Task<InvokeResult<string>> CreateTicket(string templateid, string repoid, string deviceid)
+        {
+            return _ticketCreator.CreateServiceTicketAsync(templateid, repoid, deviceid);
+        }
 
         /// <summary>
         /// Runtime Controller - Get PEM Storage Connection 

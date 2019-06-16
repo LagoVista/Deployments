@@ -18,6 +18,6 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> DeleteRemoteDeploymentHostAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RegenerateAccessKeys(string id, EntityHeader org, EntityHeader user);
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
-        Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
+        Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);        
     }
 }
