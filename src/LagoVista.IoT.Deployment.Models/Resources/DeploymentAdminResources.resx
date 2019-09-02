@@ -1167,4 +1167,7 @@
   <data name="DeploymentInstance_HealthCheckEnabled_Help" xml:space="preserve">
     <value>By defaulf if your instance is in a running state, a service will ensure that it is online. if it is not every hour the primary contact for the instance will receive a text message and an email.  With health check enabled not set, you will only receive an email or text message when it is determined that the instance is online.</value>
   </data>
+  <data name="Common_IsPublic_Help" xml:space="preserve">
+    <value>If you create this object as a public object it will be available to other users to use and clone within their application.  You will be  the only person allowed to edit it.</value>
+  </data>
 </root>

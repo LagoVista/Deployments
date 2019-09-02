@@ -22,7 +22,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, HelpResource: DeploymentAdminResources.Names.Common_IsPublic_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
+
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader OwnerUser { get; set; }
 
