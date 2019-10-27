@@ -66,6 +66,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfiguration = await _deviceConfigRepo.GetDeviceConfigurationAsync(id);
             await AuthorizeAsync(deviceConfiguration, AuthorizeActions.Delete, user, org);
             await ConfirmNoDepenenciesAsync(deviceConfiguration);
+
+            await this._deviceConfigRepo.DeleteDeviceConfigurationAsync(id);
+
             return InvokeResult.Success;
         }
 
