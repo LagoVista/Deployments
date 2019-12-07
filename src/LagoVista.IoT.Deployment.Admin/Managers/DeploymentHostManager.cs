@@ -60,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (host.HostType.Value == HostTypes.MCP) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteMCPHost.ToErrorMessage());
             if (host.HostType.Value == HostTypes.Notification) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteNotificationServerHost.ToErrorMessage());
 
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
+            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Delete, user, org);
             await ConfirmNoDepenenciesAsync(host);
             await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
             return InvokeResult.Success;

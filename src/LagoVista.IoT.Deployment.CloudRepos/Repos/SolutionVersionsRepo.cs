@@ -96,7 +96,6 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<SolutionVersion> PublishSolutionVersionAsync(SolutionVersion solutionVersion, Solution solution)
         {
-            Console.WriteLine(solutionVersion.SolutionId);
             solutionVersion.RowKey = Guid.NewGuid().ToId();
             solutionVersion.PartitionKey = solution.Id;
             solutionVersion.TimeStamp = DateTime.UtcNow.ToJSONString();

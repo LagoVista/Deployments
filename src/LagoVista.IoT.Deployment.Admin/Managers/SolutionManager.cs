@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using LagoVista.Core.Models;
-using LagoVista.IoT.Deployment.Admin.Models;
-using System.Threading.Tasks;
-using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.Core.Validation;
-using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
-using static LagoVista.Core.Models.AuthorizeResult;
-using LagoVista.IoT.Pipeline.Admin.Managers;
-using System;
+using LagoVista.Core.Models;
+using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Logging.Loggers;
-using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Pipeline.Admin.Managers;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using static LagoVista.Core.Models.AuthorizeResult;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
