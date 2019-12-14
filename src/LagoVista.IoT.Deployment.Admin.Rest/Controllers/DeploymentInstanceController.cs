@@ -173,6 +173,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var response = DetailResponse<DeploymentInstance>.Create();
             response.Model.Id = Guid.NewGuid().ToId();
             response.Model.DeploymentConfiguration = EntityHeader<DeploymentConfigurations>.Create(DeploymentConfigurations.SingleInstance);
+            response.Model.NuvIoTEdition = EntityHeader<NuvIoTEditions>.Create(NuvIoTEditions.Container);
+            response.Model.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
+            response.Model.WorkingStorage = EntityHeader<WorkingStorage>.Create(WorkingStorage.Cloud);
             response.Model.DeploymentType = EntityHeader<DeploymentTypes>.Create(DeploymentTypes.Managed);
             response.Model.QueueType = EntityHeader<QueueTypes>.Create(QueueTypes.InMemory);
             response.Model.LogStorage = EntityHeader<LogStorage>.Create(LogStorage.Cloud);
