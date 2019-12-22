@@ -41,7 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string ORG_ID = "x-nuviot-orgid";
         public const string ORG = "x-nuviot-org";
         public const string USER_ID = "x-nuviot-userid";
-        public const string USER = "x-nuviot-user";
+        public const string USER = "x-nuviot-user"; 
         public const string INSTANCE_ID = "x-nuviot-instanceid";
         public const string INSTANCE = "x-nuviot-instance";
         public const string DATE = "x-nuviot-date";

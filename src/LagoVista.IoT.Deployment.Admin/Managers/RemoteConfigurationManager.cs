@@ -24,12 +24,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _repoManager = repoManager;
         }
 
-        public async Task<ListResponse<AttributeValue>> GetAllPropertiesAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> RestartDeviceAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user)
         {
             var repo = await _repoManager.GetDeviceRepositoryAsync(deviceRepoId, org, user);
             if (EntityHeader.IsNullOrEmpty(repo.Instance))
             {
-                return ListResponse<AttributeValue>.FromError("Instance not deployed, can not set property.");
+                return InvokeResult.FromError("Instance not deployed, can not set property.");
             }
 
             var propertyManager = _proxyFactory.Create<IRemotePropertyNamanager>(new ProxySettings()
@@ -38,7 +38,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 OrganizationId = repo.OwnerOrganization.Id
             });
 
-            return await propertyManager.GetAllPropertiesAsync(deviceUniqueId);
+            return await propertyManager.QueryRemoteConfigurationAsync(deviceUniqueId);
+        }
+
+        public async Task<InvokeResult> QueryRemoteConfigurationAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user)
+        {
+            var repo = await _repoManager.GetDeviceRepositoryAsync(deviceRepoId, org, user);
+            if (EntityHeader.IsNullOrEmpty(repo.Instance))
+            {
+                return InvokeResult.FromError("Instance not deployed, can not set property.");
+            }
+
+            var propertyManager = _proxyFactory.Create<IRemotePropertyNamanager>(new ProxySettings()
+            {
+                InstanceId = repo.Instance.Id,
+                OrganizationId = repo.OwnerOrganization.Id
+            });
+
+            return await propertyManager.QueryRemoteConfigurationAsync(deviceUniqueId);
         }
 
         public async Task<InvokeResult> SendAllPropertiesAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user)

@@ -1,7 +1,4 @@
-﻿using LagoVista.Core.Models.UIMetaData;
-using LagoVista.Core.Validation;
-using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.DeviceManagement.Core.Models;
+﻿using LagoVista.Core.Validation;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
@@ -9,9 +6,6 @@ using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -33,23 +27,29 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/device/remoteconfig/{repoid}/{id}/all/send")]
-        public Task<InvokeResult> SendAllRemotePropertiesAsync(string repod, string id)
+        public Task<InvokeResult> SendAllRemotePropertiesAsync(string repoid, string id)
         {
-            return _remoteConfigMgr.SendAllPropertiesAsync(repod, id, OrgEntityHeader, UserEntityHeader);
+            return _remoteConfigMgr.SendAllPropertiesAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
         }
 
 
         [HttpGet("/api/device/remoteconfig/{repoid}/{id}/{idx}/send")]
-        public Task<InvokeResult> SendRemotePropertyAsync(string repod, string id, int idx)
+        public Task<InvokeResult> SendRemotePropertyAsync(string repoid, string id, int idx)
         {
-            return _remoteConfigMgr.SendPropertyAsync(repod, id, idx, OrgEntityHeader, UserEntityHeader);
+            return _remoteConfigMgr.SendPropertyAsync(repoid, id, idx, OrgEntityHeader, UserEntityHeader);
         }
 
 
-        [HttpGet("/api/device/remoteconfig/{repoid}/{id}")]
-        public Task<ListResponse<AttributeValue>> GetAllPropertiesAsync(string repoid, string id)
+        [HttpGet("/api/device/remoteconfig/{repoid}/{id}/query")]
+        public Task<InvokeResult> QueryRemoteConfigAsync(string repoid, string id)
         {
-            return _remoteConfigMgr.GetAllPropertiesAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+            return _remoteConfigMgr.QueryRemoteConfigurationAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/device/remoteconfig/{repoid}/{id}/restart")]
+        public Task<InvokeResult> RestartDeviceAsync(string repoid, string id)
+        {
+            return _remoteConfigMgr.RestartDeviceAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
         }
     }
 }
