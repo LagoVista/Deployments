@@ -19,6 +19,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ITelemetryManager, TelemetryManager>();
             services.AddTransient<ITelemetryService, TelemetryService>();
 
+            services.AddTransient<IRemoteConfigurationManager, RemoteConfigurationManager>();
             services.AddTransient<ISolutionManager, SolutionManager>();
             services.AddTransient<IContainerRepositoryManager, ContainerRepositoryManager>();
             services.AddTransient<IDeviceConfigurationManager, DeviceConfigurationManager>();
