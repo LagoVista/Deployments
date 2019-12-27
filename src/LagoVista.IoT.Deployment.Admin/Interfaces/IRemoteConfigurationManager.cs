@@ -12,6 +12,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> SendAllPropertiesAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> QueryRemoteConfigurationAsync (string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartDeviceAsync(string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, EntityHeader org, EntityHeader user);
     }
 
     public interface IRemotePropertyNamanager
@@ -20,5 +21,6 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> SendAllPropertiesAsync(string deviceUniqueId);
         Task<InvokeResult> QueryRemoteConfigurationAsync(string deviceUniqueId);
         Task<InvokeResult> RestartDeviceAsync(string deviceUniqueId);
+        Task<InvokeResult> SetFirmwareVersionAsync(string deviceUniqueId, string requestId);
     }
 }
