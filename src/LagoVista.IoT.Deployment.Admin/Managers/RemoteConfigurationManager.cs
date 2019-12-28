@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
@@ -98,14 +99,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, EntityHeader org, EntityHeader user)
         {
+            if (String.IsNullOrEmpty(deviceRepoId)) throw new ArgumentNullException(deviceRepoId);
+            if (String.IsNullOrEmpty(deviceUniqueId)) throw new ArgumentNullException(deviceUniqueId);
+            if (String.IsNullOrEmpty(firmwareId)) throw new ArgumentNullException(firmwareId);
+            if (String.IsNullOrEmpty(firmwareRevisionId)) throw new ArgumentNullException(firmwareRevisionId);
+
             var repo = await _repoManager.GetDeviceRepositoryAsync(deviceRepoId, org, user);
+            if (repo == null) throw new RecordNotFoundException(nameof(DeviceRepository), deviceRepoId);
             if (EntityHeader.IsNullOrEmpty(repo.Instance))
             {
                 return InvokeResult.FromError("Instance not deployed, can not set property.");
             }
 
             var firmwareRequest = await _firmwareManager.RequestDownloadLinkAsync(deviceUniqueId, firmwareId, firmwareRevisionId, org, user);
-            if(!firmwareRequest.Successful)
+            if (!firmwareRequest.Successful)
             {
                 return firmwareRequest.ToInvokeResult();
             }

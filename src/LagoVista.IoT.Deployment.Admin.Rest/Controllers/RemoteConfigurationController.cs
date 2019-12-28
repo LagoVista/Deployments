@@ -52,10 +52,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _remoteConfigMgr.RestartDeviceAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
         }
 
-        [HttpGet("/api/device/remoteconfig/{repoid}/{id}/firmware/{firmwareid}")]
-        public Task<InvokeResult> ApplyFirmwareAsync(string repoid, string id)
+        [HttpGet("/api/device/remoteconfig/{repoid}/{deviceid}/firmware/{firmwareid}/revision/{revisionid}")]
+        public Task<InvokeResult> ApplyFirmwareAsync(string repoid, string deviceid, string firmwareid, string revisionid)
         {
-            return _remoteConfigMgr.RestartDeviceAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+            return _remoteConfigMgr.ApplyFirmwareAsync(repoid, deviceid, firmwareid, revisionid, OrgEntityHeader, UserEntityHeader);
         }
     }
 }
