@@ -6,6 +6,7 @@
         StartingUp,
         Running,
         Listening,
+        Warning,
         Paused,
         ShuttingDown,
         FatalError,
