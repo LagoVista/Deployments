@@ -12,6 +12,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Pipeline.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private IContainerRepositoryManager _containerRepoMgr;
         private ISolutionVersionRepo _solutionVersionRepo;
         private readonly IDeploymentConnectorService _connector;
+        private readonly IDataStreamManager _dataStreamManager;
         private IDeviceRepositoryManager _deviceRepoManager;
         private IDeploymentActivityQueueManager _deploymentActivityQueueManager;
         private IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
@@ -50,7 +52,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
+                    IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
                     IContainerRepositoryManager containerRepoMgr) :
             base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
         {
@@ -67,12 +69,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _secureStorage = secureStorage;
             _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
             _containerRepoMgr = containerRepoMgr;
+            _dataStreamManager = dataStreamManager;
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, 
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
-            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
+                    IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
+            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -357,6 +360,42 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
 
             instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
+
+            foreach(var stream in instance.DataStreams)
+            {
+                stream.Value = await _dataStreamManager.GetDataStreamAsync(stream.Id, org, user);
+                if(!String.IsNullOrEmpty(stream.Value.DBPasswordSecureId))
+                {
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.DBPasswordSecureId, user);
+                    if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
+
+                    stream.Value.DbPassword = result.Result;
+                }
+
+                if (!String.IsNullOrEmpty(stream.Value.RedisPasswordSecureId))
+                {
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.RedisPasswordSecureId, user);
+                    if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
+
+                    stream.Value.RedisPassword = result.Result;
+                }
+
+                if (!String.IsNullOrEmpty(stream.Value.AzureAccessKeySecureId))
+                {
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.RedisPasswordSecureId, user);
+                    if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
+
+                    stream.Value.AzureAccessKey = result.Result;
+                }
+
+                if (!String.IsNullOrEmpty(stream.Value.AWSSecretKeySecureId))
+                {
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.RedisPasswordSecureId, user);
+                    if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
+
+                    stream.Value.AwsSecretKey = result.Result;
+                }
+            }
 
             var solutionResult = EntityHeader.IsNullOrEmpty(instance.Version) ?
                              await _solutionManager.LoadFullSolutionAsync(instance.Solution.Id, org, user) :
