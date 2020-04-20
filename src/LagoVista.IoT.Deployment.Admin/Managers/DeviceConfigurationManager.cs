@@ -323,14 +323,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var result = new InvokeResult();
 
-
             device.DeviceType.Value = await _deviceTypeManager.GetDeviceTypeAsync(device.DeviceType.Id, org, user);
-
-            if (EntityHeader.IsNullOrEmpty(instanceEH))
-            {
-                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
-                return result;
-            }
 
             var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
             if (deviceConfig == null)
@@ -343,6 +336,30 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             device.DeviceIdLabel = deviceConfig.DeviceIdLabel;
             device.DeviceNameLabel = deviceConfig.DeviceNameLabel;
             device.DeviceTypeLabel = deviceConfig.DeviceTypeLabel;
+
+            if (deviceConfig.Properties != null)
+            {
+                device.PropertiesMetaData = new List<DeviceAdmin.Models.CustomField>();
+                foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
+                {
+                    device.PropertiesMetaData.Add(prop);
+                    if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
+                    {
+                        prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
+                    }
+                    else if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
+                    {
+                        prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
+                    }
+                }
+            }
+
+            if (EntityHeader.IsNullOrEmpty(instanceEH))
+            {
+                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
+                return result;
+            }
+
 
             var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
@@ -447,22 +464,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 device.StateMachineMetaData = new List<StateMachine>();
             }
 
-            if (deviceConfig.Properties != null)
-            {
-                device.PropertiesMetaData = new List<DeviceAdmin.Models.CustomField>();
-                foreach (var prop in deviceConfig.Properties.OrderBy(prop => prop.Order))
-                {
-                    device.PropertiesMetaData.Add(prop);
-                    if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.State)
-                    {
-                        prop.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(prop.StateSet.Id, org, user);
-                    }
-                    else if (prop.FieldType.Value == DeviceAdmin.Models.ParameterTypes.ValueWithUnit)
-                    {
-                        prop.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(prop.UnitSet.Id, org, user);
-                    }
-                }
-            }
 
             return result;
         }
