@@ -2,6 +2,7 @@
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -50,7 +51,10 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<InvokeResult<string>> GetKeyAsync(string keyId, EntityHeader instanceId, EntityHeader org);
 
+        Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+
         Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user);
+        Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         string GenerateAccessKey();
     }

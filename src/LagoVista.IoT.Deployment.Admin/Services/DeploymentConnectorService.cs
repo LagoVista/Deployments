@@ -3,6 +3,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
 using System.Threading.Tasks;
 

@@ -80,7 +80,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
             }
 
-            throw new InvalidOperationException($"{str} is not a valid edition");            
+            throw new InvalidOperationException($"{str} is not a valid edition");
         }
 
         /// <summary>
@@ -119,16 +119,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
 
             return response;
-        }        
+        }
 
         /// <summary>
         /// Deployment Instance - Update Status
         /// </summary>
         /// <returns></returns>
         [HttpPut("/api/deployment/instance/status")]
-        public  Task<InvokeResult> UpdateInstanceStatus([FromBody] InstanceStatusUpdate statusUpdate)
+        public Task<InvokeResult> UpdateInstanceStatus([FromBody] InstanceStatusUpdate statusUpdate)
         {
-            return _instanceManager.UpdateInstanceStatusAsync(statusUpdate.Id, statusUpdate.NewStatus, statusUpdate.Deployed, statusUpdate.Version, 
+            return _instanceManager.UpdateInstanceStatusAsync(statusUpdate.Id, statusUpdate.NewStatus, statusUpdate.Deployed, statusUpdate.Version,
                 OrgEntityHeader, UserEntityHeader, statusUpdate.Details);
         }
 
@@ -141,6 +141,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceRunTimeAsync(String id)
         {
             return _instanceManager.GetInstanceDetailsAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Get connected devices that have been monitored.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/connected/monitored")]
+        public Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string id)
+        {
+            return _instanceManager.GetTimedoutDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        /// <summary>
+        /// Get connected devices that have timed out.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/connected/timedout")]
+        public Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string id)
+        {
+            return _instanceManager.GetWatchdogConnectedDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
         /// <summary>

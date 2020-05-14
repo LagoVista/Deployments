@@ -10,6 +10,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
@@ -72,7 +73,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _dataStreamManager = dataStreamManager;
         }
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, 
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
             this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
@@ -289,20 +290,41 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
-        {           
+        {
             await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
             return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
         }
-        
+
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
-
             var instance = await GetInstanceAsync(instanceId, org, user);
             MapInstanceProperties(instance);
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
             await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
+        }
+
+        public Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var proxy = _proxyFactory.Create<IConnectedDevicesService>(new ProxySettings
+            {
+                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
+                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
+            });
+
+            return proxy.GetWatchdogConnectedDevicesAsync(listRequest);
+        }
+
+        public Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var proxy = _proxyFactory.Create<IConnectedDevicesService>(new ProxySettings
+            {
+                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
+                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
+            });
+
+            return proxy.GetWatchdogConnectedDevicesAsync(listRequest);
         }
 
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
@@ -327,7 +349,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance), Actions.Read);
-         
+
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             MapInstanceProperties(instance);
             if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
@@ -361,10 +383,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             instance.DeviceRepository.Value = await _deviceRepoManager.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
 
-            foreach(var stream in instance.DataStreams)
+            foreach (var stream in instance.DataStreams)
             {
                 stream.Value = await _dataStreamManager.GetDataStreamAsync(stream.Id, org, user);
-                if(!String.IsNullOrEmpty(stream.Value.DBPasswordSecureId))
+                if (!String.IsNullOrEmpty(stream.Value.DBPasswordSecureId))
                 {
                     var result = await _secureStorage.GetSecretAsync(org, stream.Value.DBPasswordSecureId, user);
                     if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
@@ -382,7 +404,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                 if (!String.IsNullOrEmpty(stream.Value.AzureAccessKeySecureId))
                 {
-                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.RedisPasswordSecureId, user);
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.AzureAccessKeySecureId, user);
                     if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
 
                     stream.Value.AzureAccessKey = result.Result;
@@ -390,7 +412,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                 if (!String.IsNullOrEmpty(stream.Value.AWSSecretKeySecureId))
                 {
-                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.RedisPasswordSecureId, user);
+                    var result = await _secureStorage.GetSecretAsync(org, stream.Value.AWSSecretKeySecureId, user);
                     if (!result.Successful) return InvokeResult<DeploymentInstance>.FromInvokeResult(result.ToInvokeResult());
 
                     stream.Value.AwsSecretKey = result.Result;
@@ -634,7 +656,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             settings.WorkingStorage = instance.WorkingStorage;
             settings.DeploymentType = instance.DeploymentType;
             settings.NuvIoTEdition = instance.NuvIoTEdition;
-            
+
             settings.Name = instance.Name;
             settings.Key = instance.Key;
 
