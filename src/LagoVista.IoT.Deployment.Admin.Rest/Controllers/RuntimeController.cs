@@ -295,7 +295,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
                 if (String.IsNullOrEmpty(message.Email))
                 {
-                    message.Phone = getUserResult.Result.Email;
+                    message.Email = getUserResult.Result.Email;
                 }
             }
 

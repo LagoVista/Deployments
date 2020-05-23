@@ -151,7 +151,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}/connected/monitored")]
         public Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string id)
         {
-            return _instanceManager.GetTimedoutDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            return _instanceManager.GetWatchdogConnectedDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{id}/connected/timedout")]
         public Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string id)
         {
-            return _instanceManager.GetWatchdogConnectedDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            return _instanceManager.GetTimedoutDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
         /// <summary>

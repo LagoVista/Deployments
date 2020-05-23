@@ -324,7 +324,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
             });
 
-            return proxy.GetWatchdogConnectedDevicesAsync(listRequest);
+            return proxy.GetTimedOutDevicesAsync(listRequest);
         }
 
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
