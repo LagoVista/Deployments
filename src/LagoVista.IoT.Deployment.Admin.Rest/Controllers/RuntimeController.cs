@@ -21,12 +21,12 @@ using System.Text;
 using System.Threading.Tasks;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista.IoT.DeviceManagement.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
     public class RuntimeController : Controller
     {
-
         IDeploymentInstanceManager _instanceManager;
         ISecureStorage _secureStorage;
         IDeploymentHostManager _hostManager;
@@ -476,6 +476,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 return InvokeResult.FromError($"Could not parse [status] to DeploymentInstanceStates");
             }
 
+        }
+
+        /// <summary>
+        /// Handle a device exception.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/device/handlexception")]
+        public Task<InvokeResult> HandleDeviceExcptionAsync([FromBody] DeviceException deviceExcpetion)
+        {
+            return _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

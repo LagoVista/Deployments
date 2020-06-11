@@ -1170,4 +1170,34 @@
   <data name="Common_IsPublic_Help" xml:space="preserve">
     <value>If you create this object as a public object it will be available to other users to use and clone within their application.  You will be  the only person allowed to edit it.</value>
   </data>
+  <data name="DeviceConfiguration_DeviceErrorCodes" xml:space="preserve">
+    <value>Error Codes</value>
+  </data>
+  <data name="DeviceErrorCode_Description" xml:space="preserve">
+    <value>A device error code is a string that can be invoked to generate an error or exception from a device.</value>
+  </data>
+  <data name="DeviceErrorCode_ErrorCode" xml:space="preserve">
+    <value>Error Code</value>
+  </data>
+  <data name="DeviceErrorCode_Help" xml:space="preserve">
+    <value>A device error code is a string that can be invoked to generate an error or exception from a device.</value>
+  </data>
+  <data name="DeviceErrorCode_TicketTemplate" xml:space="preserve">
+    <value>Service Ticket Template</value>
+  </data>
+  <data name="DeviceErrorCode_TicketTemplate_Help" xml:space="preserve">
+    <value>This is the service ticket that will be generated when this error condition is detected.</value>
+  </data>
+  <data name="DeviceErrorCode_TicketTemplate_Select" xml:space="preserve">
+    <value>-select service ticket template-</value>
+  </data>
+  <data name="DeviceErrorCode_Title" xml:space="preserve">
+    <value>Device Error Code</value>
+  </data>
+  <data name="DeviceErrorCode_TriggerOnEachOccurrence" xml:space="preserve">
+    <value>Trigger on each occurrence</value>
+  </data>
+  <data name="DeviceErrorCode_TriggerOnEachOccurrence_Help" xml:space="preserve">
+    <value>You can specify if you want to generate a service ticket on each occurence of this error code, or only generate a service ticket when there is not currently a on open ticket.</value>
+  </data>
 </root>

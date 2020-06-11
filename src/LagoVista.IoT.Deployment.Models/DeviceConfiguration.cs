@@ -3,8 +3,10 @@ using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Logging;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
 using System;
@@ -25,6 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DeviceIdLabel = DeploymentAdminResources.DeviceConfiguration_DeviceIdLabel_Default;
             DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
             DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
+            ErrorCodes = new List<DeviceErrorCode>();
         }
 
         public String DatabaseName { get; set; }
@@ -61,6 +64,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public int? WatchdogSeconds { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<DeviceErrorCode> ErrorCodes { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
@@ -76,8 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<Route> Routes { get; set; }
 
         public Route FindRoute(string messageId)
@@ -157,6 +161,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             else if(!WatchdogEnabledDefault)
             {
                 WatchdogSeconds = null;
+            }
+
+            if(ErrorCodes.Count != ErrorCodes.GroupBy(err=>err.Key).Count())
+            {
+                result.AddUserError("Error codes for a device configuration must be unique..");
             }
         }
     }

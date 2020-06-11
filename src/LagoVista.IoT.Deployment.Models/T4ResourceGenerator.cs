@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿
+using System.Globalization;
 using System.Reflection;
 
 //Resources:DeploymentAdminResources:ClientApp_AppAuthKey1
@@ -290,6 +291,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Description
 
 		public static string DeviceConfiguration_Description { get { return GetResourceString("DeviceConfiguration_Description"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_DeviceErrorCodes
+
+		public static string DeviceConfiguration_DeviceErrorCodes { get { return GetResourceString("DeviceConfiguration_DeviceErrorCodes"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_DeviceIdLabel
 
 		public static string DeviceConfiguration_DeviceIdLabel { get { return GetResourceString("DeviceConfiguration_DeviceIdLabel"); } }
@@ -359,6 +363,33 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Description
+
+		public static string DeviceErrorCode_Description { get { return GetResourceString("DeviceErrorCode_Description"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_ErrorCode
+
+		public static string DeviceErrorCode_ErrorCode { get { return GetResourceString("DeviceErrorCode_ErrorCode"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Help
+
+		public static string DeviceErrorCode_Help { get { return GetResourceString("DeviceErrorCode_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_TicketTemplate
+
+		public static string DeviceErrorCode_TicketTemplate { get { return GetResourceString("DeviceErrorCode_TicketTemplate"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_TicketTemplate_Help
+
+		public static string DeviceErrorCode_TicketTemplate_Help { get { return GetResourceString("DeviceErrorCode_TicketTemplate_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_TicketTemplate_Select
+
+		public static string DeviceErrorCode_TicketTemplate_Select { get { return GetResourceString("DeviceErrorCode_TicketTemplate_Select"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Title
+
+		public static string DeviceErrorCode_Title { get { return GetResourceString("DeviceErrorCode_Title"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_TriggerOnEachOccurrence
+
+		public static string DeviceErrorCode_TriggerOnEachOccurrence { get { return GetResourceString("DeviceErrorCode_TriggerOnEachOccurrence"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_TriggerOnEachOccurrence_Help
+
+		public static string DeviceErrorCode_TriggerOnEachOccurrence_Help { get { return GetResourceString("DeviceErrorCode_TriggerOnEachOccurrence_Help"); } }
 //Resources:DeploymentAdminResources:Err_CantPublishNotRunning
 
 		public static string Err_CantPublishNotRunning { get { return GetResourceString("Err_CantPublishNotRunning"); } }
@@ -1188,6 +1219,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
 			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";
 			public const string DeviceConfiguration_Description = "DeviceConfiguration_Description";
+			public const string DeviceConfiguration_DeviceErrorCodes = "DeviceConfiguration_DeviceErrorCodes";
 			public const string DeviceConfiguration_DeviceIdLabel = "DeviceConfiguration_DeviceIdLabel";
 			public const string DeviceConfiguration_DeviceIdLabel_Default = "DeviceConfiguration_DeviceIdLabel_Default";
 			public const string DeviceConfiguration_DeviceIdLabel_Help = "DeviceConfiguration_DeviceIdLabel_Help";
@@ -1211,6 +1243,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_WatchDogTimeout = "DeviceConfiguration_WatchDogTimeout";
 			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
+			public const string DeviceErrorCode_Description = "DeviceErrorCode_Description";
+			public const string DeviceErrorCode_ErrorCode = "DeviceErrorCode_ErrorCode";
+			public const string DeviceErrorCode_Help = "DeviceErrorCode_Help";
+			public const string DeviceErrorCode_TicketTemplate = "DeviceErrorCode_TicketTemplate";
+			public const string DeviceErrorCode_TicketTemplate_Help = "DeviceErrorCode_TicketTemplate_Help";
+			public const string DeviceErrorCode_TicketTemplate_Select = "DeviceErrorCode_TicketTemplate_Select";
+			public const string DeviceErrorCode_Title = "DeviceErrorCode_Title";
+			public const string DeviceErrorCode_TriggerOnEachOccurrence = "DeviceErrorCode_TriggerOnEachOccurrence";
+			public const string DeviceErrorCode_TriggerOnEachOccurrence_Help = "DeviceErrorCode_TriggerOnEachOccurrence_Help";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotFindDestinationModule = "Err_CouldNotFindDestinationModule";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";

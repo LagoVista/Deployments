@@ -14,6 +14,7 @@ using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceAdmin.Models;
 using System.Collections.Generic;
+using LagoVista.IoT.Deployment.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -171,6 +172,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public DetailResponse<RouteModuleConfig> CreateRouteModuleConfig()
         {
             return DetailResponse<RouteModuleConfig>.Create();
+        }
+
+        /// <summary>
+        ///  Error Codes - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/errorcode/factory")]
+        public DetailResponse<DeviceErrorCode> CreateErrorCodeConfig()
+        {
+            return DetailResponse<DeviceErrorCode>.Create();
         }
     }
 }
