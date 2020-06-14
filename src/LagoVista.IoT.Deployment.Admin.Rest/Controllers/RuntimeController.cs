@@ -483,9 +483,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("/api/device/handlexception")]
-        public Task<InvokeResult> HandleDeviceExcptionAsync([FromBody] DeviceException deviceExcpetion)
+        public async Task<InvokeResult> HandleDeviceExcptionAsync([FromBody] DeviceException deviceExcpetion)
         {
-            return _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+            await ValidateRequest(HttpContext.Request);
+
+            return await _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
         }
     }
 }
