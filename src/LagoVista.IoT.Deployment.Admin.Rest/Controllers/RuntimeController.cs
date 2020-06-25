@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceManagement.Models;
+using LagoVista.IoT.Deployment.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -36,39 +37,59 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         IEmailSender _emailSender;
         ISmsSender _smsSender;
         IServiceTicketCreator _ticketCreator;
+        IDistributionManager _distroManager;
 
-        public const string REQUEST_ID = "x-nuviot-runtime-request-id";
-        public const string ORG_ID = "x-nuviot-orgid";
-        public const string ORG = "x-nuviot-org";
-        public const string USER_ID = "x-nuviot-userid";
-        public const string USER = "x-nuviot-user"; 
-        public const string INSTANCE_ID = "x-nuviot-instanceid";
-        public const string INSTANCE = "x-nuviot-instance";
-        public const string DATE = "x-nuviot-date";
-        public const string VERSION = "x-nuviot-version";
+        public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
+        public const string ORG_ID = "X-Nuviot-Orgid";
+        public const string ORG = "X-Nuviot-Org";
+        public const string USER_ID = "X-Nuviot-Userid";
+        public const string USER = "X-Nuviot-User"; 
+        public const string INSTANCE_ID = "X-Nuviot-Instanceid";
+        public const string INSTANCE = "X-Nuviot-Instance";
+        public const string DATE = "X-Nuviot-Date";
+        public const string VERSION = "X-Nuviot-Version";
 
         public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
-            ISecureStorage secureStorage, IAdminLogger logger)
+            IDistributionManager distroManager, ISecureStorage secureStorage, IAdminLogger logger)
         {
-            _ticketCreator = ticketCreator;
-            _userManager = userManager;
-            _orgUserRepo = orgUserRepo;
-            _instanceManager = instanceManager;
-            _secureStorage = secureStorage;
-            _runtimeTokenManager = runtimeTokenManager;
-            _hostManager = hostManager;
-            _emailSender = emailSender;
-            _smsSender = smsSendeer;
+            _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _orgUserRepo = orgUserRepo ?? throw new ArgumentNullException(nameof(orgUserRepo));
+            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager));
+            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            _runtimeTokenManager = runtimeTokenManager ?? throw new ArgumentNullException(nameof(runtimeTokenManager));
+            _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            _distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
+            _smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
         }
 
         private void CheckHeader(HttpRequest request, String header)
         {
+            
             if (!request.Headers.Keys.Contains(header) || String.IsNullOrEmpty(request.Headers[header].ToString()))
             {
-                throw new NotAuthorizedException($"Missing request id header: {header}");
+                if (!request.Headers.Keys.Contains(header.ToLower()) || String.IsNullOrEmpty(request.Headers[header.ToLower()].ToString()))
+                {
+                    throw new NotAuthorizedException($"Missing request id header: {header}");
+                }
             }
+        }
+
+        private string GetHeader(HttpRequest request, String header)
+        {
+            if(Request.Headers.ContainsKey(header))
+            {
+                return Request.Headers[header];
+            }
+            else if(Request.Headers.ContainsKey(header.ToLower()))
+            {
+                return Request.Headers[header.ToLower()];
+            }
+
+            throw new NotAuthorizedException($"Missing request id header: {header}");
         }
 
         private string GetSignature(string requestId, string key, string source)
@@ -89,27 +110,27 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         protected async Task ValidateRequest(HttpRequest request)
         {
+            CheckHeader(request, DATE);
+            CheckHeader(request, VERSION);
             CheckHeader(request, REQUEST_ID);
             CheckHeader(request, ORG_ID);
             CheckHeader(request, ORG);
             CheckHeader(request, USER_ID);
             CheckHeader(request, USER);
             CheckHeader(request, INSTANCE_ID);
-            CheckHeader(request, INSTANCE);
-            CheckHeader(request, DATE);
-            CheckHeader(request, VERSION);
+            CheckHeader(request, INSTANCE);                        
 
             var authheader = request.Headers["Authorization"];
 
-            var requestId = request.Headers[REQUEST_ID];
-            var dateStamp = request.Headers[DATE];
-            var orgId = request.Headers[ORG_ID];
-            var org = request.Headers[ORG];
-            var userId = request.Headers[USER_ID];
-            var user = request.Headers[USER];
-            var instanceId = request.Headers[INSTANCE_ID];
-            var instanceName = request.Headers[INSTANCE];
-            var version = request.Headers[VERSION];
+            var requestId = GetHeader(request, REQUEST_ID);
+            var dateStamp = GetHeader(request, DATE);
+            var orgId = GetHeader(request, ORG_ID);
+            var org = GetHeader(request, ORG);
+            var userId = GetHeader(request, USER_ID);
+            var user = GetHeader(request, USER);
+            var instanceId = GetHeader(request, INSTANCE_ID);
+            var instanceName = GetHeader(request, INSTANCE);
+            var version = GetHeader(request, VERSION);
 
             var bldr = new StringBuilder();
             //Adding the \r\n manualy ensures that the we don't have any 
@@ -275,20 +296,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             }
         }
 
-        [HttpPost("/api/deployment/user/message")]
-        public async Task<InvokeResult> SentUserMessageAsync([FromBody] UserMessage message)
+        private async Task<InvokeResult> SendToUserAsync(UserMessage message)
         {
-            await ValidateRequest(HttpContext.Request);
-
             if (!String.IsNullOrEmpty(message.UserId))
             {
                 var getUserResult = await GetUserAsync(message.UserId);
                 if (!getUserResult.Successful)
                 {
-                    throw new InvalidDataException("RuntimeController_SendUserMessageAsync", getUserResult.Errors.Select(er=>er.Message).ToArray());
+                    throw new InvalidDataException("RuntimeController_SendUserMessageAsync", getUserResult.Errors.Select(er => er.Message).ToArray());
                 }
-                
-                if(String.IsNullOrEmpty(message.Phone))
+
+                if (String.IsNullOrEmpty(message.Phone))
                 {
                     message.Phone = getUserResult.Result.Phone;
                 }
@@ -301,14 +319,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             if (String.IsNullOrEmpty(message.Phone) && (message.MessageType == MessageTypes.SMS || message.MessageType == MessageTypes.SMSAndEmail))
             {
-                throw new InvalidDataException(errors: new string[] { "Missing User Id AND Phone when attempting to send an SMS Message." });
+                if (String.IsNullOrEmpty(message.UserId))
+                    throw new InvalidDataException(errors: new string[] { "Did not supply User Id to load user, and phone number was not provided." });
+                else
+                    throw new InvalidDataException(errors: new string[] { $"User with id: {message.UserId} does not have a phone number." });
             }
 
             if (String.IsNullOrEmpty(message.Email) && (message.MessageType == MessageTypes.Email || message.MessageType == MessageTypes.SMSAndEmail))
             {
-                throw new InvalidDataException(errors:new string[] { "Missing User Id AND Email when attempting to send an email." });
+                if (String.IsNullOrEmpty(message.UserId))
+                    throw new InvalidDataException(errors: new string[] { "Did not supply User Id to load user, and email  was not provided." });
+                else
+                    throw new InvalidDataException(errors: new string[] { $"User with id: {message.UserId} does not have a valid email address." });
             }
-
 
             switch (message.MessageType)
             {
@@ -321,13 +344,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                     await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                     break;
                 case MessageTypes.SMS:
-                    if(String.IsNullOrEmpty(message.Body))
+                    if (String.IsNullOrEmpty(message.Body))
                     {
-                        throw new InvalidDataException(errors:new string[] { "Body is required to send an SMS Message." });
+                        throw new InvalidDataException(errors: new string[] { "Body is required to send an SMS Message." });
                     }
 
                     await _smsSender.SendAsync(message.Phone, message.Body);
-                    
+
                     break;
                 case MessageTypes.SMSAndEmail:
                     if (String.IsNullOrEmpty(message.Body) || String.IsNullOrEmpty(message.Subject))
@@ -343,6 +366,29 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return InvokeResult.Success;
         }
 
+        [HttpPost("/api/deployment/user/message")]
+        public async Task<InvokeResult> SendUserNotificationAsync([FromBody] UserMessage message)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if(!String.IsNullOrEmpty(message.UserId))
+            {
+                return await SendToUserAsync(message);
+            }
+
+            var group = await _distroManager.GetListAsync(message.DistributionGroupId, OrgEntityHeader, UserEntityHeader);
+            if (group == null) return InvokeResult.FromError($"Could not load distribution group for group id [{message.DistributionGroupId}].");
+
+            foreach(var user in group.AppUsers)
+            {
+                message.UserId = user.Id;
+                var sendResult = await SendToUserAsync(message);
+                if (!sendResult.Successful) return sendResult;
+            }
+
+            return InvokeResult.Success;
+        }
+
         /// <summary>
         /// Runtime Controller - Create a Service Ticket
         /// </summary>
@@ -350,10 +396,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="repoid">Device Repository for the device that the ticket will be creatd for.</param>
         /// <param name="deviceid">Device Id (32 byte unique id) of the device for the ticket </param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/fslite/{templateid}/{repoid}/{deviceid}")]
+        [HttpGet("/api/deployment/fslite/ticket/{templateid}/{repoid}/{deviceid}")]
         public Task<InvokeResult<string>> CreateTicket(string templateid, string repoid, string deviceid)
         {
-            return _ticketCreator.CreateServiceTicketAsync(templateid, repoid, deviceid);
+            return _ticketCreator.CreateServiceTicketAsync(templateid, repoid, deviceid, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Create a Service Ticket
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/deployment/fslite/ticket")]
+        public Task<InvokeResult<string>> CreateTicketAsync([FromBody] CreateServiceTicketRequest request)
+        {
+            return _ticketCreator.CreateServiceTicketAsync(request,  OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

@@ -363,15 +363,69 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_AutoExpiresTimespan
+
+		public static string DeviceErrorCode_AutoExpiresTimespan { get { return GetResourceString("DeviceErrorCode_AutoExpiresTimespan"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_AutoExpiresTimespan_Help
+
+		public static string DeviceErrorCode_AutoExpiresTimespan_Help { get { return GetResourceString("DeviceErrorCode_AutoExpiresTimespan_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_AutoExpiresTimespanQuantity
+
+		public static string DeviceErrorCode_AutoExpiresTimespanQuantity { get { return GetResourceString("DeviceErrorCode_AutoExpiresTimespanQuantity"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Days
+
+		public static string DeviceErrorCode_Days { get { return GetResourceString("DeviceErrorCode_Days"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_Description
 
 		public static string DeviceErrorCode_Description { get { return GetResourceString("DeviceErrorCode_Description"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DistributionList
+
+		public static string DeviceErrorCode_DistributionList { get { return GetResourceString("DeviceErrorCode_DistributionList"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DistributionList_Help
+
+		public static string DeviceErrorCode_DistributionList_Help { get { return GetResourceString("DeviceErrorCode_DistributionList_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DistributionList_Select
+
+		public static string DeviceErrorCode_DistributionList_Select { get { return GetResourceString("DeviceErrorCode_DistributionList_Select"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_EmailSubject
+
+		public static string DeviceErrorCode_EmailSubject { get { return GetResourceString("DeviceErrorCode_EmailSubject"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_EmailSubject_Help
+
+		public static string DeviceErrorCode_EmailSubject_Help { get { return GetResourceString("DeviceErrorCode_EmailSubject_Help"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_ErrorCode
 
 		public static string DeviceErrorCode_ErrorCode { get { return GetResourceString("DeviceErrorCode_ErrorCode"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_Help
 
 		public static string DeviceErrorCode_Help { get { return GetResourceString("DeviceErrorCode_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Hours
+
+		public static string DeviceErrorCode_Hours { get { return GetResourceString("DeviceErrorCode_Hours"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_Minutes
+
+		public static string DeviceErrorCode_Minutes { get { return GetResourceString("DeviceErrorCode_Minutes"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotApplicable
+
+		public static string DeviceErrorCode_NotApplicable { get { return GetResourceString("DeviceErrorCode_NotApplicable"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotificationInterval
+
+		public static string DeviceErrorCode_NotificationInterval { get { return GetResourceString("DeviceErrorCode_NotificationInterval"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotificationInterval_Help
+
+		public static string DeviceErrorCode_NotificationInterval_Help { get { return GetResourceString("DeviceErrorCode_NotificationInterval_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotificationIntervalQuantity
+
+		public static string DeviceErrorCode_NotificationIntervalQuantity { get { return GetResourceString("DeviceErrorCode_NotificationIntervalQuantity"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_SelectTimespan
+
+		public static string DeviceErrorCode_SelectTimespan { get { return GetResourceString("DeviceErrorCode_SelectTimespan"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_SendEmail
+
+		public static string DeviceErrorCode_SendEmail { get { return GetResourceString("DeviceErrorCode_SendEmail"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_SendSMS
+
+		public static string DeviceErrorCode_SendSMS { get { return GetResourceString("DeviceErrorCode_SendSMS"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_TicketTemplate
 
 		public static string DeviceErrorCode_TicketTemplate { get { return GetResourceString("DeviceErrorCode_TicketTemplate"); } }
@@ -849,6 +903,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_UpSince
 
 		public static string Instance_UpSince { get { return GetResourceString("Instance_UpSince"); } }
+//Resources:DeploymentAdminResources:InstanceStates_CreatingRuntime
+
+		public static string InstanceStates_CreatingRuntime { get { return GetResourceString("InstanceStates_CreatingRuntime"); } }
 //Resources:DeploymentAdminResources:InstanceStates_Degraded
 
 		public static string InstanceStates_Degraded { get { return GetResourceString("InstanceStates_Degraded"); } }
@@ -1243,9 +1300,27 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_WatchDogTimeout = "DeviceConfiguration_WatchDogTimeout";
 			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
+			public const string DeviceErrorCode_AutoExpiresTimespan = "DeviceErrorCode_AutoExpiresTimespan";
+			public const string DeviceErrorCode_AutoExpiresTimespan_Help = "DeviceErrorCode_AutoExpiresTimespan_Help";
+			public const string DeviceErrorCode_AutoExpiresTimespanQuantity = "DeviceErrorCode_AutoExpiresTimespanQuantity";
+			public const string DeviceErrorCode_Days = "DeviceErrorCode_Days";
 			public const string DeviceErrorCode_Description = "DeviceErrorCode_Description";
+			public const string DeviceErrorCode_DistributionList = "DeviceErrorCode_DistributionList";
+			public const string DeviceErrorCode_DistributionList_Help = "DeviceErrorCode_DistributionList_Help";
+			public const string DeviceErrorCode_DistributionList_Select = "DeviceErrorCode_DistributionList_Select";
+			public const string DeviceErrorCode_EmailSubject = "DeviceErrorCode_EmailSubject";
+			public const string DeviceErrorCode_EmailSubject_Help = "DeviceErrorCode_EmailSubject_Help";
 			public const string DeviceErrorCode_ErrorCode = "DeviceErrorCode_ErrorCode";
 			public const string DeviceErrorCode_Help = "DeviceErrorCode_Help";
+			public const string DeviceErrorCode_Hours = "DeviceErrorCode_Hours";
+			public const string DeviceErrorCode_Minutes = "DeviceErrorCode_Minutes";
+			public const string DeviceErrorCode_NotApplicable = "DeviceErrorCode_NotApplicable";
+			public const string DeviceErrorCode_NotificationInterval = "DeviceErrorCode_NotificationInterval";
+			public const string DeviceErrorCode_NotificationInterval_Help = "DeviceErrorCode_NotificationInterval_Help";
+			public const string DeviceErrorCode_NotificationIntervalQuantity = "DeviceErrorCode_NotificationIntervalQuantity";
+			public const string DeviceErrorCode_SelectTimespan = "DeviceErrorCode_SelectTimespan";
+			public const string DeviceErrorCode_SendEmail = "DeviceErrorCode_SendEmail";
+			public const string DeviceErrorCode_SendSMS = "DeviceErrorCode_SendSMS";
 			public const string DeviceErrorCode_TicketTemplate = "DeviceErrorCode_TicketTemplate";
 			public const string DeviceErrorCode_TicketTemplate_Help = "DeviceErrorCode_TicketTemplate_Help";
 			public const string DeviceErrorCode_TicketTemplate_Select = "DeviceErrorCode_TicketTemplate_Select";
@@ -1405,6 +1480,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_StatusTimeStamp = "Instance_StatusTimeStamp";
 			public const string Instance_Title = "Instance_Title";
 			public const string Instance_UpSince = "Instance_UpSince";
+			public const string InstanceStates_CreatingRuntime = "InstanceStates_CreatingRuntime";
 			public const string InstanceStates_Degraded = "InstanceStates_Degraded";
 			public const string InstanceStates_DeployingContainer = "InstanceStates_DeployingContainer";
 			public const string InstanceStates_DeployingRuntime = "InstanceStates_DeployingRuntime";

@@ -23,6 +23,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentInstance.Status_UpdatingSolution, DeploymentAdminResources.Names.InstanceStates_UpdatingSolution, typeof(DeploymentAdminResources))]
         UpdatingSolution,
 
+        [EnumLabel(DeploymentInstance.Status_CreatingRuntime, DeploymentAdminResources.Names.InstanceStates_CreatingRuntime, typeof(DeploymentAdminResources))]
+        CreatingRuntime,
 
         [EnumLabel(DeploymentInstance.Status_StartingRuntime, DeploymentAdminResources.Names.InstanceStates_StartingRuntime, typeof(DeploymentAdminResources))]
         StartingRuntime,

@@ -33,6 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public const string Status_DeployingRuntime = "deployingruntime";
 
+        public const string Status_CreatingRuntime = "creatingruntime";
         public const string Status_StartingRuntime = "startingruntime";
 
         public const string Status_Initializing = "initializing";

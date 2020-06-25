@@ -1195,9 +1195,66 @@
     <value>Device Error Code</value>
   </data>
   <data name="DeviceErrorCode_TriggerOnEachOccurrence" xml:space="preserve">
-    <value>Trigger on each occurrence</value>
+    <value>Generate service ticket on each occurence</value>
   </data>
   <data name="DeviceErrorCode_TriggerOnEachOccurrence_Help" xml:space="preserve">
     <value>You can specify if you want to generate a service ticket on each occurence of this error code, or only generate a service ticket when there is not currently a on open ticket.</value>
+  </data>
+  <data name="InstanceStates_CreatingRuntime" xml:space="preserve">
+    <value>Creating Runtime</value>
+  </data>
+  <data name="DeviceErrorCode_AutoExpiresTimespan" xml:space="preserve">
+    <value>Auto-expire Timespan</value>
+  </data>
+  <data name="DeviceErrorCode_AutoExpiresTimespanQuantity" xml:space="preserve">
+    <value>Auto-expire Timespan (quantity)</value>
+  </data>
+  <data name="DeviceErrorCode_AutoExpiresTimespan_Help" xml:space="preserve">
+    <value>If this amount of time goes by and this error code is no longer generated, this error code will be cleared.</value>
+  </data>
+  <data name="DeviceErrorCode_Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="DeviceErrorCode_DistributionList" xml:space="preserve">
+    <value>Notification Distribution List</value>
+  </data>
+  <data name="DeviceErrorCode_DistributionList_Help" xml:space="preserve">
+    <value>Specify the distribution list you wish to notifiy when this error code is generated.</value>
+  </data>
+  <data name="DeviceErrorCode_DistributionList_Select" xml:space="preserve">
+    <value>-select distribution list-</value>
+  </data>
+  <data name="DeviceErrorCode_EmailSubject" xml:space="preserve">
+    <value>Email Subject</value>
+  </data>
+  <data name="DeviceErrorCode_EmailSubject_Help" xml:space="preserve">
+    <value>Provide a subject to be sent along with your email notification, to include the device id use [DEVICEID] and to use the device name, use [DEVICENAME].</value>
+  </data>
+  <data name="DeviceErrorCode_Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="DeviceErrorCode_Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="DeviceErrorCode_NotApplicable" xml:space="preserve">
+    <value>Not Applicable</value>
+  </data>
+  <data name="DeviceErrorCode_NotificationInterval" xml:space="preserve">
+    <value>Notification Interval</value>
+  </data>
+  <data name="DeviceErrorCode_NotificationIntervalQuantity" xml:space="preserve">
+    <value>Notification Interval (quantity)</value>
+  </data>
+  <data name="DeviceErrorCode_NotificationInterval_Help" xml:space="preserve">
+    <value>You can specify how often you will receive notifications via SMS and Email</value>
+  </data>
+  <data name="DeviceErrorCode_SelectTimespan" xml:space="preserve">
+    <value>-select timespan-</value>
+  </data>
+  <data name="DeviceErrorCode_SendEmail" xml:space="preserve">
+    <value>Send Email Message</value>
+  </data>
+  <data name="DeviceErrorCode_SendSMS" xml:space="preserve">
+    <value>Send SMS Message</value>
   </data>
 </root>
