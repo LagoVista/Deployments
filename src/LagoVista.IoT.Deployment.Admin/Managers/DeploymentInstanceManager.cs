@@ -451,11 +451,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new InvalidDataException("Missing Request Key");
             }
 
-            if (keyId.Length != 32)
-            {
-                throw new InvalidDataException("Invalid Request Key Length");
-            }
-
             await LogEntityActionAsync(keyId, "Key", "Access", org, instance);
 
             return await _secureStorage.GetSecretAsync(org, keyId, instance);
