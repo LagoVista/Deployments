@@ -12,11 +12,44 @@ using System.Threading.Tasks;
 using LagoVista.Core;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
+using LagoVista.Core.Exceptions;
+using Newtonsoft.Json;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
+    [Authorize(AuthenticationSchemes = "APIToken")]
+    public class ContainerRepositoryControllerClientAPI : LagoVistaBaseController
+    {
+        IContainerRepositoryManager _containerManager;
+
+        public ContainerRepositoryControllerClientAPI(IContainerRepositoryManager containerManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        {
+            _containerManager = containerManager;
+        }
+
+        [HttpPost("/clientapi/container/{id}/tag")]
+        public async Task AddImageToContainer(string id, [FromBody] TaggedContainer taggedContainer)
+        {
+            if (taggedContainer == null)
+                throw new ArgumentNullException(nameof(taggedContainer));
+
+            var json = JsonConvert.SerializeObject(taggedContainer);
+            Console.WriteLine(json);
+
+            var container = await _containerManager.GetContainerRepoAsync(id, OrgEntityHeader, UserEntityHeader);
+            if(container == null)
+            {
+                throw new RecordNotFoundException(nameof(ContainerRepository), id);
+            }
+            container.Tags.Insert(0, taggedContainer);
+            container.PreferredTag = Core.Models.EntityHeader.Create(taggedContainer.Id, taggedContainer.Name);
+            await _containerManager.UpdateContainerRepoAsync(container, OrgEntityHeader, UserEntityHeader);
+        }
+    }
+
+
     [Authorize]
-   
+
     public class ContainerRepositoryController : LagoVistaBaseController
     {
         IContainerRepositoryManager _containerManager;

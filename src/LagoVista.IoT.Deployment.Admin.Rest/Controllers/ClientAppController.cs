@@ -14,7 +14,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
     public class ClientAppController : LagoVistaBaseController
     {
-        IClientAppManager _clientAppManager;
+        IClientAppManager _clientAppManager;        
 
         public ClientAppController(IClientAppManager clientAppManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
@@ -95,7 +95,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetOwnedProperties(response.Model);
 
             return response;
-        }
+        }        
 
         /// <summary>
         /// Generate a new API Key to be used on client app
