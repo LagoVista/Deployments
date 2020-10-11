@@ -111,7 +111,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromError("Instance not deployed, can not set property.");
             }
 
-            var firmwareRequest = await _firmwareManager.RequestDownloadLinkAsync(deviceUniqueId, firmwareId, firmwareRevisionId, org, user);
+            var firmwareRequest = await _firmwareManager.RequestDownloadLinkAsync(deviceRepoId, deviceUniqueId, firmwareId, firmwareRevisionId, org, user);
             if (!firmwareRequest.Successful)
             {
                 return firmwareRequest.ToInvokeResult();
