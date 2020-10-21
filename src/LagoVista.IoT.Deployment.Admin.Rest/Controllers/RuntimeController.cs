@@ -220,6 +220,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Runtime Controller - Request Connection for device event connection storage
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/deviceconnectionevent/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetDeviceEventConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetDeviceEventConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Runtime Controller - Request Connection for Usage Storage Storage
         /// </summary>
         /// <returns></returns>
