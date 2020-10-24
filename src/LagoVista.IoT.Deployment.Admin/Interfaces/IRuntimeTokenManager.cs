@@ -15,7 +15,8 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
 
         Task<InvokeResult<ConnectionSettings>> GetDeviceEventConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetAzureEventHubsWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetRabbitMQWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<LoggingSettings>> GetLoggingSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
