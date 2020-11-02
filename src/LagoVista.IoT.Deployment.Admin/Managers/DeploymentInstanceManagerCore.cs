@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.Core.Exceptions;
+using System.Runtime.CompilerServices;
+using LagoVista.UserAdmin.Interfaces.Managers;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -20,15 +22,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceRepositoryManager _deviceManagerRepo;
         ISecureStorage _secureStorage;
         IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
+        IUserManager _userManager;
 
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IUserManager useManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _deviceManagerRepo = deviceManagerRepo;
             _instanceRepo = instanceRepo;
             _secureStorage = secureStorage;
             _deploymentHostManager = deploymentHostManager;
+            _userManager = useManager;
             _deploymentInstanceStatusRepo = deploymentInstanceStatusRepo;
         }
 
@@ -97,6 +101,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _rnd.NextBytes(buffer);
             return Convert.ToBase64String(buffer);
         }
+
+        private async Task CheckOwnershipOrSysAdminAsync(IOwnedEntity entity, EntityHeader org, EntityHeader user, [CallerMemberName] string actionType = "")
+        {
+            if (entity.OwnerOrganization.Id != org.Id)
+            {
+                var sysUser = await _userManager.FindByIdAsync(user.Id);
+                if (sysUser.IsSystemAdmin)
+                    await LogEntityActionAsync(entity.Id, entity.GetType().Name, $"sys_admin=>{actionType}", org, user);
+                else
+                    await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+            }
+            else
+                await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+        }
+
 
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
@@ -214,7 +233,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             MapInstanceProperties(instance);
 
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Read, user, org);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
 
             var keysUpdated = false;
 
@@ -340,6 +359,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var dateStamp = DateTime.UtcNow.ToJSONString();
 
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
+
             MapInstanceProperties(instance);
             ValidationCheck(instance, Actions.Update);
 

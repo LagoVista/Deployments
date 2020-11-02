@@ -14,9 +14,10 @@ using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,38 +46,40 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private ISolutionVersionRepo _solutionVersionRepo;
         private readonly IDeploymentConnectorService _connector;
         private readonly IDataStreamManager _dataStreamManager;
-        private IDeviceRepositoryManager _deviceRepoManager;
-        private IDeploymentActivityQueueManager _deploymentActivityQueueManager;
-        private IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
+        private readonly IDeviceRepositoryManager _deviceRepoManager;
+        private readonly IDeploymentActivityQueueManager _deploymentActivityQueueManager;
+        private readonly IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
         private readonly IProxyFactory _proxyFactory;
+        private readonly IUserManager _userManager;
         #endregion
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
+                    IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
                     IContainerRepositoryManager containerRepoMgr) :
-            base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, logger, appConfig, depmanager, security)
+            base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo,userManager, logger, appConfig, depmanager, security)
         {
-            _hostManager = hostManager;
-            _appConfig = appConfig;
-            _adminLogger = logger;
-            _instanceRepo = instanceRepo;
-            _solutionManager = solutionManager;
-            _deploymentActivityQueueManager = deploymentActivityQueueManager;
-            _solutionVersionRepo = solutionVersionRepo;
-            _connector = connector;
-            _deviceRepoManager = deviceRepoManager;
-            _hostRepo = hostRepo;
-            _secureStorage = secureStorage;
-            _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo;
-            _containerRepoMgr = containerRepoMgr;
-            _dataStreamManager = dataStreamManager;
+            _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
+            _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
+            _adminLogger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
+            _solutionManager = solutionManager ?? throw new ArgumentNullException(nameof(solutionManager));
+            _deploymentActivityQueueManager = deploymentActivityQueueManager ?? throw new ArgumentNullException(nameof(deploymentActivityQueueManager));
+            _solutionVersionRepo = solutionVersionRepo ?? throw new ArgumentNullException(nameof(solutionVersionRepo));
+            _connector = connector ?? throw new ArgumentNullException(nameof(connector));
+            _deviceRepoManager = deviceRepoManager ?? throw new ArgumentNullException(nameof(deviceRepoManager));
+            _hostRepo = hostRepo ?? throw new ArgumentNullException(nameof(hostRepo));
+            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            _deploymentInstanceStatusRepo = deploymentStatusInstanceRepo ?? throw new ArgumentNullException(nameof(deploymentStatusInstanceRepo));
+            _containerRepoMgr = containerRepoMgr ?? throw new ArgumentNullException(nameof(containerRepoMgr));
+            _dataStreamManager = dataStreamManager ?? throw new ArgumentNullException(nameof(dataStreamManager));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
-                    IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
+                    IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, IProxyFactory proxyFactory) :
-            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
+            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager, dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -97,6 +100,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 : _connector;
         }
 
+        private async Task CheckOwnershipOrSysAdminAsync(IOwnedEntity entity, EntityHeader org, EntityHeader user, [CallerMemberName] string actionType = "")
+        {
+            if (entity.OwnerOrganization.Id != org.Id)
+            {
+                var sysUser = await _userManager.FindByIdAsync(user.Id);
+                if (sysUser.IsSystemAdmin)
+                    await LogEntityActionAsync(entity.Id, entity.GetType().Name, $"sys_admin=>{actionType}", org, user);
+                else
+                    await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+            }
+            else
+                await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+        }
+
         protected bool IsRpc(DeploymentHost host)
         {
             if (host == null)
@@ -113,7 +130,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var timeout = DateTime.UtcNow.Add(TimeSpan.FromSeconds(timeoutSeconds));
 
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Perform, user, org, $"{activityType}Instance");
+            await CheckOwnershipOrSysAdminAsync(instance, org, user, $"{activityType}Instance");
 
             await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Instance, instance.Id, activityType)
             {
@@ -164,9 +181,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> ResetAppAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             await UpdateInstanceStatusAsync(id, DeploymentInstanceStates.Offline, false, null, org, user, "Forcing to offline");
             await _hostManager.UpdateDeploymentHostStatusAsync(instance.PrimaryHost.Id, HostStatus.Offline, null, org, user, "Forcing to offline.");
@@ -176,13 +192,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PauseAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             if (IsRpc(host))
             {
+                await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
                 return !transitionResult.Successful
                 ? transitionResult
                 : await GetConnector(host, org.Id, id).PauseAsync(host, id, org, user);
@@ -197,13 +212,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> StopAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             if (IsRpc(host))
             {
+                await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
                 return !transitionResult.Successful
                 ? transitionResult
                 : await GetConnector(host, org.Id, id).StopAsync(host, id, org, user);
@@ -218,8 +232,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
@@ -230,8 +242,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartContainerAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
@@ -243,8 +253,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateRuntimeAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
@@ -255,14 +263,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> ReloadSolutionAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.ReloadSolution, org, user);
 
             if (IsRpc(host))
             {
+                await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
                 return !transitionResult.Successful
                     ? transitionResult
                     : await GetConnector(host, org.Id, id).UpdateAsync(host, id, org, user);
@@ -276,10 +283,34 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
         }
 
+        public async Task<InvokeResult> UpgradeInstanceAsync(string instanceId, string imageId, EntityHeader org, EntityHeader user)
+        {
+            if (String.IsNullOrEmpty(instanceId)) throw new ArgumentNullException(nameof(instanceId));
+            if (EntityHeader.IsNullOrEmpty(org)) throw new ArgumentNullException(nameof(org));
+            if (EntityHeader.IsNullOrEmpty(user)) throw new ArgumentNullException(nameof(user));
+
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+
+            var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
+
+            var repo = await _containerRepoMgr.GetContainerRepoAsync(instance.ContainerRepository.Id, org, user);
+            var tag = repo.Tags.Where(tg => tg.Id == imageId).FirstOrDefault();
+            if (tag == null)
+            {
+                throw new RecordNotFoundException(nameof(TaggedContainer), imageId);
+            }
+
+            instance.ContainerTag = EntityHeader.Create(tag.Id, tag.Name);
+            await _instanceRepo.UpdateInstanceAsync(instance);
+
+            var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DestroyHost, org, user);
+            return !transitionResult.Successful
+                ? transitionResult
+                : await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.UpdateRuntime);
+        }
+
         public async Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance));
-
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
@@ -299,9 +330,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
+
             MapInstanceProperties(instance);
             var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
-            await AuthorizeAsync(user, org, "instanceRuntimeDetails", instanceId);
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
         }
 
@@ -334,23 +366,52 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await CheckForDepenenciesAsync(instance);
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user)
+        public async Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetAllInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
-            return await _instanceRepo.GetInstanceForOrgAsync(orgId);
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-all_instances");
+            }
+
+            return await this._instanceRepo.GetAllInstances(listRqeuest);
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user)
+        public async Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetActiveInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest)
+        {
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-all_instances");
+            }
+
+            return await this._instanceRepo.GetAllActiveInstancs(listRqeuest);
+        }
+
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
-            return await _instanceRepo.GetInstanceForOrgAsync(edition, orgId);
+            return await _instanceRepo.GetInstancesForOrgAsync(orgId, listRequest);
+        }
+
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user, ListRequest listRequest)
+        {
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeploymentInstance));
+            return await _instanceRepo.GetInstancesForOrgAsync(edition, orgId, listRequest);
         }
 
         public async Task<ListResponse<DeploymentInstanceStatus>> GetDeploymentInstanceStatusHistoryAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentInstance), Actions.Read);
-
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
             MapInstanceProperties(instance);
             if (instance.DeploymentType.Value == DeploymentTypes.OnPremise)
             {

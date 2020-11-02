@@ -6,6 +6,7 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -19,6 +20,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
     [TestClass]
     public class HostDeletionTests
     {
+        Mock<IUserManager> _userManager = new Mock<IUserManager>();
         Mock<ISecurity> _security = new Mock<ISecurity>();
         Mock<IDeploymentHostRepo> _hostRepo = new Mock<IDeploymentHostRepo>();
         IDeploymentHostManager _deploymentHostManager;
@@ -39,7 +41,8 @@ namespace LagoVista.IoT.Deployment.Tests.Host
 
 
             _deploymentHostManager = new DeploymentHostManager(_hostRepo.Object, new Mock<IDeploymentActivityQueueManager>().Object, new Mock<IDeploymentActivityRepo>().Object,
-                    new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object, new Mock<IDeploymentHostStatusRepo>().Object, new Mock<IAppConfig>().Object,
+                    new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object,
+                    new Mock<IDeploymentHostStatusRepo>().Object, _userManager.Object, new Mock<IAppConfig>().Object,
                     new Mock<IDependencyManager>().Object, _security.Object);
         }
 

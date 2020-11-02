@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LagoVista.Core;
+using LagoVista.UserAdmin.Interfaces.Managers;
 
 namespace LagoVista.IoT.Deployment.Tests.Host
 {
@@ -24,6 +25,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         DeploymentHost _host;
 
         Mock<ISecurity> _security = new Mock<ISecurity>();
+        Mock<IUserManager> _userManager = new Mock<IUserManager>();
         Mock<IDeploymentHostRepo> _hostRepo = new Mock<IDeploymentHostRepo>();
         IDeploymentHostManager _deploymentHostManager;
         EntityHeader _org = new EntityHeader();
@@ -40,7 +42,8 @@ namespace LagoVista.IoT.Deployment.Tests.Host
             _hostRepo.Setup(hrs => hrs.GetDeploymentHostAsync(_host.Id, true)).ReturnsAsync(_host);
 
             _deploymentHostManager = new DeploymentHostManager(_hostRepo.Object, new Mock<IDeploymentActivityQueueManager>().Object, new Mock<IDeploymentActivityRepo>().Object,
-                new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object, new Mock<IDeploymentHostStatusRepo>().Object, new Mock<IAppConfig>().Object,
+                new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object, 
+                new Mock<IDeploymentHostStatusRepo>().Object, _userManager.Object, new Mock<IAppConfig>().Object,
                new Mock<IDependencyManager>().Object, _security.Object);
         }
 

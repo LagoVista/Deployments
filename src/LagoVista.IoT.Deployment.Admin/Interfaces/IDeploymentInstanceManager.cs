@@ -24,9 +24,13 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteInstanceAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user);
+        Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest);
 
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user);
+        Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetAllInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest);
+        Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetActiveInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest);
+
+        Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user, ListRequest listRequest);
+         Task<InvokeResult> UpgradeInstanceAsync(string instanceId, string imageId, EntityHeader org, EntityHeader user);
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);

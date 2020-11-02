@@ -9,6 +9,7 @@ using LagoVista.IoT.Logging.Loggers;
 using System;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Pipeline.Models;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -36,6 +37,37 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return DeleteDocumentAsync(instanceId);
         }
 
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancs(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => qry.Status.Value != DeploymentInstanceStates.Offline, listRequest);
+
+            return new ListResponse<DeploymentInstanceSummary>()
+            {
+                Model = items.Model.Select(di => di.CreateSummary()),
+                HasMoreRecords = items.HasMoreRecords,
+                NextPartitionKey = items.NextPartitionKey,
+                NextRowKey = items.NextRowKey,
+                PageCount = items.PageCount,
+                PageIndex = items.PageIndex,
+                PageSize = items.PageSize
+            };
+        }
+
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllInstances(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => true, listRequest);
+            return new ListResponse<DeploymentInstanceSummary>()
+            {
+                Model = items.Model.Select(di => di.CreateSummary()),
+                HasMoreRecords = items.HasMoreRecords,
+                NextPartitionKey = items.NextPartitionKey,
+                NextRowKey = items.NextRowKey,
+                PageCount = items.PageCount,
+                PageIndex = items.PageIndex,
+                PageSize = items.PageSize
+            };
+        }
+
         public async Task<DeploymentInstance> GetInstanceAsync(string instanceId)
         {
             var instance = await GetDocumentAsync(instanceId);
@@ -56,20 +88,16 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                    select item.CreateSummary();
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId)
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId);
-
-            return from item in items
-                   select item.CreateSummary();
+            var items = await  base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId, listRequest);
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Select(itm=>itm.CreateSummary()));
         }
 
-        public async Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId)
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(NuvIoTEditions edition, string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition));
-
-            return from item in items
-                   select item.CreateSummary();
+            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition), listRequest);
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Select(itm => itm.CreateSummary()));
         }
 
         public Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id)

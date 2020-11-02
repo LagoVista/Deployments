@@ -261,7 +261,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 NuvIoTEdition = EntityHeader.IsNullOrEmpty(NuvIoTEdition) ? "???" : NuvIoTEdition.Text,
                 DeploymentType = EntityHeader.IsNullOrEmpty(DeploymentType) ? "???" : DeploymentType.Text,
                 WorkingStorage = EntityHeader.IsNullOrEmpty(WorkingStorage) ? "???" : WorkingStorage.Text,
-                QueueType = EntityHeader.IsNullOrEmpty(QueueType) ? "???" : QueueType.Text
+                QueueType = EntityHeader.IsNullOrEmpty(QueueType) ? "???" : QueueType.Text,
+                OrgId = OwnerOrganization.Id,
+                OrgName = OwnerOrganization.Text,
+                DeviceRepoId = DeviceRepository?.Id,
+                DeviceRepoName = DeviceRepository?.Text
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -374,5 +378,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public string DeviceRepoId { get; set; }
         public string DeviceRepoName { get; set; }
+        public string OrgName { get; set; }
+        public string OrgId { get; set; }
     }
 }

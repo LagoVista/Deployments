@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+﻿using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,9 +15,9 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 
         Task<DeploymentInstance> GetInstanceAsync(string instanceId);
 
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string id);
+        Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string id, ListRequest listRequest);
 
-        Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string id);
+        Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(NuvIoTEditions edition, string id, ListRequest listRequest);
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstanceForHostAsync(string id);
         
@@ -25,6 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id);
 
-
+        Task<ListResponse<DeploymentInstanceSummary>> GetAllInstances(ListRequest listRequest);
+        Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancs(ListRequest listRequest);
     }
 }

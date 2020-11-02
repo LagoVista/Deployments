@@ -10,6 +10,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -38,6 +39,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         Mock<IDeploymentInstanceRepo> _deploymentInstanceRepo;
         Mock<IDeviceRepositoryManager> _deviceRepoManager;
         Mock<IAdminLogger> _adminLogger;
+        Mock<IUserManager> _userManager = new Mock<IUserManager>();
         Mock<IDependencyManager> _dependencyManager;
         Mock<ISecureStorage> _secureStorage;
         Mock<ISecurity> _security;
@@ -62,8 +64,9 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _secureStorage.Setup(ss => ss.AddSecretAsync(It.IsAny<EntityHeader>(), It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("XXXX"));
 
-            _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, _secureStorage.Object, _instanceStatusRepo.Object, _adminLogger.Object,
-                _appConfig.Object, _dependencyManager.Object, _security.Object);
+            _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, 
+                _secureStorage.Object, _instanceStatusRepo.Object, _userManager.Object, _adminLogger.Object,
+                _appConfig.Object,  _dependencyManager.Object, _security.Object);
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<bool>())).Returns((string id, EntityHeader user, EntityHeader org, bool throwOnError) =>
               {

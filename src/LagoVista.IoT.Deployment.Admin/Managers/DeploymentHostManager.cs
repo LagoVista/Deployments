@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LagoVista.Core;
+using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista.Core.Exceptions;
+using System.Runtime.CompilerServices;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -25,10 +28,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentActivityQueueManager _deploymentActivityQueueManager;
         IDeploymentActivityRepo _deploymentActivityRepo;
         IDeploymentHostStatusRepo _deploymentHostStatusRepo;
+        IUserManager _userManager;
 
         public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentActivityRepo deploymentActivityRepo,
                 IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IDeploymentHostStatusRepo deploymentHostStatusRepo,
-                IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+                IUserManager userManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
@@ -36,6 +40,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
             _deploymentActivityRepo = deploymentActivityRepo;
             _deploymentHostStatusRepo = deploymentHostStatusRepo;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
@@ -73,6 +78,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deploymentConnectorService.GetDeployedInstancesAsync(host, org, user);
         }
 
+        private async Task CheckOwnershipOrSysAdminAsync(IOwnedEntity entity, EntityHeader org, EntityHeader user, [CallerMemberName] string actionType = "")
+        {
+            if (entity.OwnerOrganization.Id != org.Id)
+            {
+                var sysUser = await _userManager.FindByIdAsync(user.Id);
+                if (sysUser.IsSystemAdmin)
+                    await LogEntityActionAsync(entity.Id, entity.GetType().Name, $"sys_admin=>{actionType}", org, user);
+                else
+                    await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+            }
+            else
+                await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+        }
+
         public async Task<DeploymentHost> GetDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId, throwOnNotFound);
@@ -81,9 +100,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return host;
             }
 
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Read, user, org);
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
+      
             return host;
         }
+
 
         public async Task<InvokeResult> DeployHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
@@ -124,12 +145,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             return InvokeResult.Success;
         }
-      
+
 
         public async Task<InvokeResult> RestartHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "reset");
+          
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
 
             await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, hostId, DeploymentActivityTaskTypes.RestartHost)
             {
@@ -140,7 +162,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             });
 
             return InvokeResult.Success;
-        }      
+        }
 
         public async Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user)
         {
@@ -152,11 +174,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DestroyHostAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "destoryhost");
-            if (host.Status.Value != HostStatus.Running)
-            {
-                return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStopNotRunning.ToErrorMessage());
-            }
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
 
             await _deploymentActivityQueueManager.Enqueue(new DeploymentActivity(DeploymentActivityResourceTypes.Server, instanceId, DeploymentActivityTaskTypes.DestroyHost)
             {
@@ -213,12 +231,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var existingHost = await _deploymentHostRepo.GetDeploymentHostAsync(host.Id);
 
-            if(host.Status.Value != existingHost.Status.Value)
+            if (host.Status.Value != existingHost.Status.Value)
             {
                 await UpdateDeploymentHostStatusAsync(host.Id, host.Status.Value, host.ContainerTag.Text, org, user);
             }
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
 
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
             host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
             host.LastUpdatedBy = user;
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
@@ -231,6 +249,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (host.Status.Value != hostStatus)
             {
+                await CheckOwnershipOrSysAdminAsync(host, org, user);
+
                 var hostStatusUpdate = Models.DeploymentHostStatus.Create(hostId, user);
                 hostStatusUpdate.OldState = host.Status.Value.ToString();
                 hostStatusUpdate.NewState = hostStatus.ToString();
@@ -240,9 +260,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
                 host.StatusDetails = statusDetails;
                 await _deploymentHostStatusRepo.AddDeploymentHostStatusAsync(hostStatusUpdate);
-                await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
+
                 host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
                 host.LastUpdatedBy = user;
+
                 await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             }
 
@@ -251,7 +272,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<ListResponse<DeploymentHostStatus>> GetDeploymentHostStatusHistoryAsync(string hostId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
-            await AuthorizeOrgAccessAsync(user, org, typeof(DeploymentHost), Actions.Read);
+            var host = await GetDeploymentHostAsync(hostId, org, user);
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
             return await _deploymentHostStatusRepo.GetStatusHistoryForHostAsync(hostId, listRequest);
         }
     }

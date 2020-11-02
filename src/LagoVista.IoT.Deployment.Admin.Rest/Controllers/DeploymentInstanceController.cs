@@ -62,8 +62,21 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instances")]
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync()
         {
-            var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(OrgEntityHeader.Id, UserEntityHeader);
-            return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
+            return await _instanceManager.GetInstanceForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/instances")]
+        public Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync()
+        {
+            return _instanceManager.SysAdminGetAllInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/instances/active")]
+        public Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync()
+        {
+            return _instanceManager.SysAdminGetActiveInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
         /// <summary>
@@ -76,8 +89,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             if (Enum.TryParse<NuvIoTEditions>(str, out NuvIoTEditions edition))
             {
-                var instanceSummaries = await _instanceManager.GetInstanceForOrgAsync(edition, OrgEntityHeader.Id, UserEntityHeader);
-                return ListResponse<DeploymentInstanceSummary>.Create(instanceSummaries);
+                return await _instanceManager.GetInstanceForOrgAsync(edition, OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
             }
 
             throw new InvalidOperationException($"{str} is not a valid edition");
