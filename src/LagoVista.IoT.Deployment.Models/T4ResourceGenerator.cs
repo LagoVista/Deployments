@@ -894,6 +894,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_Status
 
 		public static string Instance_Status { get { return GetResourceString("Instance_Status"); } }
+//Resources:DeploymentAdminResources:Instance_StatusDetails
+
+		public static string Instance_StatusDetails { get { return GetResourceString("Instance_StatusDetails"); } }
 //Resources:DeploymentAdminResources:Instance_StatusTimeStamp
 
 		public static string Instance_StatusTimeStamp { get { return GetResourceString("Instance_StatusTimeStamp"); } }
@@ -1477,6 +1480,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_Solution = "Instance_Solution";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
 			public const string Instance_Status = "Instance_Status";
+			public const string Instance_StatusDetails = "Instance_StatusDetails";
 			public const string Instance_StatusTimeStamp = "Instance_StatusTimeStamp";
 			public const string Instance_Title = "Instance_Title";
 			public const string Instance_UpSince = "Instance_UpSince";

@@ -1257,4 +1257,7 @@
   <data name="DeviceErrorCode_SendSMS" xml:space="preserve">
     <value>Send SMS Message</value>
   </data>
+  <data name="Instance_StatusDetails" xml:space="preserve">
+    <value>Status Details</value>
+  </data>
 </root>

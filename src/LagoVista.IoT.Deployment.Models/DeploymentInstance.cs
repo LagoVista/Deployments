@@ -108,6 +108,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusTimeStamp { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string StatusDetails{ get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeploymentHost> Host { get; set; }

@@ -8,16 +8,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     public class DeploymentHostStatus : TableStorageEntity
     {
-        public static DeploymentHostStatus Create(string instanceId, EntityHeader user)
+        public static DeploymentHostStatus Create(string hostId, EntityHeader user)
         {
             var row = new DeploymentHostStatus()
             {
-                PartitionKey = instanceId,
+                PartitionKey = hostId,
                 TimeStamp = DateTime.UtcNow.ToJSONString(),
                 RowKey = DateTime.UtcNow.ToInverseTicksRowKey(),
                 TransitionById = user.Id,
                 TransitionByName = user.Text
-
             };
 
             return row;

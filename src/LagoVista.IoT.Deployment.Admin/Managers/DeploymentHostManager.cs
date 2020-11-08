@@ -105,7 +105,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
-
         public async Task<InvokeResult> DeployHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
@@ -256,6 +255,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 hostStatusUpdate.NewState = hostStatus.ToString();
                 hostStatusUpdate.Details = statusDetails;
                 hostStatusUpdate.Version = version ?? "-";
+
                 host.Status = EntityHeader<HostStatus>.Create(hostStatus);
                 host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
                 host.StatusDetails = statusDetails;
