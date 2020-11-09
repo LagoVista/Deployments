@@ -77,10 +77,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public EntityHeader DeploymentInstance { get; set; }
 
-		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_KioskId, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_EnterId, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Kiosk, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
 		public EntityHeader Kiosk { get; set; }
 
 

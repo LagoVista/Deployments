@@ -75,12 +75,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ClientApp_Instance
 
 		public static string ClientApp_Instance { get { return GetResourceString("ClientApp_Instance"); } }
-//Resources:DeploymentAdminResources:ClientApp_Kiosk_EnterId
+//Resources:DeploymentAdminResources:ClientApp_Kiosk
 
-		public static string ClientApp_Kiosk_EnterId { get { return GetResourceString("ClientApp_Kiosk_EnterId"); } }
-//Resources:DeploymentAdminResources:ClientApp_KioskId
+		public static string ClientApp_Kiosk { get { return GetResourceString("ClientApp_Kiosk"); } }
+//Resources:DeploymentAdminResources:ClientApp_Kiosk_Select
 
-		public static string ClientApp_KioskId { get { return GetResourceString("ClientApp_KioskId"); } }
+		public static string ClientApp_Kiosk_Select { get { return GetResourceString("ClientApp_Kiosk_Select"); } }
 //Resources:DeploymentAdminResources:ClientApp_SelectInstance
 
 		public static string ClientApp_SelectInstance { get { return GetResourceString("ClientApp_SelectInstance"); } }
@@ -1213,8 +1213,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ClientApp_DeviceTypes = "ClientApp_DeviceTypes";
 			public const string ClientApp_Help = "ClientApp_Help";
 			public const string ClientApp_Instance = "ClientApp_Instance";
-			public const string ClientApp_Kiosk_EnterId = "ClientApp_Kiosk_EnterId";
-			public const string ClientApp_KioskId = "ClientApp_KioskId";
+			public const string ClientApp_Kiosk = "ClientApp_Kiosk";
+			public const string ClientApp_Kiosk_Select = "ClientApp_Kiosk_Select";
 			public const string ClientApp_SelectInstance = "ClientApp_SelectInstance";
 			public const string ClientApp_Title = "ClientApp_Title";
 			public const string Common_Description = "Common_Description";
