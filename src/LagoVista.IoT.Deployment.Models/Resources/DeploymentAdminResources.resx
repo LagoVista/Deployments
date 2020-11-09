@@ -1260,4 +1260,10 @@
   <data name="Instance_StatusDetails" xml:space="preserve">
     <value>Status Details</value>
   </data>
+  <data name="ClientApp_KioskId" xml:space="preserve">
+    <value>Kiosk Id</value>
+  </data>
+  <data name="ClientApp_Kiosk_EnterId" xml:space="preserve">
+    <value>- enter Kiosk Id -</value>
+  </data>
 </root>

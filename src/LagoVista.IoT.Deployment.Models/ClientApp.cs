@@ -80,6 +80,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader DeploymentInstance { get; set; }
 
+		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_KioskId, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_EnterId, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+		public EntityHeader Kiosk { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceTypes { get; set; }
 
