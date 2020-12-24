@@ -339,6 +339,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Help
 
 		public static string DeviceConfiguration_Help { get { return GetResourceString("DeviceConfiguration_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_MessageWatchDogs
+
+		public static string DeviceConfiguration_MessageWatchDogs { get { return GetResourceString("DeviceConfiguration_MessageWatchDogs"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Properties
 
 		public static string DeviceConfiguration_Properties { get { return GetResourceString("DeviceConfiguration_Properties"); } }
@@ -1032,6 +1035,66 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:IntegrationType_Twillio
 
 		public static string IntegrationType_Twillio { get { return GetResourceString("IntegrationType_Twillio"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Description
+
+		public static string MessageWatchDog_Description { get { return GetResourceString("MessageWatchDog_Description"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_DeviceMessage_Select
+
+		public static string MessageWatchDog_DeviceMessage_Select { get { return GetResourceString("MessageWatchDog_DeviceMessage_Select"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_ErrorCode
+
+		public static string MessageWatchDog_ErrorCode { get { return GetResourceString("MessageWatchDog_ErrorCode"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_ErrorCode_Help
+
+		public static string MessageWatchDog_ErrorCode_Help { get { return GetResourceString("MessageWatchDog_ErrorCode_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_ErrorCode_Select
+
+		public static string MessageWatchDog_ErrorCode_Select { get { return GetResourceString("MessageWatchDog_ErrorCode_Select"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_ExcludeHolidays
+
+		public static string MessageWatchDog_ExcludeHolidays { get { return GetResourceString("MessageWatchDog_ExcludeHolidays"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_Description
+
+		public static string MessageWatchDog_Exclusion_Description { get { return GetResourceString("MessageWatchDog_Exclusion_Description"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_End
+
+		public static string MessageWatchDog_Exclusion_End { get { return GetResourceString("MessageWatchDog_Exclusion_End"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_End_Help
+
+		public static string MessageWatchDog_Exclusion_End_Help { get { return GetResourceString("MessageWatchDog_Exclusion_End_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_Help
+
+		public static string MessageWatchDog_Exclusion_Help { get { return GetResourceString("MessageWatchDog_Exclusion_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_Start
+
+		public static string MessageWatchDog_Exclusion_Start { get { return GetResourceString("MessageWatchDog_Exclusion_Start"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_Start_Help
+
+		public static string MessageWatchDog_Exclusion_Start_Help { get { return GetResourceString("MessageWatchDog_Exclusion_Start_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Exclusion_Title
+
+		public static string MessageWatchDog_Exclusion_Title { get { return GetResourceString("MessageWatchDog_Exclusion_Title"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Help
+
+		public static string MessageWatchDog_Help { get { return GetResourceString("MessageWatchDog_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Message
+
+		public static string MessageWatchDog_Message { get { return GetResourceString("MessageWatchDog_Message"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Message_Help
+
+		public static string MessageWatchDog_Message_Help { get { return GetResourceString("MessageWatchDog_Message_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_SaturdayExclusions
+
+		public static string MessageWatchDog_SaturdayExclusions { get { return GetResourceString("MessageWatchDog_SaturdayExclusions"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_SundayExclusions
+
+		public static string MessageWatchDog_SundayExclusions { get { return GetResourceString("MessageWatchDog_SundayExclusions"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_Title
+
+		public static string MessageWatchDog_Title { get { return GetResourceString("MessageWatchDog_Title"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_WeekdayExclusions
+
+		public static string MessageWatchDog_WeekdayExclusions { get { return GetResourceString("MessageWatchDog_WeekdayExclusions"); } }
 //Resources:DeploymentAdminResources:NuvIoT_Edition
 
 		public static string NuvIoT_Edition { get { return GetResourceString("NuvIoT_Edition"); } }
@@ -1301,6 +1364,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_DeviceTypeLabel_Default = "DeviceConfiguration_DeviceTypeLabel_Default";
 			public const string DeviceConfiguration_DeviceTypeLabel_Help = "DeviceConfiguration_DeviceTypeLabel_Help";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
+			public const string DeviceConfiguration_MessageWatchDogs = "DeviceConfiguration_MessageWatchDogs";
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
 			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
@@ -1532,6 +1596,26 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string IntegrationType_Select_Watermark = "IntegrationType_Select_Watermark";
 			public const string IntegrationType_SendGrid = "IntegrationType_SendGrid";
 			public const string IntegrationType_Twillio = "IntegrationType_Twillio";
+			public const string MessageWatchDog_Description = "MessageWatchDog_Description";
+			public const string MessageWatchDog_DeviceMessage_Select = "MessageWatchDog_DeviceMessage_Select";
+			public const string MessageWatchDog_ErrorCode = "MessageWatchDog_ErrorCode";
+			public const string MessageWatchDog_ErrorCode_Help = "MessageWatchDog_ErrorCode_Help";
+			public const string MessageWatchDog_ErrorCode_Select = "MessageWatchDog_ErrorCode_Select";
+			public const string MessageWatchDog_ExcludeHolidays = "MessageWatchDog_ExcludeHolidays";
+			public const string MessageWatchDog_Exclusion_Description = "MessageWatchDog_Exclusion_Description";
+			public const string MessageWatchDog_Exclusion_End = "MessageWatchDog_Exclusion_End";
+			public const string MessageWatchDog_Exclusion_End_Help = "MessageWatchDog_Exclusion_End_Help";
+			public const string MessageWatchDog_Exclusion_Help = "MessageWatchDog_Exclusion_Help";
+			public const string MessageWatchDog_Exclusion_Start = "MessageWatchDog_Exclusion_Start";
+			public const string MessageWatchDog_Exclusion_Start_Help = "MessageWatchDog_Exclusion_Start_Help";
+			public const string MessageWatchDog_Exclusion_Title = "MessageWatchDog_Exclusion_Title";
+			public const string MessageWatchDog_Help = "MessageWatchDog_Help";
+			public const string MessageWatchDog_Message = "MessageWatchDog_Message";
+			public const string MessageWatchDog_Message_Help = "MessageWatchDog_Message_Help";
+			public const string MessageWatchDog_SaturdayExclusions = "MessageWatchDog_SaturdayExclusions";
+			public const string MessageWatchDog_SundayExclusions = "MessageWatchDog_SundayExclusions";
+			public const string MessageWatchDog_Title = "MessageWatchDog_Title";
+			public const string MessageWatchDog_WeekdayExclusions = "MessageWatchDog_WeekdayExclusions";
 			public const string NuvIoT_Edition = "NuvIoT_Edition";
 			public const string NuvIoTEdition_App = "NuvIoTEdition_App";
 			public const string NuvIoTEdition_Cluster = "NuvIoTEdition_Cluster";

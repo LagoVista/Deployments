@@ -28,6 +28,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
             DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
             ErrorCodes = new List<DeviceErrorCode>();
+            MessageWatchDogs = new List<MessageWatchDog>();
         }
 
         public String DatabaseName { get; set; }
@@ -66,6 +67,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<DeviceErrorCode> ErrorCodes { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<MessageWatchDog> MessageWatchDogs { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }

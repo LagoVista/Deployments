@@ -1266,4 +1266,67 @@
   <data name="ClientApp_Kiosk_Select" xml:space="preserve">
     <value>- select kiosk -</value>
   </data>
+  <data name="DeviceConfiguration_MessageWatchDogs" xml:space="preserve">
+    <value>Message Watch Dogs</value>
+  </data>
+  <data name="MessageWatchDog_Description" xml:space="preserve">
+    <value>A message watch dog will allow you to configure checks on messages sent from your devices, if a message is not received within configured watch dog periods, an error will be thrown.</value>
+  </data>
+  <data name="MessageWatchDog_ErrorCode" xml:space="preserve">
+    <value>Errror</value>
+  </data>
+  <data name="MessageWatchDog_ErrorCode_Help" xml:space="preserve">
+    <value>Error that will be generated when the watch dog expires</value>
+  </data>
+  <data name="MessageWatchDog_ExcludeHolidays" xml:space="preserve">
+    <value>Exclude Holidays</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_Title" xml:space="preserve">
+    <value>Exclusion</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_Description" xml:space="preserve">
+    <value>Exclusion is a period of time when the watch dog should not be checked.</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_End" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_End_Help" xml:space="preserve">
+    <value>End time for the exclusion period, must be number representing the time such as 1030 for 10:30 AM and 1415 for 2:15 PM</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_Help" xml:space="preserve">
+    <value>Exclusion is a period of time when the watch dog should not be checked.</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_Start" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="MessageWatchDog_Exclusion_Start_Help" xml:space="preserve">
+    <value>Start time for the exclusion period, must be number representing the time such as 1030 for 10:30 AM and 1415 for 2:15 PM</value>
+  </data>
+  <data name="MessageWatchDog_Help" xml:space="preserve">
+    <value>A message watch dog will allow you to configure checks on messages sent from your devices, if a message is not received within configured watch dog periods, an error will be thrown.</value>
+  </data>
+  <data name="MessageWatchDog_Message" xml:space="preserve">
+    <value>Device Message</value>
+  </data>
+  <data name="MessageWatchDog_Message_Help" xml:space="preserve">
+    <value>Message to be expected from the device to clear the watchdog</value>
+  </data>
+  <data name="MessageWatchDog_SaturdayExclusions" xml:space="preserve">
+    <value>Saturday Exclusions</value>
+  </data>
+  <data name="MessageWatchDog_Title" xml:space="preserve">
+    <value>Message Watch Dog</value>
+  </data>
+  <data name="MessageWatchDog_WeekdayExclusions" xml:space="preserve">
+    <value>Weekday Exclusions</value>
+  </data>
+  <data name="MessageWatchDog_SundayExclusions" xml:space="preserve">
+    <value>Sunday Exclusions</value>
+  </data>
+  <data name="MessageWatchDog_DeviceMessage_Select" xml:space="preserve">
+    <value>-select message type-</value>
+  </data>
+  <data name="MessageWatchDog_ErrorCode_Select" xml:space="preserve">
+    <value>-select error code-</value>
+  </data>
 </root>

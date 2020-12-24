@@ -1,0 +1,50 @@
+﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Models;
+using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.DeviceMessaging.Admin.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace LagoVista.IoT.Deployment.Models
+{
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Title, DeploymentAdminResources.Names.MessageWatchDog_Help,
+     DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    public class MessageWatchDog
+    {
+        public MessageWatchDog()
+        {
+            WeekdayExclusions = new List<WatchdogExclusion>();
+            SaturdayExclusions = new List<WatchdogExclusion>();
+            SundayExclusions = new List<WatchdogExclusion>();
+        }
+
+        public string Id { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string Name { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, FieldType: FieldTypes.Key, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public string Key { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
+        public string Description { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_Message, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_DeviceMessage_Select, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Message_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader<DeviceMessageDefinition> DeviceMessageDefinition { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Select, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader<DeviceErrorCode> DeviceErrorCode {get; set;}
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ExcludeHolidays, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool ExcludeHolidays { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_WeekdayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<WatchdogExclusion> WeekdayExclusions { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SaturdayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<WatchdogExclusion> SaturdayExclusions { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SundayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<WatchdogExclusion> SundayExclusions { get; set; }
+    }
+}

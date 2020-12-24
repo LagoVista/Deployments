@@ -125,6 +125,30 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        ///  Device Config - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/messagewatchdog/factory")]
+        public DetailResponse<MessageWatchDog> CreateMessageWatchDog()
+        {
+            var response = DetailResponse<MessageWatchDog>.Create();
+            response.Model.Id = Guid.NewGuid().ToId();
+            return response;
+        }
+
+        /// <summary>
+        ///  Device Config - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/watchdogexclusion/factory")]
+        public DetailResponse<WatchdogExclusion> CreateWatchDogExlusion()
+        {
+            var response = DetailResponse<WatchdogExclusion>.Create();
+            response.Model.Id = Guid.NewGuid().ToId();
+            return response;
+        }
+
+        /// <summary>
         ///  Device Config Property - Create New
         /// </summary>
         /// <returns></returns>
