@@ -28,6 +28,14 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, FieldType: FieldTypes.Key, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout, HelpResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Help, 
+            FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public int Timeout { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval, HelpResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Help, 
+            WaterMark: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Select, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader<TimeSpanIntervals> TimeoutInterval { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Description { get; set; }
 

@@ -178,6 +178,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Get all messages watch dogs as monitored by an instance.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/message/watchdog/monitored")]
+        public Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string id)
+        {
+            return _instanceManager.GetWatchdogMessageStatusAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        /// <summary>
+        /// Get all messages that have timed out as monitored by an instance.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/message/watchdog/timedout")]
+        public Task<ListResponse<WatchdogMessageStatus>> GetTimedOutWatchdogMessageStatusAsync(string id)
+        {
+            return _instanceManager.GetTimedOutWatchdogMessageStatusAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        /// <summary>
         /// Device Message Config - Key In Use
         /// </summary>
         /// <returns></returns>

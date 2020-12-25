@@ -1329,4 +1329,19 @@
   <data name="MessageWatchDog_ErrorCode_Select" xml:space="preserve">
     <value>-select error code-</value>
   </data>
+  <data name="MessageWatchdog_Timeout" xml:space="preserve">
+    <value>Timeout</value>
+  </data>
+  <data name="MessageWatchdog_Timeout_Help" xml:space="preserve">
+    <value>Enter the timeout as a number, defined by the timeout interval that should be used to watch messages.</value>
+  </data>
+  <data name="MessageWatchdog_Timeout_Interval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="MessageWatchdog_Timeout_Interval_Help" xml:space="preserve">
+    <value>Interval to define the timeout.</value>
+  </data>
+  <data name="MessageWatchdog_Timeout_Interval_Select" xml:space="preserve">
+    <value>-select timeout interval-</value>
+  </data>
 </root>

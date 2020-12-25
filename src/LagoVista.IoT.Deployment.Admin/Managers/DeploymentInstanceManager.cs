@@ -359,6 +359,28 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return proxy.GetTimedOutDevicesAsync(listRequest);
         }
 
+        public Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var proxy = _proxyFactory.Create<IMessageWatchdogService>(new ProxySettings
+            {
+                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
+                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
+            });
+
+            return proxy.GetWatchdogMessageStatusAsync(listRequest);
+        }
+
+        public Task<ListResponse<WatchdogMessageStatus>> GetTimedOutWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var proxy = _proxyFactory.Create<IMessageWatchdogService>(new ProxySettings
+            {
+                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
+                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
+            });
+
+            return proxy.GetTimedOutWatchdogMessageStatusAsync(listRequest);
+        }
+
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);

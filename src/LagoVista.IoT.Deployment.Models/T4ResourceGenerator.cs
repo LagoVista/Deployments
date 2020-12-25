@@ -1089,6 +1089,21 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:MessageWatchDog_SundayExclusions
 
 		public static string MessageWatchDog_SundayExclusions { get { return GetResourceString("MessageWatchDog_SundayExclusions"); } }
+//Resources:DeploymentAdminResources:MessageWatchdog_Timeout
+
+		public static string MessageWatchdog_Timeout { get { return GetResourceString("MessageWatchdog_Timeout"); } }
+//Resources:DeploymentAdminResources:MessageWatchdog_Timeout_Help
+
+		public static string MessageWatchdog_Timeout_Help { get { return GetResourceString("MessageWatchdog_Timeout_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchdog_Timeout_Interval
+
+		public static string MessageWatchdog_Timeout_Interval { get { return GetResourceString("MessageWatchdog_Timeout_Interval"); } }
+//Resources:DeploymentAdminResources:MessageWatchdog_Timeout_Interval_Help
+
+		public static string MessageWatchdog_Timeout_Interval_Help { get { return GetResourceString("MessageWatchdog_Timeout_Interval_Help"); } }
+//Resources:DeploymentAdminResources:MessageWatchdog_Timeout_Interval_Select
+
+		public static string MessageWatchdog_Timeout_Interval_Select { get { return GetResourceString("MessageWatchdog_Timeout_Interval_Select"); } }
 //Resources:DeploymentAdminResources:MessageWatchDog_Title
 
 		public static string MessageWatchDog_Title { get { return GetResourceString("MessageWatchDog_Title"); } }
@@ -1614,6 +1629,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string MessageWatchDog_Message_Help = "MessageWatchDog_Message_Help";
 			public const string MessageWatchDog_SaturdayExclusions = "MessageWatchDog_SaturdayExclusions";
 			public const string MessageWatchDog_SundayExclusions = "MessageWatchDog_SundayExclusions";
+			public const string MessageWatchdog_Timeout = "MessageWatchdog_Timeout";
+			public const string MessageWatchdog_Timeout_Help = "MessageWatchdog_Timeout_Help";
+			public const string MessageWatchdog_Timeout_Interval = "MessageWatchdog_Timeout_Interval";
+			public const string MessageWatchdog_Timeout_Interval_Help = "MessageWatchdog_Timeout_Interval_Help";
+			public const string MessageWatchdog_Timeout_Interval_Select = "MessageWatchdog_Timeout_Interval_Select";
 			public const string MessageWatchDog_Title = "MessageWatchDog_Title";
 			public const string MessageWatchDog_WeekdayExclusions = "MessageWatchDog_WeekdayExclusions";
 			public const string NuvIoT_Edition = "NuvIoT_Edition";
