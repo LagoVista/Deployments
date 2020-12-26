@@ -13,5 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<string>> CreateServiceTicketAsync(CreateServiceTicketRequest request, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult> HandleDeviceExceptionAsync(DeviceException exception, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult> ClearDeviceExceptionAsync(DeviceException exception, EntityHeader org, EntityHeader user);
     }
 }

@@ -578,5 +578,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             return await _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
         }
+
+        /// <summary>
+        /// Clear a device exception.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/device/clearexception")]
+        public async Task<InvokeResult> ClearDeviceExcptionAsync([FromBody] DeviceException deviceExcpetion)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            return await _ticketCreator.ClearDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+        }
     }
 }

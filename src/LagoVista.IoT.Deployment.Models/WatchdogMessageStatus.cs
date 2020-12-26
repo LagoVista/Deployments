@@ -9,9 +9,10 @@
         public string Expired { get; set; }
         public string MessageName { get; set; }
         public string MessageId { get; set; }
+        public string GeneratedErrorCode { get; set; }
         public string DeviceName { get; set; }
         public string DeviceId { get; set; }
-        public string DevicConfigurationId { get; set; }
+        public string DeviceConfigurationId { get; set; }
         public string DeviceConfiguration { get; set; }
         public string DeviceTypeId { get; set; }
         public string DeviceType { get; set; }
