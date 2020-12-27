@@ -9,6 +9,8 @@
         public string Expired { get; set; }
         public string MessageName { get; set; }
         public string MessageId { get; set; }
+        public string WatchdogName { get; set; }
+        public string WatchdogId { get; set; }
         public string GeneratedErrorCode { get; set; }
         public string DeviceName { get; set; }
         public string DeviceId { get; set; }
@@ -17,5 +19,8 @@
         public string DeviceTypeId { get; set; }
         public string DeviceType { get; set; }
         public string LastNotified { get; set; }
+        public bool Excluded { get; set; }
+        public string ExclusionName { get; set; }
+        public string ExclusionDescription { get; set; }
     }
 }

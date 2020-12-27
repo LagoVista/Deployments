@@ -1344,4 +1344,10 @@
   <data name="MessageWatchdog_Timeout_Interval_Select" xml:space="preserve">
     <value>-select timeout interval-</value>
   </data>
+  <data name="DeploymentInstance_TimeZone" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="DeploymentInstance_TimeZone_RegEx" xml:space="preserve">
+    <value>Time Zone must be between 3 and 5 upper case characters and be a valid time zone.</value>
+  </data>
 </root>

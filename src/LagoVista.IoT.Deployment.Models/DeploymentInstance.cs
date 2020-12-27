@@ -26,8 +26,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
             Integrations = new List<EntityHeader<Integration>>();
             HealthCheckEnabled = true;
+            TimeZone = new Deployment.Models.TimeZone()
+            {
+                Id = "UTC",
+                Name = "(UTC) Coordinated Universal Time",
+            };
         }
-
 
         public const string Status_Offline = "offline";
 
@@ -104,6 +108,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 StatusTimeStamp = DateTime.UtcNow.ToJSONString();
             }
         }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired:true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public LagoVista.IoT.Deployment.Models.TimeZone TimeZone { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusTimeStamp { get; set; }
