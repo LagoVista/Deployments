@@ -13,7 +13,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using TimeZone = LagoVista.IoT.Deployment.Models.TimeZone;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -129,6 +131,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
 
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
+            response.View["timeZone"].Options = TimeZone.GetSystemTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.Text, Name = tz.Text }).ToList();
 
             return response;
         }
@@ -238,6 +241,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.Model.PrimaryCacheType = EntityHeader<CacheTypes>.Create(CacheTypes.LocalInMemory);
             response.Model.SharedAccessKey1 = _instanceManager.GenerateAccessKey();
             response.Model.SharedAccessKey2 = _instanceManager.GenerateAccessKey();
+            response.View["timeZone"].Options = TimeZone.GetSystemTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.Text, Name = tz.Text }).ToList();
 
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);

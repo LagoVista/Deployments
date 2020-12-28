@@ -29,7 +29,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             TimeZone = new Deployment.Models.TimeZone()
             {
                 Id = "UTC",
-                Name = "(UTC) Coordinated Universal Time",
+                Text = "(UTC) Coordinated Universal Time",
             };
         }
 
