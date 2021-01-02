@@ -1350,4 +1350,10 @@
   <data name="DeploymentInstance_TimeZone_RegEx" xml:space="preserve">
     <value>Time Zone must be between 3 and 5 upper case characters and be a valid time zone.</value>
   </data>
+  <data name="MessageWatchDog_StartupBuffer" xml:space="preserve">
+    <value>Startup Buffer (minutes)</value>
+  </data>
+  <data name="MessageWatchDog_StartupBuffer_Help" xml:space="preserve">
+    <value>Enter the amount of time in minutes that should be used as a startup buffer after an exclusion period.  That is to say the number of minutes after the device is expected to start receiving messages to allow for a message to come in.  Without this buffer as soon as the exclusion period ends, it will immediately expect a message or will consider the message overdue.</value>
+  </data>
 </root>

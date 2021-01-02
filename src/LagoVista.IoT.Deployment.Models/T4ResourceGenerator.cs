@@ -1092,6 +1092,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:MessageWatchDog_SaturdayExclusions
 
 		public static string MessageWatchDog_SaturdayExclusions { get { return GetResourceString("MessageWatchDog_SaturdayExclusions"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_StartupBuffer
+
+		public static string MessageWatchDog_StartupBuffer { get { return GetResourceString("MessageWatchDog_StartupBuffer"); } }
+//Resources:DeploymentAdminResources:MessageWatchDog_StartupBuffer_Help
+
+		public static string MessageWatchDog_StartupBuffer_Help { get { return GetResourceString("MessageWatchDog_StartupBuffer_Help"); } }
 //Resources:DeploymentAdminResources:MessageWatchDog_SundayExclusions
 
 		public static string MessageWatchDog_SundayExclusions { get { return GetResourceString("MessageWatchDog_SundayExclusions"); } }
@@ -1636,6 +1642,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string MessageWatchDog_Message = "MessageWatchDog_Message";
 			public const string MessageWatchDog_Message_Help = "MessageWatchDog_Message_Help";
 			public const string MessageWatchDog_SaturdayExclusions = "MessageWatchDog_SaturdayExclusions";
+			public const string MessageWatchDog_StartupBuffer = "MessageWatchDog_StartupBuffer";
+			public const string MessageWatchDog_StartupBuffer_Help = "MessageWatchDog_StartupBuffer_Help";
 			public const string MessageWatchDog_SundayExclusions = "MessageWatchDog_SundayExclusions";
 			public const string MessageWatchdog_Timeout = "MessageWatchdog_Timeout";
 			public const string MessageWatchdog_Timeout_Help = "MessageWatchdog_Timeout_Help";

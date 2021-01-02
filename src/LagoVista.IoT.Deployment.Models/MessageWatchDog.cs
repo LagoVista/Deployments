@@ -36,6 +36,10 @@ namespace LagoVista.IoT.Deployment.Models
             WaterMark: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Select, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> TimeoutInterval { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_StartupBuffer, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_StartupBuffer_Help,
+            FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        public int StartupBufferMinutes { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Description { get; set; }
 
