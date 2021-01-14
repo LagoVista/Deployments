@@ -1273,7 +1273,7 @@
     <value>A message watch dog will allow you to configure checks on messages sent from your devices, if a message is not received within configured watch dog periods, an error will be thrown.</value>
   </data>
   <data name="MessageWatchDog_ErrorCode" xml:space="preserve">
-    <value>Errror</value>
+    <value>Error</value>
   </data>
   <data name="MessageWatchDog_ErrorCode_Help" xml:space="preserve">
     <value>Error that will be generated when the watch dog expires</value>
