@@ -37,7 +37,8 @@ namespace LagoVista.IoT.Deployment.Tests.Host
             _host = new DeploymentHost()
             {
                 Id = "MYHOSTID",
-                Status = EntityHeader<HostStatus>.Create(HostStatus.Offline)
+                Status = EntityHeader<HostStatus>.Create(HostStatus.Offline),
+                OwnerOrganization = _org
             };
             _hostRepo.Setup(hrs => hrs.GetDeploymentHostAsync(_host.Id, true)).ReturnsAsync(_host);
 

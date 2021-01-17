@@ -11,7 +11,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddInstanceAsync(DeploymentInstance instance);
         Task UpdateInstanceAsync(DeploymentInstance instance);
-        Task DeleteInstanceAsync(string id);
 
         Task<DeploymentInstance> GetInstanceAsync(string instanceId);
 

@@ -50,13 +50,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
             }
 
-            await _instanceRepo.DeleteInstanceAsync(instanceId);
+            instance.IsArchived = true;
+            await _instanceRepo.UpdateInstanceAsync(instance);
 
             if(!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
             {
                 var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
                 if(host.HostType.Value == HostTypes.Dedicated)
                 {
+                    await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DestroyHost);
                     await _deploymentHostManager.DeleteDeploymentHostAsync(host.Id, org, user);
                 }
             }
@@ -64,6 +66,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return InvokeResult.Success; 
         }
 
+        protected virtual Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
+        {
+            return Task.FromResult<InvokeResult>(InvokeResult.Success);
+        }
 
         private DeploymentHost CreateHost(DeploymentInstance instance)
         {

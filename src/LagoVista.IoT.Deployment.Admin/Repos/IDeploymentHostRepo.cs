@@ -15,7 +15,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<DeploymentHost> GetMCPHostAsync();
 
         Task UpdateDeploymentHostAsync(DeploymentHost host);
-        Task DeleteDeploymentHostAsync(String hostId);
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId);
         Task<bool> QueryHostKeyInUse(string key, string orgId);
     }

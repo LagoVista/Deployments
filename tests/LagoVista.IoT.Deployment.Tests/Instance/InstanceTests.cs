@@ -375,9 +375,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
             await _instanceManager.DeleteInstanceAsync(instance.Id, ORG, USER);
 
-
-            _deploymentInstanceRepo.Verify(dir => dir.DeleteInstanceAsync(DEVICE_INSTANCE_ID), Times.Once);
-
+            Assert.IsTrue(instance.IsArchived);
             /* Didn't change, don't call method to get or update the device repo */
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == NEW_DEVICE_REPO_ID && rpo.Instance == null), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
         }

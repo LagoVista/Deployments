@@ -43,11 +43,6 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             await CreateDocumentAsync(host);
         }
 
-        public Task DeleteDeploymentHostAsync(string hostId)
-        {
-            return DeleteDocumentAsync(hostId);
-        }
-
         public Task<DeploymentHost> GetDeploymentHostAsync(string hostId, bool throwOnNotFound = true)
         {
             return GetDocumentAsync(hostId, throwOnNotFound);
@@ -60,7 +55,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
+            var items = await base.QueryAsync(qry => qry.IsArchived == false && (qry.IsPublic == true || qry.OwnerOrganization.Id == orgId));
 
             return from item in items
                    select item.CreateSummary();

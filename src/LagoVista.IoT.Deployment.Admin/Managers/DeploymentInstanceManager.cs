@@ -126,7 +126,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return version.Major > 1 || (version.Major == 1 && version.Minor >= 5);
         }
 
-        private async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
+        protected override async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
         {
             var timeout = DateTime.UtcNow.Add(TimeSpan.FromSeconds(timeoutSeconds));
 
@@ -303,6 +303,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             instance.ContainerTag = EntityHeader.Create(tag.Id, tag.Name);
             await _instanceRepo.UpdateInstanceAsync(instance);
 
+            //TODO: This may not be correct, on checking, for transition to DestoryHost for upgraded.
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DestroyHost, org, user);
             return !transitionResult.Successful
                 ? transitionResult

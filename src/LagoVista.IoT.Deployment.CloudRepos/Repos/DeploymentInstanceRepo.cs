@@ -90,7 +90,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string orgId, ListRequest listRequest)
         {
-            var items = await  base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId, listRequest);
+            var items = await  base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && qry.IsArchived == false, listRequest);
             return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Select(itm=>itm.CreateSummary()));
         }
 

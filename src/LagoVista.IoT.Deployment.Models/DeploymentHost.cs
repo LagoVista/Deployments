@@ -276,6 +276,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DebugMode, HelpResource: DeploymentAdminResources.Names.Host_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool DebugMode { get; set; }
 
+        // we never want to delete an instance since billing records are tied to it.
+        public bool IsArchived { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool ShowSolutionDetailsSite { get; set; }

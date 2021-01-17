@@ -59,15 +59,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await CheckForDepenenciesAsync(host);
         }
 
-        public async Task<InvokeResult> DeleteDeploymentHostAsync(String instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> DeleteDeploymentHostAsync(String hostId, EntityHeader org, EntityHeader user)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(instanceId);
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
             if (host.HostType.Value == HostTypes.MCP) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteMCPHost.ToErrorMessage());
             if (host.HostType.Value == HostTypes.Notification) return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CanNotDeleteNotificationServerHost.ToErrorMessage());
 
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Delete, user, org);
             await ConfirmNoDepenenciesAsync(host);
-            await _deploymentHostRepo.DeleteDeploymentHostAsync(instanceId);
+            host.IsArchived = true;
+            await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
             return InvokeResult.Success;
         }
 
