@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -8,6 +10,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
     public class MiscController : Controller
     {
+        private readonly ITimeZoneServices _timeZoneServices;
+
+        public MiscController(ITimeZoneServices timeZoneServices)
+        {
+            _timeZoneServices = timeZoneServices ?? throw new NullReferenceException(nameof(timeZoneServices));
+        }
+
         /// <summary>
         /// Misc services - get all known time zones
         /// </summary>
@@ -15,7 +24,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/misc/timezones")]
         public IEnumerable<Deployment.Models.TimeZone> GetSystemTimeZones()
         {
-            return Deployment.Models.TimeZone.GetSystemTimeZones();
+            var timeZones = _timeZoneServices.GetTimeZones();
+            return timeZones.Select(tz => new Deployment.Models.TimeZone() { Id = tz.Id, Text = tz.DisplayName });
         }
     }
 }

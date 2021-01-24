@@ -28,10 +28,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     [Authorize]
     public class DeploymentInstanceController : LagoVistaBaseController
     {
-        IDeploymentInstanceManager _instanceManager;
-        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        private readonly IDeploymentInstanceManager _instanceManager;
+        private readonly ITimeZoneServices _timeZoneServices;
+
+        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, ITimeZoneServices timeZoneServices, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
-            _instanceManager = instanceManager;
+            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager)); ;
+            _timeZoneServices = timeZoneServices ?? throw new ArgumentNullException(nameof(timeZoneServices));
         }
 
         /// <summary>
@@ -131,7 +134,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
 
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
-            response.View["timeZone"].Options = TimeZone.GetSystemTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.Text, Name = tz.Text }).ToList();
+            response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
 
             return response;
         }
@@ -241,7 +244,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.Model.PrimaryCacheType = EntityHeader<CacheTypes>.Create(CacheTypes.LocalInMemory);
             response.Model.SharedAccessKey1 = _instanceManager.GenerateAccessKey();
             response.Model.SharedAccessKey2 = _instanceManager.GenerateAccessKey();
-            response.View["timeZone"].Options = TimeZone.GetSystemTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.Text, Name = tz.Text }).ToList();
+            response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
 
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
