@@ -25,6 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DataStreams = new List<EntityHeader<DataStream>>();
             ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
             Integrations = new List<EntityHeader<Integration>>();
+            DeploymentErrors = new Dictionary<string, string>();
             HealthCheckEnabled = true;
             TimeZone = new Deployment.Models.TimeZone()
             {
@@ -243,6 +244,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources),
             WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Select, HelpResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Help, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<QueueTypes> QueueType { get; set; }
+
+        public Dictionary<string, string> DeploymentErrors { get; set; }
 
 
         public EntityHeader<IConnectionSettings> QueueConnection { get; set; }

@@ -1,12 +1,9 @@
 ﻿using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.Deployment.Admin.Repos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using LagoVista.Core.Models.UIMetaData;
 using System.Threading.Tasks;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Deployment.Admin.Repos;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -21,6 +18,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         {
             return InsertAsync(instanceStatus);
         }
+
 
         public Task<ListResponse<DeploymentInstanceStatus>> GetStatusHistoryForInstanceAsync(string instanceId, ListRequest listRequest)
         {

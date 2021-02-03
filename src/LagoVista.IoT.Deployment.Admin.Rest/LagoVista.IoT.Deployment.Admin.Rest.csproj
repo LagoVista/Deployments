@@ -15,12 +15,12 @@
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.IoT.Web.Common" Version="2.1.1273-beta1708" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.1273-beta1708" />
+    <PackageReference Include="LagoVista.IoT.Web.Common" Version="2.1.1353-beta1658" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.1353-beta1658" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="LagoVista.IoT.ProductStore" Version="2.1.1273-beta1708" />
+    <PackageReference Include="LagoVista.IoT.ProductStore" Version="2.1.1353-beta1658" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
