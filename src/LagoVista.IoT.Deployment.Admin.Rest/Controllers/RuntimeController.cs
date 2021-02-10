@@ -415,6 +415,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             foreach(var user in group.AppUsers)
             {
                 message.UserId = user.Id;
+                // before calling the method to send an email to a user
+                // clear the phone/email on th emessage this will allow
+                // the email message to send to the user id, not just the 
+                // email on the message
+                message.Phone = null;
+                message.Email = null;
                 var sendResult = await SendToUserAsync(message);
                 if (!sendResult.Successful) return sendResult;
             }
