@@ -7,6 +7,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using System;
 using System.Threading.Tasks;
 using static LagoVista.Core.Models.AuthorizeResult;
@@ -15,14 +16,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 {
     public class ClientAppManager : ManagerBase, IClientAppManager
     {
-        IClientAppRepo _repo;
-        ISecureStorage _secureStorage;
+        private readonly IClientAppRepo _repo;
+        private readonly ISecureStorage _secureStorage;
+        private readonly IUserManager _userManager;
+        private readonly IOrganizationManager _orgManager;
 
         public ClientAppManager(IClientAppRepo repo, IAppConfig appConfig, IAdminLogger logger, ISecureStorage secureStorage,
-            IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+            IUserManager userManager, IOrganizationManager orgManager, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
-            _repo = repo;
-            _secureStorage = secureStorage;
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
         }
 
         public async Task<InvokeResult> AddClientAppAsync(ClientApp clientApp, EntityHeader org, EntityHeader user)
@@ -49,8 +54,44 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             clientApp.AppAuthKeySecondarySecureId = secondaryAddResult.Result;
             clientApp.AppAuthKeySecondary = null;
 
-            clientApp.ClientAppUser = EntityHeader.Create(Guid.NewGuid().ToId(), $"{clientApp.Key}-user");
+            var clientAppUserId = Guid.NewGuid().ToId();
+            clientApp.ClientAppUser = EntityHeader.Create(clientAppUserId, $"{clientApp.Key} Service Account");
 
+            var fullOrg = await _orgManager.GetOrganizationAsync(org.Id, org, user);
+
+            var clientAppEmail = $"{fullOrg.Namespace}.{clientApp.Key}@nodomain.cantlogin";
+
+            var result = await _userManager.CreateAsync(new UserAdmin.Models.Users.AppUser()
+            {
+                CurrentOrganization = org,
+                Email = clientAppEmail,
+                FirstName = clientApp.Name,
+                LastName = "Service Account",
+                Id = clientAppUserId,
+                UserName = clientAppEmail,
+                OwnerOrganization = org,
+                IsAppBuilder = false,
+                IsOrgAdmin = false,
+                IsSystemAdmin = false,
+                IsRuntimeuser = true,
+                PhoneNumberConfirmed = true,
+                EmailConfirmed = true,
+                CreationDate = clientApp.CreationDate,
+                LastUpdatedDate = clientApp.CreationDate,
+                LastUpdatedBy = user,
+                CreatedBy = user,
+                IsAccountDisabled = false,
+                Name = clientApp.ClientAppUser.Text,
+                PhoneNumber = "612 555-1212",
+            }, $"NuvI0Tabc{Guid.NewGuid().ToId()}");
+
+
+            if(!result.Successful)
+            {
+                return result;
+            }
+
+            await _orgManager.AddUserToOrgAsync(org.Id, clientAppUserId, org, user);
             await _repo.AddClientAppAsync(clientApp);
 
             return InvokeResult.Success;

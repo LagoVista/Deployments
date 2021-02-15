@@ -72,8 +72,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsPublic = IsPublic,
                 Key = Key,
                 Name = Name,
-                InstanceId = DeploymentInstance.Id,
-                InstanceName = DeploymentInstance.Text
+                InstanceId = DeploymentInstance?.Id,
+                InstanceName = DeploymentInstance?.Text
             };
         }
 
