@@ -366,19 +366,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.DestroyHostAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
-        /// <summary>
-        /// Web Socket URI - Get a URI to Receive Web Socket Notifcations
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="id"></param>
-        /// <param name="verbosity"></param>
-        /// <returns></returns>
-        [HttpGet("/api/wsuri/{channel}/{id}/{verbosity}")]
-        public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
-        {
-            return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
-        }
-
        
         /// <summary>
         /// Deployment Instance - Regenreate and update access key.
@@ -402,6 +389,35 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceid)
         {
             return _instanceManager.GetDeploymentSettingsAsync(instanceid, OrgEntityHeader, UserEntityHeader);
+        }
+    }
+
+
+    /// <summary>
+    /// Kiosk - Manage Deployment Instances 
+    /// </summary>
+    [ConfirmedUser]
+    [Authorize]
+    public class DataStreamDeploymentInstanceController : LagoVistaBaseController
+    {
+        private readonly IDeploymentInstanceManager _instanceManager;
+
+        public DataStreamDeploymentInstanceController(IDeploymentInstanceManager instanceManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        {
+            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager)); ;
+        }
+
+        /// <summary>
+        /// Web Socket URI - Get a URI to Receive Web Socket Notifcations
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="id"></param>
+        /// <param name="verbosity"></param>
+        /// <returns></returns>
+        [HttpGet("/api/wsuri/{channel}/{id}/{verbosity}")]
+        public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
+        {
+            return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
     }
 }
