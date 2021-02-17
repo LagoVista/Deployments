@@ -70,7 +70,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 Id = clientAppUserId,
                 UserName = clientAppEmail,
                 OwnerOrganization = org,
-                IsAppBuilder = false,
+                IsAppBuilder = true,
                 IsOrgAdmin = false,
                 IsSystemAdmin = false,
                 IsRuntimeuser = true,
