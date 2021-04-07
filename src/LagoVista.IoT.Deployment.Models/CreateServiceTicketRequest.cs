@@ -4,6 +4,7 @@
     {
         public string BoardId { get; set; }
         public string TemplateId { get; set; }
+        public string TemplateKey { get; set; }
         public string RepoId { get; set; }
         public string DeviceUniqueId { get; set; }
         public string DeviceId { get; set; }
