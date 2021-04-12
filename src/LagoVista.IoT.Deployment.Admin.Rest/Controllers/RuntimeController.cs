@@ -23,6 +23,8 @@ using LagoVista.UserAdmin.Models.Users;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.AI;
+
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -38,6 +40,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         ISmsSender _smsSender;
         IServiceTicketCreator _ticketCreator;
         IDistributionManager _distroManager;
+        IModelManager _modelManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -52,7 +55,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
-            IDistributionManager distroManager, ISecureStorage secureStorage, IAdminLogger logger)
+            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger)
         {
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -64,6 +67,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
             _smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
+            _modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -494,6 +498,54 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetLoggingSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Download a specific model revision
+        /// </summary>
+        /// <param name="modelid"></param>
+        /// <param name="revisionid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/ml/model/{modelid}/{revisionid}")]
+        public async Task<IActionResult> GetMLModelAsync(string modelid, string revisionid)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            var model = await _modelManager.GetModelAsync(modelid, OrgEntityHeader, UserEntityHeader);
+
+            var modelRevision = model.Revisions.First(md => md.Id == revisionid);
+
+            var result = await _modelManager.GetMLModelAsync(modelid, modelRevision.VersionNumber, OrgEntityHeader, UserEntityHeader);
+
+            if (!result.Successful)
+            {
+                throw new Exception(result.Errors.First().Message);
+            }
+
+            var ms = new System.IO.MemoryStream(result.Result);
+            return new FileStreamResult(ms, "application/octet-stream")
+            {
+                FileDownloadName = modelRevision.FileName
+            };
+        }
+
+        /// <summary>
+        /// Download a specific model revision
+        /// </summary>
+        /// <param name="modelid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/ml/model/{modelid}")]
+        public async Task<IActionResult> GetDefaultMLModelAsync(string modelid)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var model = await _modelManager.GetModelAsync(modelid, OrgEntityHeader, UserEntityHeader);
+            var modelRevision = model.Revisions.FirstOrDefault(md => md.Id == model.PreferredRevision.Id);
+            if(modelRevision == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return await GetMLModelAsync(modelid, modelRevision.Id);
         }
 
         /// <summary>
