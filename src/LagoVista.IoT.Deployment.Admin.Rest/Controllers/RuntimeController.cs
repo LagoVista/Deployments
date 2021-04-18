@@ -408,24 +408,41 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
 
+
             if(!String.IsNullOrEmpty(message.UserId))
             {
-                return await SendToUserAsync(message);
+                var sendResult = await SendToUserAsync(message);
+                if (!sendResult.Successful) return sendResult;
+            }
+            
+            if (!String.IsNullOrEmpty(message.DistributionGroupId))
+            {
+                var group = await _distroManager.GetListAsync(message.DistributionGroupId, OrgEntityHeader, UserEntityHeader);
+                if (group == null) return InvokeResult.FromError($"Could not load distribution group for group id [{message.DistributionGroupId}].");
+
+                foreach (var user in group.AppUsers)
+                {
+                    message.UserId = user.Id;
+                    // before calling the method to send an email to a user
+                    // clear the phone/email on th emessage this will allow
+                    // the email message to send to the user id, not just the 
+                    // email on the message
+                    message.Phone = null;
+                    message.Email = null;
+                    var sendResult = await SendToUserAsync(message);
+                    if (!sendResult.Successful) return sendResult;
+                }
+            }
+            
+            if(!String.IsNullOrEmpty(message.Phone))
+            {
+                var sendResult = await _smsSender.SendAsync(message.Phone, message.Body);
+                if (!sendResult.Successful) return sendResult;
             }
 
-            var group = await _distroManager.GetListAsync(message.DistributionGroupId, OrgEntityHeader, UserEntityHeader);
-            if (group == null) return InvokeResult.FromError($"Could not load distribution group for group id [{message.DistributionGroupId}].");
-
-            foreach(var user in group.AppUsers)
+            if(!String.IsNullOrEmpty(message.Email))
             {
-                message.UserId = user.Id;
-                // before calling the method to send an email to a user
-                // clear the phone/email on th emessage this will allow
-                // the email message to send to the user id, not just the 
-                // email on the message
-                message.Phone = null;
-                message.Email = null;
-                var sendResult = await SendToUserAsync(message);
+                var sendResult = await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
                 if (!sendResult.Successful) return sendResult;
             }
 
