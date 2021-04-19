@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>LagoVista.IoT.Deployment.Admin.Tests</AssemblyName>
     <PackageId>LagoVista.IoT.DeviceAdmin.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.4;portable-net451+win8</PackageTargetFallback>
     <RootNamespace>LagoVista.IoT.Deployment.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
@@ -23,12 +22,12 @@
     <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="LagoVista.Core" Version="2.1.1353-beta1658" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.1353-beta1658" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.1353-beta1658" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.1353-beta1658" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.1353-beta1658" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.1433-beta0739" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="2.1.1433-beta0739" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="2.1.1433-beta0739" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.1433-beta0739" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="2.1.1433-beta0739" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
