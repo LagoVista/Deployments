@@ -47,13 +47,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 		/// <summary>
 		/// Client Apps - Get Kiosk Client App
 		/// </summary>
-		/// <param name="orgId"></param>
-		/// <param name="kioskId"></param>
+		/// <param name="id"></param>
 		/// <returns></returns>
-		[HttpGet("/api/clientapp/{orgId}/kiosk/{kioskId}")]
-        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string orgId, string kioskId)
+		[HttpGet("/api/kioskclientapp/{id}")]
+        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string id)
         {
-            return await _clientAppManager.GetKioskClientAppAsync(orgId, kioskId, OrgEntityHeader, UserEntityHeader);
+            return await _clientAppManager.GetKioskClientAppAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

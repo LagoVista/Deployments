@@ -134,7 +134,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
     public class KioskClientAppSummary
 	{
-		public string ClientAppId { get; set; }
-		public string AppKey { get; set; }
+		public string KioskUrl { get; set; }
 	}
 }

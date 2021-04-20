@@ -17,7 +17,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     public class ClientAppManager : ManagerBase, IClientAppManager
     {
         private readonly IClientAppRepo _repo;
-        private readonly ISecureStorage _secureStorage;
+		private readonly IAppConfig _appConfig;
+		private readonly ISecureStorage _secureStorage;
         private readonly IUserManager _userManager;
         private readonly IOrganizationManager _orgManager;
 
@@ -25,7 +26,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             IUserManager userManager, IOrganizationManager orgManager, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
-            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+			_appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
+			_secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
         }
@@ -191,15 +193,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return clientApp;
         }
 
-        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string orgId, string kioskId, EntityHeader org, EntityHeader user)
+        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string kioskId, EntityHeader org, EntityHeader user)
         {
-            var clientApp = await _repo.GetKioskClientAppAsync(orgId, kioskId);
+            var clientApp = await _repo.GetKioskClientAppAsync(org.Id, kioskId);
             await AuthorizeAsync(clientApp, AuthorizeActions.Read, user, org);
             var secrets = await GetClientAppSecretsAsync(clientApp.Id, org, user);
-            var summary = new KioskClientAppSummary() 
-            { 
-                ClientAppId = clientApp.Id,
-                AppKey = secrets.Result.AppAuthKeyPrimary
+            var summary = new KioskClientAppSummary()
+            {
+                KioskUrl = $"{_appConfig.WebAddress}/account/kioskaccess/?ClientId={clientApp.Id}&ApiKey={secrets.Result.AppAuthKeyPrimary}"
             };
             return summary;
         }
