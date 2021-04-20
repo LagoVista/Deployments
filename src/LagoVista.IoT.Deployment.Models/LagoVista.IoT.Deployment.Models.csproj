@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.2</VersionPrefix>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard1.2</TargetFramework>
     <AssemblyVersion>1.2.1.1</AssemblyVersion>
     <FileVersion>1.2.1.1</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>LagoVista.IoT.Deployment.Models.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin.Models" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Models" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.UserAdmin.Models" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Models" Version="2.1.1433-beta0739" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Models" Version="2.1.1433-beta0739" />
+    <PackageReference Include="LagoVista.Core" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin.Models" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.IoT.Logging" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Models" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.UserAdmin.Models" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Models" Version="2.1.1434.0352" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Models" Version="2.1.1434.0352" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
