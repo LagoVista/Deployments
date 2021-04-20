@@ -8,6 +8,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddClientAppAsync(ClientApp app);                    
         Task<ClientApp> GetClientAppAsync(string id);
+        Task<ClientApp> GetKioskClientAppAsync(string orgId, string kioskId);
         Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, ListRequest listRequest);
         Task UpdateClientAppAsync(ClientApp deployment);
         Task DeleteClientAppAsync(string id);

@@ -13,6 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<InvokeResult> AddClientAppAsync(ClientApp clientApp, EntityHeader org, EntityHeader user);
         Task<ClientApp> GetClientAppAsync(string id, EntityHeader org, EntityHeader user);
+        Task<KioskClientAppSummary> GetKioskClientAppAsync(string orgId, string kioskId, EntityHeader org, EntityHeader user);
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string id, EntityHeader user, ListRequest request);
         Task<InvokeResult<ClientAppSecrets>> GetClientAppSecretsAsync(string id, EntityHeader org, EntityHeader user);

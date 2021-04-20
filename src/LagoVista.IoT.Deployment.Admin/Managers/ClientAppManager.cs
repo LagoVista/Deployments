@@ -191,6 +191,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return clientApp;
         }
 
+        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string orgId, string kioskId, EntityHeader org, EntityHeader user)
+        {
+            var clientApp = await _repo.GetKioskClientAppAsync(orgId, kioskId);
+            await AuthorizeAsync(clientApp, AuthorizeActions.Read, user, org);
+            var secrets = await GetClientAppSecretsAsync(clientApp.Id, org, user);
+            var summary = new KioskClientAppSummary() 
+            { 
+                ClientAppId = clientApp.Id,
+                AppKey = secrets.Result.AppAuthKeyPrimary
+            };
+            return summary;
+        }
+
         public async Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, EntityHeader user, ListRequest request)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(Solution));

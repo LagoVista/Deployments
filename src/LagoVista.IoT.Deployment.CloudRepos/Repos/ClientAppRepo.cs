@@ -34,6 +34,16 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             return GetDocumentAsync(id, false);
         }
 
+        public async Task<ClientApp> GetKioskClientAppAsync(string orgId, string kioskId)
+		{
+            var clientApps = await base.QueryAsync(attr => attr.OwnerOrganization.Id == orgId && attr.Kiosk != null && attr.Kiosk.Id == kioskId);
+            if (clientApps.Any())
+            {
+                return clientApps.First();
+            }
+            return default;
+        }
+
         public async Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, ListRequest requst)
         {
             var response = await base.QueryAsync(attr => (attr.OwnerOrganization.Id == orgId || attr.IsPublic == true), requst);

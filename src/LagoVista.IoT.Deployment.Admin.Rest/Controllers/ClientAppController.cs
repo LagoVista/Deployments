@@ -44,6 +44,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return DetailResponse<ClientApp>.Create(container);
         }
 
+		/// <summary>
+		/// Client Apps - Get Kiosk Client App
+		/// </summary>
+		/// <param name="orgId"></param>
+		/// <param name="kioskId"></param>
+		/// <returns></returns>
+		[HttpGet("/api/clientapp/{orgId}/kiosk/{kioskId}")]
+        public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string orgId, string kioskId)
+        {
+            return await _clientAppManager.GetKioskClientAppAsync(orgId, kioskId, OrgEntityHeader, UserEntityHeader);
+        }
+
         /// <summary>
         /// Client Apps - Delete Client App
         /// </summary>
