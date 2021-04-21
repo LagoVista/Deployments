@@ -83,7 +83,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Kiosk, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
 		public EntityHeader Kiosk { get; set; }
 
-
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceTypes { get; set; }
 
@@ -135,5 +134,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     public class KioskClientAppSummary
 	{
 		public string KioskUrl { get; set; }
+		public bool Successful { get; set; }
 	}
 }

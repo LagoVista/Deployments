@@ -52,7 +52,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 		[HttpGet("/api/kioskclientapp/{id}")]
         public async Task<KioskClientAppSummary> GetKioskClientAppAsync(string id)
         {
-            return await _clientAppManager.GetKioskClientAppAsync(id, OrgEntityHeader, UserEntityHeader);
+            var container = await _clientAppManager.GetKioskClientAppAsync(id, OrgEntityHeader, UserEntityHeader);
+            container.Successful = true;
+            return container;
         }
 
         /// <summary>

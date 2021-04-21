@@ -9,6 +9,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using static LagoVista.Core.Models.AuthorizeResult;
 
@@ -200,7 +201,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var secrets = await GetClientAppSecretsAsync(clientApp.Id, org, user);
             var summary = new KioskClientAppSummary()
             {
-                KioskUrl = $"{_appConfig.WebAddress}/account/kioskaccess/?ClientId={clientApp.Id}&ApiKey={secrets.Result.AppAuthKeyPrimary}"
+                KioskUrl = $"{_appConfig.WebAddress}/account/kioskaccess/?ClientId={WebUtility.UrlEncode(clientApp.Id)}&ApiKey={WebUtility.UrlEncode(secrets.Result.AppAuthKeyPrimary)}"
             };
             return summary;
         }
