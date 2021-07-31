@@ -1206,6 +1206,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:RouteModuleConfig_Unassigned
 
 		public static string RouteModuleConfig_Unassigned { get { return GetResourceString("RouteModuleConfig_Unassigned"); } }
+//Resources:DeploymentAdminResources:Solution_DefaultListener
+
+		public static string Solution_DefaultListener { get { return GetResourceString("Solution_DefaultListener"); } }
+//Resources:DeploymentAdminResources:Solution_DefaultListener_Help
+
+		public static string Solution_DefaultListener_Help { get { return GetResourceString("Solution_DefaultListener_Help"); } }
+//Resources:DeploymentAdminResources:Solution_DefaultListener_Select
+
+		public static string Solution_DefaultListener_Select { get { return GetResourceString("Solution_DefaultListener_Select"); } }
 //Resources:DeploymentAdminResources:Solution_Description
 
 		public static string Solution_Description { get { return GetResourceString("Solution_Description"); } }
@@ -1680,6 +1689,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Route_Transmitter = "Route_Transmitter";
 			public const string Route_Workflow = "Route_Workflow";
 			public const string RouteModuleConfig_Unassigned = "RouteModuleConfig_Unassigned";
+			public const string Solution_DefaultListener = "Solution_DefaultListener";
+			public const string Solution_DefaultListener_Help = "Solution_DefaultListener_Help";
+			public const string Solution_DefaultListener_Select = "Solution_DefaultListener_Select";
 			public const string Solution_Description = "Solution_Description";
 			public const string Solution_DeviceConfigurations = "Solution_DeviceConfigurations";
 			public const string Solution_DeviceConfigurations_Help = "Solution_DeviceConfigurations_Help";

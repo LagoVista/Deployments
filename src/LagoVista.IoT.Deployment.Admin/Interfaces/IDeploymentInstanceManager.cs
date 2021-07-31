@@ -1,8 +1,11 @@
-﻿using LagoVista.Core.Models;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.Pipeline.Admin.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -46,6 +49,8 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> UpdateRuntimeAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> StopAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfiguration(string instanceId, EntityHeader org, EntityHeader user);
+        Task<ListResponse<DeviceTypeSummary>> GetDeviceTypesForInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult<string>> RegenerateKeyAsync(string instanceId, string keyname, EntityHeader org, EntityHeader user);
         Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user);

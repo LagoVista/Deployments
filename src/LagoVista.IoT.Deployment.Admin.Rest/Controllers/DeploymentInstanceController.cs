@@ -4,7 +4,9 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Pipeline.Admin.Models;
 using LagoVista.IoT.Pipeline.Models;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
@@ -137,6 +139,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
 
             return response;
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get default listener with any required passwords
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/defaultlistener")]
+        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigAsync(String id)
+        {
+            return await _instanceManager.GetDefaultListenerConfiguration(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get device types that are associated with the devices configurations in the instance.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/devicetypes")]
+        public async Task<ListResponse<DeviceTypeSummary>> GetDeviceTypesForInstanceAsync(String id)
+        {
+            return await _instanceManager.GetDeviceTypesForInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

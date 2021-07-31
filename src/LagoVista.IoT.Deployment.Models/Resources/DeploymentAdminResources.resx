@@ -1356,4 +1356,13 @@
   <data name="MessageWatchDog_StartupBuffer_Help" xml:space="preserve">
     <value>Enter the amount of time in minutes that should be used as a startup buffer after an exclusion period.  That is to say the number of minutes after the device is expected to start receiving messages to allow for a message to come in.  Without this buffer as soon as the exclusion period ends, it will immediately expect a message or will consider the message overdue.</value>
   </data>
+  <data name="Solution_DefaultListener" xml:space="preserve">
+    <value>Default Listener</value>
+  </data>
+  <data name="Solution_DefaultListener_Help" xml:space="preserve">
+    <value>You can select a default listener for this solution, if you do the settings for that listener can automatically be available for any devices that are added to this solution.</value>
+  </data>
+  <data name="Solution_DefaultListener_Select" xml:space="preserve">
+    <value>-select default listener-</value>
+  </data>
 </root>
