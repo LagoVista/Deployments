@@ -1,4 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

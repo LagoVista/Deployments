@@ -6,7 +6,4 @@ using System.Text;
 
 namespace LagoVista.IoT.Deployment.Models
 {
-    public class TimeZone : EntityHeader
-    {
-    }
 }

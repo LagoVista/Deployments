@@ -27,7 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Integrations = new List<EntityHeader<Integration>>();
             DeploymentErrors = new Dictionary<string, string>();
             HealthCheckEnabled = true;
-            TimeZone = new Deployment.Models.TimeZone()
+            TimeZone = new EntityHeader()
             {
                 Id = "UTC",
                 Text = "(UTC) Coordinated Universal Time",
@@ -111,7 +111,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired:true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
-        public LagoVista.IoT.Deployment.Models.TimeZone TimeZone { get; set; }
+        public EntityHeader TimeZone { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusTimeStamp { get; set; }
@@ -124,7 +124,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<DeploymentHost> Host { get; set; }
 
         /// <summary>
-        /// This is the primary host that will be be used as an access point into the instance, if the instance consists of many machines, this will manage all the other hosts for a clustered version of an instance.
+        /// This is the primary host that will be used as an access point into the instance, if the instance consists of many machines, this will manage all the other hosts for a clustered version of an instance.
         /// </summary>
         EntityHeader<DeploymentHost> _primaryHost;
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]

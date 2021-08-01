@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
@@ -17,7 +18,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TimeZone = LagoVista.IoT.Deployment.Models.TimeZone;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -250,7 +250,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        ///  Deploymnent Instance - Create New
+        ///  Deployment Instance - Create New
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/factory")]
@@ -392,7 +392,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
        
         /// <summary>
-        /// Deployment Instance - Regenreate and update access key.
+        /// Deployment Instance - Regenerate and update access key.
         /// </summary>
         /// <param name="instanceid"></param>
         /// <param name="key">Currently support either key1 or key2</param>
@@ -432,7 +432,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Web Socket URI - Get a URI to Receive Web Socket Notifcations
+        /// Web Socket URI - Get a URI to Receive Web Socket Notifications
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="id"></param>

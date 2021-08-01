@@ -1,4 +1,6 @@
-﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
+﻿using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,10 +24,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/misc/timezones")]
-        public IEnumerable<Deployment.Models.TimeZone> GetSystemTimeZones()
+        public IEnumerable<EntityHeader> GetSystemTimeZones()
         {
             var timeZones = _timeZoneServices.GetTimeZones();
-            return timeZones.Select(tz => new Deployment.Models.TimeZone() { Id = tz.Id, Text = tz.DisplayName });
+            return timeZones.Select(tz => new EntityHeader() { Id = tz.Id, Text = tz.DisplayName });
         }
     }
 }
