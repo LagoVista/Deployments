@@ -6,7 +6,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models;
-using LagoVista.IoT.Logging;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
 using System;
@@ -27,6 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DeviceIdLabel = DeploymentAdminResources.DeviceConfiguration_DeviceIdLabel_Default;
             DeviceNameLabel = DeploymentAdminResources.DeviceConfiguration_DeviceNameLabel_Default;
             DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
+            SensorDefinitions = new List<SensorDefinition>();
             ErrorCodes = new List<DeviceErrorCode>();
             MessageWatchDogs = new List<MessageWatchDog>();
         }
@@ -70,6 +71,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<MessageWatchDog> MessageWatchDogs { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        public List<SensorDefinition> SensorDefinitions { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }

@@ -357,6 +357,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Routes
 
 		public static string DeviceConfiguration_Routes { get { return GetResourceString("DeviceConfiguration_Routes"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_SensorDefintions
+
+		public static string DeviceConfiguration_SensorDefintions { get { return GetResourceString("DeviceConfiguration_SensorDefintions"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_Sentinel
 
 		public static string DeviceConfiguration_Sentinel { get { return GetResourceString("DeviceConfiguration_Sentinel"); } }
@@ -1406,6 +1409,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
 			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";
 			public const string DeviceConfiguration_Routes = "DeviceConfiguration_Routes";
+			public const string DeviceConfiguration_SensorDefintions = "DeviceConfiguration_SensorDefintions";
 			public const string DeviceConfiguration_Sentinel = "DeviceConfiguration_Sentinel";
 			public const string DeviceConfiguration_Title = "DeviceConfiguration_Title";
 			public const string DeviceConfiguration_WatchDogEnabled_Default = "DeviceConfiguration_WatchDogEnabled_Default";

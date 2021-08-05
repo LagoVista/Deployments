@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.Core.Models;
@@ -120,6 +121,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.Model.Id = Guid.NewGuid().ToId();
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
+
+            return response;
+        }
+
+        /// <summary>
+        ///  Device Config - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/sensordefinition/factory")]
+        public DetailResponse<SensorDefinition> CreateSensorDefinition()
+        {
+            var response = DetailResponse<SensorDefinition>.Create();
 
             return response;
         }

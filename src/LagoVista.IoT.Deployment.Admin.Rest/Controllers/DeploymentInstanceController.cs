@@ -144,12 +144,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Deployment Instance - Get default listener with any required passwords
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="instanceid"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/{id}/defaultlistener")]
-        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigAsync(String id)
+        [HttpGet("/api/deployment/instance/{instanceid}/defaultlistener")]
+        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigAsync(String instanceid)
         {
-            return await _instanceManager.GetDefaultListenerConfiguration(id, OrgEntityHeader, UserEntityHeader);
+            return await _instanceManager.GetDefaultListenerConfiguration(instanceid, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

@@ -1365,4 +1365,7 @@
   <data name="Solution_DefaultListener_Select" xml:space="preserve">
     <value>-select default listener-</value>
   </data>
+  <data name="DeviceConfiguration_SensorDefintions" xml:space="preserve">
+    <value>Sensor Definitions</value>
+  </data>
 </root>

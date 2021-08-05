@@ -766,7 +766,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
             }
 
-            var solution = await _solutionManager.GetSolutionAsync(instanceId, org, user);
+            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
             if (solution == null)
             {
                 throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
@@ -814,7 +814,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
             }
 
-            var solution = await _solutionManager.GetSolutionAsync(instanceId, org, user);
+            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
             if (solution == null)
             {
                 throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
