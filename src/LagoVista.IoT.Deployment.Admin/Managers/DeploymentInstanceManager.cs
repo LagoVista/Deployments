@@ -778,6 +778,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var listenerConfiguration = await _pipelineModuleManager.GetListenerConfigurationAsync(solution.DefaultListener.Id, org, user);
+            if(listenerConfiguration.ListenerType.Value == ListenerTypes.MQTTListener)
+            {
+                listenerConfiguration.HostName = instance.DnsHostName;
+            }
 
             if (!String.IsNullOrEmpty(listenerConfiguration.SecureAccessKeyId))
             {
