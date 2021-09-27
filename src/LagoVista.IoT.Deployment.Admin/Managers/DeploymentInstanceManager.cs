@@ -243,6 +243,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartHost");
+            
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             return !transitionResult.Successful
@@ -254,7 +256,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
-
+            await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartContainer");
+           
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.RestartContainer, org, user);
             return !transitionResult.Successful
                 ? transitionResult
@@ -323,6 +326,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user)
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
+
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DestroyHost, org, user);
