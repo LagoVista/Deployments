@@ -30,6 +30,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest);
 
         Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetAllInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest);
+        Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetInstancesAsync(string orgId, EntityHeader org, EntityHeader user, ListRequest listRqeuest);
         Task<ListResponse<DeploymentInstanceSummary>> SysAdminGetActiveInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest);
 
         Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user, ListRequest listRequest);

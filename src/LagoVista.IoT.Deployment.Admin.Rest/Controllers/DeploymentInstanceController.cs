@@ -80,6 +80,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [SystemAdmin]
+        [HttpGet("/sys/api/deployment/instances/{orgid}")]
+        public Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync(string orgid)
+        {
+            return _instanceManager.SysAdminGetInstancesAsync(orgid, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        [SystemAdmin]
         [HttpGet("/sys/api/deployment/instances/active")]
         public Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync()
         {

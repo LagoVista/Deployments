@@ -277,7 +277,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (user == null) throw new ArgumentNullException("Null Reference Provided for user.");
 
             ValidationCheck(instance, Actions.Update);
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org);
+            await CheckOwnershipOrSysAdminAsync(instance, org, user);
 
             var existingInstance = await _instanceRepo.GetInstanceAsync(instance.Id);
             if (existingInstance == null) throw new RecordNotFoundException(typeof(DeploymentInstance).Name, instance.Id);

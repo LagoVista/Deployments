@@ -391,7 +391,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DeploymentType { get; set; }
         public string WorkingStorage { get; set; }
         public string QueueType { get; set; }
-
         public string DeviceRepoId { get; set; }
         public string DeviceRepoName { get; set; }
         public string OrgName { get; set; }

@@ -43,6 +43,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
+
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(host, Actions.Create);
@@ -109,7 +110,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DeployHostAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "deploy");
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
+
             if (host.Status.Value != HostStatus.Offline)
             {
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CantStartNotStopped.ToErrorMessage());
@@ -119,8 +121,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
+                RequestedByOrganizationId = host.OwnerOrganization.Id,
+                RequestedByOrganizationName = host.OwnerOrganization.Id,
             });
 
             return InvokeResult.Success;
@@ -129,7 +131,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> DeployContainerAsync(string hostId, EntityHeader org, EntityHeader user)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Perform, user, org, "deploycontainer");
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
+
             if (host.Status.Value != HostStatus.Running)
             {
                 return InvokeResult.FromErrors(Resources.DeploymentErrorCodes.CannotDeployContainerToNonRunningHost.ToErrorMessage());
@@ -139,8 +142,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
+                RequestedByOrganizationId = host.OwnerOrganization.Id,
+                RequestedByOrganizationName = host.OwnerOrganization.Id,
             });
 
             return InvokeResult.Success;
@@ -157,8 +160,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
+                RequestedByOrganizationId = host.OwnerOrganization.Id,
+                RequestedByOrganizationName = host.OwnerOrganization.Id,
             });
 
             return InvokeResult.Success;
@@ -180,8 +183,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 RequestedByUserId = user.Id,
                 RequestedByUserName = user.Text,
-                RequestedByOrganizationId = org.Id,
-                RequestedByOrganizationName = org.Text,
+                RequestedByOrganizationId = host.OwnerOrganization.Id,
+                RequestedByOrganizationName = host.OwnerOrganization.Id,
             });
 
             return InvokeResult.Success;
