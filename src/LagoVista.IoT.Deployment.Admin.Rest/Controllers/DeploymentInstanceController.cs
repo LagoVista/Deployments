@@ -93,6 +93,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.SysAdminGetActiveInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/instances/failed")]
+        public Task<ListResponse<DeploymentInstanceSummary>> GetFailedInstancesAsync()
+        {
+            return _instanceManager.SysAdminFailedInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
         /// <summary>
         /// Deployment Instance - Get for Org
         /// </summary>

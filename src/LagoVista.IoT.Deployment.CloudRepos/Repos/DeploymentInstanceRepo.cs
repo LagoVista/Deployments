@@ -37,7 +37,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return DeleteDocumentAsync(instanceId);
         }
 
-        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancs(ListRequest listRequest)
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync(ListRequest listRequest)
         {
             var items = await base.QueryAsync(qry => qry.Status.Value != DeploymentInstanceStates.Offline, listRequest);
 
@@ -67,6 +67,27 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 PageSize = items.PageSize
             };
         }
+
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllFailedInstancesAsync(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => 
+            qry.Status.Value == DeploymentInstanceStates.FailedToStart ||
+            qry.Status.Value == DeploymentInstanceStates.FailedToInitialize ||
+            qry.Status.Value == DeploymentInstanceStates.FatalError ||
+            qry.Status.Value == DeploymentInstanceStates.HostFailedHealthCheck,
+            listRequest);
+            return new ListResponse<DeploymentInstanceSummary>()
+            {
+                Model = items.Model.Select(di => di.CreateSummary()),
+                HasMoreRecords = items.HasMoreRecords,
+                NextPartitionKey = items.NextPartitionKey,
+                NextRowKey = items.NextRowKey,
+                PageCount = items.PageCount,
+                PageIndex = items.PageIndex,
+                PageSize = items.PageSize
+            };
+        }
+
 
         public async Task<DeploymentInstance> GetInstanceAsync(string instanceId)
         {

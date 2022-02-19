@@ -26,6 +26,8 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id);
 
         Task<ListResponse<DeploymentInstanceSummary>> GetAllInstances(ListRequest listRequest);
-        Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancs(ListRequest listRequest);
+        Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync(ListRequest listRequest);
+
+        Task<ListResponse<DeploymentInstanceSummary>> GetAllFailedInstancesAsync(ListRequest listRequest);
     }
 }

@@ -446,7 +446,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await AuthorizeAsync(user, org, "sysadmin-get-all_instances");
             }
 
-            return await this._instanceRepo.GetAllActiveInstancs(listRqeuest);
+            return await this._instanceRepo.GetAllActiveInstancesAsync(listRqeuest);
+        }
+
+        public async Task<ListResponse<DeploymentInstanceSummary>> SysAdminFailedInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest)
+        {
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-all_instances");
+            }
+
+            return await this._instanceRepo.GetAllFailedInstancesAsync(listRqeuest);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest)
