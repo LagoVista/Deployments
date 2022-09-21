@@ -97,7 +97,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await propertyManager.SendPropertyAsync(deviceUniqueId, propertyIndex);
         }
 
-        public async Task<InvokeResult> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<string>> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, EntityHeader org, EntityHeader user)
         {
             if (String.IsNullOrEmpty(deviceRepoId)) throw new ArgumentNullException(deviceRepoId);
             if (String.IsNullOrEmpty(deviceUniqueId)) throw new ArgumentNullException(deviceUniqueId);
@@ -108,13 +108,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (repo == null) throw new RecordNotFoundException(nameof(DeviceRepository), deviceRepoId);
             if (EntityHeader.IsNullOrEmpty(repo.Instance))
             {
-                return InvokeResult.FromError("Instance not deployed, can not set property.");
+                return InvokeResult<string>.FromError("Instance not deployed, can not set property.");
             }
 
             var firmwareRequest = await _firmwareManager.RequestDownloadLinkAsync(deviceRepoId, deviceUniqueId, firmwareId, firmwareRevisionId, org, user);
             if (!firmwareRequest.Successful)
             {
-                return firmwareRequest.ToInvokeResult();
+                return InvokeResult<string>.FromInvokeResult(firmwareRequest.ToInvokeResult());
             }
 
             var propertyManager = _proxyFactory.Create<IRemotePropertyNamanager>(new ProxySettings()
@@ -123,7 +123,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 OrganizationId = repo.OwnerOrganization.Id
             });
 
-            return await propertyManager.SetFirmwareVersionAsync(deviceUniqueId, firmwareRequest.Result.DownloadId);
+            var result = await propertyManager.SetFirmwareVersionAsync(deviceUniqueId, firmwareRequest.Result.DownloadId);
+            if(result.Successful)
+                return InvokeResult<string>.Create(firmwareRequest.Result.DownloadId);
+            else
+                return InvokeResult<string>.FromInvokeResult(result);
         }
     }
 }
