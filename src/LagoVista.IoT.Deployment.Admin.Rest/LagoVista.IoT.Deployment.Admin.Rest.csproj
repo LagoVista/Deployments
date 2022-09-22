@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.IoT.Web.Common" Version="2.1.1434-beta0835" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="2.1.1434-beta0835" />
-    <PackageReference Include="LagoVista.AI" Version="2.1.1434-beta0835" />
+    <PackageReference Include="LagoVista.IoT.Web.Common" Version="3.0.1954.1335" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.1954.1335" />
+    <PackageReference Include="LagoVista.AI" Version="3.0.1954.1335" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="LagoVista.IoT.ProductStore" Version="2.1.1434-beta0835" />
+    <PackageReference Include="LagoVista.IoT.ProductStore" Version="3.0.1954.1335" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
