@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using Microsoft.Azure.EventHubs;
 using System.Text;
 using LagoVista.Core.Models;
 using System.Collections.Generic;
 using LagoVista.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.Core.Interfaces;
+using Azure.Messaging.EventHubs.Producer;
+using Azure.Messaging.EventHubs;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -19,8 +20,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentActionEventHubSettings _settings;
 
         const string EhConnectionString = "Endpoint=sb://{0}.servicebus.windows.net/;SharedAccessKeyName={1};SharedAccessKey={2}";
-        EventHubClient _eventHubClient;
-
+        EventHubProducerClient _eventHubClient;
 
         public DeploymentActivityQueueManager(IDeploymentActivityRepo repo, IFailedDeploymentActivityRepo failedRepo,
                 ICompletedDeploymentActivityRepo completedRepo, IDeploymentActionEventHubSettings settings, IAdminLogger logger,
@@ -33,16 +33,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             
             _settings = settings;
 
-            var bldr = new EventHubsConnectionStringBuilder(string.Format(EhConnectionString,
+            var connectionString = string.Format(EhConnectionString,
                 _settings.DeploymentActivityEventHubConnection.AccountId,
                 _settings.DeploymentActivityEventHubConnection.UserName,
-                _settings.DeploymentActivityEventHubConnection.AccessKey))
-            {
-                EntityPath = _settings.DeploymentActivityEventHubConnection.ResourceName
-            };
+                _settings.DeploymentActivityEventHubConnection.AccessKey);
 
-            _eventHubClient = EventHubClient.CreateFromConnectionString(bldr.ToString());
-        }
+            _eventHubClient = new EventHubProducerClient(connectionString, _settings.DeploymentActivityEventHubConnection.ResourceName);        }
 
         public async Task Enqueue(DeploymentActivity deploymentActivity)
         {
@@ -50,7 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var buffer = Encoding.UTF8.GetBytes(deploymentActivity.RowKey);
             var eventData = new EventData(buffer);
-            await _eventHubClient.SendAsync(eventData);
+            await _eventHubClient.SendAsync(new List<EventData>() { eventData });
         }
 
         public async Task<IEnumerable<DeploymentActivitySummary>> GetCompletedActivitiesAsync(string resourceId, int take, string before, EntityHeader org, EntityHeader user)

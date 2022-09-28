@@ -11,6 +11,7 @@ using LagoVista.Core;
 using System.Linq;
 using System.IO;
 using LagoVista.Core.Validation;
+using Azure.Storage.Blobs;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -28,45 +29,52 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         private const string CONTAINER_ID = "solutions";
 
-        private BlobServicesClient CreateBlobClient(string solutionId)
+        private async Task<BlobContainerClient> CreateBlobContainerClient()
         {
-            var baseuri = $"https://{_repoSettings.AccountId}.blob.core.windows.net";
 
-            var uri = new Uri(baseuri);
-            return new CloudBlobClient(uri, new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(_repoSettings.AccountId, _repoSettings.AccessKey));
+            var connectionString = $"DefaultEndpointsProtocol=https;AccountName={_repoSettings.AccountId};AccountKey={_repoSettings.AccessKey}";
+            var blobClient = new BlobServiceClient(connectionString);
+            try
+            {
+                var blobContainerClient = blobClient.GetBlobContainerClient(CONTAINER_ID);
+                return blobContainerClient;
+            }
+            catch (Exception)
+            {
+                var container = await blobClient.CreateBlobContainerAsync(CONTAINER_ID);
+
+                return container.Value;
+            }
         }
 
         public async Task<InvokeResult<Solution>> GetSolutionVersionAsync(string solutionId, string versionId)
         {
             try
             {
-                var cloudClient = CreateBlobClient(solutionId);
-                var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
+                var containerClient = await CreateBlobContainerClient();
 
                 var blobName = GetBlobName(solutionId, versionId);
-                var blob = primaryContainer.GetBlobReference(blobName);
-                
-                using (var ms = new MemoryStream())
+
+                var blobClient = containerClient.GetBlobClient(blobName);
+
+                var content = await blobClient.DownloadStreamingAsync();
+            
+                using (var rdr = new StreamReader(content.Value.Content))
+                using (var jsonTextReader = new JsonTextReader(rdr))
                 {
-                    await blob.DownloadToStreamAsync(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    using (var rdr = new StreamReader(ms))
-                    using (var jsonTextReader = new JsonTextReader(rdr))
+                    var serializer = JsonSerializer.Create(_jsonSettings);
+                    var solution = serializer.Deserialize<Solution>(jsonTextReader);
+                    if (solution == null)
                     {
-                        var serializer = JsonSerializer.Create(_jsonSettings);
-                        var solution = serializer.Deserialize<Solution>(jsonTextReader);
-                        if (solution == null)
-                        {
-                            return InvokeResult<Solution>.FromError("Could not deserialize solution.");
-                        }
-                        else
-                        {
-                            return InvokeResult<Solution>.Create(solution);
-                        }
+                        return InvokeResult<Solution>.FromError("Could not deserialize solution.");
+                    }
+                    else
+                    {
+                        return InvokeResult<Solution>.Create(solution);
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Exception deserializeing: " + ex.Message);
                 return InvokeResult<Solution>.FromError(ex.Message);
@@ -98,13 +106,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             solutionVersion.RowKey = Guid.NewGuid().ToId();
             solutionVersion.PartitionKey = solution.Id;
             solutionVersion.TimeStamp = DateTime.UtcNow.ToJSONString();
-            solutionVersion.Uri = $"https://{_repoSettings.AccountId}.blob.core.windows.net/{CONTAINER_ID}/{GetBlobName(solutionVersion.SolutionId,solutionVersion.RowKey)}";
+            solutionVersion.Uri = $"https://{_repoSettings.AccountId}.blob.core.windows.net/{CONTAINER_ID}/{GetBlobName(solutionVersion.SolutionId, solutionVersion.RowKey)}";
 
             if (string.IsNullOrEmpty(solutionVersion.Status))
             {
                 solutionVersion.Status = "New";
             }
-           
+
             if (solutionVersion.Version == 0)
             {
                 var versions = await GetSolutionVersionsAsync(solution.Id);
@@ -118,12 +126,19 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 }
             }
 
-            var cloudClient = CreateBlobClient(solution.Id);
-            var primaryContainer = cloudClient.GetContainerReference(CONTAINER_ID);
-            await primaryContainer.CreateIfNotExistsAsync();
-            var blob = primaryContainer.GetBlockBlobReference(GetBlobName(solutionVersion.SolutionId, solutionVersion.RowKey));
+
+            var containerClient = await CreateBlobContainerClient();
+
+            var blobName = GetBlobName(solutionVersion.SolutionId, solutionVersion.RowKey);
+
+            var blobClient = containerClient.GetBlobClient(blobName);
+
             var json = JsonConvert.SerializeObject(solution, _jsonSettings);
-            await blob.UploadTextAsync(json);
+            
+            var buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(json);
+            
+            await blobClient.UploadAsync(new BinaryData(buffer));
+            
             await InsertAsync(solutionVersion);
             return solutionVersion;
         }
