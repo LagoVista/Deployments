@@ -5,7 +5,6 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Logging.Loggers;
-using Microsoft.WindowsAzure.Storage.Blob;
 using LagoVista.Core.Interfaces;
 using Newtonsoft.Json;
 using LagoVista.Core;
@@ -29,7 +28,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         private const string CONTAINER_ID = "solutions";
 
-        private CloudBlobClient CreateBlobClient(string solutionId)
+        private BlobServicesClient CreateBlobClient(string solutionId)
         {
             var baseuri = $"https://{_repoSettings.AccountId}.blob.core.windows.net";
 

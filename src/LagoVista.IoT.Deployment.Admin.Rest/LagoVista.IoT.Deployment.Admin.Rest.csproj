@@ -6,11 +6,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.IoT.Web.Common" Version="3.0.1954.1335" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.1954.1335" />
-    <PackageReference Include="LagoVista.AI" Version="3.0.1954.1335" />
+    <PackageReference Include="LagoVista.IoT.Web.Common" Version="3.0.1959.1339" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.1959.1339" />
+    <PackageReference Include="LagoVista.AI" Version="3.0.1959.1339" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="LagoVista.IoT.ProductStore" Version="3.0.1954.1335" />
+    <PackageReference Include="LagoVista.IoT.ProductStore" Version="3.0.1959.1339" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />

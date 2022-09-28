@@ -4,7 +4,6 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using Microsoft.Azure.EventHubs;
 using System.Text;
 using LagoVista.Core.Models;
-using System;
 using System.Collections.Generic;
 using LagoVista.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
