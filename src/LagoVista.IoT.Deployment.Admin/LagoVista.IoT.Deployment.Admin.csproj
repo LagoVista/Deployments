@@ -21,16 +21,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.EventHubs" Version="5.7.2" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.Core.Rpc" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="3.0.1963.1110" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.1963.1110" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="LagoVista.Core.Authentication" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.Core.Rpc" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client.ServiceBus" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="3.0.1963.1257" />
+    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.1963.1257" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj" />
