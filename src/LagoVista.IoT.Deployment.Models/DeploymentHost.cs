@@ -184,6 +184,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<HostTypes> HostType { get; set; }
 
 
+        public List<EntityHeader> Instances { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize)]
         public EntityHeader Size { get; set; }
 
@@ -279,6 +282,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         // we never want to delete an instance since billing records are tied to it.
         public bool IsArchived { get; set; }
 
+
+        public EntityHeader ToEntityHeader()
+        {
+            return EntityHeader.Create(Id, Key, Name);
+        }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ShowSiteDetails, HelpResource:DeploymentAdminResources.Names.Host_ShowSiteDetails_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool ShowSolutionDetailsSite { get; set; }

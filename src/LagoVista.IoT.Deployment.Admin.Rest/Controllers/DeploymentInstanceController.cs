@@ -51,6 +51,30 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Add shared instance.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="instanceid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/add/{instanceid}")]
+        public Task<InvokeResult> AddShardHost(string id, string instanceid)
+        {
+            return _instanceManager.AddToShardHostAsync(id, instanceid, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Remove a shared instance from shared host.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="instanceid"></param>
+        /// <returns></returns>
+        [HttpDelete("/api/deployment/host/{id}/remove/{instanceid}")]
+        public Task<InvokeResult> RemovehardHost(string id, string instanceid)
+        {
+            return _instanceManager.RemoveSharedInstanceAsync(id, instanceid, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Deployment Instance - Update
         /// </summary>
         /// <param name="instance"></param>

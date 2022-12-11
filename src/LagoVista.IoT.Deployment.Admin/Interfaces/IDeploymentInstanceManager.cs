@@ -35,7 +35,11 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<DeploymentInstanceSummary>> SysAdminFailedInstancesAsync(EntityHeader org, EntityHeader user, ListRequest listRqeuest);
 
         Task<ListResponse<DeploymentInstanceSummary>> GetInstanceForOrgAsync(NuvIoTEditions edition, string orgId, EntityHeader user, ListRequest listRequest);
-         Task<InvokeResult> UpgradeInstanceAsync(string instanceId, string imageId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> UpgradeInstanceAsync(string instanceId, string imageId, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult> AddToShardHostAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult> RemoveSharedInstanceAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user);
 
         Task<bool> QueryInstanceKeyInUseAsync(string key, EntityHeader org);
         Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user);
@@ -70,7 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         Task<ListResponse<WatchdogMessageStatus>> GetTimedOutWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
-       
+
         string GenerateAccessKey();
     }
 }

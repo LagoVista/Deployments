@@ -63,6 +63,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string DeploymentType_Cloud = "cloud";
         public const string DeploymentType_Managed = "managed";
         public const string DeploymentType_OnPremise = "onpremise";
+        public const string DeploymentType_Shared = "shared";
 
         public const string DeploymentConfiguration_UWP = "uwp";
         public const string DeploymentConfiguration_SingleInstance = "singleinstance";
@@ -87,6 +88,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string NuvIoTEdition_App = "app";
         public const string NuvIoTEdition_Container = "container";
         public const string NuvIoTEdition_Cluster = "cluster";
+        public const string NuvIoTEdition_Shared = "shared";
 
         public string DatabaseName { get; set; }
         public string EntityType { get; set; }
@@ -119,7 +121,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusDetails{ get; set; }
 
-
+        [Obsolete]
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeploymentHost> Host { get; set; }
 

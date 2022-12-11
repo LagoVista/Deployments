@@ -62,6 +62,11 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _secureStorage = new Mock<ISecureStorage>();
             _appConfig = new Mock<IAppConfig>();
 
+            _userManager.Setup(um => um.FindByIdAsync(It.Is<string>(id => id == USER.Id))).ReturnsAsync(new UserAdmin.Models.Users.AppUser()
+            {
+
+            });
+
             _secureStorage.Setup(ss => ss.AddSecretAsync(It.IsAny<EntityHeader>(), It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("XXXX"));
 
             _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, 
@@ -94,6 +99,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             instance.LastUpdatedDate = DateTime.Now.ToJSONString();
             instance.Key = "abc123";
             instance.Name = "myinstance";
+            instance.OwnerOrganization = ORG;
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = "123", Text = "abc" };
             instance.Subscription = EntityHeader.Create("id", "text");
             instance.ContainerRepository = EntityHeader.Create("id", "text");

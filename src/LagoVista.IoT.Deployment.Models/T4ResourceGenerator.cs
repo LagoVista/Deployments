@@ -291,6 +291,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentType_OnPremise
 
 		public static string DeploymentType_OnPremise { get { return GetResourceString("DeploymentType_OnPremise"); } }
+//Resources:DeploymentAdminResources:DeploymentType_Shared
+
+		public static string DeploymentType_Shared { get { return GetResourceString("DeploymentType_Shared"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType
 
 		public static string DeviceConfiguration_CustomStatusType { get { return GetResourceString("DeviceConfiguration_CustomStatusType"); } }
@@ -1140,6 +1143,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:NuvIoTEdition_Select
 
 		public static string NuvIoTEdition_Select { get { return GetResourceString("NuvIoTEdition_Select"); } }
+//Resources:DeploymentAdminResources:NuvIoTEdition_Shared
+
+		public static string NuvIoTEdition_Shared { get { return GetResourceString("NuvIoTEdition_Shared"); } }
 //Resources:DeploymentAdminResources:RemoteDeployment_Description
 
 		public static string RemoteDeployment_Description { get { return GetResourceString("RemoteDeployment_Description"); } }
@@ -1387,6 +1393,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentType_Cloud = "DeploymentType_Cloud";
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
+			public const string DeploymentType_Shared = "DeploymentType_Shared";
 			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";
 			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
 			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";
@@ -1670,6 +1677,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string NuvIoTEdition_Cluster = "NuvIoTEdition_Cluster";
 			public const string NuvIoTEdition_Container = "NuvIoTEdition_Container";
 			public const string NuvIoTEdition_Select = "NuvIoTEdition_Select";
+			public const string NuvIoTEdition_Shared = "NuvIoTEdition_Shared";
 			public const string RemoteDeployment_Description = "RemoteDeployment_Description";
 			public const string RemoteDeployment_Help = "RemoteDeployment_Help";
 			public const string RemoteDeployment_Instances = "RemoteDeployment_Instances";

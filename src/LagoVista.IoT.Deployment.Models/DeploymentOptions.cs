@@ -14,6 +14,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Managed,
         [EnumLabel(DeploymentInstance.DeploymentType_OnPremise, DeploymentAdminResources.Names.DeploymentType_OnPremise, typeof(DeploymentAdminResources))]
         OnPremise,
+        [EnumLabel(DeploymentInstance.DeploymentType_Shared, DeploymentAdminResources.Names.DeploymentType_Shared, typeof(DeploymentAdminResources))]
+        Shared,
     }
 
     public enum DeploymentConfigurations
@@ -36,6 +38,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Container,
         [EnumLabel(DeploymentInstance.NuvIoTEdition_Cluster, DeploymentAdminResources.Names.NuvIoTEdition_Cluster, typeof(DeploymentAdminResources))]
         Cluster,
+        [EnumLabel(DeploymentInstance.NuvIoTEdition_Shared, DeploymentAdminResources.Names.NuvIoTEdition_Shared, typeof(DeploymentAdminResources))]
+        Shared,
     }
 
     public enum WorkingStorage

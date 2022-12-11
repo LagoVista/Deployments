@@ -1368,4 +1368,10 @@
   <data name="DeviceConfiguration_SensorDefintions" xml:space="preserve">
     <value>Sensor Definitions</value>
   </data>
+  <data name="DeploymentType_Shared" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="NuvIoTEdition_Shared" xml:space="preserve">
+    <value>Shared</value>
+  </data>
 </root>

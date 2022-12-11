@@ -12,6 +12,7 @@ using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.Core.Exceptions;
 using System.Runtime.CompilerServices;
 using LagoVista.UserAdmin.Interfaces.Managers;
+using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -120,6 +121,70 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
                 await AuthorizeAsync(entity, AuthorizeResult.AuthorizeActions.Read, user, org, actionType);
+        }
+
+        public async Task<InvokeResult> AddToShardHostAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await GetInstanceAsync(instanceId, org, user);
+
+            if(instance.DeploymentType.Value != DeploymentTypes.Shared)
+            {
+                return InvokeResult.FromError($"Deployment Type is not a shared type, it is {instance.DeploymentType.Text}, must be shared to add to a shared instance.");
+            }
+
+            var host = await _deploymentHostManager.GetDeploymentHostAsync(hostId, org, user);
+            if(host.HostType.Value != HostTypes.Shared)
+            {
+                return InvokeResult.FromError($"Can only add a shared instance to a shared host, host is {host.HostType.Text}.");
+            }
+            
+            if(instance.PrimaryHost != null)
+            {
+                return InvokeResult.FromError($"Primary host already assigned on instance, can not add it to this host.");
+            }
+
+            if(host.Instances.Any(inst=>inst.Id == instanceId))
+            {
+                return InvokeResult.FromError($"Instance already belongs to host.");
+            }
+
+            host.Instances.Add(instance.ToEntityHeader());
+            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
+
+            await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
+            await UpdateInstanceAsync(instance, org, user);
+
+            return InvokeResult.Success;
+        }
+
+        public async Task<InvokeResult> RemoveSharedInstanceAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await GetInstanceAsync(instanceId, org, user);
+
+            if (instance.DeploymentType.Value != DeploymentTypes.Shared)
+            {
+                return InvokeResult.FromError($"Deployment Type is not a shared type, it is {instance.DeploymentType.Text}, must be shared to add to a shared instance.");
+            }
+
+            var host = await _deploymentHostManager.GetDeploymentHostAsync(hostId, org, user);
+            if (host.HostType.Value != HostTypes.Shared)
+            {
+                return InvokeResult.FromError($"Can only add a shared instance to a shared host, host is {host.HostType.Text}.");
+            }
+
+            var hostInstance = host.Instances.SingleOrDefault(inst => inst.Id == instanceId);
+            if(instance == null)
+            {
+                return InvokeResult.FromError($"Instance did not belong to host.");
+            }
+
+            instance.PrimaryHost = null;
+            host.Instances.Remove(hostInstance);
+
+            await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
+            await UpdateInstanceAsync(instance, org, user);
+
+            return InvokeResult.Success;
         }
 
 
