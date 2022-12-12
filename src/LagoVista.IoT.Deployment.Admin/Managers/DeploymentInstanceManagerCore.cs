@@ -24,9 +24,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         ISecureStorage _secureStorage;
         IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
         IUserManager _userManager;
-
+       
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IUserManager useManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) :
+           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IUserManager useManager, IAdminLogger logger, IAppConfig appConfig, 
+           IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
             _deviceManagerRepo = deviceManagerRepo;
@@ -190,10 +191,40 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
-            var host = CreateHost(instance);
-            instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Text = host.Name };
+            if(instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
+            {
+                var host = await _deploymentHostManager.FindSharedHostAsync();
+                instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
+                
+                if(!String.IsNullOrEmpty(instance.DnsHostName)) 
+                {
+                    var parts = instance.DnsHostName.Split('.');
+                    if(parts.Length >= 2)
+                    {
+                        instance.DnsHostName = $"{parts[0]}.{parts[1]}.{host.DnsHostName}";
+                    }
+                    else
+                    {
+                        instance.DnsHostName = $"{instance.Key}.c{host.Instances.Count}.{host.DnsHostName}";
+                    }
+                }
+                else
+                {
+                    instance.DnsHostName = $"{instance.Key}.c{host.Instances.Count}.{host.DnsHostName}";
+                }
 
-            ValidationCheck(host, Actions.Create);
+                host.Instances.Add(new EntityHeader() { Id = instance.Id, Key = instance.Key, Text = instance.Name });
+                await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);       
+            }
+            else
+            {
+                var host = CreateHost(instance);
+                instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
+                ValidationCheck(host, Actions.Create);
+                await _deploymentHostManager.AddDeploymentHostAsync(host, org, user);
+            }
+
+
             ValidationCheck(instance, Actions.Create);
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Create, user, org);
@@ -223,7 +254,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             instance.SharedAccessKeySecureId2 = keyAddResult.Result;
 
             await _instanceRepo.AddInstanceAsync(instance);
-            await _deploymentHostManager.AddDeploymentHostAsync(host, org, user);
 
             return InvokeResult.Success;
         }

@@ -45,7 +45,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         Mock<ISecurity> _security;
         Mock<IAppConfig> _appConfig;
         Mock<IDeploymentInstanceStatusRepo> _instanceStatusRepo = new Mock<IDeploymentInstanceStatusRepo>();
-
+        Mock<IOrganizationManager> _orgManager;
 
         EntityHeader ORG = EntityHeader.Create("FB4C4FD759E3497180DF1B28FFCB7ACD", "MyOrg");
         EntityHeader USER = EntityHeader.Create("{B050B8F2B72D46E8-8555BCE178111218", "MyUser");
@@ -61,6 +61,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _security = new Mock<ISecurity>();
             _secureStorage = new Mock<ISecureStorage>();
             _appConfig = new Mock<IAppConfig>();
+            _orgManager = new Mock<IOrganizationManager>();
 
             _userManager.Setup(um => um.FindByIdAsync(It.Is<string>(id => id == USER.Id))).ReturnsAsync(new UserAdmin.Models.Users.AppUser()
             {
@@ -71,7 +72,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             _instanceManager = new DeploymentInstanceManagerCore(_deploymentHostManager.Object, _deploymentInstanceRepo.Object, _deviceRepoManager.Object, 
                 _secureStorage.Object, _instanceStatusRepo.Object, _userManager.Object, _adminLogger.Object,
-                _appConfig.Object,  _dependencyManager.Object, _security.Object);
+                _appConfig.Object, _dependencyManager.Object, _security.Object);
 
             _deploymentHostManager.Setup(dhm => dhm.GetDeploymentHostAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<bool>())).Returns((string id, EntityHeader user, EntityHeader org, bool throwOnError) =>
               {

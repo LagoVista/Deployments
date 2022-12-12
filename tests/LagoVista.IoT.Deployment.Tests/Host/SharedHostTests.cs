@@ -36,6 +36,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         Mock<ISecureStorage> _secureStorage;
         Mock<ISecurity> _security;
         Mock<IAppConfig> _appConfig;
+        Mock<IOrganizationManager> _orgManager;
         Mock<IDeploymentInstanceStatusRepo> _instanceStatusRepo = new Mock<IDeploymentInstanceStatusRepo>();
 
 
@@ -53,6 +54,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
             _security = new Mock<ISecurity>();
             _secureStorage = new Mock<ISecureStorage>();
             _appConfig = new Mock<IAppConfig>();
+            _orgManager = new Mock<IOrganizationManager>();
 
             _userManager.Setup(um => um.FindByIdAsync(It.Is<string>(id => id == USER.Id))).ReturnsAsync(new UserAdmin.Models.Users.AppUser()
             {

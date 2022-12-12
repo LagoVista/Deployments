@@ -1,7 +1,4 @@
-﻿using LagoVista.Core.Interfaces;
-using LagoVista.Core.PlatformSupport;
-using LagoVista.IoT.Deployment.Admin.Managers;
-using LagoVista.IoT.Web.Common.Controllers;
+﻿using LagoVista.IoT.Web.Common.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +13,7 @@ using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.ProductStore;
-using System.Collections;
-using System.Collections.Generic;
+
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {

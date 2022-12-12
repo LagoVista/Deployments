@@ -164,6 +164,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             CapacityStatus = EntityHeader<HostCapacityStatus>.Create(HostCapacityStatus.UnderUtilized);
             Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
+            Instances = new List<EntityHeader>();
             GenerateAccessKeys();
         }
         

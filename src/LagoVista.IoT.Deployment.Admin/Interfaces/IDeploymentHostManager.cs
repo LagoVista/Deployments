@@ -36,5 +36,6 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);
 
         Task<ListResponse<DeploymentHostStatus>> GetDeploymentHostStatusHistoryAsync(string hostId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<DeploymentHost> FindSharedHostAsync();
     }
 }

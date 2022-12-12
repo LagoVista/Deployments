@@ -280,5 +280,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await CheckOwnershipOrSysAdminAsync(host, org, user);
             return await _deploymentHostStatusRepo.GetStatusHistoryForHostAsync(hostId, listRequest);
         }
+
+        public Task<DeploymentHost> FindSharedHostAsync()
+        {
+            return _deploymentHostRepo.FindSharedHostAsync();
+        }
     }
 }

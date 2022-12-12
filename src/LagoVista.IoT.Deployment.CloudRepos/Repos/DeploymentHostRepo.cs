@@ -7,6 +7,7 @@ using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.Core.Exceptions;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -41,6 +42,19 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             }
 
             await CreateDocumentAsync(host);
+        }
+
+        public async Task<DeploymentHost> FindSharedHostAsync()
+        {
+            var hosts = await QueryAsync(qry => qry.HostType.Value == HostTypes.Shared && !qry.IsArchived);
+            if (hosts.Count() == 0)
+            {
+                throw new RecordNotFoundException("DeploymentHost", "Shared=true");
+            }
+
+            var assignableHost = hosts.OrderBy(hsts =>  hsts.Instances.Count).FirstOrDefault();
+
+            return assignableHost;
         }
 
         public Task<DeploymentHost> GetDeploymentHostAsync(string hostId, bool throwOnNotFound = true)
