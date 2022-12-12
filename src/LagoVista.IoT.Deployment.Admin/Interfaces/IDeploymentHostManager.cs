@@ -25,8 +25,9 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId, EntityHeader user);
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
-        Task<InvokeResult> RegenerateAccessKeys(string id, EntityHeader org, EntityHeader user);
-        
+
+        Task<InvokeResult<string>> RegenerateKeyAsync(string hostId, string keyName, EntityHeader org, EntityHeader user);
+
         Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeployContainerAsync(string hostId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user);

@@ -97,11 +97,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Deployment Host - Regenerate Access Keys
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        [HttpGet("/api/deployment/host/{id}/regenerateaccesskeys")]
-        public Task<InvokeResult> RegenerateAccessKeysAsync(String id)
+        [HttpGet("/api/deployment/host/{id}/generate/{key}")]
+        public Task<InvokeResult<string>> RegenerateAccessKeysAsync(String id, string key)
         {
-            return _hostManager.RegenerateAccessKeys(id, OrgEntityHeader, UserEntityHeader);
+            return _hostManager.RegenerateKeyAsync(id, key, OrgEntityHeader, UserEntityHeader);
         }
 
 

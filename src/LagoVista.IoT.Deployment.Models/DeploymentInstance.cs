@@ -167,6 +167,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             return new EntityHeader()
             {
                 Id = Id,
+                Key = Key,
                 Text = Name,
             };
         }
