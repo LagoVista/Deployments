@@ -275,7 +275,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public String HostAccessKey1 { get; set; }
 
+        public String HostAccessKey1SecretId { get; set; }
+
+
         public String HostAccessKey2 { get; set; }
+        public String HostAccessKey2SecretId { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DebugMode, HelpResource: DeploymentAdminResources.Names.Host_DebugMode_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool DebugMode { get; set; }

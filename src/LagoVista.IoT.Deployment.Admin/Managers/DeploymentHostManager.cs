@@ -29,9 +29,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentActivityRepo _deploymentActivityRepo;
         IDeploymentHostStatusRepo _deploymentHostStatusRepo;
         IUserManager _userManager;
+        private readonly ISecureStorage _secureStorage;
 
         public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentActivityRepo deploymentActivityRepo,
-                IDeploymentConnectorService deploymentConnectorService, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IDeploymentHostStatusRepo deploymentHostStatusRepo,
+                IDeploymentConnectorService deploymentConnectorService, ISecureStorage secureStorage, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IDeploymentHostStatusRepo deploymentHostStatusRepo,
                 IUserManager userManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _deploymentHostRepo = deploymentHostRepo;
@@ -40,6 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deploymentActivityQueueManager = deploymentActivityQueueManager;
             _deploymentActivityRepo = deploymentActivityRepo;
             _deploymentHostStatusRepo = deploymentHostStatusRepo;
+            _secureStorage = secureStorage;
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
@@ -48,6 +50,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             ValidationCheck(host, Actions.Create);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Create, user, org);
+
+            var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
+            if (!res1.Successful)
+                return res1.ToInvokeResult();
+
+            host.HostAccessKey1SecretId = res1.Result;
+
+            var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
+            if (!res2.Successful)
+                return res2.ToInvokeResult();
+
+            host.HostAccessKey2SecretId = res2.Result;
+
             await _deploymentHostRepo.AddDeploymentHostAsync(host);
 
             return InvokeResult.Success;
@@ -104,6 +119,31 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await CheckOwnershipOrSysAdminAsync(host, org, user);
       
+            return host;
+        }
+
+        public async Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true)
+        {
+            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId, throwOnNotFound);
+            if (host == null)
+            {
+                return host;
+            }
+
+            if (!String.IsNullOrEmpty(host.HostAccessKey1))
+            {
+                var res1 = await _secureStorage.GetSecretAsync(org, host.HostAccessKey1SecretId, user);
+                host.HostAccessKey1 = res1.Result;
+            }
+
+            if (!string.IsNullOrEmpty(host.HostAccessKey2))
+            {
+                var res2 = await _secureStorage.GetSecretAsync(org, host.HostAccessKey2SecretId, user);
+                host.HostAccessKey2 = res2.Result;
+            }
+
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
+
             return host;
         }
 
@@ -222,6 +262,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
             host.GenerateAccessKeys();
+
+            var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
+            if (!res1.Successful)
+                return res1.ToInvokeResult();
+
+            host.HostAccessKey1SecretId = res1.Result;
+            host.HostAccessKey1 = null;
+
+            var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
+            if (!res2.Successful)
+                return res2.ToInvokeResult();
+
+            host.HostAccessKey2SecretId = res2.Result;
+            host.HostAccessKey2 = null;
+
+
             host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
             host.LastUpdatedBy = user;
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
@@ -238,11 +294,28 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 await UpdateDeploymentHostStatusAsync(host.Id, host.Status.Value, host.ContainerTag.Text, org, user);
             }
+            
             await CheckOwnershipOrSysAdminAsync(host, org, user);
+
+            var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
+            if (!res1.Successful)
+                return res1.ToInvokeResult();
+
+            host.HostAccessKey1SecretId = res1.Result;
+            host.HostAccessKey1 = null;
+
+            var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
+            if (!res2.Successful)
+                return res2.ToInvokeResult();
+
+            host.HostAccessKey2SecretId = res2.Result;
+            host.HostAccessKey2 = null;
 
             host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
             host.LastUpdatedBy = user;
+            
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
+
             return InvokeResult.Success;
         }
 
