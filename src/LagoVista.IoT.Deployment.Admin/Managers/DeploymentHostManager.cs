@@ -130,13 +130,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return host;
             }
 
-            if (!String.IsNullOrEmpty(host.HostAccessKey1))
+            if (String.IsNullOrEmpty(host.HostAccessKey1) && !String.IsNullOrEmpty(host.HostAccessKey1SecretId))
             {
                 var res1 = await _secureStorage.GetSecretAsync(org, host.HostAccessKey1SecretId, user);
                 host.HostAccessKey1 = res1.Result;
             }
 
-            if (!string.IsNullOrEmpty(host.HostAccessKey2))
+            if (string.IsNullOrEmpty(host.HostAccessKey2) && !String.IsNullOrEmpty(host.HostAccessKey2SecretId))
             {
                 var res2 = await _secureStorage.GetSecretAsync(org, host.HostAccessKey2SecretId, user);
                 host.HostAccessKey2 = res2.Result;
