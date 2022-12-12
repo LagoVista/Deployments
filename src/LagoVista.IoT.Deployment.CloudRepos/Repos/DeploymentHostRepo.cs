@@ -52,7 +52,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 throw new RecordNotFoundException("DeploymentHost", "Shared=true");
             }
 
-            var assignableHost = hosts.OrderBy(hsts =>  hsts.Instances.Count).FirstOrDefault();
+            var assignableHost = hosts.OrderBy(hsts =>  hsts.DeployedInstances.Count).FirstOrDefault();
 
             return assignableHost;
         }

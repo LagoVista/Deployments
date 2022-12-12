@@ -15,6 +15,7 @@ using LagoVista.Core;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.Core.Exceptions;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -29,12 +30,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeploymentActivityRepo _deploymentActivityRepo;
         IDeploymentHostStatusRepo _deploymentHostStatusRepo;
         IUserManager _userManager;
+        private readonly IAdminLogger _adminLogger;
         private readonly ISecureStorage _secureStorage;
 
         public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentActivityRepo deploymentActivityRepo,
                 IDeploymentConnectorService deploymentConnectorService, ISecureStorage secureStorage, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IDeploymentHostStatusRepo deploymentHostStatusRepo,
                 IUserManager userManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
+            _adminLogger = logger;
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
             _deploymentConnectorService = deploymentConnectorService;
@@ -44,7 +47,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _secureStorage = secureStorage;
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
-
 
         public async Task<InvokeResult> AddDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
         {
@@ -257,31 +259,79 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _deploymentHostRepo.QueryHostKeyInUse(key, org.Id);
         }
 
-        public async Task<InvokeResult> RegenerateAccessKeys(string hostId, EntityHeader org, EntityHeader user)
+        protected string GenerateRandomKey(byte len = 64)
         {
-            var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId);
-            await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
-            host.GenerateAccessKeys();
-
-            var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
-            if (!res1.Successful)
-                return res1.ToInvokeResult();
-
-            host.HostAccessKey1SecretId = res1.Result;
-            host.HostAccessKey1 = null;
-
-            var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
-            if (!res2.Successful)
-                return res2.ToInvokeResult();
-
-            host.HostAccessKey2SecretId = res2.Result;
-            host.HostAccessKey2 = null;
+            var buffer = new byte[len];
+            new Random().NextBytes(buffer);
+            return Convert.ToBase64String(buffer);
+        }
 
 
-            host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
-            host.LastUpdatedBy = user;
-            await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
-            return InvokeResult.Success;
+        public async Task<InvokeResult<string>> RegenerateKeyAsync(string instanceId, string keyName, EntityHeader org, EntityHeader user)
+        {
+            if (String.IsNullOrEmpty(keyName))
+            {
+                return InvokeResult<string>.FromError("Key Name is a Required Field.");
+            }
+
+            keyName = keyName.ToLower();
+            if (keyName != "key1" && keyName != "key2")
+            {
+                return InvokeResult<string>.FromError($"Currently only [key1] and [key2] are supported, you provided {keyName}.");
+            }
+
+            var instance = await GetDeploymentHostAsync(instanceId, org, user);
+
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, $"RegenerateKey-{keyName}");
+
+            var key = GenerateRandomKey();
+            var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
+            if (!keyAddResult.Successful)
+            {
+                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Add", keyAddResult.Errors.First().Message);
+                return InvokeResult<string>.FromError($"Could not add key to secure storage.");
+            }
+
+            switch (keyName)
+            {
+                case "key1":
+                    {
+                        if (!String.IsNullOrEmpty(instance.HostAccessKey1SecretId))
+                        {
+                            //If this fails don't fail the entire method.
+                            var removeKeyResult = await _secureStorage.RemoveSecretAsync(org, instance.HostAccessKey1SecretId);
+                            if (!removeKeyResult.Successful)
+                            {
+                                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Remove", removeKeyResult.Errors.First().Message);
+                            }
+                        }
+                        instance.HostAccessKey1SecretId = keyAddResult.Result;
+                    }
+                    break;
+                case "key2":
+                    {
+                        if (!String.IsNullOrEmpty(instance.HostAccessKey2SecretId))
+                        {
+                            //If this fails don't fail the entire method.
+                            var removeKeyResult = await _secureStorage.RemoveSecretAsync(org, instance.HostAccessKey2SecretId);
+                            if (!removeKeyResult.Successful)
+                            {
+                                _adminLogger.AddError("DeploymentInstanceManager_RegenerateKeyAsync_Remove", removeKeyResult.Errors.First().Message);
+                            }
+                        }
+                        instance.HostAccessKey2SecretId = keyAddResult.Result;
+                    }
+                    break;
+                default:
+                    throw new Exception($"Invalid key name: {keyName}");
+            }
+
+            instance.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            instance.LastUpdatedBy = user;
+
+            await _deploymentHostRepo.UpdateDeploymentHostAsync(instance);
+
+            return InvokeResult<string>.Create(key);
         }
 
         public async Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user)
@@ -297,19 +347,31 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             
             await CheckOwnershipOrSysAdminAsync(host, org, user);
 
-            var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
-            if (!res1.Successful)
-                return res1.ToInvokeResult();
+            if (!String.IsNullOrEmpty(host.HostAccessKey1))
+            {
+                if (!String.IsNullOrEmpty(host.HostAccessKey1SecretId))
+                    await _secureStorage.RemoveSecretAsync(org, host.HostAccessKey1SecretId);
+              
+                var res1 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey1);
+                if (!res1.Successful)
+                    return res1.ToInvokeResult();
 
-            host.HostAccessKey1SecretId = res1.Result;
-            host.HostAccessKey1 = null;
+                host.HostAccessKey1SecretId = res1.Result;
+                host.HostAccessKey1 = null;
+            }
 
-            var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
-            if (!res2.Successful)
-                return res2.ToInvokeResult();
+            if (!String.IsNullOrEmpty(host.HostAccessKey2))
+            {
+                if (!String.IsNullOrEmpty(host.HostAccessKey2SecretId))
+                    await _secureStorage.RemoveSecretAsync(org, host.HostAccessKey2SecretId);
+                
+                var res2 = await _secureStorage.AddSecretAsync(org, host.HostAccessKey2);
+                if (!res2.Successful)
+                    return res2.ToInvokeResult();
 
-            host.HostAccessKey2SecretId = res2.Result;
-            host.HostAccessKey2 = null;
+                host.HostAccessKey2SecretId = res2.Result;
+                host.HostAccessKey2 = null;
+            }
 
             host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
             host.LastUpdatedBy = user;

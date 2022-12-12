@@ -13,6 +13,7 @@ using LagoVista.Core.Exceptions;
 using System.Runtime.CompilerServices;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using System.Linq;
+using LagoVista.IoT.Deployment.Models;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -144,12 +145,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromError($"Primary host already assigned on instance, can not add it to this host.");
             }
 
-            if(host.Instances.Any(inst=>inst.Id == instanceId))
+            if(host.DeployedInstances.Any(inst=>inst.Instance.Id == instanceId))
             {
                 return InvokeResult.FromError($"Instance already belongs to host.");
             }
 
-            host.Instances.Add(instance.ToEntityHeader());
+            var sharedInstanceSummary = new SharedInstanceSummary()
+            {
+                Instance = instance.ToEntityHeader(),
+                OwnerOrganization = org,
+                Status = instance.Status
+            };
+
+            host.DeployedInstances.Add(sharedInstanceSummary);
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
 
             await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
@@ -173,14 +181,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.FromError($"Can only add a shared instance to a shared host, host is {host.HostType.Text}.");
             }
 
-            var hostInstance = host.Instances.SingleOrDefault(inst => inst.Id == instanceId);
+            var hostInstance = host.DeployedInstances.SingleOrDefault(inst => inst.Instance.Id == instanceId);
             if(instance == null)
             {
                 return InvokeResult.FromError($"Instance did not belong to host.");
             }
 
             instance.PrimaryHost = null;
-            host.Instances.Remove(hostInstance);
+            host.DeployedInstances.Remove(hostInstance);
 
             await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
             await UpdateInstanceAsync(instance, org, user);
@@ -205,15 +213,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                     else
                     {
-                        instance.DnsHostName = $"{instance.Key}.c{host.Instances.Count}.{host.DnsHostName}";
+                        instance.DnsHostName = $"{instance.Key}.c{host.DeployedInstances.Count}.{host.DnsHostName}";
                     }
                 }
                 else
                 {
-                    instance.DnsHostName = $"{instance.Key}.c{host.Instances.Count}.{host.DnsHostName}";
+                    instance.DnsHostName = $"{instance.Key}.c{host.DeployedInstances.Count}.{host.DnsHostName}";
                 }
 
-                host.Instances.Add(new EntityHeader() { Id = instance.Id, Key = instance.Key, Text = instance.Name });
+                var sharedInstanceSummary = new SharedInstanceSummary()
+                {
+                    Instance = instance.ToEntityHeader(),
+                    OwnerOrganization = org,
+                    Status = instance.Status,
+                    DnsHostName = instance.DnsHostName,
+                };
+
+                host.DeployedInstances.Add(sharedInstanceSummary);
                 await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);       
             }
             else
