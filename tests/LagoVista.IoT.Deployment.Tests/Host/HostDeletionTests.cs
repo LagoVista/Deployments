@@ -23,6 +23,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         Mock<IUserManager> _userManager = new Mock<IUserManager>();
         Mock<ISecurity> _security = new Mock<ISecurity>();
         Mock<IDeploymentHostRepo> _hostRepo = new Mock<IDeploymentHostRepo>();
+        Mock<ISecureStorage> _secureStorage = new Mock<ISecureStorage>();
         IDeploymentHostManager _deploymentHostManager;
         EntityHeader _org = new EntityHeader();
         EntityHeader _user = new EntityHeader();
@@ -41,7 +42,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
 
 
             _deploymentHostManager = new DeploymentHostManager(_hostRepo.Object, new Mock<IDeploymentActivityQueueManager>().Object, new Mock<IDeploymentActivityRepo>().Object,
-                    new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object,
+                    new Mock<IDeploymentConnectorService>().Object, new Mock<ISecureStorage>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object,
                     new Mock<IDeploymentHostStatusRepo>().Object, _userManager.Object, new Mock<IAppConfig>().Object,
                     new Mock<IDependencyManager>().Object, _security.Object);
         }

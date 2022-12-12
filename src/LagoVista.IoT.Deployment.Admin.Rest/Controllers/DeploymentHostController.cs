@@ -185,6 +185,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Host - Get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/{id}/secure")]
+        public async Task<DetailResponse<DeploymentHost>> GetHostWithKeysAsync(String id)
+        {
+            var deploymentHost = await _hostManager.GetSecureDeploymentHostAsync(id, OrgEntityHeader, UserEntityHeader);
+            return DetailResponse<DeploymentHost>.Create(deploymentHost);
+        }
+
+        /// <summary>
         /// Deployment Host - Get Deployed Instances
         /// </summary>
         /// <param name="id"></param>

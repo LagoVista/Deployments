@@ -43,7 +43,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
             _hostRepo.Setup(hrs => hrs.GetDeploymentHostAsync(_host.Id, true)).ReturnsAsync(_host);
 
             _deploymentHostManager = new DeploymentHostManager(_hostRepo.Object, new Mock<IDeploymentActivityQueueManager>().Object, new Mock<IDeploymentActivityRepo>().Object,
-                new Mock<IDeploymentConnectorService>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object, 
+                new Mock<IDeploymentConnectorService>().Object, new Mock<ISecureStorage>().Object, new Mock<IDeploymentInstanceRepo>().Object, new Mock<IAdminLogger>().Object, 
                 new Mock<IDeploymentHostStatusRepo>().Object, _userManager.Object, new Mock<IAppConfig>().Object,
                new Mock<IDependencyManager>().Object, _security.Object);
         }
