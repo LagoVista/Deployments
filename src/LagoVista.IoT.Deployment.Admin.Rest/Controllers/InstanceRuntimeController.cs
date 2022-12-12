@@ -28,7 +28,7 @@ using LagoVista.AI;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
-    public class RuntimeController : Controller
+    public class InstanceRuntimeController : Controller
     {
         IDeploymentInstanceManager _instanceManager;
         ISecureStorage _secureStorage;
@@ -52,7 +52,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string DATE = "X-Nuviot-Date";
         public const string VERSION = "X-Nuviot-Version";
 
-        public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
+        public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger)
