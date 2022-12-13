@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Admin.Rest</id>
-    <version>3.0.1963.1110</version>
+    <version>3.0.2036.0732</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,16 +12,14 @@
     <copyright>Copyright Software Logistics - 2022</copyright>
     <tags>HomeAutomation IoT Cloud</tags>
     <icon>LagoVistaIcon.png</icon>
-    <releaseNotes>Build Date: 10/1/2022 3:10:21 PM UTC</releaseNotes>
+    <releaseNotes>Build Date: 12/13/2022 12:32:17 PM UTC</releaseNotes>
     <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
       <group targetFramework="net6.0">
-        <dependency id="LagoVista.IoT.Web.Common" version="3.0.1963.1110" />
-        <dependency id="LagoVista.UserAdmin" version="3.0.1963.1110" />
-        <dependency id="LagoVista.AI" version="3.0.1963.1110" />
-        <dependency id="Newtonsoft.Json" version="13.0.1" />
-        <dependency id="LagoVista.IoT.ProductStore" version="3.0.1963.1110" />
-        <dependency id="LagoVista.IoT.Deployment.Admin" version="3.0.1963.1110" />
+        <dependency id="LagoVista.IoT.Web.Common" version="3.0.2036.0732" />
+        <dependency id="LagoVista.AI" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.ProductStore" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.Deployment.Admin" version="3.0.2036.0732" />
       </group>
     </dependencies>
   </metadata>

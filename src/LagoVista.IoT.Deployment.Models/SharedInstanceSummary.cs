@@ -9,5 +9,8 @@ namespace LagoVista.IoT.Deployment.Models
         public EntityHeader OwnerOrganization { get; set; }
         public EntityHeader<DeploymentInstanceStates> Status {get;set;}
         public string DnsHostName { get; set; }
+    
+        public string SharedAccessKey1 { get; set; }
+        public string SharedAccessKey2 { get; set; }
     }
 }
