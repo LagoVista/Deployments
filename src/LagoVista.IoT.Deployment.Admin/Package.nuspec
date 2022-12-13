@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Admin</id>
-    <version>3.0.1963.1257</version>
+    <version>3.0.2036.0732</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,24 +12,24 @@
     <copyright>Copyright Software Logistics - 2022</copyright>
     <tags>HomeAutomation IoT</tags>
     <icon>LagoVistaIcon.png</icon>
+    <releaseNotes>Build Date: 12/13/2022 12:32:17 PM UTC</releaseNotes>
+    <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
       <group targetFramework="netstandard2.1">
         <dependency id="Azure.Messaging.EventHubs" version="5.7.2" />
-        <dependency id="LagoVista.Core.Authentication" version="3.0.1963.1257" />
-        <dependency id="LagoVista.Core.Rpc" version="3.0.1963.1257" />
-        <dependency id="LagoVista.Core.Rpc.Client" version="3.0.1963.1257" />
-        <dependency id="LagoVista.Core.Rpc.Client.ServiceBus" version="3.0.1963.1257" />
-        <dependency id="LagoVista.IoT.DeviceAdmin" version="3.0.1963.1257" />
-        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="3.0.1963.1257" />
-        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="3.0.1963.1257" />
-        <dependency id="LagoVista.IoT.Pipeline.Admin" version="3.0.1963.1257" />
-        <dependency id="LagoVista.UserAdmin" version="3.0.1963.1257" />
+        <dependency id="LagoVista.Core.Authentication" version="3.0.2036.0732" />
+        <dependency id="LagoVista.Core.Rpc" version="3.0.2036.0732" />
+        <dependency id="LagoVista.Core.Rpc.Client" version="3.0.2036.0732" />
+        <dependency id="LagoVista.Core.Rpc.Client.ServiceBus" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.DeviceAdmin" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="3.0.2036.0732" />
+        <dependency id="LagoVista.IoT.Pipeline.Admin" version="3.0.2036.0732" />
+        <dependency id="LagoVista.UserAdmin" version="3.0.2036.0732" />
         <dependency id="Portable.BouncyCastle" version="1.9.0" />
-        <dependency id="LagoVista.IoT.Deployment.Models" version="3.0.1963.1257" />
+        <dependency id="LagoVista.IoT.Deployment.Models" version="3.0.2036.0732" />
       </group>
     </dependencies>
-    <releaseNotes>Build Date: 10/1/2022 4:57:03 PM UTC</releaseNotes>
-    <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
   </metadata>
   <files>
     <file src="LagoVistaIcon.png" target="LagoVistaIcon.png" />

@@ -6,7 +6,6 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
 using LagoVista.IoT.Logging.Loggers;
-using LagoVista.Core;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Managers;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +18,6 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LagoVista.UserAdmin.Models.Users;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Deployment.Models;
@@ -28,7 +26,7 @@ using LagoVista.AI;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
-    public class RuntimeController : Controller
+    public class InstanceRuntimeController : Controller
     {
         IDeploymentInstanceManager _instanceManager;
         ISecureStorage _secureStorage;
@@ -52,7 +50,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string DATE = "X-Nuviot-Date";
         public const string VERSION = "X-Nuviot-Version";
 
-        public RuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
+        public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger)
