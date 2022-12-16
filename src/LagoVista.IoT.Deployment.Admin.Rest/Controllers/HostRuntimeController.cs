@@ -128,7 +128,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             Console.WriteLine($"Loadedinst Host:  {hostId}");
             _host = await _hostManager.GetSecureDeploymentHostAsync(hostId, OrgEntityHeader, UserEntityHeader);
             Console.WriteLine($"Loaded Host:  {_host.Name}");
-
             
             var calculatedFromFirst = GetSignature(requestId, _host.HostAccessKey1, bldr.ToString());
 
@@ -145,6 +144,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         protected EntityHeader OrgEntityHeader { get; private set; }
         protected EntityHeader UserEntityHeader { get; private set; }
         protected EntityHeader InstanceEntityHeader { get; private set; }
+
+        [HttpGet("/api/deployment/host")]
+        public async Task<InvokeResult<DeploymentHost>> GetInstance()
+        {
+            await ValidateRequest(Request);
+            return InvokeResult<DeploymentHost>.Create(_host);
+        }
 
         [HttpGet("/api/deployment/host/shared/instances")]
         public async Task<InvokeResult<IEnumerable<SharedInstanceSummary>>> GetInstances()
