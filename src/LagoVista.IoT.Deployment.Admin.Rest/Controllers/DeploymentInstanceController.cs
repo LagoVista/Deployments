@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="instanceid"></param>
         /// <returns></returns>
         [HttpDelete("/api/deployment/host/{id}/remove/{instanceid}")]
-        public Task<InvokeResult> RemovehardHost(string id, string instanceid)
+        public Task<InvokeResult> RemoveSharedInstance(string id, string instanceid)
         {
             return _instanceManager.RemoveSharedInstanceAsync(id, instanceid, OrgEntityHeader, UserEntityHeader);
         }

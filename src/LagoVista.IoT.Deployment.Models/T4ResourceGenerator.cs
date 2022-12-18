@@ -633,6 +633,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Host_Help
 
 		public static string Host_Help { get { return GetResourceString("Host_Help"); } }
+//Resources:DeploymentAdminResources:Host_InternalServiceName
+
+		public static string Host_InternalServiceName { get { return GetResourceString("Host_InternalServiceName"); } }
 //Resources:DeploymentAdminResources:Host_IPv4_Address
 
 		public static string Host_IPv4_Address { get { return GetResourceString("Host_IPv4_Address"); } }
@@ -1507,6 +1510,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Host_DNSName = "Host_DNSName";
 			public const string Host_HasSSLCert = "Host_HasSSLCert";
 			public const string Host_Help = "Host_Help";
+			public const string Host_InternalServiceName = "Host_InternalServiceName";
 			public const string Host_IPv4_Address = "Host_IPv4_Address";
 			public const string Host_LastPing = "Host_LastPing";
 			public const string Host_MonitoringProvider = "Host_MonitoringProvider";

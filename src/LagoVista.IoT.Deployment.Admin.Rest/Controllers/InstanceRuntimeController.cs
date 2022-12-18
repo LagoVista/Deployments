@@ -240,7 +240,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetUsageStorageConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetUsageStorageConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetAzureEventHubWSNotifyConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetRabbitMQNotifyConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetRabbitMQWSNotifyConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetRabbitMQWSNotifyConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetRPCConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetRPCConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetEHCheckPointSettingsAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetEHCheckPointStorageSttings(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetEHCheckPointStorageSttings(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<LoggingSettings>> GetLoggingSettings()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetLoggingSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetLoggingSettingsAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

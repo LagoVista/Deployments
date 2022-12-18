@@ -284,7 +284,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 OrgId = OwnerOrganization.Id,
                 OrgName = OwnerOrganization.Text,
                 DeviceRepoId = DeviceRepository?.Id,
-                DeviceRepoName = DeviceRepository?.Text
+                DeviceRepoName = DeviceRepository?.Text,
+                Solution = Solution.Text,
+                SolutionId = Solution.Id
+               
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -389,6 +392,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     public class DeploymentInstanceSummary : SummaryData
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }
+        public string Solution { get; set; }
+        public string SolutionId { get; set; }
         public bool IsDeployed { get; set; }
         public string NuvIoTEdition { get; set; }
         public string DeploymentType { get; set; }

@@ -6,6 +6,7 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.Deployment.Models.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Digests;
@@ -176,5 +177,39 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             return InvokeResult<IEnumerable<SharedInstanceSummary>>.Create(instances);
         }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for Web Socket Notify Connection
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/wsnotify/rabbitmq/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetRabbitMQNotifyConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetRabbitMQWSNotifyConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for Web Socket Notify Connection
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/wsnotify/azureeventhub/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetAzureEventHubWSNotifyConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for RPC Service Bus Connection
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/rpc/settings")]
+        public async Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetRPCConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
     }
 }

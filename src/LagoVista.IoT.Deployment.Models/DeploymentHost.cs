@@ -227,6 +227,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_InternalServiceName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public string InternalServiceName { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_IPv4_Address, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string Ipv4Address { get; set; }
 

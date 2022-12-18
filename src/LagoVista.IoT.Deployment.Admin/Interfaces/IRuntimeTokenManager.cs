@@ -8,20 +8,27 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Interfaces
 {
+    public enum SettingType
+    {
+        Host,
+        Instance
+    }
+
     public interface IRuntimeTokenManager
     {
         Task<InvokeResult<ConnectionSettings>> GetDeviceStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetDeviceWatchdogConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult<ConnectionSettings>> GetDeviceEventConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetAzureEventHubsWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetRabbitMQWSNotifyConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<LoggingSettings>> GetLoggingSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(SettingType settingType, String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetAzureEventHubsWSNotifyConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetRabbitMQWSNotifyConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
+      
+        Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<LoggingSettings>> GetLoggingSettingsAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetNuvIoTCacheSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<DeviceDataStorageSettings>> GetDataStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetEHCheckPointStorageSttings(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetEHCheckPointStorageSttings(SettingType stetingType, String instanceId, EntityHeader org, EntityHeader user);
     }
 }

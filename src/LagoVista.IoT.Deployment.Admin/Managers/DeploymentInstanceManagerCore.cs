@@ -25,9 +25,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         ISecureStorage _secureStorage;
         IDeploymentInstanceStatusRepo _deploymentInstanceStatusRepo;
         IUserManager _userManager;
-       
+
         public DeploymentInstanceManagerCore(IDeploymentHostManager deploymentHostManager, IDeploymentInstanceRepo instanceRepo, IDeviceRepositoryManager deviceManagerRepo,
-           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IUserManager useManager, IAdminLogger logger, IAppConfig appConfig, 
+           ISecureStorage secureStorage, IDeploymentInstanceStatusRepo deploymentInstanceStatusRepo, IUserManager useManager, IAdminLogger logger, IAppConfig appConfig,
            IDependencyManager depmanager, ISecurity security) :
             base(logger, appConfig, depmanager, security)
         {
@@ -45,28 +45,50 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Delete, user, org);
             await CheckForDepenenciesAsync(instance);
 
-            var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
-            if (repo != null)
+            if(instance.Status.Value != DeploymentInstanceStates.Offline)
             {
-                /* Upon deletion release the repo so it can be used somewhere else */
-                repo.Instance = null;
-                await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
+                return InvokeResult.FromError("Instance must be offline prior to deleting.");
+            }
+
+            if (!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
+            {
+                var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
+                if (repo != null)
+                {
+                    /* Upon deletion release the repo so it can be used somewhere else */
+                    repo.Instance = null;
+                    await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
+                }
             }
 
             instance.IsArchived = true;
             await _instanceRepo.UpdateInstanceAsync(instance);
-
-            if(!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
+   
+            if (instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
             {
-                var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
-                if(host.HostType.Value == HostTypes.Dedicated)
+                if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
                 {
-                    await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DestroyHost);
-                    await _deploymentHostManager.DeleteDeploymentHostAsync(host.Id, org, user);
+                    return await this.RemoveSharedInstanceAsync(instance.PrimaryHost.Id, instanceId, org, user);
+                }
+                else
+                {
+                    return InvokeResult.Success;
                 }
             }
+            else
+            {
+                if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
+                {
+                    var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
+                    if (host.HostType.Value == HostTypes.Dedicated)
+                    {
+                        await PerformActionAsync(instance, org, user, DeploymentActivityTaskTypes.DestroyHost);
+                        await _deploymentHostManager.DeleteDeploymentHostAsync(host.Id, org, user);
+                    }
+                }
 
-            return InvokeResult.Success; 
+                return InvokeResult.Success;
+            }
         }
 
         protected virtual Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)
@@ -96,7 +118,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 Subscription = instance.Subscription,
                 ContainerRepository = instance.ContainerRepository,
                 ContainerTag = instance.ContainerTag,
-                DnsHostName = instance.DnsHostName,                
+                DnsHostName = instance.DnsHostName,
             };
 
             return host;
@@ -129,23 +151,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
 
-            if(instance.DeploymentType.Value != DeploymentTypes.Shared)
+            if (instance.DeploymentType.Value != DeploymentTypes.Shared)
             {
                 return InvokeResult.FromError($"Deployment Type is not a shared type, it is {instance.DeploymentType.Text}, must be shared to add to a shared instance.");
             }
 
             var host = await _deploymentHostManager.GetDeploymentHostAsync(hostId, org, user);
-            if(host.HostType.Value != HostTypes.Shared)
+            if (host.HostType.Value != HostTypes.Shared)
             {
                 return InvokeResult.FromError($"Can only add a shared instance to a shared host, host is {host.HostType.Text}.");
             }
-            
-            if(instance.PrimaryHost != null)
+
+            if (instance.PrimaryHost != null)
             {
                 return InvokeResult.FromError($"Primary host already assigned on instance, can not add it to this host.");
             }
 
-            if(host.DeployedInstances.Any(inst=>inst.Instance.Id == instanceId))
+            if (host.DeployedInstances.Any(inst => inst.Instance.Id == instanceId))
             {
                 return InvokeResult.FromError($"Instance already belongs to host.");
             }
@@ -170,7 +192,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
 
-            if (instance.DeploymentType.Value != DeploymentTypes.Shared)
+            if (instance.NuvIoTEdition.Value != NuvIoTEditions.Shared)
             {
                 return InvokeResult.FromError($"Deployment Type is not a shared type, it is {instance.DeploymentType.Text}, must be shared to add to a shared instance.");
             }
@@ -182,12 +204,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var hostInstance = host.DeployedInstances.SingleOrDefault(inst => inst.Instance.Id == instanceId);
-            if(instance == null)
+            if (instance == null)
             {
                 return InvokeResult.FromError($"Instance did not belong to host.");
             }
 
             instance.PrimaryHost = null;
+            instance.Status = EntityHeader<DeploymentInstanceStates>.Create(DeploymentInstanceStates.Offline);
             host.DeployedInstances.Remove(hostInstance);
 
             await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
@@ -199,21 +222,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
-            if(instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
+            if (instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
             {
                 var host = await _deploymentHostManager.FindSharedHostAsync();
                 instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
-                
-                if(!String.IsNullOrEmpty(instance.DnsHostName)) 
+
+                if (!String.IsNullOrEmpty(instance.DnsHostName))
                 {
                     var parts = instance.DnsHostName.Split('.');
-                    if(parts.Length >= 2)
+                    if (parts.Length >= 2)
                     {
-                        instance.DnsHostName = $"{parts[0]}.{parts[1]}.{host.DnsHostName}";
+                        instance.DnsHostName = $"{parts[0]}-{parts[1]}.{host.DnsHostName}";
                     }
                     else
                     {
-                        instance.DnsHostName = $"{instance.Key}.c{host.DeployedInstances.Count}.{host.DnsHostName}";
+                        instance.DnsHostName = $"{instance.Key}-c{host.DeployedInstances.Count}.{host.DnsHostName}";
                     }
                 }
                 else
@@ -230,7 +253,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 };
 
                 host.DeployedInstances.Add(sharedInstanceSummary);
-                await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);       
+                await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
             }
             else
             {
@@ -359,7 +382,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 keysUpdated = true;
                 var key = GenerateRandomKey();
                 var keyAddResult = await _secureStorage.AddSecretAsync(org, key);
-                if (!keyAddResult.Successful) return null; 
+                if (!keyAddResult.Successful) return null;
                 instance.SharedAccessKeySecureId1 = keyAddResult.Result;
             }
 
@@ -372,7 +395,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 instance.SharedAccessKeySecureId2 = keyAddResult.Result;
             }
 
-            if(keysUpdated)
+            if (keysUpdated)
             {
                 await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, "Added Missing Keys");
                 await _instanceRepo.UpdateInstanceAsync(instance);
@@ -392,7 +415,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var existingInstance = await _instanceRepo.GetInstanceAsync(instance.Id);
             if (existingInstance == null) throw new RecordNotFoundException(typeof(DeploymentInstance).Name, instance.Id);
-            
+
             if (existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
             {
                 var newlyAssginedRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
@@ -426,7 +449,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (!String.IsNullOrEmpty(instance.SharedAccessKey2))
             {
-                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);                
+                var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey2);
                 if (!addResult.Successful) return addResult.ToInvokeResult();
 
                 if (!String.IsNullOrEmpty(instance.SharedAccessKeySecureId2))
@@ -442,7 +465,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (existingInstance.Status.Value != instance.Status.Value ||
                existingInstance.IsDeployed != instance.IsDeployed)
             {
-                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v",string.Empty), org, user);
+                await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v", string.Empty), org, user);
             }
 
             var solution = instance.Solution.Value;
@@ -481,7 +504,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             MapInstanceProperties(instance);
             ValidationCheck(instance, Actions.Update);
 
-            if(newStatus == DeploymentInstanceStates.Offline)
+            if (newStatus == DeploymentInstanceStates.Offline)
             {
                 instance.LastPing = null;
             }

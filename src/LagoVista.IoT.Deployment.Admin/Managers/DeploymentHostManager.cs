@@ -344,6 +344,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 await UpdateDeploymentHostStatusAsync(host.Id, host.Status.Value, host.ContainerTag.Text, org, user);
             }
+
+            if(host.DnsHostName != existingHost.DnsHostName && host.HostType.Value == HostTypes.Shared)
+            {
+                if(string.IsNullOrEmpty(host.DnsHostName))
+                {
+                    return InvokeResult.FromError("DNS Host Name is a Required Field");
+                }
+
+                foreach(var instanceSummary in existingHost.DeployedInstances)
+                {
+                    var instance = await _deploymentInstanceRepo.GetInstanceAsync(instanceSummary.Instance.Id);
+                    instanceSummary.DnsHostName = instanceSummary.DnsHostName.ToLower().Replace(existingHost.DnsHostName.ToLower(), host.DnsHostName.ToLower());
+                    await _deploymentInstanceRepo.UpdateInstanceAsync(instance);
+                }
+            }
             
             await CheckOwnershipOrSysAdminAsync(host, org, user);
 
