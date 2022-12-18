@@ -124,7 +124,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             OrgEntityHeader = EntityHeader.Create(orgId, org);
             UserEntityHeader = EntityHeader.Create(userId, user);
-            InstanceEntityHeader = EntityHeader.Create(hostId, hostName);
+            HostEntityHeader = EntityHeader.Create(hostId, hostName);
 
             Console.WriteLine($"Loadedinst Host:  {hostId}");
             _host = await _hostManager.GetSecureDeploymentHostAsync(hostId, OrgEntityHeader, UserEntityHeader);
@@ -144,7 +144,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         protected EntityHeader OrgEntityHeader { get; private set; }
         protected EntityHeader UserEntityHeader { get; private set; }
-        protected EntityHeader InstanceEntityHeader { get; private set; }
+        protected EntityHeader HostEntityHeader { get; private set; }
 
         [HttpGet("/api/deployment/host")]
         public async Task<InvokeResult<DeploymentHost>> GetInstance()
@@ -186,7 +186,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetRabbitMQNotifyConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetRabbitMQWSNotifyConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetRabbitMQWSNotifyConnectionAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -197,7 +197,41 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<ConnectionSettings>> GetAzureEventHubWSNotifyConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Request Connection for Usage Storage Storage
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/usage/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetUsageStorageConnectionAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - Get Storage Settings for EH Check Point
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/ehcheckpoint/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetEHCheckPointSettingsAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetEHCheckPointStorageSttings(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
+        /// Runtime Controller - Get Logging Settings
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/host/logging/settings")]
+        public async Task<InvokeResult<LoggingSettings>> GetLoggingSettings()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetLoggingSettingsAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -208,7 +242,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync()
         {
             await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetRPCConnectionAsync(SettingType.Host, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return await _runtimeTokenManager.GetRPCConnectionAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
 
     }
