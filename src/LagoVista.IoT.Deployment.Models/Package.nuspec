@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Models</id>
-    <version>3.0.2036.0732</version>
+    <version>3.0.2049.0911</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,21 +12,21 @@
     <copyright>Copyright Software Logistics - 2022</copyright>
     <tags>HomeAutomation IoT</tags>
     <icon>LagoVistaIcon.png</icon>
-    <releaseNotes>Build Date: 12/13/2022 12:32:17 PM UTC</releaseNotes>
+    <releaseNotes>Build Date: 12/26/2022 2:11:26 PM UTC</releaseNotes>
     <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
-      <group targetFramework="netstandard1.2">
-        <dependency id="LagoVista.IoT.DeviceAdmin.Models" version="3.0.2036.0732" />
-        <dependency id="LagoVista.IoT.Pipeline.Models" version="3.0.2036.0732" />
-        <dependency id="LagoVista.UserAdmin.Models" version="3.0.2036.0732" />
-        <dependency id="LagoVista.IoT.DeviceMessaging.Models" version="3.0.2036.0732" />
-        <dependency id="LagoVista.IoT.DeviceManagement.Models" version="3.0.2036.0732" />
+      <group targetFramework="netstandard2.1">
+        <dependency id="LagoVista.IoT.DeviceAdmin.Models" version="3.0.2049.0911" />
+        <dependency id="LagoVista.IoT.Pipeline.Models" version="3.0.2049.0911" />
+        <dependency id="LagoVista.UserAdmin.Models" version="3.0.2049.0911" />
+        <dependency id="LagoVista.IoT.DeviceMessaging.Models" version="3.0.2049.0911" />
+        <dependency id="LagoVista.IoT.DeviceManagement.Models" version="3.0.2049.0911" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <file src="LagoVistaIcon.png" target="LagoVistaIcon.png" />
-    <file src="bin\release\netstandard1.2\LagoVista.IoT.Deployment.Models.dll" target="lib\netstandard1.2\LagoVista.IoT.Deployment.Models.dll" />
-    <file src="bin\release\netstandard1.2\LagoVista.IoT.Deployment.Models.pdb" target="lib\netstandard1.2\LagoVista.IoT.Deployment.Models.pdb" />
+    <file src="bin\release\netstandard2.1\LagoVista.IoT.Deployment.Models.dll" target="lib\netstandard2.1\LagoVista.IoT.Deployment.Models.dll" />
+    <file src="bin\release\netstandard2.1\LagoVista.IoT.Deployment.Models.pdb" target="lib\netstandard2.1\LagoVista.IoT.Deployment.Models.pdb" />
   </files>
 </package>
