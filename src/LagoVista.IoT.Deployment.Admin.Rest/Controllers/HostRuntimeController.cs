@@ -127,7 +127,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             HostEntityHeader = EntityHeader.Create(hostId, hostName);
 
             Console.WriteLine($"Loadedinst Host:  {hostId}");
-            _host = await _hostManager.GetSecureDeploymentHostAsync(hostId, OrgEntityHeader, UserEntityHeader);
+            _host = await _hostManager.GetSecureDeploymentHostAsync(hostId, OrgEntityHeader, UserEntityHeader, checkOwnership: false);
             Console.WriteLine($"Loaded Host:  {_host.Name}");
             
             var calculatedFromFirst = GetSignature(requestId, _host.HostAccessKey1, bldr.ToString());

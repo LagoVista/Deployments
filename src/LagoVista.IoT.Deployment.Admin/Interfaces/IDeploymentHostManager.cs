@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DestroyHostAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true);
+        Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true, bool checkOwnership = true);
 
         Task<IEnumerable<DeploymentActivitySummary>> GetHostActivitesAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<InstanceRuntimeSummary>> GetDeployedInstancesAsync(string hostId, EntityHeader org, EntityHeader user);

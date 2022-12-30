@@ -50,9 +50,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             using (var request = GetHttpClient(host, org, user, "GET", path))
             {
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
+
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -61,7 +62,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService_GetAsync<T>] - Non Success Code", $"{response.StatusCode} - {response.ReasonPhrase}",
+                            new KeyValuePair<string, string>("uri", uri.ToString()),
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -72,8 +74,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
-                        new KeyValuePair<string, string>("hostid", host.Id),
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService_GetAsync<T>] - Exception", ex.Message,
+                          new KeyValuePair<string, string>("uri", uri.ToString()),
+                          new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),
                         new KeyValuePair<string, string>("userid", user.Id));
@@ -119,9 +122,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     request.DefaultRequestHeaders.Add("x-pageindex", listRequest.PageIndex.ToString());
                 }
 
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -130,8 +133,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
-                            new KeyValuePair<string, string>("hostid", host.Id),
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__GetListResponseAsync<T>] - Non Success Code", $"{response.StatusCode} - {response.ReasonPhrase}",
+                           new KeyValuePair<string, string>("uri", uri.ToString()),
+                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
                             new KeyValuePair<string, string>("userid", user.Id));
@@ -144,8 +148,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
-                        new KeyValuePair<string, string>("hostid", host.Id),
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService___GetListResponseAsync<T>] - Exception", ex.Message,
+                          new KeyValuePair<string, string>("uri", uri.ToString()),
+                          new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),
                         new KeyValuePair<string, string>("userid", user.Id));
@@ -167,10 +172,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             using (var request = GetHttpClient(host, org, user, "GET", path))
             {
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
+
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
-                    Console.WriteLine(uri);
                     var response = await request.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -179,7 +184,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__GetAsync] - Non Success", $"{response.StatusCode} - {response.ReasonPhrase}",
+                          new KeyValuePair<string, string>("uri", uri.ToString()),
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -190,7 +196,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__GetAsync] - Exception", ex.Message,
+                          new KeyValuePair<string, string>("uri", uri.ToString()),
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),
@@ -211,9 +218,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             using (var request = GetHttpClient(host, org, user, "DELETE", path))
             {
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
+
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var response = await request.DeleteAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
@@ -222,7 +230,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__DeleteAsync] - Non Success", $"{response.StatusCode} - {response.ReasonPhrase}",
+                            new KeyValuePair<string, string>("uri", uri.ToString()),
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -233,7 +242,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__DeleteAsync] - Exception", ex.Message,
+                        new KeyValuePair<string, string>("uri", uri.ToString()),
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),
@@ -254,9 +264,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             using (var request = GetHttpClient(host, org, user, "POST", path))
             {
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
+
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var jsonContent = new StringContent(JsonConvert.SerializeObject(post), System.Text.Encoding.UTF8, "application/json");
                     var response = await request.PostAsync(uri, jsonContent);
                     if (response.IsSuccessStatusCode)
@@ -266,7 +277,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__PostAsync<TPost>] - Non Success", $"{response.StatusCode} - {response.ReasonPhrase}",
+                            new KeyValuePair<string, string>("uri", uri.ToString()),
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -277,7 +289,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__PostAsync<TPost>] - Exception", ex.Message,
+                        new KeyValuePair<string, string>("uri", uri.ToString()),
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),
@@ -294,13 +307,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return await PostAsync<TPost>(path, post, host, org, user);
         }
 
-        protected async Task<InvokeResult> PutAsync<TPost>(string path, TPost post, DeploymentHost host, EntityHeader org, EntityHeader user)
+        protected async Task<InvokeResult> PutAsync<TPut>(string path, TPut post, DeploymentHost host, EntityHeader org, EntityHeader user)
         {
             using (var request = GetHttpClient(host, org, user, "PUT", path))
             {
+                var uri = new Uri($"{host.AdminAPIUri}{path}");
+
                 try
                 {
-                    var uri = new Uri($"{host.AdminAPIUri}{path}");
                     var jsonContent = new StringContent(JsonConvert.SerializeObject(post), System.Text.Encoding.UTF8, "application/json");
                     var response = await request.PutAsync(uri, jsonContent);
                     if (response.IsSuccessStatusCode)
@@ -310,7 +324,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", $"{response.StatusCode} - {response.ReasonPhrase}",
+                        _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__PutAsync<TPut>] - Non Success", $"{response.StatusCode} - {response.ReasonPhrase}",
+                            new KeyValuePair<string, string>("uri", uri.ToString()),
                             new KeyValuePair<string, string>("hostid", host.Id),
                             new KeyValuePair<string, string>("path", path),
                             new KeyValuePair<string, string>("orgid", org.Id),
@@ -321,7 +336,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.AddCustomEvent(LogLevel.Error, "DeploymentConnectorService", ex.Message,
+                    _logger.AddCustomEvent(LogLevel.Error, "[DeploymentConnectorService__PutAsync<TPut>] - Exception", ex.Message,
+                        new KeyValuePair<string, string>("uri", uri.ToString()),
                         new KeyValuePair<string, string>("hostid", host.Id),
                         new KeyValuePair<string, string>("path", path),
                         new KeyValuePair<string, string>("orgid", org.Id),

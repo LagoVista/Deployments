@@ -367,7 +367,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _instanceRepo.QueryInstanceKeyInUseAsync(key, org.Id);
         }
 
-        public async Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user, bool checkOwnership = true)
         {
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
 
