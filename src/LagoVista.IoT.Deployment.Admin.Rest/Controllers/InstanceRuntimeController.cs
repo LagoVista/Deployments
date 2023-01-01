@@ -22,7 +22,10 @@ using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.AI;
-
+using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.AspNetCore.Identity.Managers;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -39,6 +42,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         IServiceTicketCreator _ticketCreator;
         IDistributionManager _distroManager;
         IModelManager _modelManager;
+        IDeploymentInstanceRepo _instanceRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -51,10 +55,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string VERSION = "X-Nuviot-Version";
 
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
-            IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager,
+            IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger)
         {
+            _instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _orgUserRepo = orgUserRepo ?? throw new ArgumentNullException(nameof(orgUserRepo));
@@ -148,7 +153,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             UserEntityHeader = EntityHeader.Create(userId, user);
             InstanceEntityHeader = EntityHeader.Create(instanceId, instanceName);
 
-            var instance = await _instanceManager.GetInstanceAsync(instanceId, OrgEntityHeader, UserEntityHeader, checkOwnership: false);
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
             if (!key1.Successful)
             {
@@ -171,6 +176,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                     throw new UnauthorizedAccessException("Invalid signature.");
                 }
             }
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimsFactory.CurrentUserId, userId));
+            claims.Add(new Claim(ClaimsFactory.CurrentOrgId, orgId));
+            claims.Add(new Claim(ClaimsFactory.HostId, instance.PrimaryHost.Id));
+            claims.Add(new Claim(ClaimsFactory.InstanceId, instanceId));
+
+            HttpContext.User.AddIdentity(new System.Security.Claims.ClaimsIdentity(claims, "host_instance_signarue"));
+
         }
 
         protected EntityHeader OrgEntityHeader { get; private set; }

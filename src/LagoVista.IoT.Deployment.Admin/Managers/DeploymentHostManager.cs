@@ -124,7 +124,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
-        public async Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true, bool checkOwnership = true)
+        public async Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId, throwOnNotFound);
             if (host == null)
@@ -144,8 +144,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 host.HostAccessKey2 = res2.Result;
             }
 
-            if(checkOwnership)
-                await CheckOwnershipOrSysAdminAsync(host, org, user);
+            await CheckOwnershipOrSysAdminAsync(host, org, user);
 
             return host;
         }

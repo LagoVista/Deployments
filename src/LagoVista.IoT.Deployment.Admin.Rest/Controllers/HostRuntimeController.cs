@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Exceptions;
+﻿using LagoVista.AspNetCore.Identity.Managers;
+using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
@@ -15,6 +16,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,18 +35,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string VERSION = "X-Nuviot-Version";
 
         private readonly IRuntimeTokenManager _runtimeTokenManager;
-        private readonly IDeploymentHostManager _hostManager;
+        private readonly IDeploymentHostRepo _hostRepo;
         private readonly ISecureStorage _secureStorage;
         private readonly IDeploymentInstanceRepo _instanceRepo;
 
         private DeploymentHost _host;
 
-        public HostRuntimeController(IDeploymentHostManager hostManager, ISecureStorage secureStorage, IDeploymentInstanceRepo instanceRepo, IRuntimeTokenManager runtimeTokenManager)
+        public HostRuntimeController(IDeploymentHostRepo hostRepo, ISecureStorage secureStorage, IDeploymentInstanceRepo instanceRepo, IRuntimeTokenManager runtimeTokenManager)
         {
             this._runtimeTokenManager = runtimeTokenManager ?? throw new ArgumentNullException(nameof(runtimeTokenManager));
-            this._hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
             this._secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
+            this._hostRepo = hostRepo ?? throw new ArgumentNullException(nameof(hostRepo));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -126,20 +128,37 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             UserEntityHeader = EntityHeader.Create(userId, user);
             HostEntityHeader = EntityHeader.Create(hostId, hostName);
 
-            Console.WriteLine($"Loadedinst Host:  {hostId}");
-            _host = await _hostManager.GetSecureDeploymentHostAsync(hostId, OrgEntityHeader, UserEntityHeader, checkOwnership: false);
-            Console.WriteLine($"Loaded Host:  {_host.Name}");
-            
+            _host = await _hostRepo.GetDeploymentHostAsync(hostId);
+            if (String.IsNullOrEmpty(_host.HostAccessKey1) && !String.IsNullOrEmpty(_host.HostAccessKey1SecretId))
+            {
+                var res1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, _host.HostAccessKey1SecretId, UserEntityHeader);
+                _host.HostAccessKey1 = res1.Result;
+            }
+
             var calculatedFromFirst = GetSignature(requestId, _host.HostAccessKey1, bldr.ToString());
 
             if (calculatedFromFirst != authheader)
             {
+
+                if (string.IsNullOrEmpty(_host.HostAccessKey2) && !String.IsNullOrEmpty(_host.HostAccessKey2SecretId))
+                {
+                    var res2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, _host.HostAccessKey2SecretId, UserEntityHeader);
+                    _host.HostAccessKey2 = res2.Result;
+                }
+
                 var calculatedFromSecond = GetSignature(requestId, _host.HostAccessKey2, bldr.ToString());
                 if (calculatedFromSecond != authheader)
                 {
                     throw new UnauthorizedAccessException("Invalid signature.");
                 }
             }
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimsFactory.CurrentUserId, userId));
+            claims.Add(new Claim(ClaimsFactory.CurrentOrgId, orgId));
+            claims.Add(new Claim(ClaimsFactory.HostId, hostId));
+
+            HttpContext.User.AddIdentity(new System.Security.Claims.ClaimsIdentity(claims, "host_shared_signarue"));          
         }
 
         protected EntityHeader OrgEntityHeader { get; private set; }
