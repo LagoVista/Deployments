@@ -813,6 +813,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:HostType_Development
 
 		public static string HostType_Development { get { return GetResourceString("HostType_Development"); } }
+//Resources:DeploymentAdminResources:HostType_MultiTenantMQTT
+
+		public static string HostType_MultiTenantMQTT { get { return GetResourceString("HostType_MultiTenantMQTT"); } }
 //Resources:DeploymentAdminResources:Instance_Caches
 
 		public static string Instance_Caches { get { return GetResourceString("Instance_Caches"); } }
@@ -1570,6 +1573,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostStatus_UpdatingRuntime = "HostStatus_UpdatingRuntime";
 			public const string HostStatus_WaitingForServer = "HostStatus_WaitingForServer";
 			public const string HostType_Development = "HostType_Development";
+			public const string HostType_MultiTenantMQTT = "HostType_MultiTenantMQTT";
 			public const string Instance_Caches = "Instance_Caches";
 			public const string Instance_DataStreams = "Instance_DataStreams";
 			public const string Instance_DebugMode = "Instance_DebugMode";

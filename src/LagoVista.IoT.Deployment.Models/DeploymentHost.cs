@@ -22,6 +22,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Community,
         [EnumLabel(DeploymentHost.HostType_Shared, DeploymentAdminResources.Names.Host_Type_Shared, typeof(DeploymentAdminResources))]
         Shared,
+        [EnumLabel(DeploymentHost.HostType_MultiTenantMQTT, DeploymentAdminResources.Names.HostType_MultiTenantMQTT, typeof(DeploymentAdminResources))]
+        MultiTenantMQTT,
         [EnumLabel(DeploymentHost.HostType_SharedHighPerformacne, DeploymentAdminResources.Names.Host_Type_SharedHighPerformance, typeof(DeploymentAdminResources))]
         SharedHighPerformance,
         [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.Host_Type_Dedicated, typeof(DeploymentAdminResources))]
@@ -118,6 +120,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public const string HostType_Free = "free";
         public const string HostType_Community = "community";
         public const string HostType_Shared = "shared";
+        public const string HostType_MultiTenantMQTT = "multitenantmqtt";
         public const string HostType_SharedHighPerformacne = "shared_highperformance";
         public const string HostType_Dedicated = "dedicated";
         public const string HostType_Clustered = "clustered";

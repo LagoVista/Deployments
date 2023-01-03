@@ -1377,4 +1377,7 @@
   <data name="Host_InternalServiceName" xml:space="preserve">
     <value>Internal Service Name</value>
   </data>
+  <data name="HostType_MultiTenantMQTT" xml:space="preserve">
+    <value>Multi-Tenant MQTT</value>
+  </data>
 </root>
