@@ -21,10 +21,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostType_Community, DeploymentAdminResources.Names.Host_Type_Community, typeof(DeploymentAdminResources))]
         Community,
         [EnumLabel(DeploymentHost.HostType_Shared, DeploymentAdminResources.Names.Host_Type_Shared, typeof(DeploymentAdminResources))]
-        Shared,
-        [EnumLabel(DeploymentHost.HostType_MultiTenantMQTT, DeploymentAdminResources.Names.HostType_MultiTenantMQTT, typeof(DeploymentAdminResources))]
-        MultiTenantMQTT,
-        [EnumLabel(DeploymentHost.HostType_SharedHighPerformacne, DeploymentAdminResources.Names.Host_Type_SharedHighPerformance, typeof(DeploymentAdminResources))]
+        Shared,        
+        [EnumLabel(DeploymentHost.HostType_SharedHighPerformacne, DeploymentAdminResources.Names.Host_Type_SharedHighPerformance, typeof(DeploymentAdminResources))] 
         SharedHighPerformance,
         [EnumLabel(DeploymentHost.HostType_Dedicated, DeploymentAdminResources.Names.Host_Type_Dedicated, typeof(DeploymentAdminResources))]
         Dedicated,
@@ -41,8 +39,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [EnumLabel(DeploymentHost.HostType_Notifications, DeploymentAdminResources.Names.Host_Type_Notifications, typeof(DeploymentAdminResources))]
         Notification,
         [EnumLabel(DeploymentHost.HostType_Development, DeploymentAdminResources.Names.HostType_Development, typeof(DeploymentAdminResources))]
-        Development
-
+        Development,
+        [EnumLabel(DeploymentHost.HostType_MultiTenantMQTT, DeploymentAdminResources.Names.HostType_MultiTenantMQTT, typeof(DeploymentAdminResources))]
+        MultiTenantMQTT,
     }
 
     public enum HostStatus

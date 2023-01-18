@@ -6,9 +6,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.IoT.Web.Common" Version="3.0.2049.0911" />
-    <PackageReference Include="LagoVista.AI" Version="3.0.2049.0911" />
-    <PackageReference Include="LagoVista.IoT.ProductStore" Version="3.0.2049.0911" />
+    <PackageReference Include="LagoVista.IoT.Web.Common" Version="3.0.2072.1618" />
+    <PackageReference Include="LagoVista.AI" Version="3.0.2072.1618" />
+    <PackageReference Include="LagoVista.IoT.ProductStore" Version="3.0.2072.1618" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
