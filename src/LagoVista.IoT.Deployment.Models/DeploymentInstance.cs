@@ -3,6 +3,7 @@ using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Pipeline.Admin.Models;
@@ -26,6 +27,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ApplicationCaches = new List<EntityHeader<ApplicationCache>>();
             Integrations = new List<EntityHeader<Integration>>();
             DeploymentErrors = new Dictionary<string, string>();
+            InstanceAccounts = new List<InstanceAccount>();
+            WiFiConnectionProfiles = new List<WiFiConnectionProfile>();
             HealthCheckEnabled = true;
             TimeZone = new EntityHeader()
             {
@@ -136,8 +139,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 if (EntityHeader.IsNullOrEmpty(_primaryHost))
                 {
+#pragma warning disable CS0612 // Type or member is obsolete
                     _primaryHost = Host;
                     return Host;
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
                 else
                 {
@@ -152,6 +157,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
+
+
+        public List<InstanceAccount> InstanceAccounts { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
@@ -242,6 +250,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.WorkingStorage, EnumType: (typeof(WorkingStorage)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.WorkingStorage_Select, IsUserEditable: true)]
         public EntityHeader<WorkingStorage> WorkingStorage { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_WiFiConnectionProfiles, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        public List<WiFiConnectionProfile> WiFiConnectionProfiles { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources),

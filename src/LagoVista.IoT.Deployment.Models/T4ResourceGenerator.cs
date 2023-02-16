@@ -261,6 +261,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentInstance_Version_Select
 
 		public static string DeploymentInstance_Version_Select { get { return GetResourceString("DeploymentInstance_Version_Select"); } }
+//Resources:DeploymentAdminResources:DeploymentInstance_WiFiConnectionProfiles
+
+		public static string DeploymentInstance_WiFiConnectionProfiles { get { return GetResourceString("DeploymentInstance_WiFiConnectionProfiles"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
 
 		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
@@ -1302,6 +1305,27 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Warning_NoListeners
 
 		public static string Warning_NoListeners { get { return GetResourceString("Warning_NoListeners"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Description
+
+		public static string WiFiConnectionProfile_Description { get { return GetResourceString("WiFiConnectionProfile_Description"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Help
+
+		public static string WiFiConnectionProfile_Help { get { return GetResourceString("WiFiConnectionProfile_Help"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Name
+
+		public static string WiFiConnectionProfile_Name { get { return GetResourceString("WiFiConnectionProfile_Name"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Notes
+
+		public static string WiFiConnectionProfile_Notes { get { return GetResourceString("WiFiConnectionProfile_Notes"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Password
+
+		public static string WiFiConnectionProfile_Password { get { return GetResourceString("WiFiConnectionProfile_Password"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_SSID
+
+		public static string WiFiConnectionProfile_SSID { get { return GetResourceString("WiFiConnectionProfile_SSID"); } }
+//Resources:DeploymentAdminResources:WiFiConnectionProfile_Title
+
+		public static string WiFiConnectionProfile_Title { get { return GetResourceString("WiFiConnectionProfile_Title"); } }
 //Resources:DeploymentAdminResources:WorkingStorage
 
 		public static string WorkingStorage { get { return GetResourceString("WorkingStorage"); } }
@@ -1389,6 +1413,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentInstance_Version = "DeploymentInstance_Version";
 			public const string DeploymentInstance_Version_Help = "DeploymentInstance_Version_Help";
 			public const string DeploymentInstance_Version_Select = "DeploymentInstance_Version_Select";
+			public const string DeploymentInstance_WiFiConnectionProfiles = "DeploymentInstance_WiFiConnectionProfiles";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
 			public const string DeploymentQueueType_QueueTechnology = "DeploymentQueueType_QueueTechnology";
@@ -1736,6 +1761,13 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
 			public const string Warning_NoDeviceConfigs = "Warning_NoDeviceConfigs";
 			public const string Warning_NoListeners = "Warning_NoListeners";
+			public const string WiFiConnectionProfile_Description = "WiFiConnectionProfile_Description";
+			public const string WiFiConnectionProfile_Help = "WiFiConnectionProfile_Help";
+			public const string WiFiConnectionProfile_Name = "WiFiConnectionProfile_Name";
+			public const string WiFiConnectionProfile_Notes = "WiFiConnectionProfile_Notes";
+			public const string WiFiConnectionProfile_Password = "WiFiConnectionProfile_Password";
+			public const string WiFiConnectionProfile_SSID = "WiFiConnectionProfile_SSID";
+			public const string WiFiConnectionProfile_Title = "WiFiConnectionProfile_Title";
 			public const string WorkingStorage = "WorkingStorage";
 			public const string WorkingStorage_Cloud = "WorkingStorage_Cloud";
 			public const string WorkingStorage_Help = "WorkingStorage_Help";

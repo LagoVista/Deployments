@@ -1380,4 +1380,28 @@
   <data name="HostType_MultiTenantMQTT" xml:space="preserve">
     <value>Multi-Tenant MQTT</value>
   </data>
+  <data name="DeploymentInstance_WiFiConnectionProfiles" xml:space="preserve">
+    <value>WiFi Connection Profiles</value>
+  </data>
+  <data name="WiFiConnectionProfile_Description" xml:space="preserve">
+    <value>Contains SSID and Password of connection profiles that can be used to provisoin a device.</value>
+  </data>
+  <data name="WiFiConnectionProfile_Help" xml:space="preserve">
+    <value>Contains SSID and Password of connection profiles that can be used to provisoin a device.</value>
+  </data>
+  <data name="WiFiConnectionProfile_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="WiFiConnectionProfile_Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="WiFiConnectionProfile_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="WiFiConnectionProfile_SSID" xml:space="preserve">
+    <value>SSID</value>
+  </data>
+  <data name="WiFiConnectionProfile_Title" xml:space="preserve">
+    <value>WiFi Connection Profile</value>
+  </data>
 </root>

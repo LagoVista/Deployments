@@ -432,6 +432,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(oldRepo, org, user);
             }
 
+
             if (!String.IsNullOrEmpty(instance.SharedAccessKey1))
             {
                 var addResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);
@@ -466,6 +467,24 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                existingInstance.IsDeployed != instance.IsDeployed)
             {
                 await UpdateInstanceStatusAsync(instance.Id, instance.Status.Value, instance.IsDeployed, instance.ContainerTag.Text.Replace("v", string.Empty), org, user);
+            }
+
+            foreach(var cn in instance.WiFiConnectionProfiles)
+            {
+                if (!String.IsNullOrEmpty(cn.Password))
+                {
+                    var addResult = await _secureStorage.AddSecretAsync(org, cn.Password);
+                    if (!addResult.Successful) return addResult.ToInvokeResult();
+
+                    if (!String.IsNullOrEmpty(cn.PasswordSecretId))
+                    {
+                        var removeResult = await _secureStorage.RemoveSecretAsync(org, cn.PasswordSecretId);
+                        if (!removeResult.Successful) return removeResult;
+                    }
+
+                    cn.Password = null;
+                    cn.PasswordSecretId = addResult.Result;
+                }
             }
 
             var solution = instance.Solution.Value;

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -187,7 +188,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/{instanceid}/defaultlistener")]
         public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigAsync(String instanceid)
         {
-            return await _instanceManager.GetDefaultListenerConfiguration(instanceid, OrgEntityHeader, UserEntityHeader);
+            return await _instanceManager.GetDefaultListenerConfigurationAsync(instanceid, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get default listener by device repository with any required passwords
+        /// </summary>
+        /// <param name="repoid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/device/repo/{repoid}/defaultlistener")]
+        public async Task<InvokeResult<ListenerConfiguration>>  GetDefaultListenerConfigForRepoAsync(String repoid)
+        {
+            return await _instanceManager.GetDefaultListenerConfigurationForRepoAsync(repoid, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -416,6 +428,43 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
+        /// <summary>
+        /// WiFi Connection Profile - Get
+        /// </summary>
+        /// <param name="id">Instance Id</param>
+        /// <param name="wifiid">WiFi Connection Profile Id</param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/wifiprofile/{wifiid}")]
+        public Task<InvokeResult<WiFiConnectionProfile>> GetWiFiConnectionProfile(string id, string wifiid)
+        {
+            return _instanceManager.GetWiFiConnectionProfileAsync(id, wifiid, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// WiFi Connection Profile - Create
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/wificonnectionprofile/factory")]
+        public DetailResponse<WiFiConnectionProfile> CreateWiFiConnectionProfile()
+        {
+            var profile = new WiFiConnectionProfile()
+            {
+                Id = Guid.NewGuid().ToId(),
+            };
+
+            return DetailResponse<WiFiConnectionProfile>.Create(profile);
+        }
+
+        /// <summary>
+        /// WiFi Connection Profiles - Get by repo
+        /// </summary>
+        /// <param name="id">Device Repoitory Id</param>
+        /// <returns></returns>
+        [HttpGet("/api/device/repo/{id}/wifiprofiles")]
+        public Task<List<WiFiConnectionProfile>> GetWiFiConnectionProfiles(string id)
+        {
+            return _instanceManager.GetWiFiConnectionProfilesByDeviceRepoAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
 
         /// <summary>
         /// Deployment Instance - Remove

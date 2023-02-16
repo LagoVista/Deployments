@@ -21,6 +21,7 @@ using LagoVista.IoT.Pipeline.Admin.Models;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -58,12 +59,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IProxyFactory _proxyFactory;
         private readonly IUserManager _userManager;
         private readonly IDeviceTypeManager _deviceTypeManager;
+        private readonly IInstanceAccountsRepo _instanceAccountRepo;
         #endregion
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
-                    IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager) :
+                    IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo) :
             base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, userManager, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
@@ -83,14 +85,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _pipelineModuleManager = pipelineModuleManager ?? throw new ArgumentNullException(nameof(pipelineModuleManager));
             _deviceTypeManager = deviceTypeManager ?? throw new ArgumentNullException(nameof(deviceTypeManager));
+            _instanceAccountRepo = instanceAccountRepo ?? throw new ArgumentNullException(nameof(instanceAccountRepo));
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, 
-                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager,  IDeviceTypeManager deviceTypeManager) :
+                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager,  IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo) :
             this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager, 
-                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager,  deviceTypeManager)
+                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager,  deviceTypeManager, instanceAccountRepo)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -796,14 +799,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             return GenerateRandomKey();
         }
-
-        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfiguration(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigurationForRepoAsync(string repoId, EntityHeader org, EntityHeader user)
         {
+            var repo = await _deviceRepoManager.GetDeviceRepositoryAsync(repoId, org, user);
+            return await GetDefaultListenerConfigurationAsync(repo.Instance.Id, org, user);
+        }
+
+        public async Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigurationAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var sw = Stopwatch.StartNew();
             var instance = await GetInstanceAsync(instanceId, org, user);
             if (instance == null)
             {
                 throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
             }
+
+            Console.WriteLine($"Got instance: {sw.ElapsedMilliseconds}ms");
 
             var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
             if (solution == null)
@@ -811,16 +822,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
             }
 
+            Console.WriteLine($"Got solution: {sw.ElapsedMilliseconds}ms");
+
             if (EntityHeader.IsNullOrEmpty(solution.DefaultListener))
             {
                 return InvokeResult<ListenerConfiguration>.FromError("Solution that this instance belongs does not have a default listener associated with it.");
             }
 
             var listenerConfiguration = await _pipelineModuleManager.GetListenerConfigurationAsync(solution.DefaultListener.Id, org, user);
-            if(listenerConfiguration.ListenerType.Value == ListenerTypes.MQTTListener)
+            if(listenerConfiguration.ListenerType.Value == ListenerTypes.MQTTListener ||
+                listenerConfiguration.ListenerType.Value == ListenerTypes.Rest ||
+                listenerConfiguration.ListenerType.Value == ListenerTypes.FTP)
             {
                 listenerConfiguration.HostName = instance.DnsHostName;
             }
+
+            Console.WriteLine($"Got listener configuration: {sw.ElapsedMilliseconds}ms");
 
             if (!String.IsNullOrEmpty(listenerConfiguration.SecureAccessKeyId))
             {
@@ -833,6 +850,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 listenerConfiguration.AccessKey = getSecretResult.Result;
             }
 
+            Console.WriteLine($"Got access key: {sw.ElapsedMilliseconds}ms");
+
             if (!String.IsNullOrEmpty(listenerConfiguration.SecurePasswordId))
             {
                 var getSecretResult = await _secureStorage.GetSecretAsync(org, listenerConfiguration.SecurePasswordId, user);
@@ -843,6 +862,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
                 listenerConfiguration.Password = getSecretResult.Result;
             }
+
+            Console.WriteLine($"Got password: {sw.ElapsedMilliseconds}ms");
 
             return InvokeResult<ListenerConfiguration>.Create(listenerConfiguration);
         }
@@ -870,6 +891,47 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return ListResponse<DeviceTypeSummary>.Create(deviceTypes);
+        }
+
+        public Task<InvokeResult> UpdateInstanceAccountsAsync(string instanceId, List<InstanceAccount> accounts, EntityHeader org, EntityHeader user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<InstanceAccount>> GetInstanceAccountsAsync(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<InvokeResult<WiFiConnectionProfile>> GetWiFiConnectionProfileAsync(string instanceId, string profileId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await GetInstanceAsync(instanceId, org, user);
+
+            var profile = instance.WiFiConnectionProfiles.SingleOrDefault(wcp => wcp.Id == profileId);
+
+            var getSecretResult = await _secureStorage.GetSecretAsync(org, profile.PasswordSecretId, user);
+            if (!getSecretResult.Successful) return InvokeResult<WiFiConnectionProfile>.FromError(getSecretResult.Errors.First().ToString());
+            profile.Password = getSecretResult.Result;
+
+            return InvokeResult<WiFiConnectionProfile>.Create(profile);
+        }
+
+        public async Task<List<WiFiConnectionProfile>> GetWiFiConnectionProfilesByDeviceRepoAsync(string repoId, EntityHeader org, EntityHeader user)
+        {
+            var repo = await _deviceRepoManager.GetDeviceRepositoryAsync(repoId, org, user);
+            if (EntityHeader.IsNullOrEmpty(repo.Instance)) throw new InvalidOperationException($"no attached instance for {repo.Name} repository.");
+
+            var solution = await GetInstanceAsync(repo.Instance.Id, org, user);
+            var profiles = new List<WiFiConnectionProfile>();
+
+            foreach(var profile in solution.WiFiConnectionProfiles)
+            {
+                var getSecretResult = await _secureStorage.GetSecretAsync(org, profile.PasswordSecretId, user);
+                profile.Password = getSecretResult.Result;
+                profiles.Add(profile);
+            }
+
+            return profiles;
         }
     }
 }
