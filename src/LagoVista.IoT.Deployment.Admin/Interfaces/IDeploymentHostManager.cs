@@ -14,6 +14,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> UpdateDeploymentHostAsync(DeploymentHost host, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(String hostId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, string version, EntityHeader org, EntityHeader user, string details = "");
+        Task<DeploymentHost> GetDeploymentHostAsync(string hostId);
     }
 
     public interface IDeploymentHostManager : IDeploymentHostManagerRemote
@@ -25,6 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentHostsForOrgAsync(string orgId, EntityHeader user);
         Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org);
+        
 
         Task<InvokeResult<string>> RegenerateKeyAsync(string hostId, string keyName, EntityHeader org, EntityHeader user);
 

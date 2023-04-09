@@ -124,6 +124,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return host;
         }
 
+        public async Task<DeploymentHost> GetDeploymentHostAsync(string hostId)
+        {
+            return await _deploymentHostRepo.GetDeploymentHostAsync(hostId);            
+        }
+
         public async Task<DeploymentHost> GetSecureDeploymentHostAsync(string hostId, EntityHeader org, EntityHeader user, bool throwOnNotFound = true)
         {
             var host = await _deploymentHostRepo.GetDeploymentHostAsync(hostId, throwOnNotFound);
@@ -398,7 +403,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateDeploymentHostStatusAsync(string hostId, HostStatus hostStatus, string version, EntityHeader org, EntityHeader user, string statusDetails = "")
         {
-            var host = await GetDeploymentHostAsync(hostId, org, user);
+            var host = await GetDeploymentHostAsync(hostId);
 
             if (host.Status.Value != hostStatus)
             {
