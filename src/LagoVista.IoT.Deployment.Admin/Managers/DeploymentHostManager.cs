@@ -436,9 +436,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deploymentHostStatusRepo.GetStatusHistoryForHostAsync(hostId, listRequest);
         }
 
-        public Task<DeploymentHost> FindSharedHostAsync()
+        public Task<DeploymentHost> FindHostServiceAsync(HostTypes hostType)
         {
-            return _deploymentHostRepo.FindSharedHostAsync();
+            return _deploymentHostRepo.FindSharedHostAsync(hostType);
         }
     }
 }

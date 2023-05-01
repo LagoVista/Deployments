@@ -4,6 +4,7 @@ using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Deployment.Admin.Validation;
+using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
 using System.Resources;
@@ -42,6 +43,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeviceManagementConnector, DeviceManagementConnectorService>();
             services.AddTransient<ITelemetryConnector, TelemetryConnector>();
             services.AddTransient<IUsageMetricsConnector, UsageMetricsConnector>();
+            services.AddTransient<IRemoteServiceManager, RemoteServiceManager>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

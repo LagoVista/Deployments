@@ -224,7 +224,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             if (instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
             {
-                var host = await _deploymentHostManager.FindSharedHostAsync();
+                var host = await _deploymentHostManager.FindHostServiceAsync(HostTypes.Shared);
                 instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id, Key = host.Key, Text = host.Name };
 
                 if (!String.IsNullOrEmpty(instance.DnsHostName))

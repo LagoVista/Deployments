@@ -44,9 +44,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             await CreateDocumentAsync(host);
         }
 
-        public async Task<DeploymentHost> FindSharedHostAsync()
+        public async Task<DeploymentHost> FindSharedHostAsync(HostTypes hostType)
         {
-            var hosts = await QueryAsync(qry => qry.HostType.Value == HostTypes.Shared && !qry.IsArchived);
+            var hosts = await QueryAsync(qry => qry.HostType.Value == hostType && !qry.IsArchived);
             if (hosts.Count() == 0)
             {
                 throw new RecordNotFoundException("DeploymentHost", "Shared=true");

@@ -26,23 +26,26 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.AspNetCore.Identity.Managers;
 using System.Security.Claims;
 using System.Collections.Generic;
+using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admins;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
     public class InstanceRuntimeController : Controller
     {
-        IDeploymentInstanceManager _instanceManager;
-        ISecureStorage _secureStorage;
-        IDeploymentHostManager _hostManager;
-        IRuntimeTokenManager _runtimeTokenManager;
-        IAppUserManagerReadOnly _userManager;
-        IOrgUserRepo _orgUserRepo;
-        IEmailSender _emailSender;
-        ISmsSender _smsSender;
-        IServiceTicketCreator _ticketCreator;
-        IDistributionManager _distroManager;
-        IModelManager _modelManager;
-        IDeploymentInstanceRepo _instanceRepo;
+        private readonly IDeploymentInstanceManager _instanceManager;
+        private readonly ISecureStorage _secureStorage;
+        private readonly IDeploymentHostManager _hostManager;
+        private readonly IRuntimeTokenManager _runtimeTokenManager;
+        private readonly IAppUserManagerReadOnly _userManager;
+        private readonly IOrgUserRepo _orgUserRepo;
+        private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
+        private readonly IServiceTicketCreator _ticketCreator;
+        private readonly IDistributionManager _distroManager;
+        private readonly IModelManager _modelManager;
+        private readonly IDeploymentInstanceRepo _instanceRepo;
+        private readonly IRemoteServiceManager _remoteServiceManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -57,20 +60,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
-            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger)
+            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger,
+            IRemoteServiceManager remoteServiceManager)
         {
-            _instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
-            _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _orgUserRepo = orgUserRepo ?? throw new ArgumentNullException(nameof(orgUserRepo));
-            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager));
-            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
-            _runtimeTokenManager = runtimeTokenManager ?? throw new ArgumentNullException(nameof(runtimeTokenManager));
-            _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
-            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-            _distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
-            _smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
-            _modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
+            this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
+            this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
+            this._userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this._orgUserRepo = orgUserRepo ?? throw new ArgumentNullException(nameof(orgUserRepo));
+            this._instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager));
+            this._secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            this._runtimeTokenManager = runtimeTokenManager ?? throw new ArgumentNullException(nameof(runtimeTokenManager));
+            this._hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
+            this._emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            this._distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
+            this._smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
+            this._modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
+            this._remoteServiceManager = remoteServiceManager ?? throw new ArgumentNullException(nameof(remoteServiceManager));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -645,13 +650,34 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             if (Enum.TryParse<DeploymentInstanceStates>(status, out DeploymentInstanceStates newStatus))
             {
-                return await _instanceManager.UpdateInstanceStatusAsync(InstanceEntityHeader.Id, newStatus, isdeployed, version, OrgEntityHeader, UserEntityHeader);
+                var result = await _instanceManager.UpdateInstanceStatusAsync(InstanceEntityHeader.Id, newStatus, isdeployed, version, OrgEntityHeader, UserEntityHeader);
+                if (!result.Successful) return result;
+
+
+                if (newStatus == DeploymentInstanceStates.Starting || newStatus == DeploymentInstanceStates.Pausing || newStatus == DeploymentInstanceStates.Stopping)
+                {
+                    var instance = await _instanceManager.GetInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+                    foreach (var host in instance.ServiceHosts)
+                    {
+                        switch(newStatus)
+                        {
+                            case DeploymentInstanceStates.Starting:
+                                return await _remoteServiceManager.RemoteInstanceStartingAsync(host.OwnerOrg.Id, host.HostId, InstanceEntityHeader.Id);
+                            case DeploymentInstanceStates.Pausing:
+                                return await _remoteServiceManager.RemoteInstancePausingAsync(host.OwnerOrg.Id, host.HostId, InstanceEntityHeader.Id);
+                            case DeploymentInstanceStates.Stopping:
+                                return await _remoteServiceManager.RemoteInstanceStoppingAsync(host.OwnerOrg.Id, host.HostId, InstanceEntityHeader.Id);
+                        }
+
+                    }
+                }
+
+                return InvokeResult.Success;
             }
             else
             {
                 return InvokeResult.FromError($"Could not parse [status] to DeploymentInstanceStates");
             }
-
         }
 
         /// <summary>
@@ -676,6 +702,52 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
 
             return await _ticketCreator.ClearDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Runtime Controller - allocate a service intance resource.
+        /// </summary>
+        /// <param name="type">Type of resource to allocate.</param>
+        /// <param name="removeExisting">Parameter to remove any existing services of the same type.</param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/instanceservice/allocate/{type}")]
+        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync (string type, bool removeExisting = true)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (Enum.TryParse<HostTypes>(type, out HostTypes hostType))
+            {
+
+                return await _instanceManager.AllocateInstanceServiceAsync(InstanceEntityHeader.Id, hostType, removeExisting, OrgEntityHeader, UserEntityHeader);
+            }
+            else
+            {
+                return InvokeResult<InstanceService>.FromError($"Could not parse {type} to HostTypes");
+            }
+        }
+
+        /// <summary>
+        /// Runtime Controller - deallocate a service instance resource.
+        /// </summary>
+        /// <param name="id">ID of instance account to remove.</param>
+        /// <returns></returns>
+        [HttpDelete("/api/deployment/instance/instanceservice/{id}")]
+        public async Task<InvokeResult> RemoveInstanceServiceAsync(string id)
+        {
+            await ValidateRequest(HttpContext.Request);
+            
+           return await _instanceManager.RemoveInstanceAccountAsync(InstanceEntityHeader.Id, id, OrgEntityHeader, UserEntityHeader);            
+        }
+        
+        /// <summary>
+        /// Runtime Controller - Get service accounts.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("/api/deployment/instance/accounts")]
+        public async Task<ListResponse<InstanceAccount>> GetInstanceAccounts()
+        {
+            await ValidateRequest(HttpContext.Request);
+            var accounts = await _instanceManager.GetInstanceAccountsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<InstanceAccount>.Create(accounts);
         }
     }
 }

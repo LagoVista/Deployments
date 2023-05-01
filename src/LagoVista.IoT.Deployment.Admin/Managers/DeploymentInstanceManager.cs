@@ -10,6 +10,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceAdmin.Models;
@@ -18,6 +19,7 @@ using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
 using LagoVista.IoT.Pipeline.Admin.Managers;
 using LagoVista.IoT.Pipeline.Admin.Models;
+using LagoVista.UserAdmin;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
@@ -60,12 +63,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IUserManager _userManager;
         private readonly IDeviceTypeManager _deviceTypeManager;
         private readonly IInstanceAccountsRepo _instanceAccountRepo;
+        private readonly IOrgUtils _orgUtils;
+        private readonly IRemoteServiceManager _remoteListenerServiceManager;
         #endregion
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
-                    IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo) :
+                    IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils,
+                    IRemoteServiceManager remoteListenerServiceManager) :
             base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, userManager, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
@@ -86,14 +92,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _pipelineModuleManager = pipelineModuleManager ?? throw new ArgumentNullException(nameof(pipelineModuleManager));
             _deviceTypeManager = deviceTypeManager ?? throw new ArgumentNullException(nameof(deviceTypeManager));
             _instanceAccountRepo = instanceAccountRepo ?? throw new ArgumentNullException(nameof(instanceAccountRepo));
+            _orgUtils = orgUtils ?? throw new ArgumentNullException(nameof(orgUtils));
+            _remoteListenerServiceManager = remoteListenerServiceManager ?? throw new ArgumentNullException(nameof(remoteListenerServiceManager));
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
-                    IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage, 
-                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager,  IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo) :
-            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager, 
-                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager,  deviceTypeManager, instanceAccountRepo)
+                    IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage,
+                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, IRemoteServiceManager remoteListenerServiceManager) :
+            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager,
+                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, remoteListenerServiceManager)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -251,7 +259,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartHost");
-            
+
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
             return !transitionResult.Successful
@@ -264,7 +272,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartContainer");
-           
+
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.RestartContainer, org, user);
             return !transitionResult.Successful
                 ? transitionResult
@@ -435,7 +443,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                await AuthorizeAsync(user, org, "sysadmin-get-instances-for-org",$"OrgId: {orgId}");
+                await AuthorizeAsync(user, org, "sysadmin-get-instances-for-org", $"OrgId: {orgId}");
             }
 
             return await this._instanceRepo.GetInstancesForOrgAsync(orgId, listRqeuest);
@@ -830,7 +838,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var listenerConfiguration = await _pipelineModuleManager.GetListenerConfigurationAsync(solution.DefaultListener.Id, org, user);
-            if(listenerConfiguration.ListenerType.Value == ListenerTypes.MQTTListener ||
+            if (listenerConfiguration.ListenerType.Value == ListenerTypes.MQTTListener ||
                 listenerConfiguration.ListenerType.Value == ListenerTypes.Rest ||
                 listenerConfiguration.ListenerType.Value == ListenerTypes.FTP)
             {
@@ -884,23 +892,100 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
             }
 
-            foreach(var deviceConfig in solution.DeviceConfigurations)
+            foreach (var deviceConfig in solution.DeviceConfigurations)
             {
                 var deviceConfigTypes = await _deviceTypeManager.GetDeviceTypesForDeviceConfigOrgAsync(deviceConfig.Id, new ListRequest() { PageSize = 1000 }, org, user);
-                deviceTypes.AddRange(deviceConfigTypes.Model);                
+                deviceTypes.AddRange(deviceConfigTypes.Model);
             }
 
             return ListResponse<DeviceTypeSummary>.Create(deviceTypes);
         }
 
-        public Task<InvokeResult> UpdateInstanceAccountsAsync(string instanceId, List<InstanceAccount> accounts, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<InstanceAccount>> CreateInstanceAccountAsync(string instanceId, string userName, EntityHeader org, EntityHeader user)
         {
-            throw new NotImplementedException();
+            var reEx = new Regex("^[a-z0-9]{3,30}$");
+            if (!reEx.Match(userName).Success)
+            {
+                return InvokeResult<InstanceAccount>.FromError("The key must use only letters and numbers, and must be lowercase and be a minimum of 3 and a maximum of 30 characters");
+            }
+
+            var exists = await _instanceAccountRepo.DoesUserNameExistsAsync(instanceId, userName);
+            if (exists)
+            {
+                return InvokeResult<InstanceAccount>.FromError($"A user name with {userName} already exists for this instance, please select a unique user id.");
+            }
+
+            // For security.
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            if (instance == null)
+            {
+                throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
+            }
+
+            var orgNamespace = await _orgUtils.GetOrgNamespaceAsync(org.Id);
+            if (!orgNamespace.Successful)
+            {
+                return InvokeResult<InstanceAccount>.FromError($"Could not find organization name space for organization: {org.Id}.");
+            }
+
+            var account = new InstanceAccount()
+            {
+                UserName = $"{orgNamespace.Result}.{instance.Key}.{userName}",
+                AccessKey1 = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+                AccessKey2 = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+            };
+
+            foreach(var srvr in instance.ServiceHosts)
+                await _remoteListenerServiceManager.AddInstanceAccountAsync(org.Id, srvr.HostId, instanceId, account);
+
+            await _instanceAccountRepo.AddInstanceAccountAsync(instanceId, account);
+            account.AccessKeyHash1 = null;
+            account.AccessKeyHash2 = null;
+            return InvokeResult<InstanceAccount>.Create(account);
+        }
+
+        public async Task<InvokeResult<InstanceAccount>> RegneerateInstanceAccountKeyAsync(string instanceId, string userName, string keyName, EntityHeader org, EntityHeader user)
+        {
+
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            if (instance == null)
+            {
+                throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
+            }
+
+            var account = await _instanceAccountRepo.GetInstanceAccountAsync(instanceId, userName);
+
+            var newKey = Guid.NewGuid().ToByteArray();
+            var accessKey = Convert.ToBase64String(newKey);
+            switch (keyName)
+            {
+                case "key1": account.AccessKey1 = accessKey; break;
+                case "key2": account.AccessKey2 = accessKey; break;
+                default: return InvokeResult<InstanceAccount>.FromError("Key index must be key1 or key.");
+            }
+
+            await _instanceAccountRepo.UpdateInstanceAccountAsync(instanceId, account);
+
+            return InvokeResult<InstanceAccount>.Create(account);
+        }
+
+        public async Task<InvokeResult> RemoveInstanceAccountAsync(string instanceId, string instanceAccountId, EntityHeader org, EntityHeader user)
+        {
+            // For security.
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            if (instance == null)
+            {
+                throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
+            }
+
+            await _instanceAccountRepo.RemoveInstanceAccountAsync(instanceId, instanceAccountId);
+
+            return InvokeResult.Success;
         }
 
         public Task<List<InstanceAccount>> GetInstanceAccountsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
-            throw new NotImplementedException();
+            return _instanceAccountRepo.GetInstanceAccountsAsync(instanceId);
         }
 
         public async Task<InvokeResult<WiFiConnectionProfile>> GetWiFiConnectionProfileAsync(string instanceId, string profileId, EntityHeader org, EntityHeader user)
@@ -924,7 +1009,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var solution = await GetInstanceAsync(repo.Instance.Id, org, user);
             var profiles = new List<WiFiConnectionProfile>();
 
-            foreach(var profile in solution.WiFiConnectionProfiles)
+            foreach (var profile in solution.WiFiConnectionProfiles)
             {
                 var getSecretResult = await _secureStorage.GetSecretAsync(org, profile.PasswordSecretId, user);
                 profile.Password = getSecretResult.Result;
@@ -932,6 +1017,68 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             return profiles;
+        }
+
+        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync(string instanceId, HostTypes hostType, bool removeExisting, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
+        {
+            var host = await _hostManager.FindHostServiceAsync(hostType);
+            if (host == null)
+            {
+                return InvokeResult<InstanceService>.FromError($"Could not find host of type {hostType} to allocate.");
+            }
+
+            var instanceService = new InstanceService()
+            {
+                Id = Guid.NewGuid().ToId(),
+                HostType = EntityHeader<HostTypes>.Create(hostType),
+                HostId = host.Id,
+                OwnerOrg = host.OwnerOrganization,
+                AllocatedTimeStamp = DateTime.UtcNow.ToJSONString(),
+                Url = host.DnsHostName,
+            };
+
+            var instance = await GetInstanceAsync(instanceId);
+            if (removeExisting)
+            {
+                var existing = instance.ServiceHosts.FirstOrDefault(hst => hst.HostType.Value == hostType);
+                if (existing != null)
+                {
+                    instance.ServiceHosts.Remove(existing);
+                }
+            }
+
+            instance.ServiceHosts.Add(instanceService);
+            await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+
+            if (hostType == HostTypes.MultiTenantMQTT)
+            {
+                var result = await _remoteListenerServiceManager.ProvisionInstanceAsync(orgEntityHeader.Id, instanceService.HostId, instanceId);
+                if (!result.Successful)
+                    return InvokeResult<InstanceService>.FromInvokeResult(result);
+            }
+
+            return InvokeResult<InstanceService>.Create(instanceService);
+        }
+
+        public async Task<InvokeResult> RemoveInstanceServiceAsync(string instanceId, string instanceServiceId, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
+        {
+            var instance = await GetInstanceAsync(instanceId);
+            var existing = instance.ServiceHosts.FirstOrDefault(hst => hst.Id == instanceServiceId);
+            if (existing == null)
+                return InvokeResult.FromError($"Could not find existing instance id with id {instanceServiceId}.");
+
+            instance.ServiceHosts.Remove(existing);
+
+            await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+            
+            if(existing.HostType.Value == HostTypes.MultiTenantMQTT)
+            {
+                var result = await _remoteListenerServiceManager.RemoveInstanceAsync(orgEntityHeader.Id, existing.HostId, instanceId);
+                if (!result.Successful)
+                    return result;
+            }
+
+            return InvokeResult.Success;
         }
     }
 }
