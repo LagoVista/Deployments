@@ -53,9 +53,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/device/remoteconfig/{repoid}/{deviceid}/firmware/{firmwareid}/revision/{revisionid}")]
-        public Task<InvokeResult<string>> ApplyFirmwareAsync(string repoid, string deviceid, string firmwareid, string revisionid)
+        public Task<InvokeResult<string>> ApplyFirmwareAsync(string repoid, string deviceid, string firmwareid, string revisionid, bool triggeredRemotely = false)
         {
-            return _remoteConfigMgr.ApplyFirmwareAsync(repoid, deviceid, firmwareid, revisionid, OrgEntityHeader, UserEntityHeader);
+            return _remoteConfigMgr.ApplyFirmwareAsync(repoid, deviceid, firmwareid, revisionid, triggeredRemotely, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

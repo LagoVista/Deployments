@@ -97,7 +97,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await propertyManager.SendPropertyAsync(deviceUniqueId, propertyIndex);
         }
 
-        public async Task<InvokeResult<string>> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<string>> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, bool triggerRemotely, EntityHeader org, EntityHeader user)
         {
             if (String.IsNullOrEmpty(deviceRepoId)) throw new ArgumentNullException(deviceRepoId);
             if (String.IsNullOrEmpty(deviceUniqueId)) throw new ArgumentNullException(deviceUniqueId);
@@ -123,11 +123,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 OrganizationId = repo.OwnerOrganization.Id
             });
 
-            var result = await propertyManager.SetFirmwareVersionAsync(deviceUniqueId, firmwareRequest.Result.DownloadId);
-            if(result.Successful)
-                return InvokeResult<string>.Create(firmwareRequest.Result.DownloadId);
-            else
+            // this will send a message to the remote instance to trigger an update to the device via MQTT
+            // or an future HTTP request.  If this is not set, the calling method will be responsible for
+            // kicking off the download.
+            if (triggerRemotely)
+            {
+                var result = await propertyManager.SetFirmwareVersionAsync(deviceUniqueId, firmwareRequest.Result.DownloadId);
+                if (result.Successful)
+                    return InvokeResult<string>.Create(firmwareRequest.Result.DownloadId);
+                else
+                {
+
+                }
                 return InvokeResult<string>.FromInvokeResult(result);
+            }
+            else
+                return InvokeResult<string>.Create(firmwareRequest.Result.DownloadId);
         }
     }
 }
