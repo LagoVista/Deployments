@@ -29,6 +29,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             DeploymentErrors = new Dictionary<string, string>();
             InstanceAccounts = new List<InstanceAccount>();
             WiFiConnectionProfiles = new List<WiFiConnectionProfile>();
+            ServiceHosts = new List<InstanceService>();
+            Credentials = new List<DeploymentInstanceCredentials>();
             HealthCheckEnabled = true;
             TimeZone = new EntityHeader()
             {
@@ -152,6 +154,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             set { _primaryHost = value; }
         }
 
+
+        public List<InstanceService> ServiceHosts { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DataStream>> DataStreams { get; set; }
 
@@ -274,6 +280,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         // we never want to delete an instance since billing records are tied to it.
         public bool IsArchived { get; set; }
+
+        public List<DeploymentInstanceCredentials> Credentials { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, WaterMark: DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]

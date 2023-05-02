@@ -75,8 +75,10 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         Task<ListResponse<WatchdogMessageStatus>> GetTimedOutWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<InvokeResult<InstanceAccount>> RegneerateInstanceAccountKeyAsync(string instanceId, string userName, string keyName, EntityHeader org, EntityHeader user);
 
-        Task<InvokeResult> UpdateInstanceAccountsAsync(string instanceId, List<InstanceAccount> accounts, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<InstanceAccount>> CreateInstanceAccountAsync(string instanceId, string userName, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> RemoveInstanceAccountAsync(string instanceId, string id, EntityHeader org, EntityHeader user);
 
         Task<List<InstanceAccount>> GetInstanceAccountsAsync(string instanceId, EntityHeader org, EntityHeader user);
 
@@ -84,5 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<List<WiFiConnectionProfile>> GetWiFiConnectionProfilesByDeviceRepoAsync(string repoId, EntityHeader org, EntityHeader user);
 
         string GenerateAccessKey();
+        Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync(string instanceId, HostTypes hostType, bool replaceExisting, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
+        Task<InvokeResult> RemoveInstanceServiceAsync(string instanceId, string instanceServiceId, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
     }
 }

@@ -6,6 +6,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
+using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
 using Microsoft.AspNetCore.Http;
@@ -263,6 +264,5 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetRPCConnectionAsync(SettingType.Host, HostEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
         }
-
     }
 }

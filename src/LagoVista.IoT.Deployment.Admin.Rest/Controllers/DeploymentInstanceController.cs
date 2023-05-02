@@ -501,8 +501,34 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return _instanceManager.GetDeploymentSettingsAsync(instanceid, OrgEntityHeader, UserEntityHeader);
         }
-    }
 
+
+        [HttpGet("/api/deployment/instance/{instanceId}/account/{username}")]
+        public Task<InvokeResult<InstanceAccount>> AddInstanceAccountAsync(string instanceId, string username)
+        {
+            return _instanceManager.CreateInstanceAccountAsync(instanceId, username, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        [HttpDelete("/api/deployment/instance/{instanceId}/account/{instanceAccountId}")]
+        public Task<InvokeResult> RemoveInstanceAccountAsync(string instanceId, string instanceAccountId)
+        {
+            return _instanceManager.RemoveInstanceAccountAsync(instanceId, instanceAccountId, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpPut("/api/deployment/instance/{instanceid}/account/{username}/key/regenerate/{keyname}")]
+        public Task<InvokeResult<InstanceAccount>> UpdateInstanceAccountAsync(string instanceid, string username, string keyname)
+        {
+            return _instanceManager.RegneerateInstanceAccountKeyAsync(instanceid, username, keyname, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/deployment/instance/{instanceId}/accounts")]
+        public async Task<ListResponse<InstanceAccount>> GetInstanceAccountsAsync(string instanceId)
+        {
+            var accounts = await _instanceManager.GetInstanceAccountsAsync(instanceId, OrgEntityHeader, UserEntityHeader);
+            return ListResponse<InstanceAccount>.Create(accounts);
+        }
+    }
 
     /// <summary>
     /// Kiosk - Manage Deployment Instances 
@@ -530,5 +556,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
+
     }
 }

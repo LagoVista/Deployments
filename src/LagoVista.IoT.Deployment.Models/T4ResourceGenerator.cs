@@ -264,6 +264,27 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentInstance_WiFiConnectionProfiles
 
 		public static string DeploymentInstance_WiFiConnectionProfiles { get { return GetResourceString("DeploymentInstance_WiFiConnectionProfiles"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials__Expires
+
+		public static string DeploymentInstanceCredentials__Expires { get { return GetResourceString("DeploymentInstanceCredentials__Expires"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials__Expires_Help
+
+		public static string DeploymentInstanceCredentials__Expires_Help { get { return GetResourceString("DeploymentInstanceCredentials__Expires_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials__Password
+
+		public static string DeploymentInstanceCredentials__Password { get { return GetResourceString("DeploymentInstanceCredentials__Password"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials__UserId
+
+		public static string DeploymentInstanceCredentials__UserId { get { return GetResourceString("DeploymentInstanceCredentials__UserId"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials_Description
+
+		public static string DeploymentInstanceCredentials_Description { get { return GetResourceString("DeploymentInstanceCredentials_Description"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials_Help
+
+		public static string DeploymentInstanceCredentials_Help { get { return GetResourceString("DeploymentInstanceCredentials_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceCredentials_Title
+
+		public static string DeploymentInstanceCredentials_Title { get { return GetResourceString("DeploymentInstanceCredentials_Title"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
 
 		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
@@ -1414,6 +1435,13 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentInstance_Version_Help = "DeploymentInstance_Version_Help";
 			public const string DeploymentInstance_Version_Select = "DeploymentInstance_Version_Select";
 			public const string DeploymentInstance_WiFiConnectionProfiles = "DeploymentInstance_WiFiConnectionProfiles";
+			public const string DeploymentInstanceCredentials__Expires = "DeploymentInstanceCredentials__Expires";
+			public const string DeploymentInstanceCredentials__Expires_Help = "DeploymentInstanceCredentials__Expires_Help";
+			public const string DeploymentInstanceCredentials__Password = "DeploymentInstanceCredentials__Password";
+			public const string DeploymentInstanceCredentials__UserId = "DeploymentInstanceCredentials__UserId";
+			public const string DeploymentInstanceCredentials_Description = "DeploymentInstanceCredentials_Description";
+			public const string DeploymentInstanceCredentials_Help = "DeploymentInstanceCredentials_Help";
+			public const string DeploymentInstanceCredentials_Title = "DeploymentInstanceCredentials_Title";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
 			public const string DeploymentQueueType_QueueTechnology = "DeploymentQueueType_QueueTechnology";
