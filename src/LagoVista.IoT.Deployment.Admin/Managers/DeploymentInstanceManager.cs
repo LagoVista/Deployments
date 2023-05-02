@@ -1093,9 +1093,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 instanceService.ServiceAccountPassword = pwdResult.Result;
             }
 
+
+
             if (hostType == HostTypes.MultiTenantMQTT)
             {
-                var result = await _remoteListenerServiceManager.ProvisionInstanceAsync(orgEntityHeader.Id, instanceService.HostId, instanceId, instanceService);
+                var accounts = await _instanceAccountRepo.GetInstanceAccountsAsync(instanceId);
+                var result = await _remoteListenerServiceManager.ProvisionInstanceAsync(orgEntityHeader.Id, instanceService.HostId, instanceId, instanceService, accounts);
                 if (!result.Successful)
                     return InvokeResult<InstanceService>.FromInvokeResult(result);
             }

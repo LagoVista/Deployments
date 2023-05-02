@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Validation;
 using System.Threading.Tasks;
 using LagoVista.IoT.Deployment.Models;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admins
 {
@@ -10,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admins
         Task<InvokeResult> RestartAsync(string orgId, string hostId);
         Task<InvokeResult> StopAsync(string orgId, string hostId);
 
-        Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService service);
+        Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService service, IEnumerable<InstanceAccount> instanceAccounts);
         Task<InvokeResult> RemoveInstanceAsync(string orgId, string hostId, string instanceId);
 
 

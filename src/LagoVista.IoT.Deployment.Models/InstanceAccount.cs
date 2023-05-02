@@ -8,6 +8,7 @@ namespace LagoVista.IoT.Deployment.Models
 {
     public class InstanceAccount : IValidateable
     {
+        public string InstanceId { get; set; }
         public string UserName { get; set; }
         public string AccessKey1 { get; set; }
         public string AccessKeyHash1 { get; set; }
@@ -36,6 +37,7 @@ namespace LagoVista.IoT.Deployment.Models
 
             var dto = new InstanceAccountDTO()
             {
+               
                 PartitionKey = instanceId,
                 RowKey = UserName,
                 AccessKeyHash1 = AccessKeyHash1,
@@ -58,6 +60,7 @@ namespace LagoVista.IoT.Deployment.Models
             return new InstanceAccount()
             {
                 UserName = RowKey,
+                InstanceId = PartitionKey,
                 AccessKeyHash1 = AccessKeyHash1,
                 AccessKeyHash2 = AccessKeyHash2
             };
