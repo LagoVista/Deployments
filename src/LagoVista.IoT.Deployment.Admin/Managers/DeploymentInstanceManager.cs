@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -935,7 +936,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 AccessKey2 = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
             };
 
-            foreach(var srvr in instance.ServiceHosts)
+            foreach (var srvr in instance.ServiceHosts)
                 await _remoteListenerServiceManager.AddInstanceAccountAsync(org.Id, srvr.HostId, instanceId, account);
 
             await _instanceAccountRepo.AddInstanceAccountAsync(instanceId, account);
@@ -1019,7 +1020,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return profiles;
         }
 
-        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync(string instanceId, HostTypes hostType, bool removeExisting, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
+        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync(string instanceId, HostTypes hostType, bool replaceExisting, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
             var host = await _hostManager.FindHostServiceAsync(hostType);
             if (host == null)
@@ -1027,32 +1028,74 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<InstanceService>.FromError($"Could not find host of type {hostType} to allocate.");
             }
 
-            var instanceService = new InstanceService()
-            {
-                Id = Guid.NewGuid().ToId(),
-                HostType = EntityHeader<HostTypes>.Create(hostType),
-                HostId = host.Id,
-                OwnerOrg = host.OwnerOrganization,
-                AllocatedTimeStamp = DateTime.UtcNow.ToJSONString(),
-                Url = host.DnsHostName,
-            };
-
             var instance = await GetInstanceAsync(instanceId);
-            if (removeExisting)
+
+            var instanceService = instance.ServiceHosts.FirstOrDefault(hst => hst.HostType.Value == hostType);
+            if (instanceService != null && replaceExisting)
             {
-                var existing = instance.ServiceHosts.FirstOrDefault(hst => hst.HostType.Value == hostType);
-                if (existing != null)
-                {
-                    instance.ServiceHosts.Remove(existing);
-                }
+                instance.ServiceHosts.Remove(instanceService);
+                instanceService = null;
             }
 
-            instance.ServiceHosts.Add(instanceService);
-            await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+            if (instanceService == null)
+            {
+                var orgNameSpaceResult = await _orgUtils.GetOrgNamespaceAsync(orgEntityHeader.Id);
+                if (!orgNameSpaceResult.Successful)
+                {
+                    return InvokeResult<InstanceService>.FromError($"Coould not determine org namespace from {orgEntityHeader.Id}");
+                }
+
+                instanceService = new InstanceService()
+                {
+                    Id = Guid.NewGuid().ToId(),
+                    HostType = EntityHeader<HostTypes>.Create(hostType),
+                    HostId = host.Id,
+                    OwnerOrg = host.OwnerOrganization,
+                    AllocatedTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    Url = host.DnsHostName,
+                    ServiceAccount = $"{orgNameSpaceResult.Result}.{instance.Key}.{hostType.ToString().ToLower()}",
+                    ServiceAccountPassword = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+                };
+
+                var addSecretResult = await _secureStorage.AddSecretAsync(orgEntityHeader, instanceService.ServiceAccountPassword);
+                if (!addSecretResult.Successful)
+                {
+                    return InvokeResult<InstanceService>.FromError($"Coould not determine org namespace from {orgEntityHeader.Id}");
+                }
+
+                instanceService.ServiceAccountSecretId = addSecretResult.Result;
+
+                // need to have a copy of this w/o the password to save with the instance, the password will be returned to the caller
+                // so it can be used to authenticate any remote clients to this service.
+                var instanceServiceCopy = new InstanceService()
+                {
+                    Id = instanceService.Id,
+                    Url = instanceService.Url,
+                    AllocatedTimeStamp = instanceService.AllocatedTimeStamp,
+                    HostId = instanceService.HostId,
+                    HostType = instanceService.HostType,
+                    OwnerOrg = instanceService.OwnerOrg,
+                    ServiceAccount = instanceService.ServiceAccount,
+                    ServiceAccountSecretId = instanceService.ServiceAccountSecretId,
+                };
+
+                instance.ServiceHosts.Add(instanceServiceCopy);
+                await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+            }
+            else
+            {
+                var pwdResult = await _secureStorage.GetSecretAsync(orgEntityHeader, instanceService.ServiceAccountSecretId, userEntityHeader);
+                if(!pwdResult.Successful)
+                {
+                    return InvokeResult<InstanceService>.FromError($"Coould not find secret from secret id.");
+                }
+
+                instanceService.ServiceAccountPassword = pwdResult.Result;
+            }
 
             if (hostType == HostTypes.MultiTenantMQTT)
             {
-                var result = await _remoteListenerServiceManager.ProvisionInstanceAsync(orgEntityHeader.Id, instanceService.HostId, instanceId);
+                var result = await _remoteListenerServiceManager.ProvisionInstanceAsync(orgEntityHeader.Id, instanceService.HostId, instanceId, instanceService);
                 if (!result.Successful)
                     return InvokeResult<InstanceService>.FromInvokeResult(result);
             }
@@ -1070,8 +1113,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             instance.ServiceHosts.Remove(existing);
 
             await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
-            
-            if(existing.HostType.Value == HostTypes.MultiTenantMQTT)
+
+            if (existing.HostType.Value == HostTypes.MultiTenantMQTT)
             {
                 var result = await _remoteListenerServiceManager.RemoveInstanceAsync(orgEntityHeader.Id, existing.HostId, instanceId);
                 if (!result.Successful)

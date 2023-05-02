@@ -14,5 +14,9 @@ namespace LagoVista.IoT.Deployment.Models
         public string AllocatedTimeStamp { get; set; }
         public EntityHeader OwnerOrg { get; set; }
         public EntityHeader<HostTypes> HostType { get; set; }
+    
+        public string ServiceAccount { get; set; }
+        public string ServiceAccountPassword { get; set; }
+        public string ServiceAccountSecretId { get; set; }
     }
 }

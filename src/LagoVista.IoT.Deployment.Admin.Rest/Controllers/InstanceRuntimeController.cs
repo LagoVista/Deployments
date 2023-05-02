@@ -708,16 +708,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Runtime Controller - allocate a service intance resource.
         /// </summary>
         /// <param name="type">Type of resource to allocate.</param>
-        /// <param name="removeExisting">Parameter to remove any existing services of the same type.</param>
+        /// <param name="replaceExisting">If existing one is there should it be replaced</param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/instanceservice/allocate/{type}")]
-        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync (string type, bool removeExisting = true)
+        public async Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync (string type, bool replaceExisting = false)
         {
             await ValidateRequest(HttpContext.Request);
             if (Enum.TryParse<HostTypes>(type, out HostTypes hostType))
             {
-
-                return await _instanceManager.AllocateInstanceServiceAsync(InstanceEntityHeader.Id, hostType, removeExisting, OrgEntityHeader, UserEntityHeader);
+                return await _instanceManager.AllocateInstanceServiceAsync(InstanceEntityHeader.Id, hostType, replaceExisting, OrgEntityHeader, UserEntityHeader);
             }
             else
             {
