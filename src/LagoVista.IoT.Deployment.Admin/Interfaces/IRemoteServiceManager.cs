@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admins
         Task<InvokeResult> RestartAsync(string orgId, string hostId);
         Task<InvokeResult> StopAsync(string orgId, string hostId);
 
-        Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService service, IEnumerable<InstanceAccount> instanceAccounts);
+        Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService service, List<InstanceAccount> instanceAccounts);
         Task<InvokeResult> RemoveInstanceAsync(string orgId, string hostId, string instanceId);
 
 

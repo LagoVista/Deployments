@@ -15,7 +15,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> StopAsync();
         Task<InvokeResult> InstanceStatusChangedAsync(string instanceId, string newState);
 
-        Task<InvokeResult> ProvisionInstanceAsync(string instanceId, InstanceService service, IEnumerable<InstanceAccount> accounts);
+        Task<InvokeResult> ProvisionInstanceAsync(string instanceId, InstanceService service, List<InstanceAccount> accounts);
         Task<InvokeResult> RemoveInstanceAsync(string instanceId);
 
         Task<InvokeResult> AddInstanceAccountAsync(string instanceId, InstanceAccount account);

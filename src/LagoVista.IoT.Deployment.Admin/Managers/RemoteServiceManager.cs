@@ -29,7 +29,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await remoteService.AddInstanceAccountAsync(instanceId, account);
         }
 
-        public async Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService instanceService, IEnumerable<InstanceAccount> accounts)
+        public async Task<InvokeResult> ProvisionInstanceAsync(string orgId, string hostId, string instanceId, InstanceService instanceService, List<InstanceAccount> accounts)
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
