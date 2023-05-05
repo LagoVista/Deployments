@@ -88,7 +88,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
-                InstanceId = orgId,
+                OrganizationId = orgId,
                 HostId = hostId,
             });
 
@@ -99,7 +99,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
-                InstanceId = orgId,
+                OrganizationId = orgId,
                 HostId = hostId,
             });
 
@@ -110,7 +110,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
-                InstanceId = orgId,
+                OrganizationId = orgId,
                 HostId = hostId,
             });
 
@@ -121,7 +121,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
-                InstanceId = orgId,
+                OrganizationId = orgId,
                 HostId = hostId,
             });
 
@@ -132,7 +132,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var remoteService = _proxyFactory.Create<IRemoteHostServices>(new ProxySettings()
             {
-                InstanceId = orgId,
+                OrganizationId = orgId,
                 HostId = hostId,
             });
 

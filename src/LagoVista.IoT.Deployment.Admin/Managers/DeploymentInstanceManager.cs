@@ -967,6 +967,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await _instanceAccountRepo.UpdateInstanceAccountAsync(instanceId, account);
 
+            foreach (var srvr in instance.ServiceHosts)
+                await _remoteListenerServiceManager.UpdateInstanceAccountAsync(org.Id, srvr.HostId, instanceId, account);
+
+            switch (keyName)
+            {
+                case "key1": account.AccessKey1 = accessKey; break;
+                case "key2": account.AccessKey2 = accessKey; break;
+            }
+
+            account.AccessKeyHash1 = null;
+            account.AccessKeyHash2 = null;
+
             return InvokeResult<InstanceAccount>.Create(account);
         }
 

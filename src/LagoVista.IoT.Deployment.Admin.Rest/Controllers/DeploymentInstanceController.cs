@@ -516,7 +516,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.RemoveInstanceAccountAsync(instanceId, instanceAccountId, OrgEntityHeader, UserEntityHeader);
         }
 
-        [HttpPut("/api/deployment/instance/{instanceid}/account/{username}/key/regenerate/{keyname}")]
+        [HttpGet("/api/deployment/instance/{instanceid}/account/{username}/key/regenerate/{keyname}")]
         public Task<InvokeResult<InstanceAccount>> UpdateInstanceAccountAsync(string instanceid, string username, string keyname)
         {
             return _instanceManager.RegneerateInstanceAccountKeyAsync(instanceid, username, keyname, OrgEntityHeader, UserEntityHeader);
