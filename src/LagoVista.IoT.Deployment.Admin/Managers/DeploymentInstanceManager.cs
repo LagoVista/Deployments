@@ -899,7 +899,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 deviceTypes.AddRange(deviceConfigTypes.Model);
             }
 
-            return ListResponse<DeviceTypeSummary>.Create(deviceTypes);
+            return ListResponse<DeviceTypeSummary>.Create(deviceTypes.OrderBy(dt=>dt.Name));
         }
 
         public async Task<InvokeResult<InstanceAccount>> CreateInstanceAccountAsync(string instanceId, string userName, EntityHeader org, EntityHeader user)
