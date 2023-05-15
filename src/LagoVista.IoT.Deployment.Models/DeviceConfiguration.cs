@@ -30,6 +30,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             SensorDefinitions = new List<SensorDefinition>();
             ErrorCodes = new List<DeviceErrorCode>();
             MessageWatchDogs = new List<MessageWatchDog>();
+            Icon = "icon-ae-device-config";
         }
 
         public String DatabaseName { get; set; }
@@ -75,6 +76,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<SensorDefinition> SensorDefinitions { get; set; }
 
+        public string Icon { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsPublic { get; set; }
@@ -130,6 +132,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IsPublic = IsPublic,
                 Key = Key,
                 Name = Name,
+                Icon = Icon,
                 Description = Description
             };
         }
@@ -183,6 +186,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help, DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class DeviceConfigurationSummary : LagoVista.Core.Models.SummaryData
     {
-
+        public string Icon { get; set; }
     }
 }

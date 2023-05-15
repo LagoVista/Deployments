@@ -28,6 +28,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
             DeviceConfigurations = new List<EntityHeader<DeviceConfiguration>>();
             Listeners = new List<EntityHeader<ListenerConfiguration>>();
             Settings = new List<CustomField>();
+            Icon = "icon-ae-deployment-instance";
         }
 
         public EntityHeader Environment
@@ -63,6 +64,8 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Settings { get; set; }
 
+        public string Icon { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
@@ -80,7 +83,8 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 Key = Key,
                 Name = Name,
                 IsPublic = IsPublic,
-                Description = Description
+                Description = Description,
+                Icon = Icon,
             };
         }
 
@@ -101,5 +105,6 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class SolutionSummary : LagoVista.Core.Models.SummaryData
     { 
+        public string Icon { get; set; }
     }
 }

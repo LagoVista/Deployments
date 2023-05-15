@@ -32,6 +32,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ServiceHosts = new List<InstanceService>();
             Credentials = new List<DeploymentInstanceCredentials>();
             HealthCheckEnabled = true;
+            Icon = "icon-ae-deployment-instance";
             TimeZone = new EntityHeader()
             {
                 Id = "UTC",
@@ -164,6 +165,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
 
+
+        public string Icon { get; set; }
 
         public List<InstanceAccount> InstanceAccounts { get; set; }
 
@@ -306,7 +309,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeviceRepoId = DeviceRepository?.Id,
                 DeviceRepoName = DeviceRepository?.Text,
                 Solution = Solution.Text,
-                SolutionId = Solution.Id
+                SolutionId = Solution.Id,
+                Icon = Icon,
                
             };
 
@@ -423,5 +427,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DeviceRepoName { get; set; }
         public string OrgName { get; set; }
         public string OrgId { get; set; }
+        public string Icon { get; set; }
     }
 }
