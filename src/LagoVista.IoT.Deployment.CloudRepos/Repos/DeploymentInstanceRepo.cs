@@ -10,6 +10,7 @@ using System;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Pipeline.Models;
 using LagoVista.Core.Models.UIMetaData;
+using LagoVista.CloudStorage;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -17,7 +18,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     {
 
         private bool _shouldConsolidateCollections;
-        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger) : base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger)
+        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider) : 
+            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger, cacheProvider)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
