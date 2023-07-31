@@ -57,6 +57,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(ClientApp.Name),
                 nameof(ClientApp.Key),
                 nameof(ClientApp.Description),
+                nameof(ClientApp.AppAuthKeyPrimary),
+                nameof(ClientApp.AppAuthKeySecondary),
                 nameof(ClientApp.DeploymentInstance),
                 nameof(ClientApp.DeviceTypes),
                 nameof(ClientApp.DeviceConfigurations),
