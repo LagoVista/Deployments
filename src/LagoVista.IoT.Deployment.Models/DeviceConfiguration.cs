@@ -67,13 +67,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public int? WatchdogSeconds { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<DeviceErrorCode> ErrorCodes { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<MessageWatchDog> MessageWatchDogs { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<SensorDefinition> SensorDefinitions { get; set; }
 
         public string Icon { get; set; }
@@ -92,7 +92,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<Route> Routes { get; set; }
 
         public Route FindRoute(string messageId)
@@ -108,7 +108,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties_Help, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_Properties_Help, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Properties { get; set; }
 
         public static DeviceConfiguration Create(Organization org, AppUser appUser)
@@ -143,10 +143,20 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 {
                     nameof(DeviceConfiguration.Name),
                     nameof(DeviceConfiguration.Key),
+                    nameof(DeviceConfiguration.CustomStatusType),
                     nameof(DeviceConfiguration.Description),
-                    nameof(DeviceConfiguration.Properties),
+					nameof(DeviceConfiguration.DeviceLabel),
+					nameof(DeviceConfiguration.DeviceIdLabel),
+					nameof(DeviceConfiguration.DeviceNameLabel),
+					nameof(DeviceConfiguration.DeviceTypeLabel),
+					nameof(DeviceConfiguration.WatchdogEnabledDefault),
+					nameof(DeviceConfiguration.WatchdogSeconds),
                     nameof(DeviceConfiguration.Routes),
-                };
+					nameof(DeviceConfiguration.Properties),
+					nameof(DeviceConfiguration.ErrorCodes),
+					nameof(DeviceConfiguration.MessageWatchDogs),
+					nameof(DeviceConfiguration.SensorDefinitions),
+				};
         }
 
         /// <summary>

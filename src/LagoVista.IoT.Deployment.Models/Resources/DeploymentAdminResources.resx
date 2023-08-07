@@ -928,7 +928,7 @@
     <value>Device Id Label</value>
   </data>
   <data name="DeviceConfiguration_DeviceIdLabel_Default" xml:space="preserve">
-    <value>Default Id </value>
+    <value>Device Id</value>
   </data>
   <data name="DeviceConfiguration_DeviceIdLabel_Help" xml:space="preserve">
     <value>You can add a label that will be used in the user interface when devices with this device configuration edit/display the Device Id</value>
