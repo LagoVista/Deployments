@@ -1,11 +1,14 @@
 ﻿using LagoVista.Core;
 using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.IoT.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Models
 {
@@ -26,7 +29,7 @@ namespace LagoVista.IoT.Deployment.Models
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
         DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeviceErrorCode
+    public class DeviceErrorCode : IFormDescriptor
     {
         public const string DeviceErrorCode_NotApplicable = "na";
         public const string DeviceErrorCode_Minutes = "minutes";
@@ -85,8 +88,24 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_AutoExpiresTimespan, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_AutoExpiresTimespan_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_SelectTimespan, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> AutoexpireTimespan { get; set; }
 
+		public List<string> GetFormFields()
+		{
+            return new List<string>()
+            {
+                nameof(Name),
+				nameof(Key),
+				nameof(Description),
+				nameof(AutoexpireTimespan),
+				nameof(AutoexpireTimespanQuantity),
+				nameof(ServiceTicketTemplate),
+				nameof(TriggerOnEachOccurrence),
+				nameof(DistroList),
+				nameof(NotificationIntervalTimeSpan),
+				nameof(NotificationIntervalQuantity),
+			};
+		}
 
-        [CustomValidator]
+		[CustomValidator]
         public void Validate(ValidationResult result)
         {
             if (EntityHeader.IsNullOrEmpty(DistroList))
