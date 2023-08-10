@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
@@ -11,7 +12,7 @@ namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Title, DeploymentAdminResources.Names.MessageWatchDog_Help,
      DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class MessageWatchDog
+    public class MessageWatchDog : IFormDescriptor
     {
         public MessageWatchDog()
         {
@@ -58,5 +59,24 @@ namespace LagoVista.IoT.Deployment.Models
         public List<WatchdogExclusion> SaturdayExclusions { get; set; }
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SundayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public List<WatchdogExclusion> SundayExclusions { get; set; }
-    }
+
+		public List<string> GetFormFields()
+		{
+            return new List<string>()
+            {
+                nameof(Name),
+				nameof(Key),
+				nameof(Description),
+				nameof(Timeout),
+				nameof(TimeoutInterval),
+				nameof(StartupBufferMinutes),
+				nameof(DeviceMessageDefinition),
+				nameof(DeviceErrorCode),
+				nameof(ExcludeHolidays),
+				nameof(WeekdayExclusions),
+				nameof(SaturdayExclusions),
+				nameof(SundayExclusions),
+			};
+		}
+	}
 }
