@@ -1,13 +1,15 @@
 ﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Title, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Help,
       DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class WatchdogExclusion
+    public class WatchdogExclusion: IFormDescriptor
     {
         public string Id { get; set; }
 
@@ -28,7 +30,19 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Description { get; set; }
 
-        [CustomValidator]
+		public List<string> GetFormFields()
+		{
+            return new List<string>()
+            {
+                nameof(Name),
+                nameof(Key),
+                nameof(Description),
+                nameof(Start), 
+                nameof(End)
+            };
+		}
+
+		[CustomValidator]
         public void Validate(ValidationResult result)
         {
             var startHours = Start / 100;

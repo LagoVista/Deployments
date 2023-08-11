@@ -53,11 +53,11 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ExcludeHolidays, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool ExcludeHolidays { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_WeekdayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_WeekdayExclusions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<WatchdogExclusion> WeekdayExclusions { get; set; }
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SaturdayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SaturdayExclusions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<WatchdogExclusion> SaturdayExclusions { get; set; }
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SundayExclusions, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_SundayExclusions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<WatchdogExclusion> SundayExclusions { get; set; }
 
 		public List<string> GetFormFields()
