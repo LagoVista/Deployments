@@ -2,6 +2,7 @@
 using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
@@ -14,7 +15,7 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help, DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor, IFormConditionalFields
     {
         public DeploymentInstance()
         {
@@ -118,14 +119,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired:true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired: true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public EntityHeader TimeZone { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string StatusTimeStamp { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusDetails, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public string StatusDetails{ get; set; }
+        public string StatusDetails { get; set; }
 
         [Obsolete]
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Host, HelpResource: DeploymentAdminResources.Names.Instance_Host_Help, WaterMark: DeploymentAdminResources.Names.Instance_Host_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
@@ -311,7 +312,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Solution = Solution.Text,
                 SolutionId = Solution.Id,
                 Icon = Icon,
-               
+
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -410,6 +411,31 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     result.AddSystemError("Must provide primary cache type.");
                 }
             }
+        }
+
+        public FormConditionals GetConditionalFields()
+        {
+            return new FormConditionals()
+            {
+                ConditionalFields = { nameof(WorkingStorage), nameof(ContainerRepository), nameof(ContainerTag), nameof(DeploymentType), nameof(Size) },
+                Conditionals = new List<FormConditional>()
+                {
+                    new FormConditional()
+                    {
+                         Field = nameof(NuvIoTEdition),
+                         Value = NuvIoTEdition_Container,
+                         VisibleFields = {nameof(ContainerRepository), nameof(ContainerTag), nameof(DeploymentType), nameof(WorkingStorage), nameof(Size)}
+                    },
+                    new FormConditional()
+                    {
+                        Field = nameof(NuvIoTEdition),
+                        Value = NuvIoTEdition_Cluster,
+                        VisibleFields = {nameof(DeploymentType), nameof(WorkingStorage)}
+                    }
+                }
+            };
+
+            throw new NotImplementedException();
         }
     }
 
