@@ -1,4 +1,4 @@
-﻿/*7/24/2023 5:10:29 PM*/
+﻿/*8/29/2023 2:52:07 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -888,6 +888,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_Host_Watermark
 
 		public static string Instance_Host_Watermark { get { return GetResourceString("Instance_Host_Watermark"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandAnonymous
+
+		public static string Instance_InputCommandAnonymous { get { return GetResourceString("Instance_InputCommandAnonymous"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandBasicAuthPassword
+
+		public static string Instance_InputCommandBasicAuthPassword { get { return GetResourceString("Instance_InputCommandBasicAuthPassword"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandBasicAuthUserName
+
+		public static string Instance_InputCommandBasicAuthUserName { get { return GetResourceString("Instance_InputCommandBasicAuthUserName"); } }
 //Resources:DeploymentAdminResources:Instance_InputCommandPort
 
 		public static string Instance_InputCommandPort { get { return GetResourceString("Instance_InputCommandPort"); } }
@@ -1643,6 +1652,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_Host = "Instance_Host";
 			public const string Instance_Host_Help = "Instance_Host_Help";
 			public const string Instance_Host_Watermark = "Instance_Host_Watermark";
+			public const string Instance_InputCommandAnonymous = "Instance_InputCommandAnonymous";
+			public const string Instance_InputCommandBasicAuthPassword = "Instance_InputCommandBasicAuthPassword";
+			public const string Instance_InputCommandBasicAuthUserName = "Instance_InputCommandBasicAuthUserName";
 			public const string Instance_InputCommandPort = "Instance_InputCommandPort";
 			public const string Instance_InputCommandPort_Help = "Instance_InputCommandPort_Help";
 			public const string Instance_InputCommandSSL = "Instance_InputCommandSSL";

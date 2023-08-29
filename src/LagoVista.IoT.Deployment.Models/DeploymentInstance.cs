@@ -21,6 +21,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             Status = EntityHeader<DeploymentInstanceStates>.Create(DeploymentInstanceStates.Offline);
             InputCommandSSL = false;
+            InputCommandAnonymous = true;
             InputCommandPort = 80;
             SettingsValues = new List<AttributeValue>();
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
@@ -232,6 +233,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandAnonymous, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public bool InputCommandAnonymous { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthUserName, FieldType: FieldTypes.Text, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public string InputCommandBasicAuthUserName { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthPassword, FieldType: FieldTypes.Text, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public string InputCommandBasicAuthPassword { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandSSL, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool InputCommandSSL { get; set; }

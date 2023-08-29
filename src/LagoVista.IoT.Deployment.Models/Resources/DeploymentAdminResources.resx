@@ -1425,4 +1425,13 @@
   <data name="DeploymentInstanceCredentials__UserId" xml:space="preserve">
     <value>User Id</value>
   </data>
+  <data name="Instance_InputCommandAnonymous" xml:space="preserve">
+    <value>Input Command Anonymous</value>
+  </data>
+  <data name="Instance_InputCommandBasicAuthPassword" xml:space="preserve">
+    <value>Input Command Basic Auth Password</value>
+  </data>
+  <data name="Instance_InputCommandBasicAuthUserName" xml:space="preserve">
+    <value>Input Command Basic Auth User Name</value>
+  </data>
 </root>
