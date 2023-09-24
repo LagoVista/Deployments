@@ -20,6 +20,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     {
         public DeviceConfiguration()
         {
+            Id = Guid.NewGuid().ToId();
             Routes = new List<Route>();
             Properties = new List<CustomField>();
             ConfigurationVersion = 0.1;

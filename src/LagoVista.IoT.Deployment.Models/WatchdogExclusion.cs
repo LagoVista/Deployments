@@ -1,8 +1,10 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using System;
 using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Models
@@ -11,6 +13,11 @@ namespace LagoVista.IoT.Deployment.Models
       DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
     public class WatchdogExclusion: IFormDescriptor
     {
+        public WatchdogExclusion()
+        {
+            Id = Guid.NewGuid().ToId();
+        }
+
         public string Id { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]

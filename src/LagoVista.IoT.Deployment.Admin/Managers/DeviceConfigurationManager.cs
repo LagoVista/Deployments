@@ -13,6 +13,7 @@ using LagoVista.IoT.DeviceMessaging.Admin.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
 using LagoVista.IoT.Pipeline.Admin.Managers;
+using LagoVista.IoT.Pipeline.Admin.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,10 +32,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDeviceAdminManager _deviceAdminManager;
         IDataStreamManager _dataStreamManager;
         IDeviceTypeManager _deviceTypeManager;
+        IRouteSupportRepo _routeSupportRepo;
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDataStreamManager dataStreamManager, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
                             IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
-                            IDeviceTypeManager deviceTypeManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+                            IDeviceTypeManager deviceTypeManager, IRouteSupportRepo routeSupportRepo, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
@@ -43,6 +45,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deploymentInstanceManager = deploymentInstnaceManager;
             _dataStreamManager = dataStreamManager;
             _deviceTypeManager = deviceTypeManager;
+            _routeSupportRepo = routeSupportRepo;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -466,6 +469,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
 
             return result;
+        }
+
+        public async Task<Route> CreateRouteWithDefaultsAsync(EntityHeader org)
+        {
+            var route = Route.Create();
+            await _routeSupportRepo.SetDefaultPipelineModulesAsync(org, route);
+            return route;
         }
     }
 }

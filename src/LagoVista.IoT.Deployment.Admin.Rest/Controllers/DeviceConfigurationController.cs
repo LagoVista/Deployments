@@ -1,6 +1,5 @@
 ﻿using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
-using LagoVista.Core;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Web.Common.Controllers;
 using System;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LagoVista.IoT.DeviceManagement.Models;
-using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
@@ -22,10 +20,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     [Authorize]
     public class DeviceConfigurationController : LagoVistaBaseController
     {
-        IDeviceConfigurationManager _deviceConfigManager;
+        private readonly IDeviceConfigurationManager _deviceConfigManager;
+       
         public DeviceConfigurationController(IDeviceConfigurationManager deviceConfigManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
-            _deviceConfigManager = deviceConfigManager;
+            _deviceConfigManager = deviceConfigManager ?? throw new ArgumentNullException(nameof(deviceConfigManager));
         }
 
         /// <summary>
@@ -118,10 +117,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public DetailResponse<DeviceConfiguration> CreateDeviceConfigurartion()
         {
             var response = DetailResponse<DeviceConfiguration>.Create();
-            response.Model.Id = Guid.NewGuid().ToId();
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
-
             return response;
         }
 
@@ -132,9 +129,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/sensordefinition/factory")]
         public DetailResponse<SensorDefinition> CreateSensorDefinition()
         {
-            var response = DetailResponse<SensorDefinition>.Create();
-
-            return response;
+            return DetailResponse<SensorDefinition>.Create();
         }
 
         /// <summary>
@@ -144,9 +139,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/messagewatchdog/factory")]
         public DetailResponse<MessageWatchDog> CreateMessageWatchDog()
         {
-            var response = DetailResponse<MessageWatchDog>.Create();
-            response.Model.Id = Guid.NewGuid().ToId();
-            return response;
+            return DetailResponse<MessageWatchDog>.Create();
         }
 
         /// <summary>
@@ -156,9 +149,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/watchdogexclusion/factory")]
         public DetailResponse<WatchdogExclusion> CreateWatchDogExlusion()
         {
-            var response = DetailResponse<WatchdogExclusion>.Create();
-            response.Model.Id = Guid.NewGuid().ToId();
-            return response;
+            return DetailResponse<WatchdogExclusion>.Create();
         }
 
         /// <summary>
@@ -168,9 +159,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/property/factory")]
         public DetailResponse<CustomField> CreateDeviceConfigProperty()
         {
-            var response = DetailResponse<CustomField>.Create();
-            response.Model.Id = Guid.NewGuid().ToId();
-            return response;
+            return DetailResponse<CustomField>.Create();
         }
 
         /// <summary>
@@ -190,14 +179,14 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deviceconfig/route/factory")]
-        public DetailResponse<Route> CreateRoute()
+        public async Task<DetailResponse<Route>> CreateRoute()
         {
-            var route = Route.Create();
+            Console.WriteLine("[DeviceConfigController__CreateRoute] - initialize routed.");
 
+            var route = await _deviceConfigManager.CreateRouteWithDefaultsAsync(OrgEntityHeader);
             var response = DetailResponse<Route>.Create(route);
-            response.Model.Id = Guid.NewGuid().ToId();
+            response.IsEditing = false;
             SetAuditProperties(response.Model);
-
             return response;
         }
 

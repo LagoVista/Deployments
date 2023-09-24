@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin;
@@ -19,6 +20,7 @@ namespace LagoVista.IoT.Deployment.Models
             WeekdayExclusions = new List<WatchdogExclusion>();
             SaturdayExclusions = new List<WatchdogExclusion>();
             SundayExclusions = new List<WatchdogExclusion>();
+            Id = Guid.NewGuid().ToId();
         }
 
         public string Id { get; set; }
