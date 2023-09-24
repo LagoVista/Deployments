@@ -45,7 +45,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
             return new ListResponse<DeploymentInstanceSummary>()
             {
-                Model = items.Model.Select(di => di.CreateSummary()),
+                Model = items.Model.OrderBy(mod=>mod.Name).Select(di => di.CreateSummary()),
                 HasMoreRecords = items.HasMoreRecords,
                 NextPartitionKey = items.NextPartitionKey,
                 NextRowKey = items.NextRowKey,
@@ -60,7 +60,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             var items = await base.QueryAsync(qry => true, listRequest);
             return new ListResponse<DeploymentInstanceSummary>()
             {
-                Model = items.Model.Select(di => di.CreateSummary()),
+                Model = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary()),
                 HasMoreRecords = items.HasMoreRecords,
                 NextPartitionKey = items.NextPartitionKey,
                 NextRowKey = items.NextRowKey,
@@ -80,7 +80,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             listRequest);
             return new ListResponse<DeploymentInstanceSummary>()
             {
-                Model = items.Model.Select(di => di.CreateSummary()),
+                Model = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary()),
                 HasMoreRecords = items.HasMoreRecords,
                 NextPartitionKey = items.NextPartitionKey,
                 NextRowKey = items.NextRowKey,
@@ -107,20 +107,20 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         {
             var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.PrimaryHost.Id == hostId);
 
-            return from item in items
+            return from item in items.OrderBy(mod => mod.Name)
                    select item.CreateSummary();
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string orgId, ListRequest listRequest)
         {
             var items = await  base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId, listRequest);
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Where(itm=>itm.IsArchived == false).Select(itm=>itm.CreateSummary()));
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Where(itm=>itm.IsArchived == false).OrderBy(mod => mod.Name).Select(itm=>itm.CreateSummary()));
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(NuvIoTEditions edition, string orgId, ListRequest listRequest)
         {
             var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition), listRequest);
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Select(itm => itm.CreateSummary()));
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.OrderBy(mod => mod.Name).Select(itm => itm.CreateSummary()));
         }
 
         public Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id)
