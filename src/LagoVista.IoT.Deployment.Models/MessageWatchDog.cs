@@ -47,10 +47,12 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Description { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_Message, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_DeviceMessage_Select, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Message_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_Message, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_DeviceMessage_Select, 
+            HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Message_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> DeviceMessageDefinition { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Select, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Select,
+            HelpResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceErrorCode> DeviceErrorCode {get; set;}
 
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ExcludeHolidays, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
