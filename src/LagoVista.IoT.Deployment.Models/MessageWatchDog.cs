@@ -12,7 +12,8 @@ using System.Text;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Title, DeploymentAdminResources.Names.MessageWatchDog_Help,
-     DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+     DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+      FactoryUrl: "/api/deviceconfig/messagewatchdog/factory")]
     public class MessageWatchDog : IFormDescriptor
     {
         public MessageWatchDog()

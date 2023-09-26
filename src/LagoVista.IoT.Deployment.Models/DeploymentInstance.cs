@@ -451,6 +451,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
+     DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+     SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}")]
     public class DeploymentInstanceSummary : SummaryData
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }

@@ -17,7 +17,9 @@ var client = new Microsoft.Azure.Management.Resources.ResourceManagementClient(c
 var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microsoft.Azure.Management.ResourceGroup("West US"), new System.Threading.CancellationToken()).Result */
 
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, 
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
     public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IKeyedEntity, INoSQLEntity, IValidateable, IFormDescriptor
     {
         public string DatabaseName { get; set; }
@@ -102,7 +104,9 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
     }
 
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description,
+     EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+     GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
     public class SolutionSummary : LagoVista.Core.Models.SummaryData
     { 
         public string Icon { get; set; }

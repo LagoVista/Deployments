@@ -84,7 +84,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Client Apps - Get Repos for Current Org
         /// </summary>
         /// <returns></returns>        
-        [HttpGet("/api/clientapps")]
+        [HttpGet("f")]
         public Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync()
         {
             return _clientAppManager.GetClientAppsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());

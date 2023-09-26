@@ -14,7 +14,8 @@ using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description, 
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/route/factory")]
     public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor, IValidateable
     {
         public Route()

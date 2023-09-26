@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Title, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Help,
-      DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+      DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/watchdogexclusion/factory")]
     public class WatchdogExclusion: IFormDescriptor
     {
         public WatchdogExclusion()
