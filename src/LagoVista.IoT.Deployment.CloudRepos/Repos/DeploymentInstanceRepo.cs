@@ -42,32 +42,15 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync(ListRequest listRequest)
         {
             var items = await base.QueryAsync(qry => qry.Status.Value != DeploymentInstanceStates.Offline, listRequest);
-
-            return new ListResponse<DeploymentInstanceSummary>()
-            {
-                Model = items.Model.OrderBy(mod=>mod.Name).Select(di => di.CreateSummary()),
-                HasMoreRecords = items.HasMoreRecords,
-                NextPartitionKey = items.NextPartitionKey,
-                NextRowKey = items.NextRowKey,
-                PageCount = items.PageCount,
-                PageIndex = items.PageIndex,
-                PageSize = items.PageSize
-            };
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllInstances(ListRequest listRequest)
         {
             var items = await base.QueryAsync(qry => true, listRequest);
-            return new ListResponse<DeploymentInstanceSummary>()
-            {
-                Model = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary()),
-                HasMoreRecords = items.HasMoreRecords,
-                NextPartitionKey = items.NextPartitionKey,
-                NextRowKey = items.NextRowKey,
-                PageCount = items.PageCount,
-                PageIndex = items.PageIndex,
-                PageSize = items.PageSize
-            };
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllFailedInstancesAsync(ListRequest listRequest)
@@ -78,16 +61,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             qry.Status.Value == DeploymentInstanceStates.FatalError ||
             qry.Status.Value == DeploymentInstanceStates.HostFailedHealthCheck,
             listRequest);
-            return new ListResponse<DeploymentInstanceSummary>()
-            {
-                Model = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary()),
-                HasMoreRecords = items.HasMoreRecords,
-                NextPartitionKey = items.NextPartitionKey,
-                NextRowKey = items.NextRowKey,
-                PageCount = items.PageCount,
-                PageIndex = items.PageIndex,
-                PageSize = items.PageSize
-            };
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
         }
 
 
