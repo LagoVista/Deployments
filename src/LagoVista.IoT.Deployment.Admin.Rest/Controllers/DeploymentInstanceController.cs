@@ -99,30 +99,38 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/instances")]
-        public Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync()
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync()
         {
-            return _instanceManager.SysAdminGetAllInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+           var listRsponse = await  _instanceManager.SysAdminGetAllInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listRsponse.GetListUrl = "/sys/api/deployment/instances";
+            return listRsponse;
         }
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/instances/{orgid}")]
-        public Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync(string orgid)
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllInstancesAsync(string orgid)
         {
-            return _instanceManager.SysAdminGetInstancesAsync(orgid, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listRsponse = await _instanceManager.SysAdminGetInstancesAsync(orgid, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listRsponse.GetListUrl = "/sys/api/deployment/instances/{id}";
+            return listRsponse;
         }
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/instances/active")]
-        public Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync()
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync()
         {
-            return _instanceManager.SysAdminGetActiveInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listRsponse = await _instanceManager.SysAdminGetActiveInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listRsponse.GetListUrl = "/sys/api/deployment/instances/active";
+            return listRsponse;
         }
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/instances/failed")]
-        public Task<ListResponse<DeploymentInstanceSummary>> GetFailedInstancesAsync()
+        public async Task<ListResponse<DeploymentInstanceSummary>> GetFailedInstancesAsync()
         {
-            return _instanceManager.SysAdminFailedInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listRsponse = await _instanceManager.SysAdminFailedInstancesAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listRsponse.GetListUrl = "/sys/api/deployment/instances/failed";
+            return listRsponse;
         }
 
         /// <summary>

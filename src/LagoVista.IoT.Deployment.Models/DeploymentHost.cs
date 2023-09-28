@@ -106,8 +106,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         FailureImminent
     }
 
-   
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, 
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}")]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public const string HostSize_ExtraSmall = "extrasmall";
@@ -351,6 +353,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description,
+        EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}")]
     public class DeploymentHostSummary : SummaryData
     {
         [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_Type, ResourceType: typeof(DeploymentAdminResources))]

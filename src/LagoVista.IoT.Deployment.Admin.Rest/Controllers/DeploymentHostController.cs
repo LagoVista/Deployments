@@ -258,23 +258,29 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/hosts/active")]
-        public Task<ListResponse<DeploymentHostSummary>> GetAllActiveHostsAsync()
+        public async Task<ListResponse<DeploymentHostSummary>> GetAllActiveHostsAsync()
         {
-            return _hostManager.SysAdminGetActiveHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listResponse = await  _hostManager.SysAdminGetActiveHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listResponse.GetListUrl = "/sys/api/deployment/hosts/active";
+            return listResponse;
         }
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/hosts/failed")]
-        public Task<ListResponse<DeploymentHostSummary>> GetFailedHostsAsync()
+        public async Task<ListResponse<DeploymentHostSummary>> GetFailedHostsAsync()
         {
-            return _hostManager.SysAdminFailedHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listResponse = await _hostManager.SysAdminFailedHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listResponse.GetListUrl = "/sys/api/deployment/hosts/failed";
+            return listResponse;
         }
 
         [SystemAdmin]
         [HttpGet("/sys/api/deployment/hosts")]
-        public Task<ListResponse<DeploymentHostSummary>> GetAlldHostsAsync()
+        public async Task<ListResponse<DeploymentHostSummary>> GetAlldHostsAsync()
         {
-            return _hostManager.SysAdminAllHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            var listResponse = await  _hostManager.SysAdminAllHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+            listResponse.GetListUrl = "/sys/api/deployment/hosts";
+            return listResponse;
         }
     }
 }
