@@ -23,13 +23,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
     public class DeploymentHostManager : ManagerBase, IDeploymentHostManager
     {
-        IDeploymentHostRepo _deploymentHostRepo;
-        IDeploymentInstanceRepo _deploymentInstanceRepo;
-        IDeploymentConnectorService _deploymentConnectorService;
-        IDeploymentActivityQueueManager _deploymentActivityQueueManager;
-        IDeploymentActivityRepo _deploymentActivityRepo;
-        IDeploymentHostStatusRepo _deploymentHostStatusRepo;
-        IUserManager _userManager;
+        private readonly IDeploymentHostRepo _deploymentHostRepo;
+        private readonly IDeploymentInstanceRepo _deploymentInstanceRepo;
+        private readonly IDeploymentConnectorService _deploymentConnectorService;
+        private readonly IDeploymentActivityQueueManager _deploymentActivityQueueManager;
+        private readonly IDeploymentActivityRepo _deploymentActivityRepo;
+        private readonly IDeploymentHostStatusRepo _deploymentHostStatusRepo;
+        private readonly IUserManager _userManager;
         private readonly IAdminLogger _adminLogger;
         private readonly ISecureStorage _secureStorage;
 
@@ -439,6 +439,52 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<DeploymentHost> FindHostServiceAsync(HostTypes hostType)
         {
             return _deploymentHostRepo.FindSharedHostAsync(hostType);
+        }
+
+
+        public async Task<ListResponse<DeploymentHostSummary>> SysAdminGetActiveHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-active-hosts");
+            }
+
+            return await _deploymentHostRepo.GetAllActiveHostsAsync(listRequest);
+        }
+
+        public async Task<ListResponse<DeploymentHostSummary>> SysAdminFailedHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-failed-hosts");
+            }
+
+            return await _deploymentHostRepo.GetAllFailedHostsAsync(listRequest);
+        }
+
+        public async Task<ListResponse<DeploymentHostSummary>> SysAdminAllHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var sysUser = await _userManager.FindByIdAsync(user.Id);
+            if (!sysUser.IsSystemAdmin)
+            {
+                throw new NotAuthenticatedException($"Attempt to access all instances by non sys admin user {user.Id} - {user.Text} from {org.Text}");
+            }
+            else
+            {
+                await AuthorizeAsync(user, org, "sysadmin-get-all-hosts");
+            }
+     
+            return await _deploymentHostRepo.GetAllHostsAsync(listRequest);
         }
     }
 }

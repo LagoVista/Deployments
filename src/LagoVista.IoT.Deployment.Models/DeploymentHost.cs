@@ -313,7 +313,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 HostType = HostType.Text,
                 Key = Key,
                 Description = Description,
-                IsPublic = IsPublic
+                IsPublic = IsPublic,
+                IpAddress = Ipv4Address,
+                LastPing = LastPing,
+                OrgId = OwnerOrganization.Id,
+                OrgName = OwnerOrganization.Text,         
+                StatusDetails = StatusDetails
             };
         }
 
@@ -355,8 +360,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_Status, ResourceType: typeof(DeploymentAdminResources))]
         public string Status { get; set; }
 
+        public string StatusDetails { get; set; }
+
         [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_CapacityStatus, ResourceType: typeof(DeploymentAdminResources))]
         public string CapacityStatus { get; set; }
+        public string OrgName { get; set; }
+        public string OrgId { get; set; }
+
+        public string LastPing { get; set; }
+        public string IpAddress { get; set; }
+    
     }
 
 }

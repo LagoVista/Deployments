@@ -9,6 +9,7 @@ using LagoVista.IoT.Logging.Exceptions;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.Core.Exceptions;
 using LagoVista.CloudStorage;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -57,6 +58,27 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             var assignableHost = hosts.OrderBy(hsts =>  hsts.DeployedInstances.Count).FirstOrDefault();
 
             return assignableHost;
+        }
+
+        public async Task<ListResponse<DeploymentHostSummary>> GetAllActiveHostsAsync(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => qry.Status.Value != HostStatus.Offline, srt => srt.Name, listRequest);
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentHostSummary>.Create(listRequest, summaryItems);
+        }
+
+        public async Task<ListResponse<DeploymentHostSummary>> GetAllFailedHostsAsync(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => qry.Status.Value != HostStatus.Offline && qry.Status.Value != HostStatus.Running, srt => srt.Name, listRequest);
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentHostSummary>.Create(listRequest, summaryItems);
+        }
+
+        public async Task<ListResponse<DeploymentHostSummary>> GetAllHostsAsync(ListRequest listRequest)
+        {
+            var items = await base.QueryAsync(qry => true, srt=>srt.Name, listRequest);
+            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
+            return ListResponse<DeploymentHostSummary>.Create(listRequest, summaryItems);
         }
 
         public Task<DeploymentHost> GetDeploymentHostAsync(string hostId, bool throwOnNotFound = true)

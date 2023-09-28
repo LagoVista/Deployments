@@ -25,8 +25,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     [Authorize]
     public class DeploymentHostController : LagoVistaBaseController
     {
-        IDeploymentHostManager _hostManager;
-        IProductStore _productStore;
+        private readonly IDeploymentHostManager _hostManager;
+        private readonly IProductStore _productStore;
+
         public DeploymentHostController(IDeploymentHostManager hostManager, IProductStore productStore, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _hostManager = hostManager;
@@ -253,6 +254,27 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var vms = await _productStore.GetProductsAsync("vms");
             return ListResponse<ProductOffering>.Create(vms);
+        }
+
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/hosts/active")]
+        public Task<ListResponse<DeploymentHostSummary>> GetAllActiveHostsAsync()
+        {
+            return _hostManager.SysAdminGetActiveHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/hosts/failed")]
+        public Task<ListResponse<DeploymentHostSummary>> GetFailedHostsAsync()
+        {
+            return _hostManager.SysAdminFailedHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        [SystemAdmin]
+        [HttpGet("/sys/api/deployment/hosts")]
+        public Task<ListResponse<DeploymentHostSummary>> GetAlldHostsAsync()
+        {
+            return _hostManager.SysAdminAllHostsAsync(OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Validation;
+﻿using LagoVista.Core.Models.UIMetaData;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,11 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<IEnumerable<DeploymentHostSummary>> GetDeploymentsForOrgAsync(string orgId);
         Task<bool> QueryHostKeyInUse(string key, string orgId);
         Task<DeploymentHost> FindSharedHostAsync(HostTypes hostType);
+
+        Task<ListResponse<DeploymentHostSummary>> GetAllHostsAsync(ListRequest listRequest);
+        Task<ListResponse<DeploymentHostSummary>> GetAllActiveHostsAsync(ListRequest listRequest);
+
+        Task<ListResponse<DeploymentHostSummary>> GetAllFailedHostsAsync(ListRequest listRequest);
     }
 }
+

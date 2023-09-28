@@ -42,5 +42,9 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<ListResponse<DeploymentHostStatus>> GetDeploymentHostStatusHistoryAsync(string hostId, EntityHeader org, EntityHeader user, ListRequest listRequest);
         Task<DeploymentHost> FindHostServiceAsync(HostTypes hostType);
+
+        Task<ListResponse<DeploymentHostSummary>> SysAdminGetActiveHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<ListResponse<DeploymentHostSummary>> SysAdminFailedHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<ListResponse<DeploymentHostSummary>> SysAdminAllHostsAsync(EntityHeader org, EntityHeader user, ListRequest listRequest);
     }
 }
