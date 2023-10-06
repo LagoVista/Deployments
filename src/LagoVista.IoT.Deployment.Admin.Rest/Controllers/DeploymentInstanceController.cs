@@ -424,6 +424,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.RestartContainerAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
+        /// <summary>
+        /// Deployment Instance - Set Docker Image
+        /// </summary>
+        /// <param name="instanceid"></param>
+        /// <param name="repoid"></pasram>
+        /// <param name="tagid"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{instanceid}/image/{repoid}/{tagid}")]
+        public Task<InvokeResult> SetDockerImageAsync(string instanceid, String repoid, string tagid)
+        {
+            return _instanceManager.SetContainerRepoAsync(instanceid, repoid, tagid, OrgEntityHeader, UserEntityHeader);
+        }
 
         /// <summary>
         /// Deployment Instance - Stop

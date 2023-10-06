@@ -72,5 +72,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                nameof(TaggedContainer.ReleaseNotes),
             };
         }
+
+        public EntityHeader ToEntityHeader()
+        {
+            return new EntityHeader()
+            {
+                Id = Id,
+                Key = Key,
+                Text = Name,
+            };
+        }
     }
 }

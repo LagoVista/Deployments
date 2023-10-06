@@ -1138,5 +1138,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             return InvokeResult.Success;
         }
+
+        public async Task<InvokeResult> SetContainerRepoAsync(string instanceId, string containerRepoId, string tagId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await GetInstanceAsync(instanceId);
+            await AuthorizeAsync(user, org, "setcontainerimage", instanceId);
+
+            var image = await _containerRepoMgr.GetContainerRepoAsync(containerRepoId, org, user);
+            var tag = image.Tags.SingleOrDefault(tg => tg.Id == tagId);
+            if (tag == null)
+                throw new RecordNotFoundException("ImageTag", tagId);
+
+            instance.ContainerRepository = image.ToEntityHeader();
+            instance.ContainerTag = tag.ToEntityHeader();
+            return await UpdateRuntimeAsync(instanceId, org, user);
+        }
     }
 }
