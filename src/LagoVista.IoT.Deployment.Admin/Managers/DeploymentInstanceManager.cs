@@ -1151,6 +1151,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             instance.ContainerRepository = image.ToEntityHeader();
             instance.ContainerTag = tag.ToEntityHeader();
+            await UpdateInstanceAsync(instance, org, user);
             return await UpdateRuntimeAsync(instanceId, org, user);
         }
     }
