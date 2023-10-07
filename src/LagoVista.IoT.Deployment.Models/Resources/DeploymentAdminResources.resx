@@ -1434,4 +1434,10 @@
   <data name="Instance_InputCommandBasicAuthUserName" xml:space="preserve">
     <value>Input Command Basic Auth User Name</value>
   </data>
+  <data name="Solution_Icon" xml:space="preserve">
+    <value>Solution Icon</value>
+  </data>
+  <data name="Solution_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
 </root>

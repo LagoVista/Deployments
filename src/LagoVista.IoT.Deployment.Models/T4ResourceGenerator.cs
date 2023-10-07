@@ -1,4 +1,4 @@
-﻿/*8/29/2023 2:52:07 PM*/
+﻿/*10/7/2023 5:38:14 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1278,6 +1278,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Solution_Help
 
 		public static string Solution_Help { get { return GetResourceString("Solution_Help"); } }
+//Resources:DeploymentAdminResources:Solution_Icon
+
+		public static string Solution_Icon { get { return GetResourceString("Solution_Icon"); } }
 //Resources:DeploymentAdminResources:Solution_Settings
 
 		public static string Solution_Settings { get { return GetResourceString("Solution_Settings"); } }
@@ -1287,6 +1290,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Solution_Title
 
 		public static string Solution_Title { get { return GetResourceString("Solution_Title"); } }
+//Resources:DeploymentAdminResources:Solution_Version
+
+		public static string Solution_Version { get { return GetResourceString("Solution_Version"); } }
 //Resources:DeploymentAdminResources:TaggedContainer_CreationDate
 
 		public static string TaggedContainer_CreationDate { get { return GetResourceString("TaggedContainer_CreationDate"); } }
@@ -1782,9 +1788,11 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_DeviceConfigurations_Help = "Solution_DeviceConfigurations_Help";
 			public const string Solution_Environment = "Solution_Environment";
 			public const string Solution_Help = "Solution_Help";
+			public const string Solution_Icon = "Solution_Icon";
 			public const string Solution_Settings = "Solution_Settings";
 			public const string Solution_Settings_Help = "Solution_Settings_Help";
 			public const string Solution_Title = "Solution_Title";
+			public const string Solution_Version = "Solution_Version";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";
 			public const string TaggedContainer_Help = "TaggedContainer_Help";
