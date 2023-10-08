@@ -33,11 +33,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     {
         private readonly IDeploymentInstanceManager _instanceManager;
         private readonly ITimeZoneServices _timeZoneServices;
+        private readonly IContainerRepositoryManager _containerRepoManager;
 
-        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, ITimeZoneServices timeZoneServices, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        public DeploymentInstanceController(IDeploymentInstanceManager instanceManager, ITimeZoneServices timeZoneServices, IContainerRepositoryManager containerRepoManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager)); ;
             _timeZoneServices = timeZoneServices ?? throw new ArgumentNullException(nameof(timeZoneServices));
+            _containerRepoManager = containerRepoManager ?? throw new ArgumentNullException(nameof(containerRepoManager));
         }
 
         /// <summary>
@@ -312,7 +314,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/factory")]
-        public DetailResponse<DeploymentInstance> CreateInstance()
+        public async Task<DetailResponse<DeploymentInstance>> CreateInstance()
         {
             var response = DetailResponse<DeploymentInstance>.Create();
             response.Model.Id = Guid.NewGuid().ToId();
@@ -331,6 +333,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
 
+            var repo = await _containerRepoManager.GetDefaultForRuntimeRepoAsync(OrgEntityHeader, UserEntityHeader);
+            response.Model.ContainerRepository = repo.ToEntityHeader();
+            response.Model.ContainerTag = repo.PreferredTag;
             return response;
         }
 
@@ -428,7 +433,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Deployment Instance - Set Docker Image
         /// </summary>
         /// <param name="instanceid"></param>
-        /// <param name="repoid"></pasram>
+        /// <param name="repoid"></param>
         /// <param name="tagid"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{instanceid}/image/{repoid}/{tagid}")]

@@ -100,5 +100,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var tagsResult = await _dockerRegistryServices.GetTagsAsync(containerRepo.Namespace, containerRepo.RepositoryName, tokenResult.Result);
             return tagsResult.Result.Tags;
         }
+
+        public Task<ContainerRepository> GetDefaultForRuntimeRepoAsync(EntityHeader org, EntityHeader user)
+        {
+            return _repo.GetDefaultForRuntimeAsync();
+        }
     }
 }

@@ -38,6 +38,18 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                    select item.CreateSummary();
         }
 
+        public async Task<ContainerRepository> GetDefaultForRuntimeAsync()
+        {
+            var containers = await base.QueryAsync(attr => (attr.IsDefaultForRuntime));
+            if (containers.Count() > 1)
+                throw new System.Exception($"Should only have one default runtime repo, found {containers.Count()}");
+
+            if(containers.Count() == 0)
+                throw new System.Exception($"Did not find default runtime repo, please add one");
+
+            return containers.First();
+        }
+
         public Task UpdateContainerRepoAsync(ContainerRepository containerRepository)
         {
             return UpsertDocumentAsync(containerRepository);

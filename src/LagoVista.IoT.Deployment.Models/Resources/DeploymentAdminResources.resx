@@ -1440,4 +1440,10 @@
   <data name="Solution_Version" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="ContainerRepository_IsDefautForRuntime" xml:space="preserve">
+    <value>Is Default for Runtime</value>
+  </data>
+  <data name="ContainerRepository_IsDefautForRuntime_Help" xml:space="preserve">
+    <value>Should be selected for the default runtime to be used for most deployments.</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin
     {
         Task<InvokeResult> AddContainerRepoAsync(ContainerRepository containerRepo, EntityHeader org, EntityHeader user);
         Task<ContainerRepository> GetContainerRepoAsync(string id, EntityHeader org, EntityHeader user);
+        Task<ContainerRepository> GetDefaultForRuntimeRepoAsync(EntityHeader org, EntityHeader user);
         Task<IEnumerable<ContainerRepositorySummary>> GetContainerReposForOrgAsync(string orgId, EntityHeader user);
         Task<InvokeResult> UpdateContainerRepoAsync(ContainerRepository containerRepo, EntityHeader org, EntityHeader user);
         Task<IEnumerable<DockerTag>> GetTagsFromRemoteRegistryAsync(string containerId, EntityHeader user, EntityHeader org);

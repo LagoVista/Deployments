@@ -19,7 +19,8 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
+        GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}",
+        HelpUrl: "https://docs.nuviot.com/Deployment/Solution.html")]
     public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IKeyedEntity, INoSQLEntity, IValidateable, IFormDescriptor
     {
         public string DatabaseName { get; set; }
@@ -60,7 +61,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Version, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string Version { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Listeners, HelpResource: DeploymentAdminResources.Names.Deployment_Listeners_Help, FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/pipeline/admin/listeners", ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Listeners, HelpResource: DeploymentAdminResources.Names.Deployment_Listeners_Help, ChildListDisplayMember: nameof(EntityHeader.Text), FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/pipeline/admin/listeners", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ListenerConfiguration>> Listeners { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Planner, WaterMark: DeploymentAdminResources.Names.Deployment_Planner_Select, EntityHeaderPickerUrl: "/api/pipeline/admin/planners", HelpResource: DeploymentAdminResources.Names.Deployment_Planner_Help, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
@@ -75,7 +76,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String Key { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations, HelpResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations_Help, FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs", ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations, HelpResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations_Help, ChildListDisplayMember:nameof(EntityHeader.Text), FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DeviceConfiguration>> DeviceConfigurations { get; set; }
 
         public string MonitoringEndpoint { get; set; }
@@ -102,8 +103,8 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 nameof(Solution.Icon),
                 nameof(Solution.Key),
                 nameof(Solution.Planner),
-                nameof(Solution.Settings),
                 nameof(Solution.Description),
+                nameof(Solution.Settings),
                 nameof(Solution.Listeners),
                 nameof(Solution.DeviceConfigurations),
             };

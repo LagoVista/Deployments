@@ -10,6 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddContainerRepoAsync(ContainerRepository containerRepository);
         Task<ContainerRepository> GetContainerRepoAsync(string containerRepositoryId);
+        Task<ContainerRepository> GetDefaultForRuntimeAsync();
         Task UpdateContainerRepoAsync(ContainerRepository containerRepositry);
         Task<IEnumerable<ContainerRepositorySummary>> GetContainerReposForOrgAsync(string orgId);
     }

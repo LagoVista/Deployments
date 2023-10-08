@@ -41,6 +41,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_UserName, HelpResource: DeploymentAdminResources.Names.ContainerRepository_UserName_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string UserName { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_IsDefautForRuntime, HelpResource: DeploymentAdminResources.Names.ContainerRepository_IsDefautForRuntime_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool IsDefaultForRuntime { get; set; }
+
+
         //NOTE: Password is required when creating, but not when updating, we set the FormField to false to make sure we can get past validation, validation on client will ensure this is put in place, also this is only temporary until we do a better job of managing containers.
         [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_Password, HelpResource: DeploymentAdminResources.Names.ContainerRepository_Password_Help, FieldType: FieldTypes.Password, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string Password { get; set; }
@@ -80,6 +84,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(ContainerRepository.Key),
                 nameof(ContainerRepository.Registry),
                 nameof(ContainerRepository.Namespace),
+                nameof(ContainerRepository.IsDefaultForRuntime),
                 nameof(ContainerRepository.RepositoryName),
                 nameof(ContainerRepository.PreferredTag),
                 nameof(ContainerRepository.UserName),

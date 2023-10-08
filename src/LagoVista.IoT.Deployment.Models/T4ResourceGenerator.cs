@@ -1,4 +1,4 @@
-﻿/*10/7/2023 5:38:14 PM*/
+﻿/*10/8/2023 9:03:51 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -120,6 +120,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ContainerRepository_Help
 
 		public static string ContainerRepository_Help { get { return GetResourceString("ContainerRepository_Help"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_IsDefautForRuntime
+
+		public static string ContainerRepository_IsDefautForRuntime { get { return GetResourceString("ContainerRepository_IsDefautForRuntime"); } }
+//Resources:DeploymentAdminResources:ContainerRepository_IsDefautForRuntime_Help
+
+		public static string ContainerRepository_IsDefautForRuntime_Help { get { return GetResourceString("ContainerRepository_IsDefautForRuntime_Help"); } }
 //Resources:DeploymentAdminResources:ContainerRepository_Namespace
 
 		public static string ContainerRepository_Namespace { get { return GetResourceString("ContainerRepository_Namespace"); } }
@@ -1402,6 +1408,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Common_Notes = "Common_Notes";
 			public const string ContainerRepository_Description = "ContainerRepository_Description";
 			public const string ContainerRepository_Help = "ContainerRepository_Help";
+			public const string ContainerRepository_IsDefautForRuntime = "ContainerRepository_IsDefautForRuntime";
+			public const string ContainerRepository_IsDefautForRuntime_Help = "ContainerRepository_IsDefautForRuntime_Help";
 			public const string ContainerRepository_Namespace = "ContainerRepository_Namespace";
 			public const string ContainerRepository_Namespace_Help = "ContainerRepository_Namespace_Help";
 			public const string ContainerRepository_Password = "ContainerRepository_Password";

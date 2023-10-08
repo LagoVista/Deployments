@@ -109,7 +109,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}")]
+        SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}",
+        HelpUrl: "https://docs.nuviot.com/Deployment/Host.html")]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public const string HostSize_ExtraSmall = "extrasmall";

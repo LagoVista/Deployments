@@ -14,10 +14,11 @@ using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help, 
-        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), 
-        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}")]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor, IFormConditionalFields
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
+        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}",
+        HelpUrl: "https://docs.nuviot.com/Deployment/Instance.html")]
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public DeploymentInstance()
         {
@@ -342,16 +343,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentInstance.Name),
                 nameof(DeploymentInstance.Key),
-                nameof(DeploymentInstance.DeploymentType),
-                nameof(DeploymentInstance.DeploymentConfiguration),
                 nameof(DeploymentInstance.DnsHostName),
                 nameof(DeploymentInstance.Status),
-                nameof(DeploymentInstance.IsDeployed),
                 nameof(DeploymentInstance.Subscription),
-                nameof(DeploymentInstance.Size),
-                nameof(DeploymentInstance.CloudProvider),
-                nameof(DeploymentInstance.ContainerRepository),
-                nameof(DeploymentInstance.ContainerTag),
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
             };
@@ -423,31 +417,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     result.AddSystemError("Must provide primary cache type.");
                 }
             }
-        }
-
-        public FormConditionals GetConditionalFields()
-        {
-            return new FormConditionals()
-            {
-                ConditionalFields = { nameof(WorkingStorage), nameof(ContainerRepository), nameof(ContainerTag), nameof(DeploymentType), nameof(Size) },
-                Conditionals = new List<FormConditional>()
-                {
-                    new FormConditional()
-                    {
-                         Field = nameof(NuvIoTEdition),
-                         Value = NuvIoTEdition_Container,
-                         VisibleFields = {nameof(ContainerRepository), nameof(ContainerTag), nameof(DeploymentType), nameof(WorkingStorage), nameof(Size)}
-                    },
-                    new FormConditional()
-                    {
-                        Field = nameof(NuvIoTEdition),
-                        Value = NuvIoTEdition_Cluster,
-                        VisibleFields = {nameof(DeploymentType), nameof(WorkingStorage)}
-                    }
-                }
-            };
-
-            throw new NotImplementedException();
         }
     }
 
