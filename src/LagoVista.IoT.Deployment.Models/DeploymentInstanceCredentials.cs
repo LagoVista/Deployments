@@ -25,6 +25,7 @@ namespace LagoVista.IoT.Deployment.Models
         public string UserId { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstanceCredentials__Password, FieldType: FieldTypes.Password,
+            SecureIdFieldName:nameof(PasswordSecretId),
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public string Password { get; set; }
 

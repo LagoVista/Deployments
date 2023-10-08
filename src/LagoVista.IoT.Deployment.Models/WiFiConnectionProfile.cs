@@ -20,9 +20,7 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_SSID, FieldType: FieldTypes.Text, IsRequired:true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Ssid { get; set; }
 
-
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Password, FieldType: FieldTypes.Password, IsRequired:true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Password, FieldType: FieldTypes.Password, IsRequired:true, SecureIdFieldName:nameof(PasswordSecretId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Password { get; set; }
 
         public string PasswordSecretId { get; set; }

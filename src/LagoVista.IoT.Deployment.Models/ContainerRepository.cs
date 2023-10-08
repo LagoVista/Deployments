@@ -11,7 +11,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ContainerRepository_Title, DeploymentAdminResources.Names.ContainerRepository_Help, 
         DeploymentAdminResources.Names.ContainerRepository_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        GetListUrl: "/api/container/repos", GetUrl: "/api/container/repo/{id}", FactoryUrl: "/api/container/repo/factory", SaveUrl: "/api/container/repo")]
 
     public class ContainerRepository : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor, IKeyedEntity
     {
@@ -46,7 +47,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
         //NOTE: Password is required when creating, but not when updating, we set the FormField to false to make sure we can get past validation, validation on client will ensure this is put in place, also this is only temporary until we do a better job of managing containers.
-        [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_Password, HelpResource: DeploymentAdminResources.Names.ContainerRepository_Password_Help, FieldType: FieldTypes.Password, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_Password, HelpResource: DeploymentAdminResources.Names.ContainerRepository_Password_Help, FieldType: FieldTypes.Password,
+           SecureIdFieldName:nameof(SecurePasswordId), ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string Password { get; set; }
 
         public String SecurePasswordId { get; set; }
