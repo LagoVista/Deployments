@@ -24,7 +24,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         Deprecated,
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.TaggedContainer_Title, DeploymentAdminResources.Names.TaggedContainer_Help, DeploymentAdminResources.Names.TaggedContainer_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.TaggedContainer_Title, DeploymentAdminResources.Names.TaggedContainer_Help,
+                 DeploymentAdminResources.Names.TaggedContainer_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+                 FactoryUrl: "/api/container/tag/factory")]
     public class TaggedContainer : IKeyedEntity, IFormDescriptor
     {
         public const string TaggedContainer_Status_Prerelease = "prerelease";
