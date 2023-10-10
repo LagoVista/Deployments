@@ -106,6 +106,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ContainerRepositories_Title, DeploymentAdminResources.Names.ContainerRepository_Help,
+       DeploymentAdminResources.Names.ContainerRepository_Description,
+       EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+       GetListUrl: "/api/container/repos", GetUrl: "/api/container/repo/{id}", FactoryUrl: "/api/container/repo/factory", SaveUrl: "/api/container/repo")]
     public class ContainerRepositorySummary : SummaryData
     {
         public EntityHeader PreferredTag { get; set; }

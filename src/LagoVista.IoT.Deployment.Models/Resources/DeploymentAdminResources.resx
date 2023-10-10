@@ -580,7 +580,7 @@
     <value>Tags</value>
   </data>
   <data name="ContainerRepository_Title" xml:space="preserve">
-    <value>Container Repository</value>
+    <value>Image Repository</value>
   </data>
   <data name="ContainerRepository_UserName" xml:space="preserve">
     <value>User Name</value>
@@ -628,7 +628,7 @@
     <value>Tag</value>
   </data>
   <data name="TaggedContainer_Title" xml:space="preserve">
-    <value>Tagged Containter</value>
+    <value>Image Tag</value>
   </data>
   <data name="Host_CloudProvider_Help" xml:space="preserve">
     <value>Currently we only support Digital Ocean, Azure and AWS coming Second Half of 2017</value>
@@ -1445,5 +1445,8 @@
   </data>
   <data name="ContainerRepository_IsDefautForRuntime_Help" xml:space="preserve">
     <value>Should be selected for the default runtime to be used for most deployments.</value>
+  </data>
+  <data name="ContainerRepositories_Title" xml:space="preserve">
+    <value>Container Image Repositories</value>
   </data>
 </root>

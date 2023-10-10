@@ -1,4 +1,4 @@
-﻿/*10/8/2023 9:03:51 AM*/
+﻿/*10/10/2023 1:06:55 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -114,6 +114,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Common_Notes
 
 		public static string Common_Notes { get { return GetResourceString("Common_Notes"); } }
+//Resources:DeploymentAdminResources:ContainerRepositories_Title
+
+		public static string ContainerRepositories_Title { get { return GetResourceString("ContainerRepositories_Title"); } }
 //Resources:DeploymentAdminResources:ContainerRepository_Description
 
 		public static string ContainerRepository_Description { get { return GetResourceString("ContainerRepository_Description"); } }
@@ -1406,6 +1409,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Common_Key_Validation = "Common_Key_Validation";
 			public const string Common_Name = "Common_Name";
 			public const string Common_Notes = "Common_Notes";
+			public const string ContainerRepositories_Title = "ContainerRepositories_Title";
 			public const string ContainerRepository_Description = "ContainerRepository_Description";
 			public const string ContainerRepository_Help = "ContainerRepository_Help";
 			public const string ContainerRepository_IsDefautForRuntime = "ContainerRepository_IsDefautForRuntime";
