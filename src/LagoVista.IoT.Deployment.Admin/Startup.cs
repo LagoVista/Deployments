@@ -44,6 +44,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ITelemetryConnector, TelemetryConnector>();
             services.AddTransient<IUsageMetricsConnector, UsageMetricsConnector>();
             services.AddTransient<IRemoteServiceManager, RemoteServiceManager>();
+            services.AddTransient<IDeviceErrorCodesManager, DeviceErrorCodesManager>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

@@ -2,6 +2,7 @@
 using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models;
@@ -29,8 +30,8 @@ namespace LagoVista.IoT.Deployment.Models
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
         DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), 
-        FactoryUrl: "/api/deviceconfig/errorcode/factory")]
-    public class DeviceErrorCode : IFormDescriptor
+        GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcodes", FactoryUrl: "/api/errorcode/factory")]
+    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor, IFormDescriptorCol2, IFormConditionalFields
     {
         public const string DeviceErrorCode_NotApplicable = "na";
         public const string DeviceErrorCode_Minutes = "minutes";
@@ -43,12 +44,12 @@ namespace LagoVista.IoT.Deployment.Models
             NotificationIntervalTimeSpan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
             AutoexpireTimespan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
         }
+        public string DatabaseName { get; set; }
+        public string EntityType { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Id { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Name { get; set; }
+        public bool IsPublic { get; set; }
+        public EntityHeader OwnerOrganization { get; set; }
+        public EntityHeader OwnerUser { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_ErrorCode, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
@@ -65,13 +66,17 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_SendEmail, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool SendEmail { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
-        public string Description { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help, 
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Select, FieldType: FieldTypes.EntityHeaderPicker,
+            EntityHeaderPickerUrl:"/api/distros",
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader DistroList { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate, 
+            HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Help,
+            EntityHeaderPickerUrl: "/api/fslite/tickets/templates",
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Select, FieldType: FieldTypes.EntityHeaderPicker, 
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader ServiceTicketTemplate { get; set; }
 
 
@@ -89,24 +94,70 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_AutoExpiresTimespan, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_AutoExpiresTimespan_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_SelectTimespan, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> AutoexpireTimespan { get; set; }
 
-		public List<string> GetFormFields()
+        public DeviceErrorCodeSummary CreateSummary()
+        {
+            return new DeviceErrorCodeSummary()
+            {
+                Description = Description,
+                Id = Id,
+                Name = Name,
+                Key = Key,
+                IsPublic = IsPublic
+            };
+        }
+
+        public FormConditionals GetConditionalFields()
+        {
+            return new FormConditionals()
+            {
+               ConditionalFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(EmailSubject), nameof(NotificationIntervalTimeSpan), nameof(NotificationIntervalQuantity) },
+               Conditionals = new List<FormConditional>()
+               {
+                    new FormConditional()
+                    {
+                         Field = nameof(DistroList),
+                         Value = "*",
+                         VisibleFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(NotificationIntervalQuantity), nameof(NotificationIntervalTimeSpan)},
+                    },
+                    new FormConditional()
+                    {
+                         Field = nameof(SendEmail),
+                         Value = "true",
+                         VisibleFields = new List<string>() { nameof(EmailSubject)},
+                         RequiredFields = new List<string>() {nameof(EmailSubject)},
+                    }
+               }
+            };
+        }
+
+        public List<string> GetFormFields()
 		{
             return new List<string>()
             {
                 nameof(Name),
 				nameof(Key),
-				nameof(Description),
-				nameof(AutoexpireTimespan),
-				nameof(AutoexpireTimespanQuantity),
 				nameof(ServiceTicketTemplate),
-				nameof(TriggerOnEachOccurrence),
-				nameof(DistroList),
-				nameof(NotificationIntervalTimeSpan),
-				nameof(NotificationIntervalQuantity),
+		        nameof(DistroList),
+                nameof(SendEmail),
+                nameof(EmailSubject),
+                nameof(SendSMS)
 			};
 		}
 
-		[CustomValidator]
+        public List<string> GetFormFieldsCol2()
+        {
+            return new List<string>()
+            {
+                nameof(TriggerOnEachOccurrence),
+                nameof(AutoexpireTimespan),
+                nameof(AutoexpireTimespanQuantity),
+                nameof(NotificationIntervalTimeSpan),
+                nameof(NotificationIntervalQuantity),
+                nameof(Description),
+            };
+        }
+
+        [CustomValidator]
         public void Validate(ValidationResult result)
         {
             if (EntityHeader.IsNullOrEmpty(DistroList))
@@ -129,6 +180,11 @@ namespace LagoVista.IoT.Deployment.Models
                 result.AddUserError("You must specify a positive, non-zero auto expire value.");
             }
         }
+    }
+
+    public class DeviceErrorCodeSummary: SummaryData
+    {
+
     }
 }
 
