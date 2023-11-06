@@ -59,9 +59,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> UpdateErrorCodeAsync(DeviceErrorCode errorCode, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(errorCode, Actions.Create);
-            await AuthorizeAsync(errorCode, AuthorizeResult.AuthorizeActions.Create, user, org);
+            await AuthorizeAsync(errorCode, AuthorizeResult.AuthorizeActions.Update, user, org);
 
-            await _deviceErrorCodesRepo.AddErrorCodeAsync(errorCode);
+            await _deviceErrorCodesRepo.UpdateErrorCodeAsync(errorCode);
 
             return InvokeResult.Success;
         }

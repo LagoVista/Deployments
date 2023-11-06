@@ -29,8 +29,8 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
-        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), 
-        GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcodes", FactoryUrl: "/api/errorcode/factory")]
+        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
     public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor, IFormDescriptorCol2, IFormConditionalFields
     {
         public const string DeviceErrorCode_NotApplicable = "na";
@@ -40,7 +40,7 @@ namespace LagoVista.IoT.Deployment.Models
 
         public DeviceErrorCode()
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToId();
             NotificationIntervalTimeSpan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
             AutoexpireTimespan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
         }
@@ -66,23 +66,23 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_SendEmail, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool SendEmail { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help, 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help,
             WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Select, FieldType: FieldTypes.EntityHeaderPicker,
-            EntityHeaderPickerUrl:"/api/distros",
+            EntityHeaderPickerUrl: "/api/distros",
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader DistroList { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate, 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate,
             HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Help,
             EntityHeaderPickerUrl: "/api/fslite/tickets/templates",
-            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Select, FieldType: FieldTypes.EntityHeaderPicker, 
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Select, FieldType: FieldTypes.EntityHeaderPicker,
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader ServiceTicketTemplate { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationIntervalQuantity, FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public double? NotificationIntervalQuantity { get; set; }
-     
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationInterval, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationInterval_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_SelectTimespan, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> NotificationIntervalTimeSpan { get; set; }
 
@@ -110,14 +110,34 @@ namespace LagoVista.IoT.Deployment.Models
         {
             return new FormConditionals()
             {
-               ConditionalFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(EmailSubject), nameof(NotificationIntervalTimeSpan), nameof(NotificationIntervalQuantity) },
-               Conditionals = new List<FormConditional>()
+                ConditionalFields = new List<string>() { nameof(SendEmail), nameof(TriggerOnEachOccurrence), nameof(SendSMS), nameof(EmailSubject), nameof(NotificationIntervalTimeSpan), nameof(NotificationIntervalQuantity), nameof(AutoexpireTimespanQuantity) },
+                Conditionals = new List<FormConditional>()
                {
                     new FormConditional()
                     {
                          Field = nameof(DistroList),
                          Value = "*",
-                         VisibleFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(NotificationIntervalQuantity), nameof(NotificationIntervalTimeSpan)},
+                         VisibleFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(NotificationIntervalTimeSpan) },
+                    },
+                    new FormConditional()
+                    {
+                         Field = nameof(ServiceTicketTemplate),
+                         Value = "*",
+                         VisibleFields = new List<string>() { nameof(TriggerOnEachOccurrence) },
+                    },
+                    new FormConditional()
+                    {
+                         Field = nameof(AutoexpireTimespan),
+                         Value = DeviceErrorCode_NotApplicable,
+                         NotEquals = true,
+                         VisibleFields = new List<string>() {  nameof(AutoexpireTimespanQuantity)},
+                    },
+                      new FormConditional()
+                    {
+                         Field = nameof(NotificationIntervalTimeSpan),
+                         Value = DeviceErrorCode_NotApplicable,
+                         NotEquals = true,
+                         VisibleFields = new List<string>() {  nameof(NotificationIntervalQuantity) },
                     },
                     new FormConditional()
                     {
@@ -131,24 +151,24 @@ namespace LagoVista.IoT.Deployment.Models
         }
 
         public List<string> GetFormFields()
-		{
+        {
             return new List<string>()
             {
                 nameof(Name),
-				nameof(Key),
-				nameof(ServiceTicketTemplate),
-		        nameof(DistroList),
+                nameof(Key),
+                nameof(ServiceTicketTemplate),
+                nameof(TriggerOnEachOccurrence),
+                nameof(DistroList),
                 nameof(SendEmail),
                 nameof(EmailSubject),
                 nameof(SendSMS)
-			};
-		}
+            };
+        }
 
         public List<string> GetFormFieldsCol2()
         {
             return new List<string>()
             {
-                nameof(TriggerOnEachOccurrence),
                 nameof(AutoexpireTimespan),
                 nameof(AutoexpireTimespanQuantity),
                 nameof(NotificationIntervalTimeSpan),
@@ -182,7 +202,10 @@ namespace LagoVista.IoT.Deployment.Models
         }
     }
 
-    public class DeviceErrorCodeSummary: SummaryData
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
+      DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+      GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
+    public class DeviceErrorCodeSummary : SummaryData
     {
 
     }
@@ -195,7 +218,7 @@ namespace LagoVista
         public static TimeSpan ToTimeSpan(this TimeSpanIntervals interval, double quantity)
         {
             switch (interval)
-            {                
+            {
                 case TimeSpanIntervals.Minutes: return TimeSpan.FromMinutes(quantity);
                 case TimeSpanIntervals.Hours: return TimeSpan.FromHours(quantity);
                 case TimeSpanIntervals.Days: return TimeSpan.FromDays(quantity);
@@ -206,7 +229,7 @@ namespace LagoVista
 
         public static string AddTimeSpan(this TimeSpanIntervals interval, double quantity, DateTime? date = null)
         {
-            if(!date.HasValue)
+            if (!date.HasValue)
             {
                 date = DateTime.UtcNow;
             }

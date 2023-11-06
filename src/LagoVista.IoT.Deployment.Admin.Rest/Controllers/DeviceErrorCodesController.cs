@@ -39,7 +39,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpPut("/api/errorcode")]
         public Task<InvokeResult> UpdateErrorCodeAsync([FromBody] DeviceErrorCode errorCode)
         {
-            return _errorCodeManager.AddErrorCodeAsync(errorCode, OrgEntityHeader, UserEntityHeader);
+            SetUpdatedProperties(errorCode);
+            return _errorCodeManager.UpdateErrorCodeAsync(errorCode, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -61,7 +62,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/errorcode/factory")]
         public DetailResponse<DeviceErrorCode> CreateNewErrorCode()
         {
-            return DetailResponse<DeviceErrorCode>.Create();
+            var errorCode = DetailResponse<DeviceErrorCode>.Create();
+            SetAuditProperties(errorCode.Model);
+            SetOwnedProperties(errorCode.Model);
+            return errorCode;
         }
 
         /// <summary>
