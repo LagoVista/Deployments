@@ -90,9 +90,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [JsonConverter(typeof(StringEnumConverter))]
         public PipelineModuleStatus Status { get; set; }
         [JsonProperty("deviceIdParsers")]
-        public List<DeviceMessageDefinitionField> DeviceIdParsers { get; private set; }
+        public List<DeviceField> DeviceIdParsers { get; private set; }
         [JsonProperty("messageIdParsers")]
-        public List<DeviceMessageDefinitionField> MessageTypeIdParsers { get; private set; }
+        public List<DeviceField> MessageTypeIdParsers { get; private set; }
 
         public static PlannerSummary Create(PlannerConfiguration planner)
         {

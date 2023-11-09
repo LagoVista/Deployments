@@ -105,6 +105,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 nameof(Solution.Version),
                 nameof(Solution.Icon),
                 nameof(Solution.Key),
+                nameof(Solution.DefaultListener),
                 nameof(Solution.Planner),
                 nameof(Solution.Description),
                 nameof(Solution.Settings),
