@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
+        SaveUrl: "/api/clientapp", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
     public class ClientApp : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
     {
         public ClientApp()
@@ -34,10 +34,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader ClientAppUser { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Secret, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Secret, SecureIdFieldName:nameof(AppAuthKeyPrimarySecureId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public String AppAuthKeyPrimary { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey2, FieldType: FieldTypes.Secret, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey2, FieldType: FieldTypes.Secret, SecureIdFieldName: nameof(AppAuthKeySecondarySecureId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public String AppAuthKeySecondary { get; set; }
 
         public string AppAuthKeyPrimarySecureId { get; set; }
@@ -81,16 +81,18 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance,  FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, EntityHeaderPickerUrl: "/api/deployment/instances", 
+            ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public EntityHeader DeploymentInstance { get; set; }
 
-		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Kiosk, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
+		[FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Kiosk, FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_Kiosk_Select, EntityHeaderPickerUrl: "/api/ui/kiosks", 
+            ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
 		public EntityHeader Kiosk { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, ChildListDisplayMember: "text", FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/devicetypes", ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceTypes { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceConfigs, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceConfigs, ChildListDisplayMember: "text", FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs", ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceConfigurations { get; set; }
 
         [CustomValidator]
@@ -129,12 +131,18 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string AppAuthKeySecondary { get; set; }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
+      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+      SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
     public class ClientAppSummary : SummaryData
     {
         public string InstanceId { get; set; }
         public string InstanceName { get; set; }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
+      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+      SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
     public class KioskClientAppSummary
 	{
 		public string KioskUrl { get; set; }
