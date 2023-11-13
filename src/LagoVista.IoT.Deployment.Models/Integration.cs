@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models.Resources;
 using Newtonsoft.Json;
@@ -19,8 +20,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         SendGrid
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description, 
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        GetListUrl: "/api/integrations", GetUrl: "/api/integration/{id}", SaveUrl: "/api/integration", FactoryUrl: "/api/integration/factory", DeleteUrl: "/api/integration/{id}")]
+    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor, IFormConditionalFields
     {
         public const string IntegrationType_Twillio = "twillio";
         public const string IntegrationType_PagerDuty = "pagerduty";
@@ -60,7 +63,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             get; set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Integeration_APIKey, FieldType: FieldTypes.Text, SecureIdFieldName:nameof(ApiKeySecretId), ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string ApiKey
         {
             get; set;
@@ -122,8 +125,44 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 IntegrationType = IntegrationType.Text
             };
         }
+
+        public FormConditionals GetConditionalFields()
+        {
+            return new FormConditionals()
+            {
+                ConditionalFields = new List<string>() { nameof(Sms), nameof(ApiKey), nameof(FromAddress), nameof(AccountId), nameof(SmtpAddress), nameof(RoutingKey) },
+                Conditionals = new List<FormConditional>()
+                {
+                    new FormConditional()
+                    {
+                         Field = nameof(IntegrationType),
+                         Value = IntegrationType_Twillio,
+                         VisibleFields = new List<string>() { nameof(Sms), nameof(ApiKey)},
+                         RequiredFields = new List<string>() { nameof(Sms), nameof(ApiKey)},
+                    },
+                    new FormConditional()
+                    {
+                         Field = nameof(IntegrationType),
+                         Value = IntegrationType_SendGrid,
+                         VisibleFields = new List<string>() { nameof(FromAddress), nameof(ApiKey)},
+                         RequiredFields = new List<string>() { nameof(FromAddress), nameof(ApiKey)},
+                    },
+                    new FormConditional()
+                    {
+                         Field = nameof(IntegrationType),
+                         Value = IntegrationType_PagerDuty,
+                         VisibleFields = new List<string>() { nameof(RoutingKey), nameof(ApiKey)},
+                         RequiredFields = new List<string>() { nameof(RoutingKey), nameof(ApiKey)},
+                    },
+                }
+            };
+        }
     }
 
+
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description,
+        EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+        GetListUrl: "/api/integrations", GetUrl: "/api/integration/{id}", SaveUrl: "/api/integration", FactoryUrl: "/api/integration/factory", DeleteUrl: "/api/integration/{id}")]
     public class IntegrationSummary : SummaryData
     {
         public string IntegrationType { get; set; }
