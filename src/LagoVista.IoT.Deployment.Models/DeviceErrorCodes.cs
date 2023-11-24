@@ -31,7 +31,7 @@ namespace LagoVista.IoT.Deployment.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
         DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
-    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor, IFormDescriptorCol2, IFormConditionalFields
+    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields
     {
         public const string DeviceErrorCode_NotApplicable = "na";
         public const string DeviceErrorCode_Minutes = "minutes";
@@ -44,21 +44,15 @@ namespace LagoVista.IoT.Deployment.Models
             NotificationIntervalTimeSpan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
             AutoexpireTimespan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
         }
-        public string DatabaseName { get; set; }
-        public string EntityType { get; set; }
-
-        public bool IsPublic { get; set; }
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_ErrorCode, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TriggerOnEachOccurrence, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TriggerOnEachOccurrence_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool TriggerOnEachOccurrence { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_EmailSubject, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_EmailSubject_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public string EmailSubject { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
+        public string Icon { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_SendSMS, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool SendSMS { get; set; }
@@ -156,6 +150,7 @@ namespace LagoVista.IoT.Deployment.Models
             {
                 nameof(Name),
                 nameof(Key),
+                nameof(Icon),
                 nameof(ServiceTicketTemplate),
                 nameof(TriggerOnEachOccurrence),
                 nameof(DistroList),

@@ -14,26 +14,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetListUrl: "/api/container/repos", GetUrl: "/api/container/repo/{id}", FactoryUrl: "/api/container/repo/factory", SaveUrl: "/api/container/repo")]
 
-    public class ContainerRepository : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor, IKeyedEntity
+    public class ContainerRepository : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor
     {
         public ContainerRepository()
         {
             Tags = new List<TaggedContainer>();
             Registry = new EntityHeader() { Id = "CE5197F74A7D4A03A18FAC45FF046187", Text = "Docker Hub" };
         }
-
-        public string DatabaseName { get; set; }
-        public string EntityType { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, HelpResource: DeploymentAdminResources.Names.Common_IsPublic_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
-        public bool IsPublic { get; set; }
-
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
-
 
         [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_Registry, HelpResource:DeploymentAdminResources.Names.ContainerRepository_Registry_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: false)]
         public EntityHeader Registry { get; set; }

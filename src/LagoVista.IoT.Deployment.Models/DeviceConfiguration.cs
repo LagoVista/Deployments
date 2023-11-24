@@ -19,7 +19,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl:"/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
         HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html")]
-    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
+    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable,  IFormDescriptor, IFormDescriptorAdvanced, IIconEntity
     {
         public DeviceConfiguration()
         {
@@ -37,13 +37,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Icon = "icon-ae-device-config";
         }
 
-        public String DatabaseName { get; set; }
-
-        public String EntityType { get; set; }
-
         public double ConfigurationVersion { get; set; }
 
 
+        [FKeyProperty(nameof(StateSet), "CustomStatusType.Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Help, WaterMark: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<StateSet> CustomStatusType { get; set; }
 
@@ -61,10 +58,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public String DeviceTypeLabel { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public String Key { get; set; }
-
-
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogEnabled_Default_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public bool WatchdogEnabledDefault { get; set; }
 
@@ -80,12 +73,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<SensorDefinition> SensorDefinitions { get; set; }
 
-        public string Icon { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_IsPublic, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources))]
-        public bool IsPublic { get; set; }
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
+        public string Icon { get; set; }
 
         public EntityHeader ToEntityHeader()
         {
@@ -147,19 +137,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 {
                     nameof(DeviceConfiguration.Name),
                     nameof(DeviceConfiguration.Key),
-                    nameof(DeviceConfiguration.CustomStatusType),
+                    nameof(DeviceConfiguration.Icon),
                     nameof(DeviceConfiguration.Description),
-					nameof(DeviceConfiguration.DeviceLabel),
-					nameof(DeviceConfiguration.DeviceIdLabel),
-					nameof(DeviceConfiguration.DeviceNameLabel),
-					nameof(DeviceConfiguration.DeviceTypeLabel),
-					nameof(DeviceConfiguration.WatchdogEnabledDefault),
-					nameof(DeviceConfiguration.WatchdogSeconds),
-                    nameof(DeviceConfiguration.Routes),
-					nameof(DeviceConfiguration.Properties),
-					nameof(DeviceConfiguration.ErrorCodes),
-					nameof(DeviceConfiguration.MessageWatchDogs),
-					nameof(DeviceConfiguration.SensorDefinitions),
+				    nameof(DeviceConfiguration.Routes),
 				};
         }
 
@@ -193,6 +173,30 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 result.AddUserError("Error codes for a device configuration must be unique..");
             }
+        }
+
+        public List<string> GetAdvancedFields()
+        {
+
+            return new List<string>()
+                {
+                    nameof(DeviceConfiguration.Name),
+                    nameof(DeviceConfiguration.Key),
+                    nameof(DeviceConfiguration.CustomStatusType),
+                    nameof(DeviceConfiguration.Icon),
+                    nameof(DeviceConfiguration.Description),
+                    nameof(DeviceConfiguration.DeviceLabel),
+                    nameof(DeviceConfiguration.DeviceIdLabel),
+                    nameof(DeviceConfiguration.DeviceNameLabel),
+                    nameof(DeviceConfiguration.DeviceTypeLabel),
+                    nameof(DeviceConfiguration.WatchdogEnabledDefault),
+                    nameof(DeviceConfiguration.WatchdogSeconds),
+                    nameof(DeviceConfiguration.Routes),
+                    nameof(DeviceConfiguration.Properties),
+                    nameof(DeviceConfiguration.ErrorCodes),
+                    nameof(DeviceConfiguration.MessageWatchDogs),
+                    nameof(DeviceConfiguration.SensorDefinitions),
+                };
         }
     }
 

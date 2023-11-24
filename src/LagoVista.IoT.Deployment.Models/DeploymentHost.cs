@@ -111,7 +111,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}",
         HelpUrl: "https://docs.nuviot.com/Deployment/Host.html")]
-    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
+    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,IValidateable, IFormDescriptor
     {
         public const string HostSize_ExtraSmall = "extrasmall";
         public const string HostSize_Small = "small";
@@ -180,17 +180,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             HostAccessKey2 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
         }
 
-        public string DatabaseName { get; set; }
-        public string EntityType { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Type, EnumType: (typeof(HostTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<HostTypes> HostType { get; set; }
 
 
+        [FKeyProperty(nameof(SharedInstanceSummary), WhereClause:nameof(SharedInstanceSummary) + "[*].Id = {0}")]
         public List<SharedInstanceSummary> DeployedInstances { get; set; }
 
 
@@ -216,12 +212,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }
 
+        [FKeyProperty(nameof(DeploymentInstance), nameof(DedicatedInstance) + ".Id = {0}")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DedicatedInstance, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public EntityHeader DedicatedInstance { get; set; }
-
-        public bool IsPublic { get; set; }
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerRepository { get; set; }
