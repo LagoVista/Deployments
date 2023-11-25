@@ -1,5 +1,6 @@
 ﻿using LagoVista.CloudStorage;
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models;

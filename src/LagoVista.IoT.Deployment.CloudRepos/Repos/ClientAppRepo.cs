@@ -1,4 +1,5 @@
 ﻿using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -11,8 +12,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos
     public class ClientAppRepo : DocumentDBRepoBase<ClientApp>, IClientAppRepo
     {
         private bool _shouldConsolidateCollections;
-        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
+        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependency)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, dependencyManager:dependency)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

@@ -186,7 +186,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var route = await _deviceConfigManager.CreateRouteWithDefaultsAsync(OrgEntityHeader);
             var response = DetailResponse<Route>.Create(route);
             response.IsEditing = false;
-            SetAuditProperties(response.Model);
             return response;
         }
 

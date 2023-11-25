@@ -1,23 +1,22 @@
 ﻿using LagoVista.CloudStorage.DocumentDB;
-using LagoVista.Core.PlatformSupport;
-using LagoVista.IoT.DeviceAdmin.Models;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LagoVista.IoT.DeviceAdmin.Interfaces.Repos;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.CloudStorage;
+using LagoVista.Core.Interfaces;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeviceConfigurationRepo : DocumentDBRepoBase<DeviceConfiguration>, IDeviceConfigurationRepo
     {
         private bool _shouldConsolidateCollections;
-        public DeviceConfigurationRepo(IDeviceConfigurationSettings repoSettings, ICacheProvider cacheProvider, IAdminLogger logger) 
-            : base(repoSettings.DeviceConfigurationtAdminDocDbStorage.Uri, repoSettings.DeviceConfigurationtAdminDocDbStorage.AccessKey, repoSettings.DeviceConfigurationtAdminDocDbStorage.ResourceName, logger, cacheProvider)
+        public DeviceConfigurationRepo(IDeviceConfigurationSettings repoSettings, ICacheProvider cacheProvider, IAdminLogger logger, IDependencyManager dependencyMgr) 
+            : base(repoSettings.DeviceConfigurationtAdminDocDbStorage.Uri, repoSettings.DeviceConfigurationtAdminDocDbStorage.AccessKey, 
+                  repoSettings.DeviceConfigurationtAdminDocDbStorage.ResourceName, logger, cacheProvider, dependencyMgr)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

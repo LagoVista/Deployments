@@ -16,7 +16,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/route/factory")]
-    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IAuditableEntity, IFormDescriptor, IValidateable
+    public class Route : IKeyedEntity, IIDEntity, INamedEntity,  IFormDescriptor, IValidateable
     {
         public Route()
         {
@@ -35,6 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Route_IsDefault, HelpResource: DeploymentAdminResources.Names.Route_IsDefault_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsDefault { get; set; }
 
+        [FKeyProperty(nameof(DeviceMessageDefinition), "ARRAY_CONTAINS(c.Routes, {MessageDefinition:{Id:@id}}, true)")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Route_Messages, HelpResource: DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
 

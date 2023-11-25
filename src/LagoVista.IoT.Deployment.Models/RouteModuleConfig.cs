@@ -39,6 +39,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RouteModuleConfig_Title, DeploymentAdminResources.Names.RouteModuleConfig_Help, DeploymentAdminResources.Names.RouteModuleConfig_Help,
+      EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/route/moduleconfig/factory")]
     public class RouteModuleConfig
     {
         public RouteModuleConfig()
@@ -72,6 +74,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public DiagramLocation DiagramLocation { get; set; }
 
+        [FKeyProperty("SentinelConfiguration,CustomModuleConfiguration,InputTranslatorConfiguration,DataStream,TransmitterConfiguration,OutputTranslatorConfiguration,DeviceWorkflow",
+            WhereClause: "(SELECT VALUE ( ARRAY(SELECT VALUE ARRAY_LENGTH(ARRAY(SELECT VALUE m.Module.Id FROM m in p.PipelineModules where m.Module.Id = @id )) FROM p IN c.Routes)))[0] > 0")]
         //[JsonConverter(typeof(PipelineModuleConfigurationConverter))]
         public EntityHeader<IPipelineModuleConfiguration> Module { get; set; }
 

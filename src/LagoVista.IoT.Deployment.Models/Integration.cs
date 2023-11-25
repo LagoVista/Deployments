@@ -23,22 +23,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetListUrl: "/api/integrations", GetUrl: "/api/integration/{id}", SaveUrl: "/api/integration", FactoryUrl: "/api/integration/factory", DeleteUrl: "/api/integration/{id}")]
-    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, INoSQLEntity, IFormDescriptor, IFormConditionalFields
+    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IFormConditionalFields
     {
         public const string IntegrationType_Twillio = "twillio";
         public const string IntegrationType_PagerDuty = "pagerduty";
         public const string IntegrationType_SendGrid = "sendgrid";
 
 
-        public string DatabaseName { get; set; }
-        public string EntityType { get; set; }
-
-        public bool IsPublic { get; set; }
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
 
         public List<string> GetFormFields()
         {

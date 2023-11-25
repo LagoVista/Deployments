@@ -1,4 +1,4 @@
-﻿/*10/10/2023 1:06:55 PM*/
+﻿/*11/23/2023 10:51:09 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -381,6 +381,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_Help
 
 		public static string DeviceConfiguration_Help { get { return GetResourceString("DeviceConfiguration_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiguration_Icon
+
+		public static string DeviceConfiguration_Icon { get { return GetResourceString("DeviceConfiguration_Icon"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_MessageWatchDogs
 
 		public static string DeviceConfiguration_MessageWatchDogs { get { return GetResourceString("DeviceConfiguration_MessageWatchDogs"); } }
@@ -1260,6 +1263,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Route_Workflow
 
 		public static string Route_Workflow { get { return GetResourceString("Route_Workflow"); } }
+//Resources:DeploymentAdminResources:RouteModuleConfig_Help
+
+		public static string RouteModuleConfig_Help { get { return GetResourceString("RouteModuleConfig_Help"); } }
+//Resources:DeploymentAdminResources:RouteModuleConfig_Title
+
+		public static string RouteModuleConfig_Title { get { return GetResourceString("RouteModuleConfig_Title"); } }
 //Resources:DeploymentAdminResources:RouteModuleConfig_Unassigned
 
 		public static string RouteModuleConfig_Unassigned { get { return GetResourceString("RouteModuleConfig_Unassigned"); } }
@@ -1498,6 +1507,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_DeviceTypeLabel_Default = "DeviceConfiguration_DeviceTypeLabel_Default";
 			public const string DeviceConfiguration_DeviceTypeLabel_Help = "DeviceConfiguration_DeviceTypeLabel_Help";
 			public const string DeviceConfiguration_Help = "DeviceConfiguration_Help";
+			public const string DeviceConfiguration_Icon = "DeviceConfiguration_Icon";
 			public const string DeviceConfiguration_MessageWatchDogs = "DeviceConfiguration_MessageWatchDogs";
 			public const string DeviceConfiguration_Properties = "DeviceConfiguration_Properties";
 			public const string DeviceConfiguration_Properties_Help = "DeviceConfiguration_Properties_Help";
@@ -1791,6 +1801,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Route_Title = "Route_Title";
 			public const string Route_Transmitter = "Route_Transmitter";
 			public const string Route_Workflow = "Route_Workflow";
+			public const string RouteModuleConfig_Help = "RouteModuleConfig_Help";
+			public const string RouteModuleConfig_Title = "RouteModuleConfig_Title";
 			public const string RouteModuleConfig_Unassigned = "RouteModuleConfig_Unassigned";
 			public const string Solution_DefaultListener = "Solution_DefaultListener";
 			public const string Solution_DefaultListener_Help = "Solution_DefaultListener_Help";

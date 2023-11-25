@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RemoteDeployment_Title, DeploymentAdminResources.Names.RemoteDeployment_Help, DeploymentAdminResources.Names.RemoteDeployment_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class RemoteDeployment : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IOwnedEntity, IValidateable, IKeyedEntity, INoSQLEntity, IFormDescriptor
+    public class RemoteDeployment : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor
     {
         public RemoteDeployment()
         {
@@ -31,15 +31,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.RemoteDeployment_SecondaryMCP, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public DeploymentHost SecondaryMCP { get; set; }
 
-        public bool IsPublic { get; set; }
-        public EntityHeader OwnerOrganization { get; set; }
-        public EntityHeader OwnerUser { get; set; }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
-
-        public string DatabaseName { get; set; }
-        public string EntityType { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.RemoteDeployment_Instances, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public List<DeploymentInstance> Instances { get; set; }
