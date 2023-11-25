@@ -6,6 +6,7 @@ using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
+using LagoVista.IoT.DeviceAdmin.Interfaces.Repos;
 using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
@@ -33,9 +34,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IDataStreamManager _dataStreamManager;
         IDeviceTypeManager _deviceTypeManager;
         IRouteSupportRepo _routeSupportRepo;
+        IStateSetRepo _stateSetRepo;
+        IUnitSetRepo _unitSetRepo;
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDataStreamManager dataStreamManager, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
                             IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
+                            IStateSetRepo stateSetRepo, IUnitSetRepo unitSetRepo,
                             IDeviceTypeManager deviceTypeManager, IRouteSupportRepo routeSupportRepo, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
@@ -46,6 +50,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _dataStreamManager = dataStreamManager;
             _deviceTypeManager = deviceTypeManager;
             _routeSupportRepo = routeSupportRepo;
+            _stateSetRepo = stateSetRepo;
+            _unitSetRepo = unitSetRepo;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -156,6 +162,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             foreach (var route in deviceConfiguration.Routes)
             {
                 await PopulateRoutes(route, org, user);
+            }
+
+            foreach(var prop in deviceConfiguration.Properties)
+            {
+                switch(prop.FieldType.Value)
+                {
+                    case ParameterTypes.State: prop.StateSet.Value = await _stateSetRepo.GetStateSetAsync(prop.StateSet.Id); break;
+                    case ParameterTypes.ValueWithUnit: prop.UnitSet.Value = await _unitSetRepo.GetUnitSetAsync(prop.UnitSet.Id); break;
+                }
             }
 
             if (result.Successful)
