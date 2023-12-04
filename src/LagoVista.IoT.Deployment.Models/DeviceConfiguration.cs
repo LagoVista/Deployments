@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help, 
         DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl:"/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
-        HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html")]
+        HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html", Icon: "icon-ae-device-config")]
     public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable,  IFormDescriptor, IFormDescriptorAdvanced, IIconEntity
     {
         public DeviceConfiguration()
