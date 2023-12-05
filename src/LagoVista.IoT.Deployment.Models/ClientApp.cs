@@ -35,15 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string AppAuthKeyPrimarySecureId { get; set; }
         public string AppAuthKeySecondarySecureId { get; set; }
 
-        public EntityHeader ToEntityHeader()
-        {
-            return new EntityHeader()
-            {
-                Id = Id,
-                Text = Name,
-            };
-        }
-
+        
         public List<string> GetFormFields()
         {
             return new List<string>()

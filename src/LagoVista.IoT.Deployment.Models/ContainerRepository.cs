@@ -81,16 +81,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(ContainerRepository.Tags),
             };
         }
-
-        public EntityHeader ToEntityHeader()
-        {
-            return new EntityHeader()
-            {
-                Id = Id,
-                Key = Key,
-                Text = Name,
-            };
-        }
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ContainerRepositories_Title, DeploymentAdminResources.Names.ContainerRepository_Help,
