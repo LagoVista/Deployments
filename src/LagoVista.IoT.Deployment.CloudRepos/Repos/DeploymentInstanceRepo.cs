@@ -42,28 +42,23 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync(ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.Status.Value != DeploymentInstanceStates.Offline, listRequest);
-            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
+            return await base.QuerySummaryAsync<DeploymentInstanceSummary, DeploymentInstance>(qry => qry.Status.Value != DeploymentInstanceStates.Offline, ins=>ins.Name, listRequest);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllInstances(ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => true, listRequest);
-            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
+            return await base.QuerySummaryAsync<DeploymentInstanceSummary, DeploymentInstance>(qry => true, ins => ins.Name, listRequest);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllFailedInstancesAsync(ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => 
+            return await base.QuerySummaryAsync<DeploymentInstanceSummary, DeploymentInstance>(qry => 
             qry.Status.Value == DeploymentInstanceStates.FailedToStart ||
             qry.Status.Value == DeploymentInstanceStates.FailedToInitialize ||
             qry.Status.Value == DeploymentInstanceStates.FatalError ||
             qry.Status.Value == DeploymentInstanceStates.HostFailedHealthCheck,
+            ins=>ins.Name,
             listRequest);
-            var summaryItems = items.Model.OrderBy(mod => mod.Name).Select(di => di.CreateSummary());
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, summaryItems);
         }
 
 
@@ -89,14 +84,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(string orgId, ListRequest listRequest)
         {
-            var items = await  base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId, listRequest);
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.Where(itm=>itm.IsArchived == false).OrderBy(mod => mod.Name).Select(itm=>itm.CreateSummary()));
+            return await base.QuerySummaryAsync<DeploymentInstanceSummary, DeploymentInstance>(qry => qry.OwnerOrganization.Id == orgId && qry.IsArchived == false, ins=>ins.Name, listRequest);
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetInstancesForOrgAsync(NuvIoTEditions edition, string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition), listRequest);
-            return ListResponse<DeploymentInstanceSummary>.Create(listRequest, items.Model.OrderBy(mod => mod.Name).Select(itm => itm.CreateSummary()));
+            return await base.QuerySummaryAsync<DeploymentInstanceSummary, DeploymentInstance>(qry => qry.OwnerOrganization.Id == orgId && (qry.NuvIoTEdition.HasValue && qry.NuvIoTEdition.Value == edition), ins=>ins.Name, listRequest);
         }
 
         public Task<IEnumerable<DeploymentInstanceSummary>> GetInstancesForHostAsync(string id)

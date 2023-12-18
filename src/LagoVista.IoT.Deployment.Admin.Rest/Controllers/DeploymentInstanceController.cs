@@ -515,6 +515,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.RegenerateKeyAsync(instanceid, key, OrgEntityHeader, UserEntityHeader);
         }
 
+        /// <summary>
+        /// Deployment Instance - Create a credentials object,
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/credentials/factory")]
+        public DetailResponse<DeploymentInstanceCredentials> CreateCredentials()
+        {
+            return DetailResponse<DeploymentInstanceCredentials>.Create();
+        }
 
         /// <summary>
         /// Get Deployment Settings

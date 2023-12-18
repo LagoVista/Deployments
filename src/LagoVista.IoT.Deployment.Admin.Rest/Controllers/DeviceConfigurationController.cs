@@ -55,12 +55,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/deviceconfigs")]
-        public async Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync()
+        public Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync()
         {
-            var deviceConfigurations = await _deviceConfigManager.GetDeviceConfigurationsForOrgsAsync(OrgEntityHeader.Id, UserEntityHeader);
-            var response = ListResponse<DeviceConfigurationSummary>.Create(deviceConfigurations);
-
-            return response;
+            return _deviceConfigManager.GetDeviceConfigurationsForOrgsAsync(OrgEntityHeader.Id, GetListRequestFromHeader(), UserEntityHeader);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿/*11/23/2023 10:51:09 AM*/
+﻿/*12/18/2023 7:01:34 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -90,6 +90,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Common_Description
 
 		public static string Common_Description { get { return GetResourceString("Common_Description"); } }
+//Resources:DeploymentAdminResources:Common_Icon
+
+		public static string Common_Icon { get { return GetResourceString("Common_Icon"); } }
 //Resources:DeploymentAdminResources:Common_Id
 
 		public static string Common_Id { get { return GetResourceString("Common_Id"); } }
@@ -855,6 +858,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_Caches
 
 		public static string Instance_Caches { get { return GetResourceString("Instance_Caches"); } }
+//Resources:DeploymentAdminResources:Instance_Credentials
+
+		public static string Instance_Credentials { get { return GetResourceString("Instance_Credentials"); } }
+//Resources:DeploymentAdminResources:Instance_Credentials_Help
+
+		public static string Instance_Credentials_Help { get { return GetResourceString("Instance_Credentials_Help"); } }
 //Resources:DeploymentAdminResources:Instance_DataStreams
 
 		public static string Instance_DataStreams { get { return GetResourceString("Instance_DataStreams"); } }
@@ -903,6 +912,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_InputCommandAnonymous
 
 		public static string Instance_InputCommandAnonymous { get { return GetResourceString("Instance_InputCommandAnonymous"); } }
+//Resources:DeploymentAdminResources:Instance_InputCommandAnonymous_Help
+
+		public static string Instance_InputCommandAnonymous_Help { get { return GetResourceString("Instance_InputCommandAnonymous_Help"); } }
 //Resources:DeploymentAdminResources:Instance_InputCommandBasicAuthPassword
 
 		public static string Instance_InputCommandBasicAuthPassword { get { return GetResourceString("Instance_InputCommandBasicAuthPassword"); } }
@@ -960,6 +972,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_Solution
 
 		public static string Instance_Solution { get { return GetResourceString("Instance_Solution"); } }
+//Resources:DeploymentAdminResources:Instance_Solution_Help
+
+		public static string Instance_Solution_Help { get { return GetResourceString("Instance_Solution_Help"); } }
 //Resources:DeploymentAdminResources:Instance_Solution_Select
 
 		public static string Instance_Solution_Select { get { return GetResourceString("Instance_Solution_Select"); } }
@@ -972,6 +987,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_StatusTimeStamp
 
 		public static string Instance_StatusTimeStamp { get { return GetResourceString("Instance_StatusTimeStamp"); } }
+//Resources:DeploymentAdminResources:Instance_Subscription_Help
+
+		public static string Instance_Subscription_Help { get { return GetResourceString("Instance_Subscription_Help"); } }
 //Resources:DeploymentAdminResources:Instance_Title
 
 		public static string Instance_Title { get { return GetResourceString("Instance_Title"); } }
@@ -1410,6 +1428,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ClientApp_SelectInstance = "ClientApp_SelectInstance";
 			public const string ClientApp_Title = "ClientApp_Title";
 			public const string Common_Description = "Common_Description";
+			public const string Common_Icon = "Common_Icon";
 			public const string Common_Id = "Common_Id";
 			public const string Common_IsPublic = "Common_IsPublic";
 			public const string Common_IsPublic_Help = "Common_IsPublic_Help";
@@ -1665,6 +1684,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostType_Development = "HostType_Development";
 			public const string HostType_MultiTenantMQTT = "HostType_MultiTenantMQTT";
 			public const string Instance_Caches = "Instance_Caches";
+			public const string Instance_Credentials = "Instance_Credentials";
+			public const string Instance_Credentials_Help = "Instance_Credentials_Help";
 			public const string Instance_DataStreams = "Instance_DataStreams";
 			public const string Instance_DebugMode = "Instance_DebugMode";
 			public const string Instance_DebugMode_Help = "Instance_DebugMode_Help";
@@ -1681,6 +1702,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_Host_Help = "Instance_Host_Help";
 			public const string Instance_Host_Watermark = "Instance_Host_Watermark";
 			public const string Instance_InputCommandAnonymous = "Instance_InputCommandAnonymous";
+			public const string Instance_InputCommandAnonymous_Help = "Instance_InputCommandAnonymous_Help";
 			public const string Instance_InputCommandBasicAuthPassword = "Instance_InputCommandBasicAuthPassword";
 			public const string Instance_InputCommandBasicAuthUserName = "Instance_InputCommandBasicAuthUserName";
 			public const string Instance_InputCommandPort = "Instance_InputCommandPort";
@@ -1700,10 +1722,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_QueueConnection = "Instance_QueueConnection";
 			public const string Instance_SettingsValues = "Instance_SettingsValues";
 			public const string Instance_Solution = "Instance_Solution";
+			public const string Instance_Solution_Help = "Instance_Solution_Help";
 			public const string Instance_Solution_Select = "Instance_Solution_Select";
 			public const string Instance_Status = "Instance_Status";
 			public const string Instance_StatusDetails = "Instance_StatusDetails";
 			public const string Instance_StatusTimeStamp = "Instance_StatusTimeStamp";
+			public const string Instance_Subscription_Help = "Instance_Subscription_Help";
 			public const string Instance_Title = "Instance_Title";
 			public const string Instance_UpSince = "Instance_UpSince";
 			public const string InstanceStates_CreatingRuntime = "InstanceStates_CreatingRuntime";

@@ -1,6 +1,5 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.Deployment.Models;
-using System.Collections.Generic;
+﻿using LagoVista.Core.Models.UIMetaData;
+using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin
@@ -10,9 +9,8 @@ namespace LagoVista.IoT.Deployment.Admin
         Task AddIntegrationAsync(Integration integration);
         Task<Integration> GetIntegrationAsync(string integrationId);
         Task UpdateIntegrationAsync(Integration integration);
-        Task<IEnumerable<IntegrationSummary>> GetIntegrationsForOrgsAsync(string orgId);
+        Task<ListResponse<IntegrationSummary>> GetIntegrationsForOrgsAsync(string orgId, ListRequest listRequest);
         Task<bool> QueryKeyInUseAsync(string key, string id);
-
         Task DeleteIntegrationAsync(string id);
     }
 }

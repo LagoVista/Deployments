@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -318,10 +319,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return fullLoadResult;
         }
 
-        public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user)
+        public async Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, ListRequest listRequest, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceConfiguration));
-            return await _deviceConfigRepo.GetDeviceConfigurationsForOrgAsync(orgId);
+            return await _deviceConfigRepo.GetDeviceConfigurationsForOrgAsync(orgId, listRequest);
         }
 
         public async Task<InvokeResult> UpdateDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)

@@ -21,7 +21,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}",
         HelpUrl: "https://docs.nuviot.com/Deployment/Solution.html")]
-    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity
+    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, ISummaryFactory
     {
 
         public Solution()
@@ -99,6 +99,11 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 nameof(Solution.Listeners),
                 nameof(Solution.DeviceConfigurations),
             };
+        }
+
+        Core.Interfaces.ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
         }
     }
 

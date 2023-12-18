@@ -45,19 +45,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             return default;
         }
 
-        public async Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, ListRequest requst)
+        public Task<ListResponse<ClientAppSummary>> GetClientAppsForOrgAsync(string orgId, ListRequest requst)
         {
-            var response = await base.QueryAsync(attr => (attr.OwnerOrganization.Id == orgId || attr.IsPublic == true), requst);
-            //TODO: This is a broken pattern to be fixed another day...sorry.
-            var finalResponse = ListResponse<ClientAppSummary>.Create( response.Model.OrderBy(mod => mod.Name).Select(mod => mod.CreateSummary()));
-            finalResponse.NextPartitionKey = response.NextPartitionKey;
-            finalResponse.NextRowKey = response.NextRowKey;
-            finalResponse.PageCount = response.PageCount;
-            finalResponse.PageCount = response.PageIndex;
-            finalResponse.PageSize = response.PageSize;
-            finalResponse.ResultId = response.ResultId;
-            return finalResponse;
-            
+            return base.QuerySummaryAsync<ClientAppSummary, ClientApp>(attr => (attr.OwnerOrganization.Id == orgId || attr.IsPublic == true), app=>app.Name, requst);
         }
 
         public async Task<bool> QueryKeyInUseAsync(string key, string orgId)

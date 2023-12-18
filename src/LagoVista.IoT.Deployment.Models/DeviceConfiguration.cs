@@ -19,7 +19,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl:"/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
         HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html", Icon: "icon-ae-device-config")]
-    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable,  IFormDescriptor, IFormDescriptorAdvanced, IIconEntity
+    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable,  IFormDescriptor, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, IIconEntity, ISummaryFactory
     {
         public DeviceConfiguration()
         {
@@ -169,7 +169,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public List<string> GetAdvancedFields()
         {
-
             return new List<string>()
                 {
                     nameof(DeviceConfiguration.Name),
@@ -177,17 +176,31 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.CustomStatusType),
                     nameof(DeviceConfiguration.Icon),
                     nameof(DeviceConfiguration.Description),
+                    nameof(DeviceConfiguration.WatchdogEnabledDefault),
+                    nameof(DeviceConfiguration.WatchdogSeconds),
+                    nameof(DeviceConfiguration.Routes),
+                    nameof(DeviceConfiguration.SensorDefinitions),
+                };
+        }
+
+        Core.Interfaces.ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
+        }
+
+        public List<string> GetAdvancedFieldsCol2()
+        {
+            return new List<string>()
+                {
                     nameof(DeviceConfiguration.DeviceLabel),
                     nameof(DeviceConfiguration.DeviceIdLabel),
                     nameof(DeviceConfiguration.DeviceNameLabel),
                     nameof(DeviceConfiguration.DeviceTypeLabel),
                     nameof(DeviceConfiguration.WatchdogEnabledDefault),
                     nameof(DeviceConfiguration.WatchdogSeconds),
-                    nameof(DeviceConfiguration.Routes),
                     nameof(DeviceConfiguration.Properties),
                     nameof(DeviceConfiguration.ErrorCodes),
                     nameof(DeviceConfiguration.MessageWatchDogs),
-                    nameof(DeviceConfiguration.SensorDefinitions),
                 };
         }
     }

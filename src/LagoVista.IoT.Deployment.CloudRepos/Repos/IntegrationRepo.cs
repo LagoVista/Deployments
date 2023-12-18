@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -35,13 +36,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(integrationId);
         }
 
-        public async Task<IEnumerable<IntegrationSummary>> GetIntegrationsForOrgsAsync(string orgId)
+        public  Task<ListResponse<IntegrationSummary>> GetIntegrationsForOrgsAsync(string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
-
-            return from item in items
-                   select item.CreateSummary();
-        }
+           return base.QuerySummaryAsync<IntegrationSummary, Integration>(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId, intg=>intg.Name, listRequest);
+         }
 
         public async Task<bool> QueryKeyInUseAsync(string key, string orgId)
         {

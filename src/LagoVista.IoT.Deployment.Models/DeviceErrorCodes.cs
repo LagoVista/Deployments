@@ -31,7 +31,7 @@ namespace LagoVista.IoT.Deployment.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
         DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
-    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields
+    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields, ISummaryFactory
     {
         public const string DeviceErrorCode_NotApplicable = "na";
         public const string DeviceErrorCode_Minutes = "minutes";
@@ -194,6 +194,11 @@ namespace LagoVista.IoT.Deployment.Models
             {
                 result.AddUserError("You must specify a positive, non-zero auto expire value.");
             }
+        }
+
+        ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
         }
     }
 

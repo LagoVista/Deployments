@@ -313,7 +313,7 @@
     <value>The is the engine that runs your Deployment Configuration.  It consists of all the components you have configured such as the Deployment Configuration, Device Configurations and Workflow.</value>
   </data>
   <data name="Instance_Help" xml:space="preserve">
-    <value>The is the engine that runs your Deployment Configuration.  It consists of all the components you have configured such as the Deployment Configuration, Device Configurations and Workflow.</value>
+    <value>The is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
   </data>
   <data name="Instance_Host" xml:space="preserve">
     <value>Host</value>
@@ -391,7 +391,7 @@
     <value>Workflow</value>
   </data>
   <data name="Solution_Description" xml:space="preserve">
-    <value>A Solution is a Specification for an End-to-End Solution that can be deployed to at as a Server to Manage your Devices.</value>
+    <value>A Solution is used to define the core building blocks that will be used to listen for and process messages from your devices.  Solutions are published as instances of your application.</value>
   </data>
   <data name="Solution_DeviceConfigurations" xml:space="preserve">
     <value>Device Configurations</value>
@@ -403,7 +403,7 @@
     <value>Environment</value>
   </data>
   <data name="Solution_Help" xml:space="preserve">
-    <value>Create a Solution that can be Deployed</value>
+    <value>A Solution is used to define the core building blocks that will be used to listen for and process messages from your devices.  Solutions are published as instances of your application.</value>
   </data>
   <data name="Solution_Title" xml:space="preserve">
     <value>Solution</value>
@@ -511,7 +511,7 @@
     <value>Device Repository</value>
   </data>
   <data name="Instance_DeviceRepo_Help" xml:space="preserve">
-    <value>Select the Device Repository that contains the devices that your instance will have access to.</value>
+    <value>Your instance needs a dedicated device repository where you can add and access devices that are part of this instance.  Please select or create a Device Repository that will be used by this Instance.</value>
   </data>
   <data name="Instance_DeviceRepo_Select" xml:space="preserve">
     <value>-select device repository-</value>
@@ -1457,5 +1457,23 @@
   </data>
   <data name="DeviceConfiguration_Icon" xml:space="preserve">
     <value>Device Configuration Icon</value>
+  </data>
+  <data name="Common_Icon" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="Instance_Credentials" xml:space="preserve">
+    <value>Credentials</value>
+  </data>
+  <data name="Instance_Credentials_Help" xml:space="preserve">
+    <value>Credentials can be used at the instance level to authorize access to instnace data by services.</value>
+  </data>
+  <data name="Instance_Solution_Help" xml:space="preserve">
+    <value>The solution is the definition of how the messages sent from your devices should be procseed.  Please select a solution, if none are available, you will need to create one.  A solution can be used by multiple instances.</value>
+  </data>
+  <data name="Instance_Subscription_Help" xml:space="preserve">
+    <value>You must associate this instance with a subscription that will be used for billing of the resources used to host the instance.</value>
+  </data>
+  <data name="Instance_InputCommandAnonymous_Help" xml:space="preserve">
+    <value>Input Commands are REST end points that are defined as part of your Work Flow, setting Anonymous to true will not require any authentication for these end points to be called.  This is not recommended.S</value>
   </data>
 </root>

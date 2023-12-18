@@ -16,9 +16,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
         DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}",
+        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", 
+        GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}",
         HelpUrl: "https://docs.nuviot.com/Deployment/Instance.html")]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory
     {
         public DeploymentInstance()
         {
@@ -167,13 +168,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
         public List<InstanceAccount> InstanceAccounts { get; set; }
 
 
         [FKeyProperty(nameof(Integration), "Integrations[*].Id = {0}", "")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, EntityHeaderPickerUrl: "/api/integrations", 
+            FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<Integration>> Integrations { get; set; }
 
       
@@ -181,14 +184,18 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string UpSince { get; set; }
 
         [FKeyProperty(nameof(LagoVista.UserAdmin.Models.Orgs.Subscription), nameof(Subscription) + ".Id = {0}")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, 
+           HelpResource:DeploymentAdminResources.Names.Instance_Subscription_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/subscriptions", FactoryUrl: "/api/subscription/factory",
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize)]
         public EntityHeader Size { get; set; }
 
         [FKeyProperty(nameof(DeviceRepository), WhereClause:nameof(DeviceRepository) + ".Id = {0}")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeviceRepo, nameof(DeviceRepository), HelpResource: DeploymentAdminResources.Names.Instance_DeviceRepo_Help, WaterMark: DeploymentAdminResources.Names.Instance_DeviceRepo_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DeviceRepo, nameof(DeviceRepository), EntityHeaderPickerUrl: "/api/devicerepos/available", FactoryUrl: "/api/devicerepo/standard/factory",
+            HelpResource: DeploymentAdminResources.Names.Instance_DeviceRepo_Help, WaterMark: DeploymentAdminResources.Names.Instance_DeviceRepo_Select, 
+            FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader<DeviceRepository> DeviceRepository { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_SettingsValues, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
@@ -223,13 +230,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandAnonymous, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandAnonymous, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandAnonymous_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public bool InputCommandAnonymous { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthUserName, FieldType: FieldTypes.Text, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthUserName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string InputCommandBasicAuthUserName { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthPassword, FieldType: FieldTypes.Text, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandBasicAuthPassword, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string InputCommandBasicAuthPassword { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_InputCommandSSL, FieldType: FieldTypes.CheckBox, HelpResource: DeploymentAdminResources.Names.Instance_InputCommandSSL_Help, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
@@ -285,10 +292,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         // we never want to delete an instance since billing records are tied to it.
         public bool IsArchived { get; set; }
 
+        [FormField(FactoryUrl: "/api/deployment/instance/credentials/factory", FieldType:FieldTypes.ChildListInline, LabelResource: DeploymentAdminResources.Names.Instance_Credentials, ResourceType: typeof(DeploymentAdminResources), 
+            HelpResource:DeploymentAdminResources.Names.Instance_Credentials_Help)]
         public List<DeploymentInstanceCredentials> Credentials { get; set; }
 
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, WaterMark: DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Solution, EntityHeaderPickerUrl: "/api/deployment/solutions", HelpResource:DeploymentAdminResources.Names.Instance_Solution_Help,
+            WaterMark: DeploymentAdminResources.Names.Instance_Solution_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public EntityHeader<Solution> Solution { get; set; }
         public DeploymentInstanceSummary CreateSummary()
         {
@@ -335,6 +344,42 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.Subscription),
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
+            };
+        }
+
+        public List<string> GetAdvancedFields()
+        {
+            return new List<string>()
+            {
+                nameof(DeploymentInstance.Name),
+                nameof(DeploymentInstance.Key),
+                nameof(DeploymentInstance.DnsHostName),
+                nameof(DeploymentInstance.Status),
+                nameof(DeploymentInstance.Subscription),
+                nameof(DeploymentInstance.DeviceRepository),
+                nameof(DeploymentInstance.Solution),
+            };
+        }
+
+        public List<string> GetAdvancedFieldsCol2()
+        {
+            return new List<string>()
+            {
+                nameof(DeploymentInstance.ApplicationCaches),
+                nameof(DeploymentInstance.WiFiConnectionProfiles),
+                nameof(DeploymentInstance.Credentials),
+                nameof(DeploymentInstance.DataStreams),
+                nameof(DeploymentInstance.NuvIoTEdition),
+                nameof(DeploymentInstance.DeploymentType),
+                nameof(DeploymentInstance.WorkingStorage),
+                nameof(DeploymentInstance.QueueType),
+                nameof(DeploymentInstance.LogStorage),
+                nameof(DeploymentInstance.Integrations),
+                nameof(DeploymentInstance.InputCommandAnonymous),
+                nameof(DeploymentInstance.InputCommandBasicAuthPassword),
+                nameof(DeploymentInstance.InputCommandBasicAuthUserName),
+                nameof(DeploymentInstance.InputCommandPort),
+                nameof(DeploymentInstance.InputCommandSSL)
             };
         }
 
@@ -404,6 +449,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     result.AddSystemError("Must provide primary cache type.");
                 }
             }
+        }
+
+        ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
         }
     }
 

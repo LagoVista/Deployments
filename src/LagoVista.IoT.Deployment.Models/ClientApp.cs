@@ -13,7 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl: "/api/clientapp", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
-    public class ClientApp : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor
+    public class ClientApp : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, ISummaryFactory
     {
         public ClientApp()
         {
@@ -113,6 +113,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     result.AddUserError("AppAuthKeySecondary or AppAuthKeySecondarySecureId is required when creating a client app.");
                 }
             }
+        }
+
+        Core.Interfaces.ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
         }
     }
 

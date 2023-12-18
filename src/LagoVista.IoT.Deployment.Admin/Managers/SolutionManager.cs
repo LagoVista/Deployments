@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -195,10 +196,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return ValidateSolution(solutionLoadResult.Result);
         }
 
-        public async Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, EntityHeader user)
+        public async Task<ListResponse<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, ListRequest listRequest, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(Solution));
-            return await _deploymentRepo.GetSolutionsForOrgsAsync(orgId);
+            return await _deploymentRepo.GetSolutionsForOrgsAsync(orgId, listRequest);
         }
 
         public async Task<InvokeResult> UpdateSolutionsAsync(Solution deployment, EntityHeader org, EntityHeader user)

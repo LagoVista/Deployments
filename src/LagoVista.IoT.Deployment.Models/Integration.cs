@@ -23,7 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Integration_Title, DeploymentAdminResources.Names.Integration_Help, DeploymentAdminResources.Names.Integration_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         GetListUrl: "/api/integrations", GetUrl: "/api/integration/{id}", SaveUrl: "/api/integration", FactoryUrl: "/api/integration/factory", DeleteUrl: "/api/integration/{id}")]
-    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IFormConditionalFields
+    public class Integration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IFormConditionalFields, ISummaryFactory
     {
         public const string IntegrationType_Twillio = "twillio";
         public const string IntegrationType_PagerDuty = "pagerduty";
@@ -147,6 +147,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     },
                 }
             };
+        }
+
+        ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
         }
     }
 

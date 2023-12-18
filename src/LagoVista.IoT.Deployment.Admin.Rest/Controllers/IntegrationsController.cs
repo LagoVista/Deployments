@@ -71,10 +71,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/api/integrations")]
-        public async Task<ListResponse<IntegrationSummary>> GetIntegrationsForOrg()
+        public Task<ListResponse<IntegrationSummary>> GetIntegrationsForOrg()
         {
-            var integrationSummaries = await _integrationManager.GetIntegrationsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader);
-            return ListResponse<IntegrationSummary>.Create(integrationSummaries);
+            return _integrationManager.GetIntegrationsForOrgAsync(OrgEntityHeader.Id, GetListRequestFromHeader(), UserEntityHeader);
         }
 
         /// <summary>

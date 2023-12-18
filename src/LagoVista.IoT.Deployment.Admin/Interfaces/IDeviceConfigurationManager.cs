@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.DeviceAdmin.Models;
@@ -16,7 +17,7 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<DependentObjectCheckResult> CheckDeviceConfigInUseAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, EntityHeader user);
+        Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgsAsync(string orgId, ListRequest listRequest, EntityHeader user);
         Task<InvokeResult> UpdateDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteDeviceConfigurationAsync(string id, EntityHeader org, EntityHeader user);
         Task<bool> QueryDeviceConfigurationKeyInUseAsync(string key, string orgId);

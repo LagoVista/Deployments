@@ -17,7 +17,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult<Solution>> LoadFullSolutionAsync(string id, EntityHeader org, EntityHeader user);
         Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user);
 
-        Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string id, EntityHeader user);
+        Task<ListResponse<SolutionSummary>> GetSolutionsForOrgsAsync(string id, ListRequest listRequest, EntityHeader user);
         Task<InvokeResult> UpdateSolutionsAsync(Solution deployment, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteSolutionAsync(string id, EntityHeader org, EntityHeader user);
         Task<InvokeResult> PublishSolutionAsync(SolutionVersion solutionVersion, EntityHeader org, EntityHeader user);

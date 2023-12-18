@@ -9,6 +9,7 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.CloudStorage.DocumentDB;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -40,12 +41,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(id);
         }
 
-        public async Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId)
+        public async Task<ListResponse<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
-
-            return from item in items
-                   select item.CreateSummary();
+            return await base.QuerySummaryAsync<SolutionSummary, Solution>(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId, sol=>sol.Name, listRequest);
         }
 
         public async Task<bool> QueryKeyInUseAsync(string key, string orgId)

@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Logging.Loggers;
@@ -75,10 +76,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return integration;
         }
 
-        public async Task<IEnumerable<IntegrationSummary>> GetIntegrationsForOrgAsync(string orgId, EntityHeader user)
+        public async Task<ListResponse<IntegrationSummary>> GetIntegrationsForOrgAsync(string orgId, ListRequest listRequest, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(TaggedContainer), Actions.Read);
-            return await _repo.GetIntegrationsForOrgsAsync(orgId);
+            return await _repo.GetIntegrationsForOrgsAsync(orgId, listRequest);
         }
         
         public async Task<DependentObjectCheckResult> CheckInUseAsync(string id, EntityHeader org, EntityHeader user)

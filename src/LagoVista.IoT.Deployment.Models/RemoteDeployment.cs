@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RemoteDeployment_Title, DeploymentAdminResources.Names.RemoteDeployment_Help, DeploymentAdminResources.Names.RemoteDeployment_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class RemoteDeployment : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor
+    public class RemoteDeployment : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, ISummaryFactory
     {
         public RemoteDeployment()
         {
@@ -65,6 +65,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
+        ISummaryData ISummaryFactory.CreateSummary()
+        {
+            return CreateSummary();
+        }
     }
 
 

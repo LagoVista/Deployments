@@ -8,6 +8,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -44,12 +45,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(id);
         }
 
-        public async Task<IEnumerable<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync(string orgId)
+        public Task<ListResponse<DeviceConfigurationSummary>> GetDeviceConfigurationsForOrgAsync(string orgId, ListRequest listRequest)
         {
-            var items = await base.QueryAsync(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId);
-
-            return from item in items.OrderBy(itm=>itm.Name)
-                   select item.CreateSummary();
+            return base.QuerySummaryAsync<DeviceConfigurationSummary, DeviceConfiguration>(qry => qry.IsPublic == true || qry.OwnerOrganization.Id == orgId, dcf=>dcf.Name, listRequest);
         }
 
         public async Task<bool> QueryKeyInUseAsync(string key, string orgId)

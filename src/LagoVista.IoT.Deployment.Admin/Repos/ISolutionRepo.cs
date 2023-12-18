@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using LagoVista.IoT.Deployment.Admin.Models;
 using System.Threading.Tasks;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Repos
 {
@@ -8,7 +9,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task AddSolutionAsync(Solution deployment);
         Task<Solution> GetSolutionAsync(string id, bool populateChildren = false);
-        Task<IEnumerable<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId);
+        Task<ListResponse<SolutionSummary>> GetSolutionsForOrgsAsync(string orgId, ListRequest listRequest);
         Task UpdateSolutionAsync(Solution deployment);
         Task DeleteSolutionAsync(string id);
         Task<bool> QueryKeyInUseAsync(string key, string org);

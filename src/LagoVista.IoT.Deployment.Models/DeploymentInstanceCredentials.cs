@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
@@ -9,15 +10,15 @@ using System.Text;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeploymentInstanceCredentials_Title, DeploymentAdminResources.Names.DeploymentInstanceCredentials_Help,
-        DeploymentAdminResources.Names.DeploymentInstanceCredentials_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class DeploymentInstanceCredentials
+        DeploymentAdminResources.Names.DeploymentInstanceCredentials_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        FactoryUrl: "/api/deployment/instance/credentials/factory")]
+    public class DeploymentInstanceCredentials : IFormDescriptor
     {
         public string Id { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstanceCredentials__Expires,
             HelpResource: DeploymentAdminResources.Names.DeploymentInstanceCredentials__Expires_Help,
             FieldType: FieldTypes.Date, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
-
         public string Expires { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstanceCredentials__UserId, FieldType: FieldTypes.Text,
@@ -30,6 +31,16 @@ namespace LagoVista.IoT.Deployment.Models
         public string Password { get; set; }
 
         public string PasswordSecretId { get; set; }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>()
+            {
+                nameof(UserId),
+                nameof(Password),
+                nameof(Expires)
+            };
+        }
 
         [CustomValidator]
         public void Validate(ValidationResult result, Actions action)
