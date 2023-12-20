@@ -310,10 +310,10 @@
     <value>High Performance</value>
   </data>
   <data name="Instance_Description" xml:space="preserve">
-    <value>The is the engine that runs your Deployment Configuration.  It consists of all the components you have configured such as the Deployment Configuration, Device Configurations and Workflow.</value>
+    <value>This is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
   </data>
   <data name="Instance_Help" xml:space="preserve">
-    <value>The is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
+    <value>This is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
   </data>
   <data name="Instance_Host" xml:space="preserve">
     <value>Host</value>
