@@ -1,13 +1,23 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using System;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.WiFiConnectionProfile_Title, DeploymentAdminResources.Names.WiFiConnectionProfile_Help, DeploymentAdminResources.Names.WiFiConnectionProfile_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
-    public class WiFiConnectionProfile : IIDEntity, IKeyedEntity, INamedEntity, IDescriptionEntity
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.WiFiConnectionProfile_Title, DeploymentAdminResources.Names.WiFiConnectionProfile_Help,
+        DeploymentAdminResources.Names.WiFiConnectionProfile_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        FactoryUrl: "/api/wificonnectionprofile/factory")]
+    public class WiFiConnectionProfile : IIDEntity, IKeyedEntity, INamedEntity, IDescriptionEntity, IFormDescriptor, IFormDescriptorAdvanced
     {
+        public WiFiConnectionProfile()
+        {
+            Id = Guid.NewGuid().ToId();
+        }
+
         public string Id { get; set; }
 
 
@@ -20,12 +30,35 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_SSID, FieldType: FieldTypes.Text, IsRequired:true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Ssid { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Password, FieldType: FieldTypes.Password, IsRequired:true, SecureIdFieldName:nameof(PasswordSecretId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Password, FieldType: FieldTypes.Password, SecureIdFieldName:nameof(PasswordSecretId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Password { get; set; }
 
         public string PasswordSecretId { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Notes, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Description { get; set; }
+
+        public List<string> GetAdvancedFields()
+        {
+            return new List<string>
+            {
+                nameof(Name),
+                nameof(Key),
+                nameof(Ssid),
+                nameof(Password),
+                nameof(Description)
+            };
+        }
+
+        public List<string> GetFormFields()
+        {
+            return new List<string>
+            {
+                nameof(Name),
+                nameof(Key),
+                nameof(Ssid),
+                nameof(Password),
+            };
+        }
     }
 }

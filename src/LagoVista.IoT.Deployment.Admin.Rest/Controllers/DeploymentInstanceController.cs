@@ -472,12 +472,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/wificonnectionprofile/factory")]
         public DetailResponse<WiFiConnectionProfile> CreateWiFiConnectionProfile()
         {
-            var profile = new WiFiConnectionProfile()
-            {
-                Id = Guid.NewGuid().ToId(),
-            };
-
-            return DetailResponse<WiFiConnectionProfile>.Create(profile);
+            return DetailResponse<WiFiConnectionProfile>.Create();
         }
 
         /// <summary>

@@ -17,9 +17,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
         DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", 
-        GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}",
+        GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}", Icon: "icon-ae-deployment-instance",
         HelpUrl: "https://docs.nuviot.com/Deployment/Instance.html")]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory
     {
         public DeploymentInstance()
         {
@@ -160,11 +160,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
         [FKeyProperty(nameof(DataStream), "DataStreams[*].Id = {0}","")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams,  FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams,  FieldType: FieldTypes.ChildListInlinePicker, FactoryUrl: "/api/datastream/factory", EntityHeaderPickerUrl: "/api/datastreams", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DataStream>> DataStreams { get; set; }
 
         [FKeyProperty(nameof(ApplicationCache), "ApplicationCaches[*].Id = {0}", "")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/appcaches", FactoryUrl: "/api/appcache/factory",
+            ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
 
 
@@ -175,8 +176,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
         [FKeyProperty(nameof(Integration), "Integrations[*].Id = {0}", "")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, EntityHeaderPickerUrl: "/api/integrations", 
-            FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, EntityHeaderPickerUrl: "/api/integrations", FactoryUrl: "/api/integration/factory",
+            FieldType: FieldTypes.ChildListInlinePicker, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<Integration>> Integrations { get; set; }
 
       
@@ -269,7 +270,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader<WorkingStorage> WorkingStorage { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_WiFiConnectionProfiles, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_WiFiConnectionProfiles, FieldType: FieldTypes.ChildListInline,
+           FactoryUrl: "/api/wificonnectionprofile/factory", ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public List<WiFiConnectionProfile> WiFiConnectionProfiles { get; set; }
 
 
@@ -355,9 +357,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.Key),
                 nameof(DeploymentInstance.DnsHostName),
                 nameof(DeploymentInstance.Status),
-                nameof(DeploymentInstance.Subscription),
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
+                nameof(DeploymentInstance.Subscription),
+                nameof(DeploymentInstance.WiFiConnectionProfiles),
+                nameof(DeploymentInstance.ApplicationCaches),
+                nameof(DeploymentInstance.DataStreams),
+                nameof(DeploymentInstance.Integrations),
+                nameof(DeploymentInstance.Credentials)
             };
         }
 
@@ -365,21 +372,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             return new List<string>()
             {
-                nameof(DeploymentInstance.ApplicationCaches),
-                nameof(DeploymentInstance.WiFiConnectionProfiles),
-                nameof(DeploymentInstance.Credentials),
-                nameof(DeploymentInstance.DataStreams),
                 nameof(DeploymentInstance.NuvIoTEdition),
                 nameof(DeploymentInstance.DeploymentType),
                 nameof(DeploymentInstance.WorkingStorage),
                 nameof(DeploymentInstance.QueueType),
                 nameof(DeploymentInstance.LogStorage),
-                nameof(DeploymentInstance.Integrations),
+                nameof(DeploymentInstance.InputCommandSSL),
                 nameof(DeploymentInstance.InputCommandAnonymous),
                 nameof(DeploymentInstance.InputCommandBasicAuthPassword),
                 nameof(DeploymentInstance.InputCommandBasicAuthUserName),
                 nameof(DeploymentInstance.InputCommandPort),
-                nameof(DeploymentInstance.InputCommandSSL)
             };
         }
 
