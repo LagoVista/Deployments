@@ -206,8 +206,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
-      DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfigurations_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
+      DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-device-config",
       SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: " /api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}")]
     public class DeviceConfigurationSummary : LagoVista.Core.Models.SummaryData
     {

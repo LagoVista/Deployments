@@ -108,7 +108,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-pz-server-1",
         SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}",
         HelpUrl: "https://docs.nuviot.com/Deployment/Host.html")]
     public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,IValidateable, IFormDescriptor
@@ -171,6 +171,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
             CloudProvider = new EntityHeader() { Text = "Digital Ocean", Id = "378463ADF57B4C02B60FEF4DCB30F7E2" };
             DeployedInstances = new List<SharedInstanceSummary>();
+            Icon = "icon-pz-server-1";
             GenerateAccessKeys();
         }
         
@@ -221,6 +222,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerTag, WaterMark: DeploymentAdminResources.Names.Host_ContainerTag_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerTag { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
+        public string Icon { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DNSName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public string DnsHostName { get; set; }
@@ -310,7 +316,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 LastPing = LastPing,
                 OrgId = OwnerOrganization.Id,
                 OrgName = OwnerOrganization.Text,         
-                StatusDetails = StatusDetails
+                StatusDetails = StatusDetails,
+                Icon = Icon,
             };
         }
 
@@ -320,6 +327,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentHost.Name),
                 nameof(DeploymentHost.Key),
+                nameof(DeploymentHost.Icon),
                 nameof(DeploymentHost.Status),
                 nameof(DeploymentHost.HostType),
                 nameof(DeploymentHost.Size),
@@ -343,8 +351,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description,
-        EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Hosts_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description,
+        EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-server-1",
         SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}")]
     public class DeploymentHostSummary : SummaryData
     {
@@ -361,6 +369,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string CapacityStatus { get; set; }
         public string OrgName { get; set; }
         public string OrgId { get; set; }
+        public string Icon { get; set; }
 
         public string LastPing { get; set; }
         public string IpAddress { get; set; }

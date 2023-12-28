@@ -160,10 +160,10 @@
     <value>Deployment</value>
   </data>
   <data name="DeviceConfiguration_Description" xml:space="preserve">
-    <value>A Device Configuration is a specification for a set of Server Side Pipeline Modules that are used to process incoming Messages from a Device and perform Workflows.</value>
+    <value>A Device Configuration is the specification for how messages should be processed by NuvIoT, this is where you create routes that contain pipeline modules that act on the data from the messages.</value>
   </data>
   <data name="DeviceConfiguration_Help" xml:space="preserve">
-    <value>A Device Configuration is a specification for a set of Server Side Pipeline Modules that are used to process incoming Messages from a Device and perform Workflows.</value>
+    <value>A Device Configuration is the specification for how messages should be processed by NuvIoT, this is where you create routes that contain pipeline modules that act on the data from the messages.  </value>
   </data>
   <data name="DeviceConfiguration_Routes" xml:space="preserve">
     <value>Routes</value>
@@ -343,10 +343,10 @@
     <value>Instance</value>
   </data>
   <data name="Route_Description" xml:space="preserve">
-    <value>A route is a path that defines how your message will be processed</value>
+    <value>A Route is a set of Pipeline modules that will be used to interpret and process data sent by messages from your devices.</value>
   </data>
   <data name="Route_Help" xml:space="preserve">
-    <value>A route is a path that defines how your message will be processed</value>
+    <value>A Route is a set of Pipeline modules that will be used to interpret and process data sent by messages from your devices.</value>
   </data>
   <data name="Route_InputTranslator" xml:space="preserve">
     <value>Input Translator</value>
@@ -391,7 +391,7 @@
     <value>Workflow</value>
   </data>
   <data name="Solution_Description" xml:space="preserve">
-    <value>A Solution is used to define the core building blocks that will be used to listen for and process messages from your devices.  Solutions are published as instances of your application.</value>
+    <value>A Solution is where you assemble all the components that will be used as an application to listen to and process data sent by messages from your devices.  Solutions are reusable components that can be published by dedicated instances.</value>
   </data>
   <data name="Solution_DeviceConfigurations" xml:space="preserve">
     <value>Device Configurations</value>
@@ -403,7 +403,7 @@
     <value>Environment</value>
   </data>
   <data name="Solution_Help" xml:space="preserve">
-    <value>A Solution is used to define the core building blocks that will be used to listen for and process messages from your devices.  Solutions are published as instances of your application.</value>
+    <value>A Solution is where you assemble all the components that will be used as an application to listen to and process data sent by messages from your devices.  Solutions are reusable components that can be published by dedicated instances.</value>
   </data>
   <data name="Solution_Title" xml:space="preserve">
     <value>Solution</value>
@@ -1475,5 +1475,17 @@
   </data>
   <data name="Instance_InputCommandAnonymous_Help" xml:space="preserve">
     <value>Input Commands are REST end points that are defined as part of your Work Flow, setting Anonymous to true will not require any authentication for these end points to be called.  This is not recommended.S</value>
+  </data>
+  <data name="Hosts_Title" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="Instances_Title" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="DeviceConfigurations_Title" xml:space="preserve">
+    <value>Device Configurations</value>
+  </data>
+  <data name="Solutions_Title" xml:space="preserve">
+    <value>Solutions</value>
   </data>
 </root>

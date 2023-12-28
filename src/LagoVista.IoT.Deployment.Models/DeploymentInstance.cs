@@ -168,7 +168,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
 
-
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
@@ -372,6 +371,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             return new List<string>()
             {
+                nameof(DeploymentInstance.Icon),
                 nameof(DeploymentInstance.NuvIoTEdition),
                 nameof(DeploymentInstance.DeploymentType),
                 nameof(DeploymentInstance.WorkingStorage),
@@ -459,8 +459,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
-     DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instances_Title, DeploymentAdminResources.Names.Instance_Help,
+     DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-deployment-instance",
      SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}")]
     public class DeploymentInstanceSummary : SummaryData
     {

@@ -18,7 +18,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-pz-solution",
         GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}",
         HelpUrl: "https://docs.nuviot.com/Deployment/Solution.html")]
     public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, ISummaryFactory
@@ -29,7 +29,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
             DeviceConfigurations = new List<EntityHeader<DeviceConfiguration>>();
             Listeners = new List<EntityHeader<ListenerConfiguration>>();
             Settings = new List<CustomField>();
-            Icon = "icon-ae-deployment-instance";
+            Icon = "icon-pz-solution";
             Version = "1.0";
         }
 
@@ -108,8 +108,8 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
     }
 
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description,
-     EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solutions_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description,
+     EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-solution",
      GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
     public class SolutionSummary : LagoVista.Core.Models.SummaryData
     { 

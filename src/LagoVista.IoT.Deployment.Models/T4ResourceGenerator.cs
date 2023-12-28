@@ -1,4 +1,4 @@
-﻿/*12/18/2023 7:01:34 AM*/
+﻿/*12/28/2023 8:30:18 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -420,6 +420,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguration_WatchDogTimeout_Help
 
 		public static string DeviceConfiguration_WatchDogTimeout_Help { get { return GetResourceString("DeviceConfiguration_WatchDogTimeout_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfigurations_Title
+
+		public static string DeviceConfigurations_Title { get { return GetResourceString("DeviceConfigurations_Title"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
@@ -783,6 +786,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:HostCapacity_Underutlized
 
 		public static string HostCapacity_Underutlized { get { return GetResourceString("HostCapacity_Underutlized"); } }
+//Resources:DeploymentAdminResources:Hosts_Title
+
+		public static string Hosts_Title { get { return GetResourceString("Hosts_Title"); } }
 //Resources:DeploymentAdminResources:HostSize_ExtraLarge
 
 		public static string HostSize_ExtraLarge { get { return GetResourceString("HostSize_ExtraLarge"); } }
@@ -996,6 +1002,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_UpSince
 
 		public static string Instance_UpSince { get { return GetResourceString("Instance_UpSince"); } }
+//Resources:DeploymentAdminResources:Instances_Title
+
+		public static string Instances_Title { get { return GetResourceString("Instances_Title"); } }
 //Resources:DeploymentAdminResources:InstanceStates_CreatingRuntime
 
 		public static string InstanceStates_CreatingRuntime { get { return GetResourceString("InstanceStates_CreatingRuntime"); } }
@@ -1329,6 +1338,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Solution_Version
 
 		public static string Solution_Version { get { return GetResourceString("Solution_Version"); } }
+//Resources:DeploymentAdminResources:Solutions_Title
+
+		public static string Solutions_Title { get { return GetResourceString("Solutions_Title"); } }
 //Resources:DeploymentAdminResources:TaggedContainer_CreationDate
 
 		public static string TaggedContainer_CreationDate { get { return GetResourceString("TaggedContainer_CreationDate"); } }
@@ -1538,6 +1550,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_WatchDogEnabled_Default_Help = "DeviceConfiguration_WatchDogEnabled_Default_Help";
 			public const string DeviceConfiguration_WatchDogTimeout = "DeviceConfiguration_WatchDogTimeout";
 			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
+			public const string DeviceConfigurations_Title = "DeviceConfigurations_Title";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
 			public const string DeviceErrorCode_AutoExpiresTimespan = "DeviceErrorCode_AutoExpiresTimespan";
 			public const string DeviceErrorCode_AutoExpiresTimespan_Help = "DeviceErrorCode_AutoExpiresTimespan_Help";
@@ -1659,6 +1672,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostCapacity_Ok = "HostCapacity_Ok";
 			public const string HostCapacity_OverCapacity = "HostCapacity_OverCapacity";
 			public const string HostCapacity_Underutlized = "HostCapacity_Underutlized";
+			public const string Hosts_Title = "Hosts_Title";
 			public const string HostSize_ExtraLarge = "HostSize_ExtraLarge";
 			public const string HostSize_ExtraSmall = "HostSize_ExtraSmall";
 			public const string HostSize_Large = "HostSize_Large";
@@ -1730,6 +1744,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_Subscription_Help = "Instance_Subscription_Help";
 			public const string Instance_Title = "Instance_Title";
 			public const string Instance_UpSince = "Instance_UpSince";
+			public const string Instances_Title = "Instances_Title";
 			public const string InstanceStates_CreatingRuntime = "InstanceStates_CreatingRuntime";
 			public const string InstanceStates_Degraded = "InstanceStates_Degraded";
 			public const string InstanceStates_DeployingContainer = "InstanceStates_DeployingContainer";
@@ -1841,6 +1856,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_Settings_Help = "Solution_Settings_Help";
 			public const string Solution_Title = "Solution_Title";
 			public const string Solution_Version = "Solution_Version";
+			public const string Solutions_Title = "Solutions_Title";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";
 			public const string TaggedContainer_Help = "TaggedContainer_Help";
