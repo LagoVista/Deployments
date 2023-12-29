@@ -910,7 +910,7 @@
     <value>A client app is a thick/mobile/external application that will authenticate and access NuvIoT via REST</value>
   </data>
   <data name="ClientApp_Title" xml:space="preserve">
-    <value>Mobile Application</value>
+    <value>Client Application</value>
   </data>
   <data name="ClientApp_DeviceConfigs" xml:space="preserve">
     <value>Device Configurations</value>
@@ -1487,5 +1487,11 @@
   </data>
   <data name="Solutions_Title" xml:space="preserve">
     <value>Solutions</value>
+  </data>
+  <data name="ClientApplications_Title" xml:space="preserve">
+    <value>Client Applications</value>
+  </data>
+  <data name="DeviceErrorCodes_Title" xml:space="preserve">
+    <value>Device Error Codes</value>
   </data>
 </root>

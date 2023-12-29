@@ -136,7 +136,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string InstanceName { get; set; }
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApplications_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
       EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
       SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
     public class KioskClientAppSummary

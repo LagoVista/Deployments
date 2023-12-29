@@ -1,4 +1,4 @@
-﻿/*12/28/2023 8:30:18 AM*/
+﻿/*12/28/2023 4:03:18 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -87,6 +87,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ClientApp_Title
 
 		public static string ClientApp_Title { get { return GetResourceString("ClientApp_Title"); } }
+//Resources:DeploymentAdminResources:ClientApplications_Title
+
+		public static string ClientApplications_Title { get { return GetResourceString("ClientApplications_Title"); } }
 //Resources:DeploymentAdminResources:Common_Description
 
 		public static string Common_Description { get { return GetResourceString("Common_Description"); } }
@@ -507,6 +510,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCode_TriggerOnEachOccurrence_Help
 
 		public static string DeviceErrorCode_TriggerOnEachOccurrence_Help { get { return GetResourceString("DeviceErrorCode_TriggerOnEachOccurrence_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCodes_Title
+
+		public static string DeviceErrorCodes_Title { get { return GetResourceString("DeviceErrorCodes_Title"); } }
 //Resources:DeploymentAdminResources:Err_CantPublishNotRunning
 
 		public static string Err_CantPublishNotRunning { get { return GetResourceString("Err_CantPublishNotRunning"); } }
@@ -1439,6 +1445,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ClientApp_Kiosk_Select = "ClientApp_Kiosk_Select";
 			public const string ClientApp_SelectInstance = "ClientApp_SelectInstance";
 			public const string ClientApp_Title = "ClientApp_Title";
+			public const string ClientApplications_Title = "ClientApplications_Title";
 			public const string Common_Description = "Common_Description";
 			public const string Common_Icon = "Common_Icon";
 			public const string Common_Id = "Common_Id";
@@ -1579,6 +1586,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_Title = "DeviceErrorCode_Title";
 			public const string DeviceErrorCode_TriggerOnEachOccurrence = "DeviceErrorCode_TriggerOnEachOccurrence";
 			public const string DeviceErrorCode_TriggerOnEachOccurrence_Help = "DeviceErrorCode_TriggerOnEachOccurrence_Help";
+			public const string DeviceErrorCodes_Title = "DeviceErrorCodes_Title";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotFindDestinationModule = "Err_CouldNotFindDestinationModule";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";
