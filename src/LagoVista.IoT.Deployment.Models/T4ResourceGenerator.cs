@@ -1,4 +1,4 @@
-﻿/*12/28/2023 4:03:18 PM*/
+﻿/*1/7/2024 9:23:45 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1395,6 +1395,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Warning_NoListeners
 
 		public static string Warning_NoListeners { get { return GetResourceString("Warning_NoListeners"); } }
+//Resources:DeploymentAdminResources:WatchdogConnectedDevice_Help
+
+		public static string WatchdogConnectedDevice_Help { get { return GetResourceString("WatchdogConnectedDevice_Help"); } }
+//Resources:DeploymentAdminResources:WatchdogConnectedDevice_Title
+
+		public static string WatchdogConnectedDevice_Title { get { return GetResourceString("WatchdogConnectedDevice_Title"); } }
+//Resources:DeploymentAdminResources:WatchdogMessage_Help
+
+		public static string WatchdogMessage_Help { get { return GetResourceString("WatchdogMessage_Help"); } }
+//Resources:DeploymentAdminResources:WatchdogMessage_Title
+
+		public static string WatchdogMessage_Title { get { return GetResourceString("WatchdogMessage_Title"); } }
 //Resources:DeploymentAdminResources:WiFiConnectionProfile_Description
 
 		public static string WiFiConnectionProfile_Description { get { return GetResourceString("WiFiConnectionProfile_Description"); } }
@@ -1881,6 +1893,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
 			public const string Warning_NoDeviceConfigs = "Warning_NoDeviceConfigs";
 			public const string Warning_NoListeners = "Warning_NoListeners";
+			public const string WatchdogConnectedDevice_Help = "WatchdogConnectedDevice_Help";
+			public const string WatchdogConnectedDevice_Title = "WatchdogConnectedDevice_Title";
+			public const string WatchdogMessage_Help = "WatchdogMessage_Help";
+			public const string WatchdogMessage_Title = "WatchdogMessage_Title";
 			public const string WiFiConnectionProfile_Description = "WiFiConnectionProfile_Description";
 			public const string WiFiConnectionProfile_Help = "WiFiConnectionProfile_Help";
 			public const string WiFiConnectionProfile_Name = "WiFiConnectionProfile_Name";

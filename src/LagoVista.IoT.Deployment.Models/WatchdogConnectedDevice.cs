@@ -1,5 +1,14 @@
-﻿namespace LagoVista.IoT.Deployment.Models
+﻿using LagoVista.Core.Attributes;
+using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Models.Resources;
+
+namespace LagoVista.IoT.Deployment.Models
 {
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.WatchdogConnectedDevice_Title, 
+        DeploymentAdminResources.Names.WatchdogConnectedDevice_Help, 
+        DeploymentAdminResources.Names.WatchdogConnectedDevice_Help,
+      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-core-2",
+      GetListUrl: "/api/deployment/instance/{id}/connected/monitored")]
     public class WatchdogConnectedDevice
     {
         public string Id { get; set; }
@@ -19,7 +28,7 @@
         /// </summary>
         public string DeviceUniqueId { get; set; }
 
-        public string DevicConfigurationId { get; set; }
+        public string DeviceConfigurationId { get; set; }
         public string DeviceConfiguration { get; set; }
         public string DeviceTypeId { get; set; }
         public string DeviceType { get; set; }

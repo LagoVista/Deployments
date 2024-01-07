@@ -1,5 +1,15 @@
-﻿namespace LagoVista.IoT.Deployment.Models
+﻿using LagoVista.Core.Attributes;
+using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Models.Resources;
+
+namespace LagoVista.IoT.Deployment.Models
 {
+
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.WatchdogMessage_Title,
+        DeploymentAdminResources.Names.WatchdogMessage_Help,
+        DeploymentAdminResources.Names.WatchdogMessage_Help,
+      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-fo-message-info",
+      GetListUrl: "/api/deployment/instance/{id}/message/watchdog/monitored")]
     public class WatchdogMessageStatus
     {
         public string Id { get; set; }

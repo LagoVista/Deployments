@@ -1494,4 +1494,16 @@
   <data name="DeviceErrorCodes_Title" xml:space="preserve">
     <value>Device Error Codes</value>
   </data>
+  <data name="WatchdogConnectedDevice_Help" xml:space="preserve">
+    <value>Devices as being monitored by the run time.</value>
+  </data>
+  <data name="WatchdogConnectedDevice_Title" xml:space="preserve">
+    <value>Connected Device</value>
+  </data>
+  <data name="WatchdogMessage_Help" xml:space="preserve">
+    <value>Messages as being tracked by the runtime engine </value>
+  </data>
+  <data name="WatchdogMessage_Title" xml:space="preserve">
+    <value>Message Watchdog</value>
+  </data>
 </root>
