@@ -2,6 +2,7 @@
 using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.Resources;
@@ -15,11 +16,12 @@ using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help, 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
         DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        SaveUrl:"/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
+        SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
         HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html", Icon: "icon-ae-device-config")]
-    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable,  IFormDescriptor, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, IIconEntity, ISummaryFactory
+    public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IFormDescriptorAdvanced, IFormConditionalFields,
+        IFormDescriptorAdvancedCol2, IIconEntity, ISummaryFactory
     {
         public DeviceConfiguration()
         {
@@ -64,21 +66,21 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_WatchDogTimeout_Help, FieldType: FieldTypes.Integer, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public int? WatchdogSeconds { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceErrorCodes, FactoryUrl: "/api/errorcode/factory", FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<DeviceErrorCode> ErrorCodes { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_MessageWatchDogs, FactoryUrl: "/api/deviceconfig/messagewatchdog/factory", FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<MessageWatchDog> MessageWatchDogs { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_SensorDefintions, FactoryUrl: "/api/device/sensor/factory", FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
         public List<SensorDefinition> SensorDefinitions { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
-        
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/deviceconfig/route/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<Route> Routes { get; set; }
 
         public Route FindRoute(string messageId)
@@ -131,8 +133,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.Key),
                     nameof(DeviceConfiguration.Icon),
                     nameof(DeviceConfiguration.Description),
-				    nameof(DeviceConfiguration.Routes),
-				};
+                    nameof(DeviceConfiguration.Routes),
+                };
         }
 
         /// <summary>
@@ -152,16 +154,16 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [CustomValidator]
         public void Validate(ValidationResult result)
         {
-            if(WatchdogEnabledDefault && !WatchdogSeconds.HasValue)
+            if (WatchdogEnabledDefault && !WatchdogSeconds.HasValue)
             {
                 result.AddUserError("Watchdog Internal is required.");
             }
-            else if(!WatchdogEnabledDefault)
+            else if (!WatchdogEnabledDefault)
             {
                 WatchdogSeconds = null;
             }
 
-            if(ErrorCodes.Count != ErrorCodes.GroupBy(err=>err.Key).Count())
+            if (ErrorCodes.Count != ErrorCodes.GroupBy(err => err.Key).Count())
             {
                 result.AddUserError("Error codes for a device configuration must be unique..");
             }
@@ -176,8 +178,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.CustomStatusType),
                     nameof(DeviceConfiguration.Icon),
                     nameof(DeviceConfiguration.Description),
-                    nameof(DeviceConfiguration.WatchdogEnabledDefault),
-                    nameof(DeviceConfiguration.WatchdogSeconds),
                     nameof(DeviceConfiguration.Routes),
                     nameof(DeviceConfiguration.SensorDefinitions),
                 };
@@ -199,9 +199,26 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.WatchdogEnabledDefault),
                     nameof(DeviceConfiguration.WatchdogSeconds),
                     nameof(DeviceConfiguration.Properties),
-                    nameof(DeviceConfiguration.ErrorCodes),
                     nameof(DeviceConfiguration.MessageWatchDogs),
                 };
+        }
+
+        public FormConditionals GetConditionalFields()
+        {
+            return new FormConditionals()
+            {
+                ConditionalFields = new List<string>() { nameof(WatchdogSeconds) },
+                Conditionals = new List<FormConditional>()
+                 {
+                      new FormConditional()
+                      {
+                          Field = nameof(WatchdogEnabledDefault),
+                          Value = "true",
+                          VisibleFields = new List<string>() { nameof(WatchdogSeconds) },
+                          RequiredFields = new List<string> { nameof(WatchdogSeconds) }
+                      }
+                 }
+            };
         }
     }
 

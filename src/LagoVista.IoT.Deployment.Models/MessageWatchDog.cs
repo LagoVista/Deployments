@@ -12,9 +12,9 @@ using System.Text;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Title, DeploymentAdminResources.Names.MessageWatchDog_Help,
-     DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+     DeploymentAdminResources.Names.MessageWatchDog_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-ae-broken",
       FactoryUrl: "/api/deviceconfig/messagewatchdog/factory")]
-    public class MessageWatchDog : IFormDescriptor
+    public class MessageWatchDog : IFormDescriptor, IFormDescriptorCol2, IFormDescriptorBottom
     {
         public MessageWatchDog()
         {
@@ -36,7 +36,7 @@ namespace LagoVista.IoT.Deployment.Models
             FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public int Timeout { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval, HelpResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Help, 
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval, HelpResource: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Help, IsRequired:true,
             WaterMark: DeploymentAdminResources.Names.MessageWatchdog_Timeout_Interval_Select, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> TimeoutInterval { get; set; }
 
@@ -48,11 +48,14 @@ namespace LagoVista.IoT.Deployment.Models
         public string Description { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_Message, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_DeviceMessage_Select, 
-            HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Message_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+            EntityHeaderPickerUrl: "/api/devicemessagetypes", FactoryUrl: "/api/devicemessagetype/factory", HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Message_Help,
+            FieldType: FieldTypes.EntityHeaderPicker,  IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> DeviceMessageDefinition { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode, WaterMark: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Select,
-            HelpResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Help, FieldType: FieldTypes.EntityHeaderPicker, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode, 
+            WaterMark: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Select, EntityHeaderPickerUrl: "/api/errorcodes", FactoryUrl: "/api/errorcode/factory",
+            HelpResource: DeploymentAdminResources.Names.MessageWatchDog_ErrorCode_Help, FieldType: FieldTypes.EntityHeaderPicker, 
+                            IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceErrorCode> DeviceErrorCode {get; set;}
 
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_ExcludeHolidays, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
@@ -71,17 +74,31 @@ namespace LagoVista.IoT.Deployment.Models
             {
                 nameof(Name),
 				nameof(Key),
-				nameof(Description),
-				nameof(Timeout),
-				nameof(TimeoutInterval),
-				nameof(StartupBufferMinutes),
-				nameof(DeviceMessageDefinition),
-				nameof(DeviceErrorCode),
-				nameof(ExcludeHolidays),
-				nameof(WeekdayExclusions),
-				nameof(SaturdayExclusions),
-				nameof(SundayExclusions),
+                nameof(DeviceMessageDefinition),
+                nameof(DeviceErrorCode),
+                nameof(StartupBufferMinutes),
+                nameof(TimeoutInterval),
+                nameof(Timeout),
 			};
 		}
-	}
+
+        public List<string> GetFormFieldsBottom()
+        {
+            return new List<string>()
+            {
+                nameof(Description)
+            };
+        }
+
+        public List<string> GetFormFieldsCol2()
+        {
+            return new List<string>()
+            {
+                nameof(ExcludeHolidays),
+                nameof(WeekdayExclusions),
+                nameof(SaturdayExclusions),
+                nameof(SundayExclusions),
+            };
+        }
+    }
 }

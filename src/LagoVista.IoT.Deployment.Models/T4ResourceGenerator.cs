@@ -1,4 +1,4 @@
-﻿/*1/7/2024 9:23:45 AM*/
+﻿/*1/8/2024 9:32:09 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1401,6 +1401,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:WatchdogConnectedDevice_Title
 
 		public static string WatchdogConnectedDevice_Title { get { return GetResourceString("WatchdogConnectedDevice_Title"); } }
+//Resources:DeploymentAdminResources:WatchdogExclusion_AllDay
+
+		public static string WatchdogExclusion_AllDay { get { return GetResourceString("WatchdogExclusion_AllDay"); } }
+//Resources:DeploymentAdminResources:WatchdogExclusion_AllDay_Help
+
+		public static string WatchdogExclusion_AllDay_Help { get { return GetResourceString("WatchdogExclusion_AllDay_Help"); } }
 //Resources:DeploymentAdminResources:WatchdogMessage_Help
 
 		public static string WatchdogMessage_Help { get { return GetResourceString("WatchdogMessage_Help"); } }
@@ -1895,6 +1901,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Warning_NoListeners = "Warning_NoListeners";
 			public const string WatchdogConnectedDevice_Help = "WatchdogConnectedDevice_Help";
 			public const string WatchdogConnectedDevice_Title = "WatchdogConnectedDevice_Title";
+			public const string WatchdogExclusion_AllDay = "WatchdogExclusion_AllDay";
+			public const string WatchdogExclusion_AllDay_Help = "WatchdogExclusion_AllDay_Help";
 			public const string WatchdogMessage_Help = "WatchdogMessage_Help";
 			public const string WatchdogMessage_Title = "WatchdogMessage_Title";
 			public const string WiFiConnectionProfile_Description = "WiFiConnectionProfile_Description";

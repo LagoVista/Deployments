@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core;
 using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
@@ -10,12 +11,15 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Title, DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Help,
-      DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/watchdogexclusion/factory")]
-    public class WatchdogExclusion: IFormDescriptor
+      DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel,  
+        typeof(DeploymentAdminResources), Icon: "icon-pz-smartwatch-1", FactoryUrl: "/api/deviceconfig/watchdogexclusion/factory")]
+    public class WatchdogExclusion: IFormDescriptor, IFormConditionalFields
     {
         public WatchdogExclusion()
         {
             Id = Guid.NewGuid().ToId();
+            Start = 0;
+            End = 759;
         }
 
         public string Id { get; set; }
@@ -25,6 +29,10 @@ namespace LagoVista.IoT.Deployment.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, FieldType: FieldTypes.Key, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Key { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.WatchdogExclusion_AllDay, HelpResource: DeploymentAdminResources.Names.WatchdogExclusion_AllDay_Help,
+            FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool AllDay { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Start, HelpResource: DeploymentAdminResources.Names.MessageWatchDog_Exclusion_Start_Help,
            ValidationRegEx: @"^[0-2]?[0-9]?[0-5]?[0-9]$", FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources))]
@@ -37,15 +45,32 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Description { get; set; }
 
-		public List<string> GetFormFields()
+        public FormConditionals GetConditionalFields()
+        {
+            return new FormConditionals()
+            {
+                ConditionalFields = new List<string>() { nameof(Start), nameof(End) },
+                Conditionals = new List<FormConditional>()
+                {
+                    new FormConditional()
+                    {
+                        Field = nameof(AllDay),
+                        Value = "false",
+                        VisibleFields = new List<string>() {nameof(Start),nameof(End)}
+                    }
+                }
+            };
+        }
+
+        public List<string> GetFormFields()
 		{
             return new List<string>()
             {
                 nameof(Name),
                 nameof(Key),
-                nameof(Description),
                 nameof(Start), 
-                nameof(End)
+                nameof(End),
+                nameof(Description),
             };
 		}
 

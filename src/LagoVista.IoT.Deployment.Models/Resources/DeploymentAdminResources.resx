@@ -1506,4 +1506,10 @@
   <data name="WatchdogMessage_Title" xml:space="preserve">
     <value>Message Watchdog</value>
   </data>
+  <data name="WatchdogExclusion_AllDay" xml:space="preserve">
+    <value>All Day</value>
+  </data>
+  <data name="WatchdogExclusion_AllDay_Help" xml:space="preserve">
+    <value>The watch dog should not be checking for messages on this day.</value>
+  </data>
 </root>
