@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description, 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Route_Title, DeploymentAdminResources.Names.Route_Help, DeploymentAdminResources.Names.Route_Description,
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), FactoryUrl: "/api/deviceconfig/route/factory")]
-    public class Route : IKeyedEntity, IIDEntity, INamedEntity,  IFormDescriptor, IValidateable
+    public class Route : IKeyedEntity, IIDEntity, INamedEntity, IFormDescriptor, IFormDescriptorCol2, IValidateable
     {
         public Route()
         {
@@ -36,7 +36,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public bool IsDefault { get; set; }
 
         [FKeyProperty(nameof(DeviceMessageDefinition), "ARRAY_CONTAINS(c.Routes, {MessageDefinition:{Id:@id}}, true)")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Route_Messages, HelpResource: DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.ChildList, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Route_Messages, HelpResource: DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/devicemessagetypes",
+          IsRequired:true, WaterMark:DeploymentAdminResources.Names.Route_Message_Help,  ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }
 
         public List<RouteModuleConfig> PipelineModules { get; set; }
@@ -49,16 +50,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string LastUpdatedDate { get; set; }
         public EntityHeader CreatedBy { get; set; }
         public EntityHeader LastUpdatedBy { get; set; }
-
+         
         public List<string> GetFormFields()
         {
             return new List<string>()
             {
                nameof(Route.Name),
                nameof(Route.Key),
-               nameof(Route.MessageDefinition),
-               nameof(Route.IsDefault),
-               nameof(Route.Notes)
+               nameof(Route.MessageDefinition)
             };
         }
 
@@ -232,6 +231,15 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 Id = Id,
                 Text = Name
+            };
+        }
+
+        public List<string> GetFormFieldsCol2()
+        {
+
+            return new List<string>() {
+               nameof(Route.IsDefault),
+               nameof(Route.Notes)
             };
         }
     }

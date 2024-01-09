@@ -178,10 +178,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deviceconfig/route/factory")]
         public async Task<DetailResponse<Route>> CreateRoute()
         {
-            Console.WriteLine("[DeviceConfigController__CreateRoute] - initialize routed.");
-
             var route = await _deviceConfigManager.CreateRouteWithDefaultsAsync(OrgEntityHeader);
-            var response = DetailResponse<Route>.Create(route);
+            var response = DetailResponse<Route>.Create(route, true);
             response.IsEditing = false;
             return response;
         }

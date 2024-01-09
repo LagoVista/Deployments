@@ -1,4 +1,4 @@
-﻿/*1/8/2024 9:32:09 AM*/
+﻿/*1/8/2024 12:09:54 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1263,6 +1263,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Route_IsDefault_Help
 
 		public static string Route_IsDefault_Help { get { return GetResourceString("Route_IsDefault_Help"); } }
+//Resources:DeploymentAdminResources:Route_Message_Help
+
+		public static string Route_Message_Help { get { return GetResourceString("Route_Message_Help"); } }
 //Resources:DeploymentAdminResources:Route_Messages
 
 		public static string Route_Messages { get { return GetResourceString("Route_Messages"); } }
@@ -1855,6 +1858,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Route_InputTranslator = "Route_InputTranslator";
 			public const string Route_IsDefault = "Route_IsDefault";
 			public const string Route_IsDefault_Help = "Route_IsDefault_Help";
+			public const string Route_Message_Help = "Route_Message_Help";
 			public const string Route_Messages = "Route_Messages";
 			public const string Route_Messages_Help = "Route_Messages_Help";
 			public const string Route_OutputTranslator = "Route_OutputTranslator";

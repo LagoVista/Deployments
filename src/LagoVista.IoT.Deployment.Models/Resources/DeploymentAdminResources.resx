@@ -1512,4 +1512,7 @@
   <data name="WatchdogExclusion_AllDay_Help" xml:space="preserve">
     <value>The watch dog should not be checking for messages on this day.</value>
   </data>
+  <data name="Route_Message_Help" xml:space="preserve">
+    <value>-select message-</value>
+  </data>
 </root>
