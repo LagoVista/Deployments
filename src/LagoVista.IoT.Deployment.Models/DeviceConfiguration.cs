@@ -228,6 +228,5 @@ namespace LagoVista.IoT.Deployment.Admin.Models
       SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: " /api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}")]
     public class DeviceConfigurationSummary : LagoVista.Core.Models.SummaryData
     {
-        public string Icon { get; set; }
     }
 }

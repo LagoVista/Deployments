@@ -113,6 +113,5 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
      GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
     public class SolutionSummary : LagoVista.Core.Models.SummaryData
     { 
-        public string Icon { get; set; }
     }
 }

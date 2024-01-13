@@ -308,6 +308,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Name = Name,
                 Key = Key,
                 Id = Id,
+                Icon = Icon,
                 IsPublic = IsPublic,
                 IsDeployed = IsDeployed,
                 Status = Status,
@@ -321,8 +322,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeviceRepoName = DeviceRepository?.Text,
                 Solution = Solution.Text,
                 SolutionId = Solution.Id,
-                Icon = Icon,
-
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -476,6 +475,5 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DeviceRepoName { get; set; }
         public string OrgName { get; set; }
         public string OrgId { get; set; }
-        public string Icon { get; set; }
     }
 }

@@ -17,13 +17,21 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         SingleInstance,
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RemoteDeployment_Title, DeploymentAdminResources.Names.RemoteDeployment_Help, DeploymentAdminResources.Names.RemoteDeployment_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources))]
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RemoteDeployment_Title, 
+        DeploymentAdminResources.Names.RemoteDeployment_Help, DeploymentAdminResources.Names.RemoteDeployment_Description,
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/remotedeployment", GetListUrl: "/api/deployment/remotedeployments", GetUrl: "/api/deployment/remotedeployment/{id}", FactoryUrl: "/api/deployment/remotedeployment/factory",
+        DeleteUrl: "/api/deployment/remotedeployment/{id}", Icon: "icon-pz-server-cloud")]
     public class RemoteDeployment : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, ISummaryFactory
     {
         public RemoteDeployment()
         {
             Instances = new List<DeploymentInstance>();
+            Icon = "icon-pz-server-cloud";
         }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, IsRequired: true, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
+        public string Icon { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.RemoteDeployment_PrimaryMCP, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public DeploymentHost PrimaryMCP { get; set; }
@@ -41,6 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentHost.Name),
                 nameof(DeploymentHost.Key),
+                nameof(Icon),
                 nameof(DeploymentHost.Status),
                 nameof(DeploymentHost.HostType),
                 nameof(DeploymentHost.Size),
@@ -59,6 +68,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 Id = Id,
                 Name = Name,
+                Icon = Icon,
                 Key = Key,
                 Description = Description,
                 IsPublic = IsPublic
@@ -72,6 +82,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     }
 
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RemoteDeployment_Title,
+        DeploymentAdminResources.Names.RemoteDeployment_Help, DeploymentAdminResources.Names.RemoteDeployment_Description,
+        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/remotedeployment", GetListUrl: "/api/deployment/remotedeployments", GetUrl: "/api/deployment/remotedeployment/{id}", FactoryUrl: "/api/deployment/remotedeployment/factory",
+        DeleteUrl: "/api/deployment/remotedeployment/{id}", Icon: "icon-pz-server-cloud")]
     public class RemoteDeploymentSummary : SummaryData
     {
 

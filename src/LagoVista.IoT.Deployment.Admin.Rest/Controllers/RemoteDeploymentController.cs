@@ -87,6 +87,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Remote Deployment - Delete
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("/api/deployment/remotedeployment/{id}")]
+        public async Task<InvokeResult> DeleteRemoteDeployment(String id)
+        {
+            return await _manager.DeleteRemoteDeploymentHostAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Remote Deployment - Get
         /// </summary>
         /// <param name="id"></param>
@@ -96,6 +107,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var deploymentHost = await _manager.GetRemoteDeploymentAsync(id, OrgEntityHeader, UserEntityHeader);
             return DetailResponse<RemoteDeployment>.Create(deploymentHost);
+        }
+
+        /// <summary>
+        /// Remote Deployment - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/remotedeployment/factory")]
+        public  DetailResponse<RemoteDeployment> CreateNew()
+        {
+            var newRemoteDeployment = DetailResponse<RemoteDeployment>.Create();
+            SetOwnedProperties(newRemoteDeployment.Model);
+            SetAuditProperties(newRemoteDeployment.Model);
+            return newRemoteDeployment;
         }
     }
 }

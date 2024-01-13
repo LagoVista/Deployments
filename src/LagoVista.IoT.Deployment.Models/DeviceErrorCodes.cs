@@ -95,6 +95,7 @@ namespace LagoVista.IoT.Deployment.Models
             {
                 Description = Description,
                 Id = Id,
+                Icon = Icon,
                 Name = Name,
                 Key = Key,
                 IsPublic = IsPublic
@@ -204,7 +205,7 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCodes_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
-      DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources),
+      DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
       GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
     public class DeviceErrorCodeSummary : SummaryData
     {

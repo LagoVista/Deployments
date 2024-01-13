@@ -310,6 +310,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 CapacityStatus = CapacityStatus.Text,
                 HostType = HostType.Text,
                 Key = Key,
+                Icon = Icon,
                 Description = Description,
                 IsPublic = IsPublic,
                 IpAddress = Ipv4Address,
@@ -317,7 +318,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 OrgId = OwnerOrganization.Id,
                 OrgName = OwnerOrganization.Text,         
                 StatusDetails = StatusDetails,
-                Icon = Icon,
             };
         }
 
@@ -369,7 +369,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string CapacityStatus { get; set; }
         public string OrgName { get; set; }
         public string OrgId { get; set; }
-        public string Icon { get; set; }
 
         public string LastPing { get; set; }
         public string IpAddress { get; set; }
