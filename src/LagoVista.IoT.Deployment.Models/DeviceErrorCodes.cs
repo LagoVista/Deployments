@@ -29,9 +29,10 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
-        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
+        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
+        ListUIUrl: "/iotstudio/device/errorcodes", EditUIUrl: "/iotstudio/device/errorcode/{id}", CreateUIUrl: "/iotstudio/device/errorcode/add",
         GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
-    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields, ISummaryFactory
+    public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields, ISummaryFactory, ICategorized
     {
         public const string DeviceErrorCode_NotApplicable = "na";
         public const string DeviceErrorCode_Minutes = "minutes";
@@ -45,6 +46,10 @@ namespace LagoVista.IoT.Deployment.Models
             AutoexpireTimespan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
             Icon = "icon-ae-error-1";   
         }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TriggerOnEachOccurrence, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TriggerOnEachOccurrence_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool TriggerOnEachOccurrence { get; set; }
@@ -98,7 +103,8 @@ namespace LagoVista.IoT.Deployment.Models
                 Icon = Icon,
                 Name = Name,
                 Key = Key,
-                IsPublic = IsPublic
+                IsPublic = IsPublic,
+                Category = Category
             };
         }
 
@@ -153,6 +159,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Name),
                 nameof(Key),
                 nameof(Icon),
+                nameof(Category),
                 nameof(ServiceTicketTemplate),
                 nameof(TriggerOnEachOccurrence),
                 nameof(DistroList),
@@ -207,7 +214,7 @@ namespace LagoVista.IoT.Deployment.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCodes_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
       DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
       GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
-    public class DeviceErrorCodeSummary : SummaryData
+    public class DeviceErrorCodeSummary : CategorizedSummaryData
     {
 
     }

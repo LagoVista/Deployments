@@ -1518,4 +1518,10 @@
   <data name="ClientApps_Title" xml:space="preserve">
     <value>Client Apps</value>
   </data>
+  <data name="Common_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Common_Category_Select" xml:space="preserve">
+    <value>-select category-</value>
+  </data>
 </root>

@@ -18,10 +18,11 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solution_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-pz-solution",
+        EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-pz-solution",
         GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}",
+        ListUIUrl: "/iotstudio/manage/solutions", EditUIUrl: "/iotstudio/manage/solution/{id}", CreateUIUrl: "/iotstudio/manage/solution/add",
         HelpUrl: "https://docs.nuviot.com/Deployment/Solution.html")]
-    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, ISummaryFactory
+    public class Solution : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, ISummaryFactory, ICategorized
     {
 
         public Solution()
@@ -39,7 +40,10 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
             set;
         }
 
-        
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
+
+
         [FKeyProperty(nameof(ListenerConfiguration), nameof(DefaultListener) + ".Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DefaultListener, HelpResource: DeploymentAdminResources.Names.Solution_DefaultListener_Help,  WaterMark: DeploymentAdminResources.Names.Solution_DefaultListener_Select, IsRequired:false, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader DefaultListener { get; set; }
@@ -81,6 +85,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 IsPublic = IsPublic,
                 Description = Description,
                 Icon = Icon,
+                Category = Category
             };
         }
 
@@ -92,6 +97,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 nameof(Solution.Version),
                 nameof(Solution.Icon),
                 nameof(Solution.Key),
+                nameof(Solution.Category),
                 nameof(Solution.DefaultListener),
                 nameof(Solution.Planner),
                 nameof(Solution.Description),
@@ -111,7 +117,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solutions_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description,
      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-solution",
      GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
-    public class SolutionSummary : LagoVista.Core.Models.SummaryData
+    public class SolutionSummary : LagoVista.Core.Models.CategorizedSummaryData
     { 
     }
 }

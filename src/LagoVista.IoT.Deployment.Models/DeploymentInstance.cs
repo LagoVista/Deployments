@@ -15,11 +15,11 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
-        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
-        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", 
-        GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}", Icon: "icon-ae-deployment-instance",
-        HelpUrl: "https://docs.nuviot.com/Deployment/Instance.html")]
-    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory
+        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources),
+        SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}",
+        ListUIUrl: "/iotstudio/manage/instances", EditUIUrl: "/iotstudio/manage/instance/{id}", CreateUIUrl: "/iotstudio/manage/instance/add",
+        GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}", Icon: "icon-ae-deployment-instance")]
+    public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory, ICategorized
     {
         public DeploymentInstance()
         {
@@ -117,6 +117,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 StatusTimeStamp = DateTime.UtcNow.ToJSONString();
             }
         }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired: true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public EntityHeader TimeZone { get; set; }
@@ -322,6 +326,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeviceRepoName = DeviceRepository?.Text,
                 Solution = Solution.Text,
                 SolutionId = Solution.Id,
+                Category = Category
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -339,6 +344,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentInstance.Name),
                 nameof(DeploymentInstance.Key),
+                nameof(DeploymentInstance.Icon),
+                nameof(DeploymentInstance.Category),
                 nameof(DeploymentInstance.DnsHostName),
                 nameof(DeploymentInstance.Status),
                 nameof(DeploymentInstance.Subscription),
@@ -353,6 +360,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             {
                 nameof(DeploymentInstance.Name),
                 nameof(DeploymentInstance.Key),
+                nameof(DeploymentInstance.Icon),
+                nameof(DeploymentInstance.Category),
                 nameof(DeploymentInstance.DnsHostName),
                 nameof(DeploymentInstance.Status),
                 nameof(DeploymentInstance.DeviceRepository),
@@ -370,7 +379,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         {
             return new List<string>()
             {
-                nameof(DeploymentInstance.Icon),
                 nameof(DeploymentInstance.NuvIoTEdition),
                 nameof(DeploymentInstance.DeploymentType),
                 nameof(DeploymentInstance.WorkingStorage),
@@ -461,7 +469,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instances_Title, DeploymentAdminResources.Names.Instance_Help,
      DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-deployment-instance",
      SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}")]
-    public class DeploymentInstanceSummary : SummaryData
+    public class DeploymentInstanceSummary : CategorizedSummaryData
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }
         public string Solution { get; set; }

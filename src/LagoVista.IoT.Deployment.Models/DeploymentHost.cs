@@ -108,10 +108,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Host_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-pz-server-1",
+        EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-pz-server-1",
         SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}",
+        ListUIUrl: "/iotstudio/manage/hosts", EditUIUrl: "/iotstudio/manage/host/{id}", CreateUIUrl: "/iotstudio/manage/host/add",
         HelpUrl: "https://docs.nuviot.com/Deployment/Host.html")]
-    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,IValidateable, IFormDescriptor
+    public class DeploymentHost : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,IValidateable, IFormDescriptor, ICategorized
     {
         public const string HostSize_ExtraSmall = "extrasmall";
         public const string HostSize_Small = "small";
@@ -181,6 +182,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             HostAccessKey2 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
         }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Type, EnumType: (typeof(HostTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: true)]
@@ -318,6 +321,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 OrgId = OwnerOrganization.Id,
                 OrgName = OwnerOrganization.Text,         
                 StatusDetails = StatusDetails,
+                Category = Category
             };
         }
 
@@ -328,6 +332,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentHost.Name),
                 nameof(DeploymentHost.Key),
                 nameof(DeploymentHost.Icon),
+                nameof(DeploymentHost.Category),
                 nameof(DeploymentHost.Status),
                 nameof(DeploymentHost.HostType),
                 nameof(DeploymentHost.Size),
@@ -354,7 +359,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Hosts_Title, DeploymentAdminResources.Names.Host_Help, DeploymentAdminResources.Names.Host_Description,
         EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-server-1",
         SaveUrl: "/api/deployment/host", GetUrl: "/api/deployment/host/{id}", GetListUrl: "/api/deployment/hosts", FactoryUrl: "/api/deployment/host/factory", DeleteUrl: "/api/deployment/host/{id}")]
-    public class DeploymentHostSummary : SummaryData
+    public class DeploymentHostSummary : CategorizedSummaryData
     {
         [ListColumn(HeaderResource: DeploymentAdminResources.Names.Host_Type, ResourceType: typeof(DeploymentAdminResources))]
         public string HostType { get; set; }

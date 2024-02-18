@@ -11,9 +11,10 @@ using System.Collections.ObjectModel;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApp_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description, 
-        EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources), Icon: "icon-pz-todo",
+        EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-pz-todo",
+        ListUIUrl: "/iotstudio/settings/clientapps", EditUIUrl: "/iotstudio/settings/clientapp/{id}", CreateUIUrl: "/iotstudio/settings/clientapp/add",
         SaveUrl: "/api/clientapp", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
-    public class ClientApp : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, ISummaryFactory
+    public class ClientApp : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, ISummaryFactory, ICategorized
     {
         public ClientApp()
         {
@@ -29,6 +30,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, IsRequired: true, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; } = "icon-fo-image";
 
+        
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Secret, SecureIdFieldName:nameof(AppAuthKeyPrimarySecureId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
@@ -48,6 +52,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(ClientApp.Name),
                 nameof(ClientApp.Key),
                 nameof(ClientApp.Icon),
+                nameof(ClientApp.Category),
                 nameof(ClientApp.Description),
                 nameof(ClientApp.AppAuthKeyPrimary),
                 nameof(ClientApp.AppAuthKeySecondary),
@@ -68,7 +73,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Icon = Icon,
                 Name = Name,
                 InstanceId = DeploymentInstance?.Id,
-                InstanceName = DeploymentInstance?.Text
+                InstanceName = DeploymentInstance?.Text,
+                Category = Category
             };
         }
 
@@ -137,7 +143,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApps_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
       EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-todo",
       SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
-    public class ClientAppSummary : SummaryData
+    public class ClientAppSummary : CategorizedSummaryData
     {
         public string InstanceId { get; set; }
         public string InstanceName { get; set; }

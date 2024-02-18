@@ -1,4 +1,4 @@
-﻿/*1/13/2024 10:25:12 AM*/
+﻿/*2/18/2024 7:51:43 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -93,6 +93,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ClientApps_Title
 
 		public static string ClientApps_Title { get { return GetResourceString("ClientApps_Title"); } }
+//Resources:DeploymentAdminResources:Common_Category
+
+		public static string Common_Category { get { return GetResourceString("Common_Category"); } }
+//Resources:DeploymentAdminResources:Common_Category_Select
+
+		public static string Common_Category_Select { get { return GetResourceString("Common_Category_Select"); } }
 //Resources:DeploymentAdminResources:Common_Description
 
 		public static string Common_Description { get { return GetResourceString("Common_Description"); } }
@@ -1471,6 +1477,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ClientApp_Title = "ClientApp_Title";
 			public const string ClientApplications_Title = "ClientApplications_Title";
 			public const string ClientApps_Title = "ClientApps_Title";
+			public const string Common_Category = "Common_Category";
+			public const string Common_Category_Select = "Common_Category_Select";
 			public const string Common_Description = "Common_Description";
 			public const string Common_Icon = "Common_Icon";
 			public const string Common_Id = "Common_Id";

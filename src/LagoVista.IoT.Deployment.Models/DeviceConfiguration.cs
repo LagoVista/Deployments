@@ -17,11 +17,12 @@ using System.Linq;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
-        DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
+        DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources),
         SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
-        HelpUrl: "https://docs.nuviot.com/Devices/DeviceConfigurations.html", Icon: "icon-ae-device-config")]
+        ListUIUrl: "/iotstudio/device/deviceconfigurations", EditUIUrl: "/iotstudio/device/deviceconfiguration/{id}", CreateUIUrl: "/iotstudio/device/deviceconfiguration/add",
+        Icon: "icon-ae-device-config")]
     public class DeviceConfiguration : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IFormDescriptorAdvanced, IFormConditionalFields,
-        IFormDescriptorAdvancedCol2, IIconEntity, ISummaryFactory
+        IFormDescriptorAdvancedCol2, IIconEntity, ISummaryFactory, ICategorized
     {
         public DeviceConfiguration()
         {
@@ -46,6 +47,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Help, WaterMark: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<StateSet> CustomStatusType { get; set; }
 
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String DeviceLabel { get; set; }
@@ -121,7 +126,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Key = Key,
                 Name = Name,
                 Icon = Icon,
-                Description = Description
+                Description = Description,
+                Category = Category
             };
         }
 
@@ -132,6 +138,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.Name),
                     nameof(DeviceConfiguration.Key),
                     nameof(DeviceConfiguration.Icon),
+                    nameof(DeviceConfiguration.Category),
                     nameof(DeviceConfiguration.Description),
                     nameof(DeviceConfiguration.Routes),
                 };
@@ -175,8 +182,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 {
                     nameof(DeviceConfiguration.Name),
                     nameof(DeviceConfiguration.Key),
-                    nameof(DeviceConfiguration.CustomStatusType),
                     nameof(DeviceConfiguration.Icon),
+                    nameof(DeviceConfiguration.Category),
+                    nameof(DeviceConfiguration.CustomStatusType),
                     nameof(DeviceConfiguration.Description),
                     nameof(DeviceConfiguration.Routes),
                     nameof(DeviceConfiguration.SensorDefinitions),
@@ -226,7 +234,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfigurations_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
       DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-device-config",
       SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: " /api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}")]
-    public class DeviceConfigurationSummary : LagoVista.Core.Models.SummaryData
+    public class DeviceConfigurationSummary : LagoVista.Core.Models.CategorizedSummaryData
     {
     }
 }
