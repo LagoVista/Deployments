@@ -61,6 +61,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
+        public List<string> GetFormFieldsCol2()
+        {
+
+            return new List<string>() {
+               nameof(Route.IsDefault),
+            };
+        }
+
         public static Route Create()
         {
             var route = new Route();
@@ -234,13 +242,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        public List<string> GetFormFieldsCol2()
-        {
 
-            return new List<string>() {
-               nameof(Route.IsDefault),
-               nameof(Route.Notes)
-            };
-        }
     }
 }
