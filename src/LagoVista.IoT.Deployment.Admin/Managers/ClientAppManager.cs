@@ -66,7 +66,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var result = await _userManager.CreateAsync(new UserAdmin.Models.Users.AppUser()
             {
-                CurrentOrganization = org,
+                CurrentOrganization = fullOrg.CreateSummary(),
                 Email = clientAppEmail,
                 FirstName = clientApp.Name,
                 LastName = "Service Account",
