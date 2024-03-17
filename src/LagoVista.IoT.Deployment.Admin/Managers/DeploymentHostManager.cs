@@ -32,11 +32,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IUserManager _userManager;
         private readonly IAdminLogger _adminLogger;
         private readonly ISecureStorage _secureStorage;
+        private readonly IAppConfig _appConfig;
 
         public DeploymentHostManager(IDeploymentHostRepo deploymentHostRepo, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentActivityRepo deploymentActivityRepo,
                 IDeploymentConnectorService deploymentConnectorService, ISecureStorage secureStorage, IDeploymentInstanceRepo deploymentInstanceRepo, IAdminLogger logger, IDeploymentHostStatusRepo deploymentHostStatusRepo,
                 IUserManager userManager, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
+            _appConfig = appConfig;
             _adminLogger = logger;
             _deploymentHostRepo = deploymentHostRepo;
             _deploymentInstanceRepo = deploymentInstanceRepo;
@@ -254,9 +256,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _deploymentHostRepo.GetMCPHostAsync();
         }
 
-        public Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
+        public async Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
         {
-            return _deploymentHostRepo.GetNotificationsHostAsync();
+            if (_appConfig.Environment == Environments.Local)
+            {
+                return new DeploymentHost()
+                {
+                    AdminAPIUri = "https://dev-notifications.nuviot.com",
+                    HostType = EntityHeader<HostTypes>.Create(HostTypes.Notification),
+                    ContainerTag = EntityHeader.Create("notification", "v1.1.0")
+                };
+            }
+
+            return await _deploymentHostRepo.GetNotificationsHostAsync();
         }
 
         public Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org)
