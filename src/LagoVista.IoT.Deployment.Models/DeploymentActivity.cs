@@ -164,6 +164,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
     }
 
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeploymentInstanceStatus_Title, DeploymentAdminResources.Names.DeploymentInstanceStatus_Description,
+     DeploymentAdminResources.Names.DeploymentInstanceStatus_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-report-4",
+     GetListUrl: "/api/deployment/instance/{id}/statushistory")]
     public class DeploymentActivitySummary
     {
         public string Id { get; set; }

@@ -1,11 +1,14 @@
 ﻿using LagoVista.Core.Models;
 using System;
 using LagoVista.Core;
-using System.Collections.Generic;
-using System.Text;
+using LagoVista.Core.Attributes;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeploymentInstanceStatus_Title, DeploymentAdminResources.Names.DeploymentInstanceStatus_Description,
+     DeploymentAdminResources.Names.DeploymentInstanceStatus_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-report-4",
+     GetListUrl: "/api/deployment/instance/{id}/statushistory")]
     public class DeploymentInstanceStatus : TableStorageEntity
     {
         public static DeploymentInstanceStatus Create(string instanceId, EntityHeader user)

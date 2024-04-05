@@ -1,12 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
 using LagoVista.Core;
-using System.Collections.Generic;
-using System.Text;
 using LagoVista.IoT.Logging.Models;
+using LagoVista.Core.Attributes;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
+
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Telemetry_Title, DeploymentAdminResources.Names.Telemetry_Help,
+         DeploymentAdminResources.Names.Telemetry_Help, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-report-4",
+         GetListUrl: "/api/telemetry/events/instance/{id}")]
     public class TelemetryReportData
     {
         [JsonProperty("id")]

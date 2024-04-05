@@ -1,4 +1,4 @@
-﻿/*2/18/2024 7:51:43 AM*/
+﻿/*4/3/2024 4:05:58 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -309,6 +309,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentInstanceCredentials_Title
 
 		public static string DeploymentInstanceCredentials_Title { get { return GetResourceString("DeploymentInstanceCredentials_Title"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceStatus_Description
+
+		public static string DeploymentInstanceStatus_Description { get { return GetResourceString("DeploymentInstanceStatus_Description"); } }
+//Resources:DeploymentAdminResources:DeploymentInstanceStatus_Title
+
+		public static string DeploymentInstanceStatus_Title { get { return GetResourceString("DeploymentInstanceStatus_Title"); } }
 //Resources:DeploymentAdminResources:DeploymentQueueType_InMemory
 
 		public static string DeploymentQueueType_InMemory { get { return GetResourceString("DeploymentQueueType_InMemory"); } }
@@ -1401,6 +1407,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Telemetry_ErrorQueryServer
 
 		public static string Telemetry_ErrorQueryServer { get { return GetResourceString("Telemetry_ErrorQueryServer"); } }
+//Resources:DeploymentAdminResources:Telemetry_Help
+
+		public static string Telemetry_Help { get { return GetResourceString("Telemetry_Help"); } }
+//Resources:DeploymentAdminResources:Telemetry_Title
+
+		public static string Telemetry_Title { get { return GetResourceString("Telemetry_Title"); } }
 //Resources:DeploymentAdminResources:Warning_NoDeviceConfigs
 
 		public static string Warning_NoDeviceConfigs { get { return GetResourceString("Warning_NoDeviceConfigs"); } }
@@ -1549,6 +1561,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentInstanceCredentials_Description = "DeploymentInstanceCredentials_Description";
 			public const string DeploymentInstanceCredentials_Help = "DeploymentInstanceCredentials_Help";
 			public const string DeploymentInstanceCredentials_Title = "DeploymentInstanceCredentials_Title";
+			public const string DeploymentInstanceStatus_Description = "DeploymentInstanceStatus_Description";
+			public const string DeploymentInstanceStatus_Title = "DeploymentInstanceStatus_Title";
 			public const string DeploymentQueueType_InMemory = "DeploymentQueueType_InMemory";
 			public const string DeploymentQueueType_Kafka = "DeploymentQueueType_Kafka";
 			public const string DeploymentQueueType_QueueTechnology = "DeploymentQueueType_QueueTechnology";
@@ -1913,6 +1927,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string TaggedContainer_Tag = "TaggedContainer_Tag";
 			public const string TaggedContainer_Title = "TaggedContainer_Title";
 			public const string Telemetry_ErrorQueryServer = "Telemetry_ErrorQueryServer";
+			public const string Telemetry_Help = "Telemetry_Help";
+			public const string Telemetry_Title = "Telemetry_Title";
 			public const string Warning_NoDeviceConfigs = "Warning_NoDeviceConfigs";
 			public const string Warning_NoListeners = "Warning_NoListeners";
 			public const string WatchdogConnectedDevice_Help = "WatchdogConnectedDevice_Help";
