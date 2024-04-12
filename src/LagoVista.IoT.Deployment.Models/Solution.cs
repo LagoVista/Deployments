@@ -62,7 +62,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
             HelpResource: DeploymentAdminResources.Names.Deployment_Planner_Help, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
         public EntityHeader<PlannerConfiguration> Planner { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, FieldType: FieldTypes.ChildListInline, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, ChildListDisplayMember:"name", FieldType: FieldTypes.ChildListInline, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Settings { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Icon, FieldType:FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
