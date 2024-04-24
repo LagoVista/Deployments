@@ -193,7 +193,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_SelectSize)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Size, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), EntityHeaderPickerUrl: "/api/productofferings/vms", WaterMark: DeploymentAdminResources.Names.Host_SelectSize)]
         public EntityHeader Size { get; set; }
 
         [FKeyProperty(nameof(DeviceRepository), WhereClause:nameof(DeviceRepository) + ".Id = {0}")]
@@ -347,6 +347,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.Icon),
                 nameof(DeploymentInstance.Category),
                 nameof(DeploymentInstance.DnsHostName),
+                nameof(DeploymentInstance.Size),
                 nameof(DeploymentInstance.Status),
                 nameof(DeploymentInstance.Subscription),
                 nameof(DeploymentInstance.DeviceRepository),
@@ -363,6 +364,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 nameof(DeploymentInstance.Icon),
                 nameof(DeploymentInstance.Category),
                 nameof(DeploymentInstance.DnsHostName),
+                nameof(DeploymentInstance.Size),
                 nameof(DeploymentInstance.Status),
                 nameof(DeploymentInstance.DeviceRepository),
                 nameof(DeploymentInstance.Solution),
