@@ -28,6 +28,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IRouteSupportRepo, RouteSupportRepo>();
             services.AddTransient<IDeviceConfigurationRepo, DeviceConfigurationRepo>();
             services.AddTransient<IDeviceErrorCodesRepo, DeviceErrorCodesRepo>();
+            services.AddTransient<IDeviceNotificationRepo, DeviceNotificationRepo>();
         }
     }
 }

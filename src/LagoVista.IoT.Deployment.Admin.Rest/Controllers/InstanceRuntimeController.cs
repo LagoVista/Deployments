@@ -46,6 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IModelManager _modelManager;
         private readonly IDeploymentInstanceRepo _instanceRepo;
         private readonly IRemoteServiceManager _remoteServiceManager;
+        private readonly IDeviceNotificationManager _deviceNoficationManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -61,7 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger,
-            IRemoteServiceManager remoteServiceManager)
+            IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -76,6 +77,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
             this._modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
             this._remoteServiceManager = remoteServiceManager ?? throw new ArgumentNullException(nameof(remoteServiceManager));
+            this._deviceNoficationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -690,6 +692,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
 
             return await _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
+        /// Raise a notification for the device and notification key.
+        /// </summary>
+        /// <param name="raisedNotification"></param>
+        /// <returns></returns>
+        [HttpPost("/api/device/notiifcation/generate")]
+        public async Task<InvokeResult> GenerateNotification([FromBody] RaisedDeviceNotification raisedNotification)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            return await _deviceNoficationManager.RaiseNotificationAsync(raisedNotification, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>

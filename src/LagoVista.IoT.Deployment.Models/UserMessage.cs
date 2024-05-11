@@ -17,6 +17,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string DistributionGroupId { get; set; }
         public MessageTypes MessageType { get; set; }
 
+        public string DeviceId { get; set; }
+
         public string Email { get; set; }
         public string Phone { get; set; }
 

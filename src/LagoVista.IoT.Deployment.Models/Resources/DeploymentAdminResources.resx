@@ -1542,4 +1542,37 @@
   <data name="DeploymentActivities_TItle" xml:space="preserve">
     <value>Deployment Activities</value>
   </data>
+  <data name="DeviceNotifications_Description" xml:space="preserve">
+    <value>Definition of notifications that can be sent out to devices</value>
+  </data>
+  <data name="DeviceNotifications_EmailContent" xml:space="preserve">
+    <value>Email Content</value>
+  </data>
+  <data name="DeviceNotifications_EmailSubject" xml:space="preserve">
+    <value>Email Subject</value>
+  </data>
+  <data name="DeviceNotifications_IncludeLandingPageContent" xml:space="preserve">
+    <value>Include Landing Page Content</value>
+  </data>
+  <data name="DeviceNotifications_LandingPageContent" xml:space="preserve">
+    <value>Landing Page Content</value>
+  </data>
+  <data name="DeviceNotifications_SendEmail" xml:space="preserve">
+    <value>Send Email Message</value>
+  </data>
+  <data name="DeviceNotifications_SendSMS" xml:space="preserve">
+    <value>Send SMS Message</value>
+  </data>
+  <data name="DeviceNotifications_SMSContent" xml:space="preserve">
+    <value>SMS Content</value>
+  </data>
+  <data name="DeviceNotifications_Title" xml:space="preserve">
+    <value>Device Notifications</value>
+  </data>
+  <data name="DeviceNotification_TagHelp" xml:space="preserve">
+    <value>The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]</value>
+  </data>
+  <data name="DeviceNotification_Title" xml:space="preserve">
+    <value>Device Notification</value>
+  </data>
 </root>

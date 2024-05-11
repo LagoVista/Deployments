@@ -1,4 +1,4 @@
-﻿/*4/3/2024 4:05:58 PM*/
+﻿/*5/11/2024 2:12:52 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -222,6 +222,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Deployment_Title
 
 		public static string Deployment_Title { get { return GetResourceString("Deployment_Title"); } }
+//Resources:DeploymentAdminResources:DeploymentActivities_Help
+
+		public static string DeploymentActivities_Help { get { return GetResourceString("DeploymentActivities_Help"); } }
+//Resources:DeploymentAdminResources:DeploymentActivities_TItle
+
+		public static string DeploymentActivities_TItle { get { return GetResourceString("DeploymentActivities_TItle"); } }
 //Resources:DeploymentAdminResources:DeploymentActivity_ActivityType
 
 		public static string DeploymentActivity_ActivityType { get { return GetResourceString("DeploymentActivity_ActivityType"); } }
@@ -528,6 +534,39 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCodes_Title
 
 		public static string DeviceErrorCodes_Title { get { return GetResourceString("DeviceErrorCodes_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_TagHelp
+
+		public static string DeviceNotification_TagHelp { get { return GetResourceString("DeviceNotification_TagHelp"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_Title
+
+		public static string DeviceNotification_Title { get { return GetResourceString("DeviceNotification_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_Description
+
+		public static string DeviceNotifications_Description { get { return GetResourceString("DeviceNotifications_Description"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_EmailContent
+
+		public static string DeviceNotifications_EmailContent { get { return GetResourceString("DeviceNotifications_EmailContent"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_EmailSubject
+
+		public static string DeviceNotifications_EmailSubject { get { return GetResourceString("DeviceNotifications_EmailSubject"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_IncludeLandingPageContent
+
+		public static string DeviceNotifications_IncludeLandingPageContent { get { return GetResourceString("DeviceNotifications_IncludeLandingPageContent"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_LandingPageContent
+
+		public static string DeviceNotifications_LandingPageContent { get { return GetResourceString("DeviceNotifications_LandingPageContent"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_SendEmail
+
+		public static string DeviceNotifications_SendEmail { get { return GetResourceString("DeviceNotifications_SendEmail"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_SendSMS
+
+		public static string DeviceNotifications_SendSMS { get { return GetResourceString("DeviceNotifications_SendSMS"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_SMSContent
+
+		public static string DeviceNotifications_SMSContent { get { return GetResourceString("DeviceNotifications_SMSContent"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_Title
+
+		public static string DeviceNotifications_Title { get { return GetResourceString("DeviceNotifications_Title"); } }
 //Resources:DeploymentAdminResources:Err_CantPublishNotRunning
 
 		public static string Err_CantPublishNotRunning { get { return GetResourceString("Err_CantPublishNotRunning"); } }
@@ -1532,6 +1571,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Deployment_Planner_Help = "Deployment_Planner_Help";
 			public const string Deployment_Planner_Select = "Deployment_Planner_Select";
 			public const string Deployment_Title = "Deployment_Title";
+			public const string DeploymentActivities_Help = "DeploymentActivities_Help";
+			public const string DeploymentActivities_TItle = "DeploymentActivities_TItle";
 			public const string DeploymentActivity_ActivityType = "DeploymentActivity_ActivityType";
 			public const string DeploymentActivity_Duration = "DeploymentActivity_Duration";
 			public const string DeploymentActivity_ErrorMessage = "DeploymentActivity_ErrorMessage";
@@ -1634,6 +1675,17 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_TriggerOnEachOccurrence = "DeviceErrorCode_TriggerOnEachOccurrence";
 			public const string DeviceErrorCode_TriggerOnEachOccurrence_Help = "DeviceErrorCode_TriggerOnEachOccurrence_Help";
 			public const string DeviceErrorCodes_Title = "DeviceErrorCodes_Title";
+			public const string DeviceNotification_TagHelp = "DeviceNotification_TagHelp";
+			public const string DeviceNotification_Title = "DeviceNotification_Title";
+			public const string DeviceNotifications_Description = "DeviceNotifications_Description";
+			public const string DeviceNotifications_EmailContent = "DeviceNotifications_EmailContent";
+			public const string DeviceNotifications_EmailSubject = "DeviceNotifications_EmailSubject";
+			public const string DeviceNotifications_IncludeLandingPageContent = "DeviceNotifications_IncludeLandingPageContent";
+			public const string DeviceNotifications_LandingPageContent = "DeviceNotifications_LandingPageContent";
+			public const string DeviceNotifications_SendEmail = "DeviceNotifications_SendEmail";
+			public const string DeviceNotifications_SendSMS = "DeviceNotifications_SendSMS";
+			public const string DeviceNotifications_SMSContent = "DeviceNotifications_SMSContent";
+			public const string DeviceNotifications_Title = "DeviceNotifications_Title";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";
 			public const string Err_CouldNotFindDestinationModule = "Err_CouldNotFindDestinationModule";
 			public const string Err_CouldNotLoadDeviceConfiguration = "Err_CouldNotLoadDeviceConfiguration";
