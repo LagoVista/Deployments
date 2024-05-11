@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core;
 using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
+using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
 using System;
@@ -11,7 +12,7 @@ namespace LagoVista.IoT.Deployment.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.WiFiConnectionProfile_Title, DeploymentAdminResources.Names.WiFiConnectionProfile_Help,
         DeploymentAdminResources.Names.WiFiConnectionProfile_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
         FactoryUrl: "/api/wificonnectionprofile/factory")]
-    public class WiFiConnectionProfile : IIDEntity, IKeyedEntity, INamedEntity, IDescriptionEntity, IFormDescriptor, IFormDescriptorAdvanced
+    public class WiFiConnectionProfile : IIDEntity, IKeyedEntity, IValidateable, INamedEntity, IDescriptionEntity, IFormDescriptor, IFormDescriptorAdvanced
     {
         public WiFiConnectionProfile()
         {
