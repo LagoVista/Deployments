@@ -453,6 +453,29 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.StopAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
+        [HttpPut("/api/deployment/instance/{id}/wifiprofile")]
+        public async Task<InvokeResult<DeploymentInstance>> UpdateWiFiProfile(string id, WiFiConnectionProfile connectionProfile)
+        {
+            var instance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            var existing = instance.WiFiConnectionProfiles.FirstOrDefault(ins => ins.Id == connectionProfile.Id);
+            if (instance != null)
+                instance.WiFiConnectionProfiles.Remove(existing);
+
+            instance.WiFiConnectionProfiles.Add(connectionProfile);
+
+            var result = await _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
+            if (result.Successful)
+                return InvokeResult<DeploymentInstance>.Create(instance);
+
+            return InvokeResult<DeploymentInstance>.FromInvokeResult(result);
+        }
+
+        [HttpPost("/api/deployment/instance/{id}/wifiprofile")]
+        public Task<InvokeResult<DeploymentInstance>> AddWiFiProfile(string id, WiFiConnectionProfile connectionProfile)
+        {
+            return UpdateWiFiProfile(id, connectionProfile);
+        }
+
         /// <summary>
         /// WiFi Connection Profile - Get
         /// </summary>
