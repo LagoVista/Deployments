@@ -1,4 +1,4 @@
-﻿/*5/11/2024 2:12:52 PM*/
+﻿/*5/12/2024 7:47:39 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1056,6 +1056,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Instance_Subscription_Help
 
 		public static string Instance_Subscription_Help { get { return GetResourceString("Instance_Subscription_Help"); } }
+//Resources:DeploymentAdminResources:Instance_TestMode
+
+		public static string Instance_TestMode { get { return GetResourceString("Instance_TestMode"); } }
 //Resources:DeploymentAdminResources:Instance_Title
 
 		public static string Instance_Title { get { return GetResourceString("Instance_Title"); } }
@@ -1849,6 +1852,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Instance_StatusDetails = "Instance_StatusDetails";
 			public const string Instance_StatusTimeStamp = "Instance_StatusTimeStamp";
 			public const string Instance_Subscription_Help = "Instance_Subscription_Help";
+			public const string Instance_TestMode = "Instance_TestMode";
 			public const string Instance_Title = "Instance_Title";
 			public const string Instance_UpSince = "Instance_UpSince";
 			public const string Instances_Title = "Instances_Title";

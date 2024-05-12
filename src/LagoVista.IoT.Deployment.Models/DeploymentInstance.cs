@@ -277,6 +277,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
            FactoryUrl: "/api/wificonnectionprofile/factory", ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public List<WiFiConnectionProfile> WiFiConnectionProfiles { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Instance_TestMode, FieldType: FieldTypes.CheckBox, 
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public bool TestMode { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology, EnumType: (typeof(QueueTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources),
             WaterMark: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Select, HelpResource: DeploymentAdminResources.Names.DeploymentQueueType_QueueTechnology_Help, IsRequired: true, IsUserEditable: true)]

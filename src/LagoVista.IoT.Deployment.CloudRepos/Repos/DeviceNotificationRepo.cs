@@ -1,5 +1,6 @@
 ﻿using LagoVista.CloudStorage;
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin;
@@ -34,6 +35,16 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task<DeviceNotification> GetNotificationAsync(string id)
         {
             return GetDocumentAsync(id);
+        }
+
+        public async Task<DeviceNotification> GetNotificationByKeyAsync(string orgId, string key)
+        {
+            var result = await QueryAsync(dn=>dn.OwnerOrganization.Id == orgId && dn.Key == key);
+            if (result == null || !result.Any())
+                throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key}");
+
+            return result.First();
+        
         }
 
         public Task<ListResponse<DeviceNotificationSummary>> GetNotificationForOrgAsync(string orgId, ListRequest listRequest)

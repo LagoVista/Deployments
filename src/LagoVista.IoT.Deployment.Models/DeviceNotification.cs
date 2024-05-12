@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Attributes;
+﻿using LagoVista.Core;
+using LagoVista.Core.Attributes;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
@@ -59,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Models
         {
             return new FormConditionals()
             {
-                ConditionalFields = new List<string>() { nameof(SmsContent), nameof(EmailContent), nameof(LandingPageContent) },
+                ConditionalFields = new List<string>() { nameof(SmsContent), nameof(EmailSubject), nameof(EmailContent), nameof(LandingPageContent) },
                 Conditionals = new List<FormConditional>()
                  {
                      new FormConditional()
@@ -73,8 +74,8 @@ namespace LagoVista.IoT.Deployment.Models
                      {
                          Field = nameof(SendEmail),
                          Value = "true",
-                         RequiredFields = new List<string>() { nameof(EmailContent) },
-                         VisibleFields = new List<string>() { nameof(EmailContent) }
+                         RequiredFields = new List<string>() { nameof(EmailContent), nameof(EmailSubject) },
+                         VisibleFields = new List<string>() { nameof(EmailContent), nameof(EmailSubject) }
                      },
                      new FormConditional()
                      {
@@ -118,6 +119,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(SendSMS),
                 nameof(SmsContent),
                 nameof(SendEmail),
+                nameof(EmailSubject),
                 nameof(EmailContent),
                 nameof(IncludeLandingPage),
                 nameof(LandingPageContent)
@@ -141,8 +143,26 @@ namespace LagoVista.IoT.Deployment.Models
 
     public class RaisedDeviceNotification
     {
+        public bool TestMode { get; set; }
+
+        public string Id { get; set; } = Guid.NewGuid().ToId();
         public string NotificationKey { get; set; }
         public string DeviceId { get; set; }
         public string DeviceRepositoryId { get; set; }
+
+        public InvokeResult Validate()
+        {
+            var result = InvokeResult.Success;
+            if (String.IsNullOrEmpty(NotificationKey))
+                result.AddSystemError("Missing notification key on RaiseDeviceNotification");
+
+            if(String.IsNullOrEmpty(DeviceId))
+                result.AddSystemError("Missing device id on RaiseDeviceNotification");
+
+            if (String.IsNullOrEmpty(DeviceRepositoryId))
+                result.AddSystemError("Missing device repository id on RaiseDeviceNotification");
+
+            return result;
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         public DeviceNotificationController(IDeviceNotificationManager notificationManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
-            _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));   
+            _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
         }
 
         /// <summary>
@@ -67,6 +67,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetAuditProperties(notification.Model);
             SetOwnedProperties(notification.Model);
             return notification;
+        }
+
+        [HttpGet("/api/notifications/{repoid}/{deviceid}/{notificationkey}")]
+        public Task<InvokeResult> TestSendAsync(string repoid, string deviceid, string notificationkey, string testing = "true")
+        {
+            return _notificationManager.RaiseNotificationAsync(new RaisedDeviceNotification()
+            {
+                TestMode = testing == "true",
+                DeviceId = deviceid,
+                DeviceRepositoryId = repoid,
+                NotificationKey = notificationkey
+            }, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
