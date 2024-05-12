@@ -481,6 +481,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return UpdateWiFiProfile(id, connectionProfile);
         }
 
+        [HttpPost("/api/deployment/instance/{id}/testmode/{enabled}")]
+        public async Task<InvokeResult> SetTaskMode(string id, bool enabled)
+        {
+            var instance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            instance.TestMode = enabled;
+            return await _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
+        }
+
+
         /// <summary>
         /// WiFi Connection Profile - Get
         /// </summary>
@@ -492,6 +501,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return _instanceManager.GetWiFiConnectionProfileAsync(id, wifiid, OrgEntityHeader, UserEntityHeader);
         }
+
 
         /// <summary>
         /// WiFi Connection Profile - Create
