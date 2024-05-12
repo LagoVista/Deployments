@@ -8,6 +8,7 @@ using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -100,6 +101,57 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult> DeletenotificationAsync(string id)
         {
             return await _notificationManager.DeleteNotificationAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        private string GetMessage(string payload)
+        {
+            var html = @"<html>
+<head>
+  <link rel=""icon"" type=""image/png"" href=""https://nuviot.blob.core.windows.net/cdn/sa/favicon.png"">
+  <link href=""https://nuviot.blob.core.windows.net/cdn/sa/style.css"" rel=""stylesheet"">
+</head>
+<body>
+<div class=""header""></div>" + 
+payload + 
+@"</body>
+</html>";
+
+            return html;
+        }
+
+        [HttpGet("/api/device/notification/{deviceid}/history")]
+        public async Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistory(string deviceid)
+        {
+            return await _notificationManager.GetNotificationHistoryAsync(deviceid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/acknowledge")]
+        public async Task<ActionResult> AcknowledgAsync(string notifid, string orgid, string recipientid, string pageid)
+        {
+            var result = await _notificationManager.AcknowledgeNotificationAsync(notifid, recipientid);
+            if (result.Successful)
+            {
+                var content = Content(GetMessage("Thank you for acknowledging the notification."));
+                content.ContentType = "text/html";
+                return content;
+            }
+            else
+                return NotFound();
+        }
+
+
+        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
+        public  async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
+        {
+            var result = await _notificationManager.HandleNotificationAsync(notifid, orgid, recipientid, pageid);
+            if (result.Successful)
+            {
+                var content = Content(GetMessage(result.Result));
+                content.ContentType = "text/html";
+                return content;
+            } else
+                return NotFound();
         }
     }
 }

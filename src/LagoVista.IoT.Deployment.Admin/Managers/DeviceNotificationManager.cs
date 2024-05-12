@@ -113,8 +113,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
             _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Starting - Test Mode {raisedNotification.TestMode}");
-            _logger.AddCustomEvent(LogLevel.Message, $"[DeviceNotificationManager__RaiseNotificationAsync]",$"Starting", 
-                raisedNotification.TestMode.ToString().ToKVP("testMode"), 
+            _logger.AddCustomEvent(LogLevel.Message, $"[DeviceNotificationManager__RaiseNotificationAsync]", $"Starting",
+                raisedNotification.TestMode.ToString().ToKVP("testMode"),
                 raisedNotification.Id.ToKVP("id"));
 
             var result = raisedNotification.Validate();
@@ -127,7 +127,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(raisedNotification.DeviceRepositoryId, orgEntityHeader, userEntityHeader);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository ${raisedNotification.DeviceRepositoryId}");
 
-            if(EntityHeader.IsNullOrEmpty(repo.Instance)) return InvokeResult.FromError($"Device does not have a deployment instance for device repository: ${repo.Name}");
+            if (EntityHeader.IsNullOrEmpty(repo.Instance)) return InvokeResult.FromError($"Device does not have a deployment instance for device repository: ${repo.Name}");
 
             var device = await _deviceManager.GetDeviceByIdAsync(repo, raisedNotification.DeviceId, orgEntityHeader, userEntityHeader);
             if (device == null) return InvokeResult.FromError($"Could not locate device {raisedNotification.DeviceId} in device repository ${raisedNotification.DeviceRepositoryId}");
@@ -137,14 +137,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Name} in {repo.Name} repository");
 
             var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
-            if(deployment == null)  return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
+            if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
             OrgLocation location = null;
             DistroList distroList;
 
             if (!EntityHeader.IsNullOrEmpty(device.DistributionList))
             {
                 distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id);
-                if(!distroList.ExternalContacts.Any())
+                if (!distroList.ExternalContacts.Any())
                 {
                     _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Found distribution list, but no external contacts, will not attempt to send.");
                     return InvokeResult.Success;
@@ -180,7 +180,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     template = $"<h1>TESTING - TESTING</h1> {template}";
 
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Tags replaced in template");
-         
+
                 var storageResult = await _staticPageStorage.StorePageAsync(orgEntityHeader.Id, "devnotif", template);
                 if (!storageResult.Successful) return storageResult.ToInvokeResult();
 
@@ -210,7 +210,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var emailsSent = 0;
             var textSent = 0;
-           
+
             foreach (var recpient in distroList.ExternalContacts)
             {
                 var actualInk = String.IsNullOrEmpty(fullLandingPageLink) ? acknowledgeLink.Replace("[RecipientId]", recpient.Id)
@@ -285,6 +285,27 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _deviceNotificationRepo.UpdateNotificationAsync(notification);
 
             return InvokeResult.Success;
+        }
+
+        public async Task<InvokeResult<string>> HandleNotificationAsync(string notifid, string orgid, string recipientid, string pageid)
+        {
+            var page = await _staticPageStorage.GetPageAsync(orgid, "devnotif", pageid);
+
+            if (page.Successful)
+                await _notificationTracking.MarkAsViewed($"{notifid}-{recipientid}");
+
+            return page;
+        }
+
+        public async Task<InvokeResult> AcknowledgeNotificationAsync(string notifid, string recipientid)
+        {
+            await _notificationTracking.MarkAsViewed($"{notifid}-{recipientid}");
+            return InvokeResult.Success;
+        }
+
+        public Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistoryAsync(string deviceid, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            return _notificationTracking.GetHistoryAsync(deviceid, listRequest);
         }
     }
 }

@@ -30,9 +30,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public async Task MarkAsViewed(string staticPageId)
         {
             var history = await this.GetAsync(staticPageId);
-            history.ViewedTimeStamp = DateTime.UtcNow.ToJSONString();
-            history.Viewed = true;
-            await UpdateAsync(history);
+            if (!history.Viewed)
+            {
+                history.ViewedTimeStamp = DateTime.UtcNow.ToJSONString();
+                history.Viewed = true;
+                await UpdateAsync(history);
+            }
         }
     }
 }
