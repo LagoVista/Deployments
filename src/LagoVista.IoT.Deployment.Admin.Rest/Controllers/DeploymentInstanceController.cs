@@ -624,5 +624,23 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
 
+        /// <summary>
+        /// Web Socket URI - Get a URI to Receive Web Socket Notifications
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="orgid"></param>
+        /// <param name="repoid"></param>
+        /// <param name="id"></param>
+        /// <param name="pin"></param>
+        /// <param name="verbosity"></param>
+        /// <returns></returns>
+        [HttpGet("/api/wsuri/device/{orgid}/{repoid}/{id}/{verbosity}/{pin}")]
+        public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string channel, string orgid, string repoid, string id, string pin, string verbosity)
+        {
+            var org = EntityHeader.Create(orgid, "PIN Device Access");
+            var user = EntityHeader.Create(Guid.Empty.ToId(), "PIN Device Access");
+            return _instanceManager.GetRemoteMonitoringURIForDeviceWithPINAsync(channel, repoid, id, pin, verbosity, org, user);
+        }
+
     }
 }
