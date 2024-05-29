@@ -184,7 +184,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
 
-            var response = DetailResponse<DeploymentInstance>.Create(deviceInstance);
+            var response = DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
             response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
 
             return response;
@@ -457,20 +457,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<DeploymentInstance>> UpdateWiFiProfile(string id, [FromBody] WiFiConnectionProfile connectionProfile)
         {
             var instance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
-            var existing = instance.WiFiConnectionProfiles.FirstOrDefault(ins => ins.Id == connectionProfile.Id);
+            var existing = instance.Result.WiFiConnectionProfiles.FirstOrDefault(ins => ins.Id == connectionProfile.Id);
             if (existing != null)
             {
-                instance.WiFiConnectionProfiles.Remove(existing);
+                instance.Result.WiFiConnectionProfiles.Remove(existing);
                 Console.WriteLine("REmove old");
             }
 
-            Console.WriteLine($"Count {instance.WiFiConnectionProfiles.Count}  {connectionProfile.Name} {connectionProfile.Key}");
+            Console.WriteLine($"Count {instance.Result.WiFiConnectionProfiles.Count}  {connectionProfile.Name} {connectionProfile.Key}");
 
-            instance.WiFiConnectionProfiles.Add(connectionProfile);
+            instance.Result.WiFiConnectionProfiles.Add(connectionProfile);
 
-            var result = await _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
+            var result = await _instanceManager.UpdateInstanceAsync(instance.Result, OrgEntityHeader, UserEntityHeader);
             if (result.Successful)
-                return InvokeResult<DeploymentInstance>.Create(instance);
+                return InvokeResult<DeploymentInstance>.Create(instance.Result);
 
             return InvokeResult<DeploymentInstance>.FromInvokeResult(result);
         }
@@ -485,8 +485,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult> SetTaskMode(string id, bool enabled)
         {
             var instance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
-            instance.TestMode = enabled;
-            return await _instanceManager.UpdateInstanceAsync(instance, OrgEntityHeader, UserEntityHeader);
+            instance.Result.TestMode = enabled;
+            return await _instanceManager.UpdateInstanceAsync(instance.Result, OrgEntityHeader, UserEntityHeader);
         }
 
 
@@ -635,11 +635,11 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="verbosity"></param>
         /// <returns></returns>
         [HttpGet("/api/wsuri/device/{orgid}/{repoid}/{id}/{verbosity}/{pin}")]
-        public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string channel, string orgid, string repoid, string id, string pin, string verbosity)
+        public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string orgid, string repoid, string id, string verbosity, string pin)
         {
             var org = EntityHeader.Create(orgid, "PIN Device Access");
             var user = EntityHeader.Create(Guid.Empty.ToId(), "PIN Device Access");
-            return _instanceManager.GetRemoteMonitoringURIForDeviceWithPINAsync(channel, repoid, id, pin, verbosity, org, user);
+            return _instanceManager.GetRemoteMonitoringURIForDeviceWithPINAsync("device", repoid, id, pin, verbosity, org, user);
         }
 
     }

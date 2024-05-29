@@ -604,13 +604,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             var instance = await _instanceManager.GetInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-            if (EntityHeader.IsNullOrEmpty(instance.Version))
+            if (EntityHeader.IsNullOrEmpty(instance.Result.Version))
             {
                 return InvokeResult<string>.Create("latest");
             }
             else
             {
-                return InvokeResult<string>.Create(instance.Version.Id);
+                return InvokeResult<string>.Create(instance.Result.Version.Id);
             }
         }
 
@@ -659,7 +659,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 if (newStatus == DeploymentInstanceStates.Starting || newStatus == DeploymentInstanceStates.Pausing || newStatus == DeploymentInstanceStates.Stopping)
                 {
                     var instance = await _instanceManager.GetInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-                    foreach (var host in instance.ServiceHosts)
+                    foreach (var host in instance.Result.ServiceHosts)
                     {
                         switch(newStatus)
                         {

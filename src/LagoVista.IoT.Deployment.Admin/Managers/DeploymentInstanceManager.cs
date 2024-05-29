@@ -67,6 +67,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IDeviceTypeManager _deviceTypeManager;
         private readonly IInstanceAccountsRepo _instanceAccountRepo;
         private readonly IOrgUtils _orgUtils;
+        private readonly ICacheProvider _cacheProvider;
         private readonly IRemoteServiceManager _remoteListenerServiceManager;
         private readonly LagoVista.IoT.DeviceManagement.Core.IDeviceManager _deviceManager;
         #endregion
@@ -75,7 +76,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
                     IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager,
-                    IRemoteServiceManager remoteListenerServiceManager) :
+                    ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
             base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, userManager, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
@@ -99,15 +100,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _orgUtils = orgUtils ?? throw new ArgumentNullException(nameof(orgUtils));
             _remoteListenerServiceManager = remoteListenerServiceManager ?? throw new ArgumentNullException(nameof(remoteListenerServiceManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
         
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage,
-                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, IRemoteServiceManager remoteListenerServiceManager) :
+                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, 
+                    LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
             this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager,
-                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, deviceManager, remoteListenerServiceManager)
+                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, deviceManager, cacheProvider, remoteListenerServiceManager)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -182,6 +185,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> DeployHostAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.DeployHost, org, user);
@@ -212,6 +217,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> ResetAppAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
@@ -243,6 +250,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> StopAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.Start, org, user);
@@ -263,6 +272,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartHostAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartHost");
 
@@ -275,6 +286,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RestartContainerAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user, "RestartContainer");
@@ -287,6 +300,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateRuntimeAsync(string id, EntityHeader org, EntityHeader user)
         {
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
+
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.UpdateRuntime, org, user);
@@ -300,6 +315,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var instance = await _instanceRepo.GetInstanceAsync(id);
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
             var transitionResult = CanTransitionToState(host, instance, DeploymentActivityTaskTypes.ReloadSolution, org, user);
+
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
 
             if (IsRpc(host))
             {
@@ -322,6 +339,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (String.IsNullOrEmpty(instanceId)) throw new ArgumentNullException(nameof(instanceId));
             if (EntityHeader.IsNullOrEmpty(org)) throw new ArgumentNullException(nameof(org));
             if (EntityHeader.IsNullOrEmpty(user)) throw new ArgumentNullException(nameof(user));
+
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(instanceId));
 
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
 
@@ -348,6 +367,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await _instanceRepo.GetInstanceAsync(id);
             await CheckOwnershipOrSysAdminAsync(instance, org, user);
+            await _cacheProvider.RemoveAsync(DeviceConfigurationManager.GetDeviceConfigMetaDataKey(id));
 
             var host = await _hostRepo.GetDeploymentHostAsync(instance.PrimaryHost.Id);
 
@@ -379,10 +399,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<InstanceRuntimeDetails>> GetInstanceDetailsAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
-            await CheckOwnershipOrSysAdminAsync(instance, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);
 
-            MapInstanceProperties(instance);
-            var host = await _hostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
+            MapInstanceProperties(instance.Result);
+            var host = await _hostManager.GetDeploymentHostAsync(instance.Result.PrimaryHost.Id, org, user);
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
         }
 
@@ -631,7 +651,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<string>.FromError($"Currently only [key1] and [key2] are supported, you provided {keyName}.");
             }
 
-            var instance = await GetInstanceAsync(instanceId, org, user);
+            var result = await GetInstanceAsync(instanceId, org, user);
+            var instance = result.Result;
 
             await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, $"RegenerateKey-{keyName}");
 
@@ -842,10 +863,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             Console.WriteLine($"Got instance: {sw.ElapsedMilliseconds}ms");
 
-            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
+            var solution = await _solutionManager.GetSolutionAsync(instance.Result.Solution.Id, org, user);
             if (solution == null)
             {
-                throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
+                throw new RecordNotFoundException(nameof(Solution), instance.Result.Solution.Id);
             }
 
             Console.WriteLine($"Got solution: {sw.ElapsedMilliseconds}ms");
@@ -860,7 +881,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 listenerConfiguration.ListenerType.Value == ListenerTypes.Rest ||
                 listenerConfiguration.ListenerType.Value == ListenerTypes.FTP)
             {
-                listenerConfiguration.HostName = instance.DnsHostName;
+                listenerConfiguration.HostName = instance.Result.DnsHostName;
             }
 
             Console.WriteLine($"Got listener configuration: {sw.ElapsedMilliseconds}ms");
@@ -904,10 +925,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new RecordNotFoundException(nameof(DeploymentInstance), instanceId);
             }
 
-            var solution = await _solutionManager.GetSolutionAsync(instance.Solution.Id, org, user);
+            var solution = await _solutionManager.GetSolutionAsync(instance.Result.Solution.Id, org, user);
             if (solution == null)
             {
-                throw new RecordNotFoundException(nameof(Solution), instance.Solution.Id);
+                throw new RecordNotFoundException(nameof(Solution), instance.Result.Solution.Id);
             }
 
             foreach (var deviceConfig in solution.DeviceConfigurations)
@@ -948,12 +969,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var account = new InstanceAccount()
             {
-                UserName = $"{orgNamespace.Result}.{instance.Key}.{userName}",
+                UserName = $"{orgNamespace.Result}.{instance.Result.Key}.{userName}",
                 AccessKey1 = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
                 AccessKey2 = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
             };
 
-            foreach (var srvr in instance.ServiceHosts)
+            foreach (var srvr in instance.Result.ServiceHosts)
                 await _remoteListenerServiceManager.AddInstanceAccountAsync(org.Id, srvr.HostId, instanceId, account);
 
             await _instanceAccountRepo.AddInstanceAccountAsync(instanceId, account);
@@ -984,7 +1005,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await _instanceAccountRepo.UpdateInstanceAccountAsync(instanceId, account);
 
-            foreach (var srvr in instance.ServiceHosts)
+            foreach (var srvr in instance.Result.ServiceHosts)
                 await _remoteListenerServiceManager.UpdateInstanceAccountAsync(org.Id, srvr.HostId, instanceId, account);
 
             switch (keyName)
@@ -1022,7 +1043,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
 
-            var profile = instance.WiFiConnectionProfiles.SingleOrDefault(wcp => wcp.Id == profileId);
+            var profile = instance.Result.WiFiConnectionProfiles.SingleOrDefault(wcp => wcp.Id == profileId);
 
             var getSecretResult = await _secureStorage.GetSecretAsync(org, profile.PasswordSecretId, user);
             if (!getSecretResult.Successful) return InvokeResult<WiFiConnectionProfile>.FromError(getSecretResult.Errors.First().ToString());
@@ -1036,10 +1057,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var repo = await _deviceRepoManager.GetDeviceRepositoryAsync(repoId, org, user);
             if (EntityHeader.IsNullOrEmpty(repo.Instance)) throw new InvalidOperationException($"no attached instance for {repo.Name} repository.");
 
-            var solution = await GetInstanceAsync(repo.Instance.Id, org, user);
+            var result = await GetInstanceAsync(repo.Instance.Id, org, user);
             var profiles = new List<WiFiConnectionProfile>();
 
-            foreach (var profile in solution.WiFiConnectionProfiles)
+            foreach (var profile in result.Result.WiFiConnectionProfiles)
             {
                 var getSecretResult = await _secureStorage.GetSecretAsync(org, profile.PasswordSecretId, user);
                 profile.Password = getSecretResult.Result;
@@ -1059,10 +1080,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var instance = await GetInstanceAsync(instanceId);
 
-            var instanceService = instance.ServiceHosts.FirstOrDefault(hst => hst.HostType.Value == hostType);
+            var instanceService = instance.Result.ServiceHosts.FirstOrDefault(hst => hst.HostType.Value == hostType);
             if (instanceService != null && replaceExisting)
             {
-                instance.ServiceHosts.Remove(instanceService);
+                instance.Result.ServiceHosts.Remove(instanceService);
                 instanceService = null;
             }
 
@@ -1082,7 +1103,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     OwnerOrg = host.OwnerOrganization,
                     AllocatedTimeStamp = DateTime.UtcNow.ToJSONString(),
                     Url = host.DnsHostName,
-                    ServiceAccount = $"{orgNameSpaceResult.Result}.{instance.Key}.{hostType.ToString().ToLower()}",
+                    ServiceAccount = $"{orgNameSpaceResult.Result}.{instance.Result.Key}.{hostType.ToString().ToLower()}",
                     ServiceAccountPassword = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
                 };
 
@@ -1108,8 +1129,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     ServiceAccountSecretId = instanceService.ServiceAccountSecretId,
                 };
 
-                instance.ServiceHosts.Add(instanceServiceCopy);
-                await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+                instance.Result.ServiceHosts.Add(instanceServiceCopy);
+                await UpdateInstanceAsync(instance.Result, orgEntityHeader, userEntityHeader);
             }
             else
             {
@@ -1138,13 +1159,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> RemoveInstanceServiceAsync(string instanceId, string instanceServiceId, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
             var instance = await GetInstanceAsync(instanceId);
-            var existing = instance.ServiceHosts.FirstOrDefault(hst => hst.Id == instanceServiceId);
+            var existing = instance.Result.ServiceHosts.FirstOrDefault(hst => hst.Id == instanceServiceId);
             if (existing == null)
                 return InvokeResult.FromError($"Could not find existing instance id with id {instanceServiceId}.");
 
-            instance.ServiceHosts.Remove(existing);
+            instance.Result.ServiceHosts.Remove(existing);
 
-            await UpdateInstanceAsync(instance, orgEntityHeader, userEntityHeader);
+            await UpdateInstanceAsync(instance.Result, orgEntityHeader, userEntityHeader);
 
             if (existing.HostType.Value == HostTypes.MultiTenantMQTT)
             {
@@ -1166,9 +1187,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (tag == null)
                 throw new RecordNotFoundException("ImageTag", tagId);
 
-            instance.ContainerRepository = image.ToEntityHeader();
-            instance.ContainerTag = tag.ToEntityHeader();
-            await UpdateInstanceAsync(instance, org, user);
+            instance.Result.ContainerRepository = image.ToEntityHeader();
+            instance.Result.ContainerTag = tag.ToEntityHeader();
+            await UpdateInstanceAsync(instance.Result, org, user);
             return await UpdateRuntimeAsync(instanceId, org, user);
         }
     }

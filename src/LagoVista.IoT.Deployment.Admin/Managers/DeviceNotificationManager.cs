@@ -134,16 +134,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, raisedNotification.NotificationKey);
 
-            _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Name} in {repo.Name} repository");
+            _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Result.Name} in {repo.Name} repository");
 
             var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
             OrgLocation location = null;
             DistroList distroList;
 
-            if (!EntityHeader.IsNullOrEmpty(device.DistributionList))
+            if (!EntityHeader.IsNullOrEmpty(device.Result.DistributionList))
             {
-                distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id);
+                distroList = await _distroListRepo.GetDistroListAsync(device.Result.DistributionList.Id);
                 if (!distroList.ExternalContacts.Any())
                 {
                     _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Found distribution list, but no external contacts, will not attempt to send.");
@@ -158,9 +158,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult.Success;
             }
 
-            if (!EntityHeader.IsNullOrEmpty(device.Location))
+            if (!EntityHeader.IsNullOrEmpty(device.Result.Location))
             {
-                location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
+                location = await _orgLocationRepo.GetLocationAsync(device.Result.Location.Id);
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - found location {location.Name} on device, can not append location information");
             }
             else
@@ -175,7 +175,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (notification.IncludeLandingPage)
             {
                 _logger.Trace("[DeviceNotificationManager__RaiseNotificationAsync] - Including Landindg page");
-                var template = ReplaceTags(notification.LandingPageContent, device, location);
+                var template = ReplaceTags(notification.LandingPageContent, device.Result, location);
                 if (deployment.TestMode)
                     template = $"<h1>TESTING - TESTING</h1> {template}";
 
@@ -197,10 +197,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             if (notification.SendEmail)
-                emailContent = ReplaceTags(notification.EmailContent, device, location);
+                emailContent = ReplaceTags(notification.EmailContent, device.Result, location);
 
             if (notification.SendSMS)
-                smsContent = ReplaceTags(notification.SmsContent, device, location);
+                smsContent = ReplaceTags(notification.SmsContent, device.Result, location);
 
             if (deployment.TestMode)
             {
@@ -253,7 +253,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
 
-                await _notificationTracking.AddHistoryAsync(new DeviceNotificationHistory(device.Id, $"{raisedNotification.Id}-{recpient.Id}")
+                await _notificationTracking.AddHistoryAsync(new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{recpient.Id}")
                 {
                     UserId = recpient.Id,
                     UserName = $"{recpient.FirstName} {recpient.LastName}",

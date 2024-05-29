@@ -19,6 +19,7 @@ using LagoVista.IoT.Pipeline.Admin.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using static LagoVista.Core.Models.AuthorizeResult;
@@ -33,15 +34,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         IPipelineModuleManager _pipelineModuleManager;
         IDeviceAdminManager _deviceAdminManager;
         IDataStreamManager _dataStreamManager;
-        IDeviceTypeManager _deviceTypeManager;
+        IDeviceTypeRepo _deviceTypeRepo;
         IRouteSupportRepo _routeSupportRepo;
         IStateSetRepo _stateSetRepo;
         IUnitSetRepo _unitSetRepo;
+        ICacheProvider _cacheProvider;
 
         public DeviceConfigurationManager(IDeviceConfigurationRepo deviceConfigRepo, IDataStreamManager dataStreamManager, IDeviceMessageDefinitionManager deviceMessageDefinitionManager,
                             IPipelineModuleManager pipelineModuleManager, IDeviceAdminManager deviceAdminManager, IAdminLogger logger, IDeploymentInstanceManagerCore deploymentInstnaceManager,
                             IStateSetRepo stateSetRepo, IUnitSetRepo unitSetRepo,
-                            IDeviceTypeManager deviceTypeManager, IRouteSupportRepo routeSupportRepo, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
+                            IDeviceTypeRepo deviceTypeRepo, IRouteSupportRepo routeSupportRepo, IAppConfig appConfig, ICacheProvider cacheProvider, IDependencyManager depmanager, ISecurity security) : base(logger, appConfig, depmanager, security)
         {
             _pipelineModuleManager = pipelineModuleManager;
             _deviceConfigRepo = deviceConfigRepo;
@@ -49,10 +51,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceMessageDefinitionManager = deviceMessageDefinitionManager;
             _deploymentInstanceManager = deploymentInstnaceManager;
             _dataStreamManager = dataStreamManager;
-            _deviceTypeManager = deviceTypeManager;
+            _deviceTypeRepo = deviceTypeRepo;
             _routeSupportRepo = routeSupportRepo;
             _stateSetRepo = stateSetRepo;
             _unitSetRepo = unitSetRepo;
+            _cacheProvider = cacheProvider;
         }
 
         public async Task<InvokeResult> AddDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration, EntityHeader org, EntityHeader user)
@@ -165,9 +168,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await PopulateRoutes(route, org, user);
             }
 
-            foreach(var prop in deviceConfiguration.Properties)
+            foreach (var prop in deviceConfiguration.Properties)
             {
-                switch(prop.FieldType.Value)
+                switch (prop.FieldType.Value)
                 {
                     case ParameterTypes.State: prop.StateSet.Value = await _stateSetRepo.GetStateSetAsync(prop.StateSet.Id); break;
                     case ParameterTypes.ValueWithUnit: prop.UnitSet.Value = await _unitSetRepo.GetUnitSetAsync(prop.UnitSet.Id); break;
@@ -338,18 +341,63 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _deviceConfigRepo.QueryKeyInUseAsync(key, orgId);
         }
 
+        public static string GetDeviceConfigMetaDataKey(String id)
+        {
+            return $"DeviceConfig-InstanceMetaData-{id}";
+        }
+
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
             var result = new InvokeResult();
+            if (EntityHeader.IsNullOrEmpty(instanceEH))
+            {
+                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
+                return result;
+            }
 
-            device.DeviceType.Value = await _deviceTypeManager.GetDeviceTypeAsync(device.DeviceType.Id, org, user);
+            var fullSw = Stopwatch.StartNew();
+            var deviceConfigMetaJSON = await _cacheProvider.GetFromCollection(GetDeviceConfigMetaDataKey(instanceEH.Id), device.DeviceConfiguration.Id);
+            if(!String.IsNullOrEmpty(deviceConfigMetaJSON))
+            {
+                var cachedMetaData = JsonConvert.DeserializeObject<MetaDataCache>(deviceConfigMetaJSON);
+                device.DeviceType.Value = cachedMetaData.DeviceType;
+                device.DeviceLabel = cachedMetaData.DeviceConfiguration.DeviceLabel;
+                device.DeviceIdLabel = cachedMetaData.DeviceConfiguration.DeviceIdLabel;
+                device.DeviceNameLabel = cachedMetaData.DeviceConfiguration.DeviceNameLabel;
+                device.DeviceTypeLabel = cachedMetaData.DeviceConfiguration.DeviceTypeLabel;
+                device.PropertiesMetaData = cachedMetaData.PropertiesMetaData;
+                device.AttributeMetaData = cachedMetaData.AttributeMetaData;
+                device.StateMachineMetaData = cachedMetaData.StateMachineMetaData;
+                device.InputCommandEndPoints = cachedMetaData.InputCommandEndPoints;
 
-            var deviceConfig = await GetDeviceConfigurationAsync(device.DeviceConfiguration.Id, org, user);
+                foreach (var ep in device.InputCommandEndPoints)
+                {
+                    ep.EndPoint = ep.EndPoint.Replace("[DEVICEID]", device.DeviceId);
+                }
+
+
+                var protocol = cachedMetaData.EndpointSSL ? "https" : "http";
+                device.DeviceURI = $"{protocol}://{cachedMetaData.DnsHostName}:{cachedMetaData.EndpointPort}/devices/{device.Id}";
+
+                result.Timings.Add(new ResultTiming() { Key = $"Load device config {cachedMetaData.DeviceConfiguration.Name} meta data from cache", Ms = fullSw.Elapsed.TotalMilliseconds });
+                return result;
+            }
+
+            var sw = Stopwatch.StartNew();
+            device.DeviceType.Value = await _deviceTypeRepo.GetDeviceTypeAsync(device.DeviceType.Id);
+            result.Timings.Add(new ResultTiming() { Key = "GetDeviceType", Ms = sw.Elapsed.TotalMilliseconds });
+            sw.Restart();
+
+
+            var deviceConfig = await _deviceConfigRepo.GetDeviceConfigurationAsync(device.DeviceConfiguration.Id);
             if (deviceConfig == null)
             {
                 result.AddSystemError($"Could Not Load Device Configuration with Device Configuration {device.DeviceConfiguration.Text}, Id={device.DeviceConfiguration.Id}.");
                 return result;
             }
+
+            result.Timings.Add(new ResultTiming() { Key = "GetDeviceConfiguration", Ms = sw.Elapsed.TotalMilliseconds });
+            sw.Restart();
 
             device.DeviceLabel = deviceConfig.DeviceLabel;
             device.DeviceIdLabel = deviceConfig.DeviceIdLabel;
@@ -372,15 +420,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
             }
+           
+            sw.Restart();
+            var instanceResult = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+            result.Timings.AddRange(instanceResult.Timings);
+            var instance = instanceResult.Result;
 
-            if (EntityHeader.IsNullOrEmpty(instanceEH))
-            {
-                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
-                return result;
-            }
+            result.Timings.Add(new ResultTiming() { Key = "GetInstanceAsync", Ms = sw.Elapsed.TotalMilliseconds });
 
-
-            var instance = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
             if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
             {
                 if (instance.InputCommandSSL)
@@ -393,7 +440,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
 
                 var workflowKeys = new List<string>();
-
                 var endpoints = new List<InputCommandEndPoint>();
                 foreach (var route in deviceConfig.Routes)
                 {
@@ -401,7 +447,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     {
                         if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                         {
+                            sw.Restart();
+
                             var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                            result.Timings.AddRange(wfLoadResult.Timings);
+                            result.Timings.Add(new ResultTiming() { Key = $"LoadFullDeviceWorkflowAsync - {wfLoadResult.Result.Name}", Ms = sw.Elapsed.TotalMilliseconds });
                             if (wfLoadResult.Successful && !workflowKeys.Contains(wfLoadResult.Result.Key))
                             {
                                 workflowKeys.Add(wfLoadResult.Result.Key);
@@ -444,7 +494,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                         var protocol = instance.InputCommandSSL ? "https://" : "http://";
                                         var endPoint = new InputCommandEndPoint
                                         {
-                                            EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/{device.DeviceId}",
+                                            EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/[DEVICEID]",
                                             InputCommand = inputCommand
                                         };
 
@@ -452,11 +502,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                         {
                                             if (param.ParameterType.Value == ParameterTypes.State)
                                             {
+                                                sw.Restart();
                                                 param.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(param.StateSet.Id, org, user);
+                                                result.Timings.Add(new ResultTiming() { Key = $"GetStateSetAsync - {param.StateSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
                                             }
                                             else if (param.ParameterType.Value == ParameterTypes.ValueWithUnit)
                                             {
+                                                sw.Restart();
                                                 param.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(param.UnitSet.Id, org, user);
+                                                result.Timings.Add(new ResultTiming() { Key = $"GetAttributeUnitSetAsync - {param.UnitSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
                                             }
                                         }
 
@@ -483,6 +537,26 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 device.StateMachineMetaData = new List<StateMachine>();
             }
 
+            var metaDataCache = new MetaDataCache()
+            {
+                DeviceConfiguration = deviceConfig,
+                EndpointPort = instance.InputCommandPort,
+                EndpointSSL = instance.InputCommandSSL,
+                DnsHostName = instance.DnsHostName,
+                InputCommandEndPoints = device.InputCommandEndPoints,
+                AttributeMetaData = device.AttributeMetaData,
+                StateMachineMetaData = device.StateMachineMetaData,
+                PropertiesMetaData = device.PropertiesMetaData,
+            };
+
+            foreach(var ep in device.InputCommandEndPoints)
+            {
+              ep.EndPoint = ep.EndPoint.Replace("[DEVICEID]", device.DeviceId);
+            }
+
+            await _cacheProvider.AddToCollectionAsync(GetDeviceConfigMetaDataKey(instanceEH.Id), deviceConfig.Id, JsonConvert.SerializeObject(metaDataCache));
+           
+            result.Timings.Add(new ResultTiming() { Key = "LoadFullDeviceConfig", Ms = fullSw.Elapsed.TotalMilliseconds });
 
             return result;
         }
@@ -493,5 +567,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _routeSupportRepo.SetDefaultPipelineModulesAsync(org, route);
             return route;
         }
+    }
+
+    public class MetaDataCache
+    {
+        public DeviceConfiguration DeviceConfiguration { get; set; }
+        public DeviceType DeviceType { get; set; }
+
+        public bool EndpointSSL { get; set; }
+        public int EndpointPort { get; set; }
+        public string DnsHostName { get; set; }
+
+       public List<InputCommandEndPoint> InputCommandEndPoints { get; set; }
+       public List<DeviceAdmin.Models.Attribute> AttributeMetaData { get; set; }
+       public List<StateMachine> StateMachineMetaData { get; set; }
+        public List<DeviceAdmin.Models.CustomField> PropertiesMetaData { get; set; }
     }
 }

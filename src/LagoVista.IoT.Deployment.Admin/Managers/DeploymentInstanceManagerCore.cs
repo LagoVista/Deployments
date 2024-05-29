@@ -14,6 +14,8 @@ using System.Runtime.CompilerServices;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using System.Linq;
 using LagoVista.IoT.Deployment.Models;
+using System.Diagnostics;
+using LagoVista.Core.Models.ML;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -149,8 +151,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> AddToShardHostAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user)
         {
-            var instance = await GetInstanceAsync(instanceId, org, user);
-
+            var result = await GetInstanceAsync(instanceId, org, user);
+            var instance = result.Result;
             if (instance.DeploymentType.Value != DeploymentTypes.Shared)
             {
                 return InvokeResult.FromError($"Deployment Type is not a shared type, it is {instance.DeploymentType.Text}, must be shared to add to a shared instance.");
@@ -190,7 +192,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> RemoveSharedInstanceAsync(string hostId, string instanceId, EntityHeader org, EntityHeader user)
         {
-            var instance = await GetInstanceAsync(instanceId, org, user);
+            var result = await GetInstanceAsync(instanceId, org, user);
+            var instance = result.Result;
 
             if (instance.NuvIoTEdition.Value != NuvIoTEditions.Shared)
             {
@@ -367,20 +370,30 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _instanceRepo.QueryInstanceKeyInUseAsync(key, org.Id);
         }
 
-        public async Task<DeploymentInstance> GetInstanceAsync(string instanceId)
+        public async Task<InvokeResult<DeploymentInstance>> GetInstanceAsync(string instanceId)
         {
+            var sw = Stopwatch.StartNew();
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            var result = InvokeResult<DeploymentInstance>.Create(instance);
             MapInstanceProperties(instance);
-            return instance;
+            result.Timings.Add(new ResultTiming() { Key = "Get Instance from Storage", Ms = sw.Elapsed.TotalMilliseconds });
+            return result;
         }
 
-        public async Task<DeploymentInstance> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<DeploymentInstance>> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
+            var sw = Stopwatch.StartNew();
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            var result = InvokeResult<DeploymentInstance>.Create(instance);
+            result.Timings.Add(new ResultTiming() { Key = "Get Instance from Storage", Ms = sw.Elapsed.TotalMilliseconds });
 
+            sw.Restart();
             MapInstanceProperties(instance);
+            result.Timings.Add(new ResultTiming() { Key = "Map Instance Properties", Ms = sw.Elapsed.TotalMilliseconds });
 
+            sw.Restart();
             await CheckOwnershipOrSysAdminAsync(instance, org, user);
+            result.Timings.Add(new ResultTiming() { Key = "Checked Ownership", Ms = sw.Elapsed.TotalMilliseconds });
 
             var keysUpdated = false;
 
@@ -408,7 +421,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await _instanceRepo.UpdateInstanceAsync(instance);
             }
 
-            return instance;
+            return result;
         }
 
         public async Task<InvokeResult> UpdateInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
