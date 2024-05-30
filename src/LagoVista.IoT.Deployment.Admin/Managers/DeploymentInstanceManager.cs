@@ -386,7 +386,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIForDeviceWithPINAsync(string channel, string repoId, string id, string pin, string verbosity, EntityHeader org, EntityHeader user)
         {
-            var repo = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(repoId, org, user);
+            var repo = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(repoId, org, user, pin);
 
             // if we can load it, we know we have a good PIN, which is what we care about.
             var result = await _deviceManager.GetDeviceByIdWithPinAsync(repo, id, pin, org, user, false);

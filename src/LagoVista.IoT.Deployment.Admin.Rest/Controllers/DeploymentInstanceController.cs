@@ -634,6 +634,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="pin"></param>
         /// <param name="verbosity"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("/api/wsuri/device/{orgid}/{repoid}/{id}/{verbosity}/{pin}")]
         public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string orgid, string repoid, string id, string verbosity, string pin)
         {

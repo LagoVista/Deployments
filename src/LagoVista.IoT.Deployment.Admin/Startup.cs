@@ -5,6 +5,7 @@ using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Deployment.Admin.Validation;
 using LagoVista.IoT.Deployment.Admins;
+using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
 using System.Resources;

@@ -8,6 +8,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Rpc.Client;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
