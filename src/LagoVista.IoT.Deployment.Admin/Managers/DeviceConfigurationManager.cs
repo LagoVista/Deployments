@@ -539,6 +539,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var metaDataCache = new MetaDataCache()
             {
+                DeviceType = device.DeviceType.Value,
                 DeviceConfiguration = deviceConfig,
                 EndpointPort = instance.InputCommandPort,
                 EndpointSSL = instance.InputCommandSSL,
