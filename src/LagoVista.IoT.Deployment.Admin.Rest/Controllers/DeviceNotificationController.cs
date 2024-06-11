@@ -3,8 +3,12 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
+using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
+using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,13 +17,16 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
+    [ConfirmedUser]
     public class DeviceNotificationController : LagoVistaBaseController
     {
         IDeviceNotificationManager _notificationManager;
+        ILocationDiagramRepo _locationDiagramRepo;
 
-        public DeviceNotificationController(IDeviceNotificationManager notificationManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        public DeviceNotificationController(IDeviceNotificationManager notificationManager, ILocationDiagramRepo locationDiagramRepo, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
+            _locationDiagramRepo = locationDiagramRepo ?? throw new ArgumentNullException(nameof(locationDiagramRepo));
         }
 
         /// <summary>
@@ -103,6 +110,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return await _notificationManager.DeleteNotificationAsync(id, OrgEntityHeader, UserEntityHeader);
         }
 
+
+        [HttpGet("/api/device/notification/{deviceid}/history")]
+        public async Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistory(string deviceid)
+        {
+            return await _notificationManager.GetNotificationHistoryAsync(deviceid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
         private string GetMessage(string payload)
         {
             var html = @"<html>
@@ -111,21 +125,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
   <link href=""https://nuviot.blob.core.windows.net/cdn/sa/style.css"" rel=""stylesheet"">
 </head>
 <body>
-<div class=""header""></div>" + 
-payload + 
+<div class=""header""></div>" +
+payload +
 @"</body>
 </html>";
 
             return html;
         }
 
-        [HttpGet("/api/device/notification/{deviceid}/history")]
-        public async Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistory(string deviceid)
-        {
-            return await _notificationManager.GetNotificationHistoryAsync(deviceid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
-        }
-
-
+        [AllowAnonymous]
         [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/acknowledge")]
         public async Task<ActionResult> AcknowledgAsync(string notifid, string orgid, string recipientid, string pageid)
         {
@@ -140,7 +148,7 @@ payload +
                 return NotFound();
         }
 
-
+        [AllowAnonymous]
         [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
         public  async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
         {
@@ -152,6 +160,14 @@ payload +
                 return content;
             } else
                 return NotFound();
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("/device/notifications/diagram/{diagramid}")]
+        public async Task<LocationDiagram> GetLocationDiagram(string diagramid)
+        {
+            return await _locationDiagramRepo.GetLocationDiagramAsync(diagramid);
         }
     }
 }

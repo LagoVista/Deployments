@@ -13,6 +13,7 @@ using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
+using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using LagoVista.UserAdmin.Models.Orgs;
 using Org.BouncyCastle.Bcpg;
 using RingCentral;
@@ -38,10 +39,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IDeviceNotificationTracking _notificationTracking;
         private readonly IDeploymentInstanceRepo _deploymentRepo;
         private readonly ILogger _logger;
+        private readonly IAppUserRepo _appUserRepo;
 
         public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceRepositoryManager repoManager, ILinkShortener linkShortner, IDeviceNotificationTracking notificationTracking,
                 IDistributionListRepo distroListRepo, IOrgLocationRepo orgLocationRepo, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, IEmailSender emailSender, ISmsSender smsSender,
-                IStaticPageStorage staticPageStorage, IDeploymentInstanceRepo deploymentRepo, ILogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
+                IAppUserRepo appUserRepo, IStaticPageStorage staticPageStorage, IDeploymentInstanceRepo deploymentRepo, ILogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
             base(logger, appConfig, dependencyManager, security)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -57,6 +59,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deploymentRepo = deploymentRepo ?? throw new ArgumentNullException(nameof(deploymentRepo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
+            _appUserRepo = appUserRepo ?? throw new ArgumentNullException(nameof(appUserRepo));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
@@ -95,14 +98,33 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deviceNotificationRepo.GetNotificationForOrgAsync(orgId, listRequest);
         }
 
-        private string ReplaceTags(string template, Device device, OrgLocation location)
+        private async Task<string> ReplaceTags(string site, string template, Device device, OrgLocation location)
         {
             //The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
 
             template = template.Replace("[DeviceName]", device.Name);
             template = template.Replace("[DeviceId]", device.DeviceId);
             if (location != null)
-                template = template.Replace("[DeviceLocation]", location.ToHTML());
+            {
+                template = template.Replace("[DeviceLocation]", location.ToHTML(site));
+                if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
+                {
+                    var adminContact = await _appUserRepo.FindByIdAsync(location.AdminContact.Id);
+                    if (adminContact != null)
+                    {
+                        template.Replace("[Location_Admin_Contact]", adminContact.Name + (String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $" ({adminContact.PhoneNumber})"));
+                    }
+                }
+
+                if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
+                {
+                    var technicalContact = await _appUserRepo.FindByIdAsync(location.TechnicalContact.Id);
+                    if(technicalContact != null)
+                    {
+                        template.Replace("[Location_Admin_Contact]", technicalContact.Name + (String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $" ({technicalContact.PhoneNumber})"));
+                    }
+                }
+            }
 
             template = template.Replace("[DeviceSummary]", device.Summary);
             template = template.Replace("[NotificationTimeStamp]", DateTime.Now.ToString());
@@ -175,7 +197,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (notification.IncludeLandingPage)
             {
                 _logger.Trace("[DeviceNotificationManager__RaiseNotificationAsync] - Including Landindg page");
-                var template = ReplaceTags(notification.LandingPageContent, device.Result, location);
+                var template = await ReplaceTags(_appConfig.WebAddress, notification.LandingPageContent, device.Result, location);
                 if (deployment.TestMode)
                     template = $"<h1>TESTING - TESTING</h1> {template}";
 
@@ -187,20 +209,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Static page stored page id: {storageResult.Result}");
 
                 pageId = storageResult.Result;
+                // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
                 fullLandingPageLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotification.Id}/{orgEntityHeader.Id}/[RecipientId]/{pageId}";
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Including Landindg page - {fullLandingPageLink}");
             }
             else
             {
+                // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
                 acknowledgeLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotification.Id}/{orgEntityHeader.Id}/[RecipientId]/acknowledge";
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Including Landindg page - {acknowledgeLink}");
             }
 
             if (notification.SendEmail)
-                emailContent = ReplaceTags(notification.EmailContent, device.Result, location);
+                emailContent = await ReplaceTags(_appConfig.WebAddress, notification.EmailContent, device.Result, location);
 
             if (notification.SendSMS)
-                smsContent = ReplaceTags(notification.SmsContent, device.Result, location);
+                smsContent = await ReplaceTags(_appConfig.WebAddress, notification.SmsContent, device.Result, location);
 
             if (deployment.TestMode)
             {
