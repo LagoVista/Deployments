@@ -11,6 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> AddErrorCodeAsync(DeviceErrorCode errorCode, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteErrorCodeAsync(string id, EntityHeader org, EntityHeader user);
         Task<DeviceErrorCode> GetErrorCodeAsync(string id, EntityHeader org, EntityHeader user);
+        Task<DeviceErrorCode> GetErrorCodeByKeyAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<DeviceErrorCodeSummary>> GetErrorCodesForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest);
         Task<InvokeResult> UpdateErrorCodeAsync(DeviceErrorCode errorCode, EntityHeader org, EntityHeader user); 
     }

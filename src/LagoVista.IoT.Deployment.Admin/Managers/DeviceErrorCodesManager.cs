@@ -50,6 +50,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return errorCode;
         }
 
+        public async Task<DeviceErrorCode> GetErrorCodeByKeyAsync(string key, EntityHeader org, EntityHeader user)
+        {
+            var errorCode = await _deviceErrorCodesRepo.GetErrorCodeByKeyAsync(key, org.Id);
+            await AuthorizeAsync(errorCode, AuthorizeResult.AuthorizeActions.Read, user, org);
+
+            return errorCode;
+        }
+
         public async Task<ListResponse<DeviceErrorCodeSummary>> GetErrorCodesForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest)
         {
             await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceErrorCode));

@@ -9,6 +9,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task AddErrorCodeAsync(DeviceErrorCode errorCode);
         Task DeleteErrorCodeAsync(string id);
         Task<DeviceErrorCode> GetErrorCodeAsync(string id);
+        Task<DeviceErrorCode> GetErrorCodeByKeyAsync(string key, string orgId);
         Task<ListResponse<DeviceErrorCodeSummary>> GetErrorCodesForOrgAsync(string orgId, ListRequest listRequest);
         Task UpdateErrorCodeAsync(DeviceErrorCode errorCode);
     }

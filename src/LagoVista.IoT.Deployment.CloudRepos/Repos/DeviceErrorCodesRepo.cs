@@ -36,6 +36,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(id);
         }
 
+        public async Task<DeviceErrorCode> GetErrorCodeByKeyAsync(string key, string orgId)
+        {
+            var result = await QueryAsync(erc => erc.Key == key && erc.OwnerOrganization.Id == orgId);
+            return result.FirstOrDefault();
+        }
+
         public Task<ListResponse<DeviceErrorCodeSummary>> GetErrorCodesForOrgAsync(string orgId, ListRequest listRequest)
         {
             return QuerySummaryAsync<DeviceErrorCodeSummary, DeviceErrorCode>(ec => ec.OwnerOrganization.Id == orgId, ec => ec.Name, listRequest);

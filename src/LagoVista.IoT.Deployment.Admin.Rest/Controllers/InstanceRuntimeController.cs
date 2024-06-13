@@ -28,6 +28,7 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admins;
+using LagoVista.IoT.Deployment.Admin.Services;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -47,6 +48,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeploymentInstanceRepo _instanceRepo;
         private readonly IRemoteServiceManager _remoteServiceManager;
         private readonly IDeviceNotificationManager _deviceNoficationManager;
+        private readonly IDeviceErrorHandler _deviceErrorHandler;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -62,7 +64,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger,
-            IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
+            IDeviceErrorHandler deviceErrorHandler, IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -78,6 +80,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
             this._remoteServiceManager = remoteServiceManager ?? throw new ArgumentNullException(nameof(remoteServiceManager));
             this._deviceNoficationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
+            this._deviceErrorHandler = deviceErrorHandler ?? throw new ArgumentNullException(nameof(deviceErrorHandler));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -683,15 +686,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Handle a device exception.
+        /// Handle a device exception. (keep for legacy, should have two ee's as in Handle Exception not Handle xception
         /// </summary>
         /// <returns></returns>
         [HttpPost("/api/device/handlexception")]
         public async Task<InvokeResult> HandleDeviceExcptionAsync([FromBody] DeviceException deviceExcpetion)
         {
             await ValidateRequest(HttpContext.Request);
+            return await _deviceErrorHandler.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+        }
 
-            return await _ticketCreator.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+        /// <summary>
+        /// Handle a device exception.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/device/handleexception")]
+        public async Task<InvokeResult> HandleDeviceExcptionExAsync([FromBody] DeviceException deviceExcpetion)
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _deviceErrorHandler.HandleDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
         }
 
 

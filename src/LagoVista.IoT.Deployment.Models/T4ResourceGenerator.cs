@@ -1,4 +1,4 @@
-﻿/*5/12/2024 7:47:39 AM*/
+﻿/*6/12/2024 9:44:45 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -465,6 +465,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCode_Description
 
 		public static string DeviceErrorCode_Description { get { return GetResourceString("DeviceErrorCode_Description"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DeviceNotification
+
+		public static string DeviceErrorCode_DeviceNotification { get { return GetResourceString("DeviceErrorCode_DeviceNotification"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DeviceNotification_Help
+
+		public static string DeviceErrorCode_DeviceNotification_Help { get { return GetResourceString("DeviceErrorCode_DeviceNotification_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_DeviceNotification_Select
+
+		public static string DeviceErrorCode_DeviceNotification_Select { get { return GetResourceString("DeviceErrorCode_DeviceNotification_Select"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_DistributionList
 
 		public static string DeviceErrorCode_DistributionList { get { return GetResourceString("DeviceErrorCode_DistributionList"); } }
@@ -1655,6 +1664,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_AutoExpiresTimespanQuantity = "DeviceErrorCode_AutoExpiresTimespanQuantity";
 			public const string DeviceErrorCode_Days = "DeviceErrorCode_Days";
 			public const string DeviceErrorCode_Description = "DeviceErrorCode_Description";
+			public const string DeviceErrorCode_DeviceNotification = "DeviceErrorCode_DeviceNotification";
+			public const string DeviceErrorCode_DeviceNotification_Help = "DeviceErrorCode_DeviceNotification_Help";
+			public const string DeviceErrorCode_DeviceNotification_Select = "DeviceErrorCode_DeviceNotification_Select";
 			public const string DeviceErrorCode_DistributionList = "DeviceErrorCode_DistributionList";
 			public const string DeviceErrorCode_DistributionList_Help = "DeviceErrorCode_DistributionList_Help";
 			public const string DeviceErrorCode_DistributionList_Select = "DeviceErrorCode_DistributionList_Select";

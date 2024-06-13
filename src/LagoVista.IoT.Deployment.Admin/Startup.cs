@@ -47,6 +47,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IRemoteServiceManager, RemoteServiceManager>();
             services.AddTransient<IDeviceErrorCodesManager, DeviceErrorCodesManager>();
             services.AddTransient<IDeviceNotificationManager, DeviceNotificationManager>();
+            services.AddTransient<IDeviceErrorHandler, DeviceErrorHandler>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

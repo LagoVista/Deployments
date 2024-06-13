@@ -135,9 +135,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
             _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Starting - Test Mode {raisedNotification.TestMode}");
-            _logger.AddCustomEvent(LogLevel.Message, $"[DeviceNotificationManager__RaiseNotificationAsync]", $"Starting",
-                raisedNotification.TestMode.ToString().ToKVP("testMode"),
-                raisedNotification.Id.ToKVP("id"));
 
             var result = raisedNotification.Validate();
             if (!result.Successful)

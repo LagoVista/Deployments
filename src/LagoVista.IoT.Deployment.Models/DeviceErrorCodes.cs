@@ -72,6 +72,12 @@ namespace LagoVista.IoT.Deployment.Models
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader DistroList { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DeviceNotification, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DeviceNotification_Help,
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DeviceNotification_Select, FieldType: FieldTypes.EntityHeaderPicker,
+            EntityHeaderPickerUrl: "/api/notifications",
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
+        public EntityHeader DeviceNotification { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate,
             HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_TicketTemplate_Help,
             EntityHeaderPickerUrl: "/api/fslite/tickets/templates",
@@ -112,15 +118,9 @@ namespace LagoVista.IoT.Deployment.Models
         {
             return new FormConditionals()
             {
-                ConditionalFields = new List<string>() { nameof(SendEmail), nameof(TriggerOnEachOccurrence), nameof(SendSMS), nameof(EmailSubject), nameof(NotificationIntervalTimeSpan), nameof(NotificationIntervalQuantity), nameof(AutoexpireTimespanQuantity) },
+                ConditionalFields = new List<string>() { nameof(TriggerOnEachOccurrence), nameof(EmailSubject), nameof(NotificationIntervalQuantity), nameof(AutoexpireTimespanQuantity) },
                 Conditionals = new List<FormConditional>()
                {
-                    new FormConditional()
-                    {
-                         Field = nameof(DistroList),
-                         Value = "*",
-                         VisibleFields = new List<string>() { nameof(SendEmail), nameof(SendSMS), nameof(NotificationIntervalTimeSpan) },
-                    },
                     new FormConditional()
                     {
                          Field = nameof(ServiceTicketTemplate),
@@ -163,6 +163,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(ServiceTicketTemplate),
                 nameof(TriggerOnEachOccurrence),
                 nameof(DistroList),
+                nameof(DeviceNotification),
                 nameof(SendEmail),
                 nameof(EmailSubject),
                 nameof(SendSMS)
@@ -184,18 +185,10 @@ namespace LagoVista.IoT.Deployment.Models
         [CustomValidator]
         public void Validate(ValidationResult result)
         {
-            if (EntityHeader.IsNullOrEmpty(DistroList))
+            if (NotificationIntervalTimeSpan != EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable) &&
+                (!NotificationIntervalQuantity.HasValue || NotificationIntervalQuantity.Value <= 0))
             {
-                NotificationIntervalTimeSpan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
-                NotificationIntervalQuantity = null;
-            }
-            else
-            {
-                if (NotificationIntervalTimeSpan != EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable) &&
-                   (!NotificationIntervalQuantity.HasValue || NotificationIntervalQuantity.Value <= 0))
-                {
-                    result.AddUserError("You must specify a notification interval quantity.");
-                }
+                result.AddUserError("You must specify a notification interval quantity.");
             }
 
             if (AutoexpireTimespan.Value != TimeSpanIntervals.NotApplicable &&

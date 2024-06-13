@@ -1578,4 +1578,13 @@
   <data name="Instance_TestMode" xml:space="preserve">
     <value>Test Mode</value>
   </data>
+  <data name="DeviceErrorCode_DeviceNotification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="DeviceErrorCode_DeviceNotification_Help" xml:space="preserve">
+    <value>A device notification is a message that can be sent out when this error code is generated.</value>
+  </data>
+  <data name="DeviceErrorCode_DeviceNotification_Select" xml:space="preserve">
+    <value>-select notification-</value>
+  </data>
 </root>

@@ -13,9 +13,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
     //TODO: This needs a bit more thought put into it, should be good enough to start with though.
     public class TelemetryService : ITelemetryService
     {
-        ILogReader _logReader;
+        IAzureLogReader _logReader;
 
-        public TelemetryService(ILogReader reader)
+        public TelemetryService(IAzureLogReader reader)
         {
             _logReader = reader;
         }
