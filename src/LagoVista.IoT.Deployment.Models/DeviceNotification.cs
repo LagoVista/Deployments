@@ -6,6 +6,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.UserAdmin.Models.Orgs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -149,6 +150,9 @@ namespace LagoVista.IoT.Deployment.Models
         public string NotificationKey { get; set; }
         public string DeviceId { get; set; }
         public string DeviceRepositoryId { get; set; }
+
+        public List<EntityHeader> AdditionalUsers { get; set; }
+        public List<ExternalContact> AdditionalExternalContacts { get; set; }
 
         public InvokeResult Validate()
         {

@@ -1,4 +1,4 @@
-﻿/*6/12/2024 9:44:45 AM*/
+﻿/*6/13/2024 11:12:04 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -513,6 +513,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCode_NotificationIntervalQuantity
 
 		public static string DeviceErrorCode_NotificationIntervalQuantity { get { return GetResourceString("DeviceErrorCode_NotificationIntervalQuantity"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotifyOnClear
+
+		public static string DeviceErrorCode_NotifyOnClear { get { return GetResourceString("DeviceErrorCode_NotifyOnClear"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_NotifyOnRaise
+
+		public static string DeviceErrorCode_NotifyOnRaise { get { return GetResourceString("DeviceErrorCode_NotifyOnRaise"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_SelectTimespan
 
 		public static string DeviceErrorCode_SelectTimespan { get { return GetResourceString("DeviceErrorCode_SelectTimespan"); } }
@@ -1680,6 +1686,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_NotificationInterval = "DeviceErrorCode_NotificationInterval";
 			public const string DeviceErrorCode_NotificationInterval_Help = "DeviceErrorCode_NotificationInterval_Help";
 			public const string DeviceErrorCode_NotificationIntervalQuantity = "DeviceErrorCode_NotificationIntervalQuantity";
+			public const string DeviceErrorCode_NotifyOnClear = "DeviceErrorCode_NotifyOnClear";
+			public const string DeviceErrorCode_NotifyOnRaise = "DeviceErrorCode_NotifyOnRaise";
 			public const string DeviceErrorCode_SelectTimespan = "DeviceErrorCode_SelectTimespan";
 			public const string DeviceErrorCode_SendEmail = "DeviceErrorCode_SendEmail";
 			public const string DeviceErrorCode_SendSMS = "DeviceErrorCode_SendSMS";

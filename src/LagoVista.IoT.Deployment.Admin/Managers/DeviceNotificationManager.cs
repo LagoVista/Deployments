@@ -18,6 +18,7 @@ using LagoVista.UserAdmin.Models.Orgs;
 using Org.BouncyCastle.Bcpg;
 using RingCentral;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,11 +159,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
             OrgLocation location = null;
-            DistroList distroList;
+
+
+            var appUsers = new List<EntityHeader>();
+            var externalContacts = new List<ExternalContact>();
+
+            if(raisedNotification.AdditionalUsers != null)
+                appUsers.AddRange(raisedNotification.AdditionalUsers);
+
+            if(raisedNotification.AdditionalExternalContacts != null)
+                externalContacts.AddRange(raisedNotification.AdditionalExternalContacts);
 
             if (!EntityHeader.IsNullOrEmpty(device.Result.DistributionList))
             {
-                distroList = await _distroListRepo.GetDistroListAsync(device.Result.DistributionList.Id);
+                var distroList = await _distroListRepo.GetDistroListAsync(device.Result.DistributionList.Id);
                 if (!distroList.ExternalContacts.Any())
                 {
                     _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Found distribution list, but no external contacts, will not attempt to send.");
@@ -170,6 +180,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
 
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts");
+
+                appUsers.AddRange(distroList.AppUsers);
+                externalContacts.AddRange(distroList.ExternalContacts);
             }
             else
             {
@@ -232,7 +245,73 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var emailsSent = 0;
             var textSent = 0;
 
-            foreach (var recpient in distroList.ExternalContacts)
+            foreach (var appUser in appUsers)
+            {
+                var actualInk = String.IsNullOrEmpty(fullLandingPageLink) ? acknowledgeLink.Replace("[RecipientId]", appUser.Id)
+                   : fullLandingPageLink.Replace("[RecipientId]", appUser.Id);
+
+                var shortenedLink = await _linkShortener.ShortenLinkAsync(actualInk);
+                if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
+
+                var linkLabel = String.IsNullOrEmpty(fullLandingPageLink) ? "Details" : "Acknowledge";
+
+                var user = await _appUserRepo.FindByIdAsync(appUser.Id);
+
+                if (user == null)
+                {
+                    _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail__AppUser]",
+                        $"Request to send notification to app user, but could not find app user with id: ({user.Id}) but email addess is empty");
+
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(emailContent))
+                    {
+                        if (String.IsNullOrEmpty(user.Email))
+                            _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail__AppUser]",
+                                $"Request to send email to {user.FirstName} {user.LastName} ({user.Id}) but email addess is empty");
+                        else
+                        {
+                            _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__AppUser] - Sending Email To {user.FirstName} {user.LastName} {user.Email} -  {shortenedLink.Result} ({actualInk})");
+                            result = await _emailSender.SendAsync(user.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>");
+                            if (result.Successful)
+                                emailsSent++;
+                            else
+                                _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail__AppUser]", new Exception($"Error sending email to {user.Email} - {result.ErrorMessage}"));
+                        }
+                    }
+
+                    if (String.IsNullOrEmpty(smsContent))
+                    {
+                        if (String.IsNullOrEmpty(user.PhoneNumber))
+                            _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendSms__AppUser]",
+                                $"Request to send email to {user.FirstName} {user.LastName} ({user.Id}) but phone number is empty");
+                        else
+                        {
+                            _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__AppUser] - Sending SMS To {user.FirstName} {user.LastName} {user.PhoneNumber} -  {shortenedLink.Result} ({actualInk})");
+                            result = await _smsSender.SendAsync(user.PhoneNumber, $"{smsContent} {shortenedLink.Result}");
+                            if (result.Successful)
+                                textSent++;
+                            else
+                                _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync__SendSms__AppUser", new Exception($"Error sending sms to {user.PhoneNumber} - {result.ErrorMessage}"));
+                        }
+                    }
+
+                    await _notificationTracking.AddHistoryAsync(new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{user.Id}")
+                    {
+                        UserId = user.Id,
+                        UserName = $"{user.FirstName} {user.LastName}",
+                        OrgId = orgEntityHeader.Id,
+                        StaticPageId = pageId,
+                        TestMode = raisedNotification.TestMode,
+                        SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                        SentEmail = notification.SendEmail,
+                        SentSMS = notification.SendSMS && !String.IsNullOrEmpty(user.PhoneNumber)
+                    });
+                }
+            }
+
+            foreach (var recpient in externalContacts)
             {
                 var actualInk = String.IsNullOrEmpty(fullLandingPageLink) ? acknowledgeLink.Replace("[RecipientId]", recpient.Id)
                     : fullLandingPageLink.Replace("[RecipientId]", recpient.Id);
@@ -245,32 +324,32 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 if (recpient.SendEmail && !String.IsNullOrEmpty(emailContent))
                 {
                     if (String.IsNullOrEmpty(recpient.Email))
-                        _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail]",
+                        _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail__ExternalContact]",
                             $"Request to send email to {recpient.FirstName} {recpient.LastName} ({recpient.Id}) but email addess is empty");
                     else
                     {
-                        _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Sending Email To {recpient.FirstName} {recpient.LastName} {recpient.Email} -  {shortenedLink.Result} ({actualInk})");
+                        _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__ExternalContact] - Sending Email To {recpient.FirstName} {recpient.LastName} {recpient.Email} -  {shortenedLink.Result} ({actualInk})");
                         result = await _emailSender.SendAsync(recpient.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>");
                         if (result.Successful)
                             emailsSent++;
                         else
-                            _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync_SendEmail]", new Exception($"Error sending email to {recpient.Email} - {result.ErrorMessage}"));
+                            _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync__SendEmail__ExternalContact]", new Exception($"Error sending email to {recpient.Email} - {result.ErrorMessage}"));
                     }
                 }
 
                 if (recpient.SendSMS && !String.IsNullOrEmpty(smsContent))
                 {
-                    if (String.IsNullOrEmpty(recpient.Email))
-                        _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendSms]",
+                    if (String.IsNullOrEmpty(recpient.Phone))
+                        _logger.AddCustomEvent(LogLevel.Warning, $"[DeviceNotificationManager__RaiseNotificationAsync__SendSms__ExternalContact]",
                             $"Request to send email to {recpient.FirstName} {recpient.LastName} ({recpient.Id}) but phone number is empty");
                     else
                     {
-                        _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Sending SMS To {recpient.FirstName} {recpient.LastName} {recpient.Phone} -  {shortenedLink.Result} ({actualInk})");
+                        _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recpient.FirstName} {recpient.LastName} {recpient.Phone} -  {shortenedLink.Result} ({actualInk})");
                         result = await _smsSender.SendAsync(recpient.Phone, $"{smsContent} {shortenedLink.Result}");
                         if (result.Successful)
                             textSent++;
                         else
-                            _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync_SendSms]", new Exception($"Error sending sms to {recpient.Phone} - {result.ErrorMessage}"));
+                            _logger.AddException($"[DeviceNotificationManager__RaiseNotificationAsync__SendSms__ExternalContact]", new Exception($"Error sending sms to {recpient.Phone} - {result.ErrorMessage}"));
                     }
                 }
 

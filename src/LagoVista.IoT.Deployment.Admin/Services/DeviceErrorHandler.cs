@@ -6,10 +6,13 @@ using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista.UserAdmin.Models.Orgs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,9 +32,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly IUserManager _userManager;
         private readonly IDeviceNotificationManager _deviceNotificationManager;
         private readonly IDeviceErrorCodesManager _errorCodeManager;
+        private readonly IDeviceExceptionRepo _exceptionRepo;
 
 
-        public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager,
+        public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager, IDeviceExceptionRepo exceptionRepo,
                                   IDeviceErrorCodesManager errorCodeManager, IDistributionManager distroManager, IUserManager userManager, IEmailSender emailSender, ISmsSender smsSender, IDeviceNotificationManager deviceNotificationManager)
         {
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -45,17 +49,31 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
             _deviceNotificationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             _errorCodeManager = errorCodeManager ?? throw new ArgumentNullException(nameof(errorCodeManager));
+            _exceptionRepo = exceptionRepo ?? throw new ArgumentNullException(nameof(exceptionRepo));
         }
-
 
         private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, EntityHeader org, EntityHeader user)
         {
-
-
-            var result = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
             var subject = String.IsNullOrEmpty(deviceErrorCode.EmailSubject) ? deviceErrorCode.Name : deviceErrorCode.EmailSubject.Replace("[DEVICEID]", device.DeviceId).Replace("[DEVICENAME]", device.Name);
 
-            foreach (var notificationUser in result.AppUsers)
+            var appUsers = new List<EntityHeader>();
+            var externalContacts = new List<ExternalContact>();
+
+            if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
+            {
+                var distroList = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
+                appUsers.AddRange(distroList.AppUsers);
+                externalContacts.AddRange(distroList.ExternalContacts);
+            }
+
+            if(!EntityHeader.IsNullOrEmpty(device.DistributionList))
+            {
+                var distroList = await _distroManager.GetListAsync(device.DistributionList.Id, org, user);
+                appUsers.AddRange(distroList.AppUsers);
+                externalContacts.AddRange(distroList.ExternalContacts);
+            }
+
+            foreach (var notificationUser in appUsers)
             {
                 var appUser = await _userManager.FindByIdAsync(notificationUser.Id);
                 if (deviceErrorCode.SendEmail)
@@ -74,12 +92,37 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     await _emailSender.SendAsync(appUser.Email, subject, body);
                 }
 
-                if (deviceErrorCode.SendSMS)
+                if (deviceErrorCode.SendSMS && String.IsNullOrEmpty(appUser.PhoneNumber))
                 {
                     var body = $"Device {device.Name} generated error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
                     await _smsSender.SendAsync(appUser.PhoneNumber, body);
                 }
-            }             
+            }
+
+            foreach (var notificationUser in externalContacts)
+            {
+                if (deviceErrorCode.SendEmail && notificationUser.SendSMS)
+                {
+                    var body = $"The error code [{deviceErrorCode.Key}] was detected on the device {device.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
+                    if (exception.AdditionalDetails.Any())
+                    {
+                        body += "<br>";
+                        body += "<b>Additional Details:<br /><b>";
+                        body += "<ul>";
+                        foreach (var detail in exception.AdditionalDetails)
+                            body += $"<li>{detail}</li>";
+
+                        body += "</ul>";
+                    }
+                    await _emailSender.SendAsync(notificationUser.Email, subject, body);
+                }
+
+                if (deviceErrorCode.SendSMS && notificationUser.SendSMS)
+                {
+                    var body = $"Device {device.Name} generated error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
+                    await _smsSender.SendAsync(notificationUser.Phone, body);
+                }
+            }
         }
 
         private async Task SendDeviceNotification(DeviceErrorCode deviceErrorCode, DeviceException exception, EntityHeader org, EntityHeader user)
@@ -88,12 +131,21 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             {
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has Device Notification {deviceErrorCode.DeviceNotification.Text}");
 
-                await _deviceNotificationManager.RaiseNotificationAsync(new RaisedDeviceNotification()
+                var notification = new RaisedDeviceNotification()
                 {
                     DeviceId = exception.DeviceUniqueId,
                     DeviceRepositoryId = exception.DeviceRepositoryId,
                     NotificationKey = deviceErrorCode.DeviceNotification.Key,
-                }, org, user);
+                };
+
+                if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
+                {
+                    var distroList = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
+                    notification.AdditionalUsers = distroList.AppUsers;
+                    notification.AdditionalExternalContacts = distroList.ExternalContacts;
+                }
+
+                await _deviceNotificationManager.RaiseNotificationAsync(notification, org, user);
 
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}");
             }
@@ -142,12 +194,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (exception == null) throw new ArgumentNullException(nameof(exception));
             if (org == null) throw new ArgumentNullException(nameof(org));
             if (user == null) throw new ArgumentNullException(nameof(user));
+           
+            var timeStamp = DateTime.UtcNow.ToJSONString();
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(exception.DeviceRepositoryId, org, user);
             if (repo == null)
             {
                 return InvokeResult.FromError($"FSLite - Handle Device Exception - Could not find repo for: {exception.DeviceUniqueId}");
             }
+
+            await _exceptionRepo.AddDeviceExceptionAsync(repo, exception);
 
             _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Repo: {repo.Name} - {repo.OwnerOrganization.Text}");
 
@@ -188,15 +244,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 {
                     Count = 1,
                     DeviceErrorCode = exception.ErrorCode,
-                    FirstSeen = DateTime.UtcNow.ToJSONString(),
+                    FirstSeen = timeStamp,
+                    LastSeen = timeStamp,
                     LastDetails = exception.Details,
-                    Timestamp = DateTime.UtcNow.ToJSONString(),
+                    Timestamp = timeStamp,
                 };
-
-                if (deviceErrorCode.AutoexpireTimespanQuantity.HasValue)
-                {
-                    deviceError.Expires = deviceErrorCode.AutoexpireTimespan.Value.AddTimeSpan(deviceErrorCode.AutoexpireTimespanQuantity.Value);
-                }
 
                 device.Result.Errors.Add(deviceError);
 
@@ -205,7 +257,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             else
             {
                 deviceError.Count++;
-                deviceError.Timestamp = DateTime.UtcNow.ToJSONString();
+                deviceError.Timestamp = timeStamp;
+                deviceError.LastSeen = timeStamp;
+
+                if (!deviceError.Active)
+                    deviceError.FirstSeen = timeStamp;
+
+                if (deviceErrorCode.AutoexpireTimespanQuantity.HasValue)
+                {
+                    deviceError.Expires = deviceErrorCode.AutoexpireTimespan.Value.AddTimeSpan(deviceErrorCode.AutoexpireTimespanQuantity.Value);
+                }
 
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has exisiting device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.");
             }
@@ -243,9 +304,75 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return InvokeResult.Success;
         }
 
-        public Task<InvokeResult> ClearDeviceExceptionAsync(DeviceException deviceException, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> ClearDeviceExceptionAsync(DeviceException exception, EntityHeader org, EntityHeader user)
         {
-            throw new NotImplementedException();
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+            if (org == null) throw new ArgumentNullException(nameof(org));
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(exception.DeviceRepositoryId, org, user);
+            var device = await _deviceManager.GetDeviceByIdAsync(repo, exception.DeviceUniqueId, org, user);
+            var deviceConfig = await _deviceConfigManager.GetDeviceConfigurationAsync(device.Result.DeviceConfiguration.Id, org, user);
+
+            var deviceErrorCode = deviceConfig.ErrorCodes.FirstOrDefault(err => err.Key == exception.ErrorCode);
+            if (deviceErrorCode == null)
+            {
+                return InvokeResult.FromError($"Could not find error code [{exception.ErrorCode}] on device configuration [{deviceConfig.Name}] for device [{device.Result.Name}]");
+            }
+
+            _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Clear Device Exception {exception.ErrorCode}");
+
+            await _exceptionRepo.AddDeviceExceptionClearedAsync(repo, exception);
+
+            await _ticketCreator.ClearDeviceExceptionAsync(exception, org, user);
+
+            if (deviceErrorCode.NotifyOnClear)
+            {
+                var appUsers = new List<EntityHeader>();
+                var externalContacts = new List<ExternalContact>();
+
+                if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
+                {
+                    var distroList = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
+                    appUsers.AddRange(distroList.AppUsers);
+                    externalContacts.AddRange(distroList.ExternalContacts);
+                }
+                    
+                var subject = "[CLEARED] -" + (String.IsNullOrEmpty(deviceErrorCode.EmailSubject) ? deviceErrorCode.Name : deviceErrorCode.EmailSubject.Replace("[DEVICEID]", device.Result.DeviceId).Replace("[DEVICENAME]", device.Result.Name));
+
+                foreach (var notificationUser in appUsers)
+                {
+                    var appUser = await _userManager.FindByIdAsync(notificationUser.Id);
+                    if (deviceErrorCode.SendEmail)
+                    {
+                        var body = $"The error code [{deviceErrorCode.Key}] was cleared on the device {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
+                        await _emailSender.SendAsync(appUser.Email, subject, body);
+                    }
+
+                    if (deviceErrorCode.SendSMS)
+                    {
+                        var body = $"Device {device.Result.Name} cleared error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
+                        await _smsSender.SendAsync(appUser.PhoneNumber, body);
+                    }
+                }
+
+                foreach (var externalContact in externalContacts)
+                {
+                    if (externalContact.SendEmail)
+                    {
+                        var body = $"The error code [{deviceErrorCode.Key}] was cleared on the device {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
+                        await _emailSender.SendAsync(externalContact.Email, subject, body);
+                    }
+
+                    if (externalContact.SendSMS)
+                    {
+                        var body = $"Device {device.Result.Name} cleared error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
+                        await _smsSender.SendAsync(externalContact.Phone, body);
+                    }
+                }
+            }
+
+            return InvokeResult.Success;
         }
     }
 }

@@ -1587,4 +1587,10 @@
   <data name="DeviceErrorCode_DeviceNotification_Select" xml:space="preserve">
     <value>-select notification-</value>
   </data>
+  <data name="DeviceErrorCode_NotifyOnClear" xml:space="preserve">
+    <value>Send noficiation when cleared</value>
+  </data>
+  <data name="DeviceErrorCode_NotifyOnRaise" xml:space="preserve">
+    <value>Send notification when raised</value>
+  </data>
 </root>

@@ -44,7 +44,9 @@ namespace LagoVista.IoT.Deployment.Models
             Id = Guid.NewGuid().ToId();
             NotificationIntervalTimeSpan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
             AutoexpireTimespan = EntityHeader<TimeSpanIntervals>.Create(TimeSpanIntervals.NotApplicable);
-            Icon = "icon-ae-error-1";   
+            Icon = "icon-ae-error-1";
+            NotifyOnRaise = true;
+            NotifyOnClear = true;
         }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
@@ -59,6 +61,12 @@ namespace LagoVista.IoT.Deployment.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotifyOnRaise, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool NotifyOnRaise { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotifyOnClear, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool NotifyOnClear { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_SendSMS, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool SendSMS { get; set; }
@@ -166,7 +174,9 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(DeviceNotification),
                 nameof(SendEmail),
                 nameof(EmailSubject),
-                nameof(SendSMS)
+                nameof(SendSMS),
+                nameof(NotifyOnRaise),
+                nameof(NotifyOnClear),
             };
         }
 

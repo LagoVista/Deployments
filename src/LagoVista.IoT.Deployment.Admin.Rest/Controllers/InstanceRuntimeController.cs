@@ -730,7 +730,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
 
-            return await _ticketCreator.ClearDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
+            return await _deviceErrorHandler.ClearDeviceExceptionAsync(deviceExcpetion, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
