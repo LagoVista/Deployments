@@ -29,6 +29,8 @@ using System.Collections.Generic;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.DeviceManagement.Core;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -49,6 +51,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IRemoteServiceManager _remoteServiceManager;
         private readonly IDeviceNotificationManager _deviceNoficationManager;
         private readonly IDeviceErrorHandler _deviceErrorHandler;
+        private readonly IDeviceManager _deviceManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -62,7 +65,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
-            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,
+            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger,
             IDeviceErrorHandler deviceErrorHandler, IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
         {
@@ -81,6 +84,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._remoteServiceManager = remoteServiceManager ?? throw new ArgumentNullException(nameof(remoteServiceManager));
             this._deviceNoficationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             this._deviceErrorHandler = deviceErrorHandler ?? throw new ArgumentNullException(nameof(deviceErrorHandler));
+            this._deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -719,6 +723,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
 
             return await _deviceNoficationManager.RaiseNotificationAsync(raisedNotification, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpPost("/api/device/status/online")]
+        public async Task<InvokeResult<Device>> DeviceOnlineAsync([FromBody] Device device)
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _deviceManager.HandleDeviceOnlineAsync(device, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpPost("/api/device/status/offline")]
+        public async Task<InvokeResult<Device>> DeviceOfflineAsync([FromBody] Device device)
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _deviceManager.HandleDeviceOfflineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
