@@ -6,6 +6,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin.Models;
 using LagoVista.IoT.Pipeline.Models;
@@ -251,7 +252,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{id}/connected/monitored")]
-        public Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string id)
+        public Task<ListResponse<DeviceStatus>> GetTimedoutDevicesAsync(string id)
         {
             return _instanceManager.GetWatchdogConnectedDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
@@ -262,7 +263,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/{id}/connected/timedout")]
-        public Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string id)
+        public Task<ListResponse<DeviceStatus>> GetWatchdogConnectedDevicesAsync(string id)
         {
             return _instanceManager.GetTimedoutDevicesAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }

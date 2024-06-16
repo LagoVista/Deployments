@@ -5,6 +5,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Pipeline.Admin.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -71,10 +72,10 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<InvokeResult<string>> GetKeyAsync(string keyId, EntityHeader instanceId, EntityHeader org);
 
-        Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<ListResponse<DeviceStatus>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         Task<InvokeResult<DeploymentSettings>> GetDeploymentSettingsAsync(string instanceId, EntityHeader org, EntityHeader user);
-        Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+        Task<ListResponse<DeviceStatus>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 
         Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest);
 

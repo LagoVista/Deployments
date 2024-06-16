@@ -16,6 +16,7 @@ using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
 using LagoVista.IoT.Pipeline.Admin.Managers;
@@ -70,13 +71,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly ICacheProvider _cacheProvider;
         private readonly IRemoteServiceManager _remoteListenerServiceManager;
         private readonly LagoVista.IoT.DeviceManagement.Core.IDeviceManager _deviceManager;
+        private readonly IDeviceStatusRepo _deviceStatusRepo;
         #endregion
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
                     IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager,
-                    ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
+                    IDeviceStatusRepo deviceStatusRepo, ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
             base(hostManager, instanceRepo, deviceManagerRepo, secureStorage, deploymentStatusInstanceRepo, userManager, logger, appConfig, depmanager, security)
         {
             _hostManager = hostManager ?? throw new ArgumentNullException(nameof(hostManager));
@@ -101,16 +103,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _remoteListenerServiceManager = remoteListenerServiceManager ?? throw new ArgumentNullException(nameof(remoteListenerServiceManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
+            _deviceStatusRepo = deviceStatusRepo ?? throw new ArgumentNullException(nameof(deviceStatusRepo));
         
         }
 
         public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage,
-                    IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, 
+                    IDeviceStatusRepo deviceStatusRepo, IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, 
                     LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
             this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager,
-                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, deviceManager, cacheProvider, remoteListenerServiceManager)
+                dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, deviceManager, deviceStatusRepo, cacheProvider, remoteListenerServiceManager)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
         }
@@ -406,29 +409,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await GetConnector(host, org.Id, instanceId).GetInstanceDetailsAsync(host, instanceId, org, user);
         }
 
-        public Task<ListResponse<WatchdogConnectedDevice>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        public async Task<ListResponse<DeviceStatus>> GetWatchdogConnectedDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
-            var proxy = _proxyFactory.Create<IConnectedDevicesService>(new ProxySettings
-            {
-                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
-                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
-            });
-
-            return proxy.GetWatchdogConnectedDevicesAsync(listRequest);
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);
+            
+            return await _deviceStatusRepo.GetDeviceStatusForInstanceAsync(listRequest, instance.Result);
         }
 
-        public Task<ListResponse<WatchdogConnectedDevice>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        public async Task<ListResponse<DeviceStatus>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
-            var proxy = _proxyFactory.Create<IConnectedDevicesService>(new ProxySettings
-            {
-                OrganizationId = org.Id ?? throw new ArgumentNullException(nameof(org)),
-                InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId))
-            });
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);
 
-            return proxy.GetTimedOutDevicesAsync(listRequest);
+            return await _deviceStatusRepo.GetTimedOutDeviceStatusForInstanceAsync(listRequest, instance.Result);
         }
 
-        public Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        public  Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
             var proxy = _proxyFactory.Create<IMessageWatchdogService>(new ProxySettings
             {
