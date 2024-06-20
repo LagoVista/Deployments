@@ -163,6 +163,30 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.GetDeploymentInstanceStatusHistoryAsync(id, OrgEntityHeader, UserEntityHeader, GetListRequestFromHeader());
         }
 
+        /// <summary>
+        /// Deployment Instance - Get Status History
+        /// </summary>
+        /// <param name="instanceid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{instanceid}/device/{id}/notifications/silence")]
+        public Task<InvokeResult> SilenceNotificationAsync(string instanceid, string id)
+        {
+            return _instanceManager.SetSilenceAlarmAsync(instanceid, id, true, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get Status History
+        /// </summary>
+        /// <param name="instanceid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{instanceid}/device/{id}/notifications/enable")]
+        public Task<InvokeResult> EnableNotificationAsync(string instanceid, string id)
+        {
+            return _instanceManager.SetSilenceAlarmAsync(instanceid, id, false, OrgEntityHeader, UserEntityHeader);
+        }
+
 
         /// <summary>
         /// Deployment Instance - Check in Use

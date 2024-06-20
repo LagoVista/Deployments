@@ -63,6 +63,8 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult<ListenerConfiguration>> GetDefaultListenerConfigurationForRepoAsync(string repoId, EntityHeader org, EntityHeader user);
         Task<ListResponse<DeviceTypeSummary>> GetDeviceTypesForInstanceAsync(string instanceId, EntityHeader org, EntityHeader user);
 
+        Task<ListResponse<DeviceStatus>> GetStatusHistoryForDeviceAsync(string instanceId, string deviceUniqueId, EntityHeader org, EntityHeader user, ListRequest listRequest);
+
         Task<InvokeResult<string>> RegenerateKeyAsync(string instanceId, string keyname, EntityHeader org, EntityHeader user);
         Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user);
         Task<InvokeResult<string>> GetRemoteMonitoringURIForDeviceWithPINAsync(string channel, string repoId, string id, string pin, string verbosity, EntityHeader org, EntityHeader user);
@@ -93,5 +95,7 @@ namespace LagoVista.IoT.Deployment.Admin
         string GenerateAccessKey();
         Task<InvokeResult<InstanceService>> AllocateInstanceServiceAsync(string instanceId, HostTypes hostType, bool replaceExisting, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
         Task<InvokeResult> RemoveInstanceServiceAsync(string instanceId, string instanceServiceId, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
+
+        Task<InvokeResult> SetSilenceAlarmAsync(string instanceId, string id, bool silenced, EntityHeader org, EntityHeader user);
     }
 }

@@ -10,6 +10,9 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task<ListResponse<DeviceStatus>> GetDeviceStatusForInstanceAsync(ListRequest listRequest, DeploymentInstance instance);
         Task<ListResponse<DeviceStatus>> GetTimedOutDeviceStatusForInstanceAsync(ListRequest listRequest, DeploymentInstance instance);
-        Task<ListResponse<DeviceStatus>> GetDeviceStatusHistoryForDevceAsync(ListRequest listRequest, DeviceRepository repo,  string deviceUniqueId);
+        Task<ListResponse<DeviceStatus>> GetDeviceStatusHistoryForDeviceAsync(ListRequest listRequest, DeploymentInstance instance, string deviceUniqueId);
+        Task AddDeviceStatusAsync(DeploymentInstance instance, DeviceStatus status);
+        Task UpdateDeviceStatusAsync(DeploymentInstance instance, DeviceStatus status);
+        Task<DeviceStatus> GetDeviceStatusAsync(DeploymentInstance instance, string deviceUniqueId);
     }
 }

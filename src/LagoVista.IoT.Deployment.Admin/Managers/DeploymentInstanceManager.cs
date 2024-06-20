@@ -16,6 +16,7 @@ using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Interfaces.Managers;
 using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin;
@@ -417,12 +418,28 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await _deviceStatusRepo.GetDeviceStatusForInstanceAsync(listRequest, instance.Result);
         }
 
+        public async Task<InvokeResult> SetSilenceAlarmAsync(string instanceId, string id, bool silenced, EntityHeader org, EntityHeader user)
+        {
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);          
+            var deviceStatus = await _deviceStatusRepo.GetDeviceStatusAsync(instance.Result, id);
+            deviceStatus.SilenceAlarm = silenced;
+            await _deviceStatusRepo.UpdateDeviceStatusAsync(instance.Result, deviceStatus);
+            return InvokeResult.Success;
+        }
+
         public async Task<ListResponse<DeviceStatus>> GetTimedoutDevicesAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
         {
             var instance = await GetInstanceAsync(instanceId, org, user);
             await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);
-
             return await _deviceStatusRepo.GetTimedOutDeviceStatusForInstanceAsync(listRequest, instance.Result);
+        }
+
+        public async Task<ListResponse<DeviceStatus>> GetStatusHistoryForDeviceAsync(string instanceId, string deviceUniqueId, EntityHeader org, EntityHeader user, ListRequest listRequest)
+        {
+            var instance = await GetInstanceAsync(instanceId, org, user);
+            await CheckOwnershipOrSysAdminAsync(instance.Result, org, user);
+            return await _deviceStatusRepo.GetDeviceStatusHistoryForDeviceAsync(listRequest, instance.Result, deviceUniqueId);
         }
 
         public  Task<ListResponse<WatchdogMessageStatus>> GetWatchdogMessageStatusAsync(string instanceId, EntityHeader org, EntityHeader user, ListRequest listRequest)
