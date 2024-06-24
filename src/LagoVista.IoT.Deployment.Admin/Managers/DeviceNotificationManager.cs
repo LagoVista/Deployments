@@ -10,6 +10,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
@@ -126,6 +127,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
             }
+            else
+                template = template.Replace("[DeviceLocation]", string.Empty);
+
 
             template = template.Replace("[DeviceSummary]", device.Summary);
             template = template.Replace("[NotificationTimeStamp]", DateTime.Now.ToString());
@@ -145,12 +149,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(raisedNotification.DeviceRepositoryId, orgEntityHeader, userEntityHeader);
-            if (repo == null) return InvokeResult.FromError($"Could not locate device repository ${raisedNotification.DeviceRepositoryId}");
+            if (repo == null) return InvokeResult.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");
 
             if (EntityHeader.IsNullOrEmpty(repo.Instance)) return InvokeResult.FromError($"Device does not have a deployment instance for device repository: ${repo.Name}");
 
-            var device = await _deviceManager.GetDeviceByIdAsync(repo, raisedNotification.DeviceId, orgEntityHeader, userEntityHeader);
-            if (device == null) return InvokeResult.FromError($"Could not locate device {raisedNotification.DeviceId} in device repository ${raisedNotification.DeviceRepositoryId}");
+            InvokeResult<Device> device = null;
+
+            if(!String.IsNullOrEmpty(raisedNotification.DeviceId))
+                device = await _deviceManager.GetDeviceByDeviceIdAsync(repo, raisedNotification.DeviceId, orgEntityHeader, userEntityHeader);
+            else if(!string.IsNullOrEmpty(raisedNotification.DeviceUniqueId))
+                device = await _deviceManager.GetDeviceByIdAsync(repo, raisedNotification.DeviceUniqueId, orgEntityHeader, userEntityHeader);
+            else
+                return InvokeResult.FromError($"Must provide either DeviceId or DeviceUniqueId.");
+
+            if (device == null) return InvokeResult.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
 
             var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, raisedNotification.NotificationKey);
 
@@ -159,7 +171,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
             OrgLocation location = null;
-
 
             var appUsers = new List<EntityHeader>();
             var externalContacts = new List<ExternalContact>();

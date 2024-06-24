@@ -717,7 +717,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// </summary>
         /// <param name="raisedNotification"></param>
         /// <returns></returns>
-        [HttpPost("/api/device/notiifcation/generate")]
+        [HttpPost("/api/device/notification/generate")]
         public async Task<InvokeResult> GenerateNotification([FromBody] RaisedDeviceNotification raisedNotification)
         {
             await ValidateRequest(HttpContext.Request);

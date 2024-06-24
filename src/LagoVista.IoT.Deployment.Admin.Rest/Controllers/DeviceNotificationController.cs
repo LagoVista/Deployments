@@ -77,13 +77,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return notification;
         }
 
-        [HttpGet("/api/notifications/{repoid}/{deviceid}/{notificationkey}")]
-        public Task<InvokeResult> TestSendAsync(string repoid, string deviceid, string notificationkey, string testing = "true")
+        [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
+        public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "true")
         {
             return _notificationManager.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
                 TestMode = testing == "true",
-                DeviceId = deviceid,
+                DeviceUniqueId = deviceuniqueid,
                 DeviceRepositoryId = repoid,
                 NotificationKey = notificationkey
             }, OrgEntityHeader, UserEntityHeader);
@@ -123,6 +123,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 <head>
   <link rel=""icon"" type=""image/png"" href=""https://nuviot.blob.core.windows.net/cdn/sa/favicon.png"">
   <link href=""https://nuviot.blob.core.windows.net/cdn/sa/style.css"" rel=""stylesheet"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
 </head>
 <body>
 <div class=""header""></div>" +

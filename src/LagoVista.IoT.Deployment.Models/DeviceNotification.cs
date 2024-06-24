@@ -149,6 +149,7 @@ namespace LagoVista.IoT.Deployment.Models
         public string Id { get; set; } = Guid.NewGuid().ToId();
         public string NotificationKey { get; set; }
         public string DeviceId { get; set; }
+        public string DeviceUniqueId { get; set; }
         public string DeviceRepositoryId { get; set; }
 
         public List<EntityHeader> AdditionalUsers { get; set; }
@@ -160,8 +161,8 @@ namespace LagoVista.IoT.Deployment.Models
             if (String.IsNullOrEmpty(NotificationKey))
                 result.AddSystemError("Missing notification key on RaiseDeviceNotification");
 
-            if(String.IsNullOrEmpty(DeviceId))
-                result.AddSystemError("Missing device id on RaiseDeviceNotification");
+            if(String.IsNullOrEmpty(DeviceId) && String.IsNullOrEmpty(DeviceUniqueId))
+                result.AddSystemError("Missing DeviceId or DeviceUniqueId on RaiseDeviceNotification");
 
             if (String.IsNullOrEmpty(DeviceRepositoryId))
                 result.AddSystemError("Missing device repository id on RaiseDeviceNotification");

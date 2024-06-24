@@ -23,6 +23,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string Phone { get; set; }
 
         public string Body { get; set; }
+        public string Link { get; set; }
         public string Subject { get; set; }
+
     }
 }
