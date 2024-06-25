@@ -314,6 +314,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         UserName = $"{user.FirstName} {user.LastName}",
                         OrgId = orgEntityHeader.Id,
                         StaticPageId = pageId,
+                        Notification = notification.Name,
+                        NotificationId = notification.Id,
                         TestMode = raisedNotification.TestMode,
                         SentTimeStamp = DateTime.UtcNow.ToJSONString(),
                         SentEmail = notification.SendEmail,
