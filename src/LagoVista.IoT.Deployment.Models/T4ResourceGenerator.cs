@@ -1,4 +1,4 @@
-﻿/*6/13/2024 11:12:04 AM*/
+﻿/*6/25/2024 7:52:44 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -555,6 +555,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotification_Title
 
 		public static string DeviceNotification_Title { get { return GetResourceString("DeviceNotification_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotificationHistory_Description
+
+		public static string DeviceNotificationHistory_Description { get { return GetResourceString("DeviceNotificationHistory_Description"); } }
+//Resources:DeploymentAdminResources:DeviceNotificationHistory_Title
+
+		public static string DeviceNotificationHistory_Title { get { return GetResourceString("DeviceNotificationHistory_Title"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_Description
 
 		public static string DeviceNotifications_Description { get { return GetResourceString("DeviceNotifications_Description"); } }
@@ -1700,6 +1706,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCodes_Title = "DeviceErrorCodes_Title";
 			public const string DeviceNotification_TagHelp = "DeviceNotification_TagHelp";
 			public const string DeviceNotification_Title = "DeviceNotification_Title";
+			public const string DeviceNotificationHistory_Description = "DeviceNotificationHistory_Description";
+			public const string DeviceNotificationHistory_Title = "DeviceNotificationHistory_Title";
 			public const string DeviceNotifications_Description = "DeviceNotifications_Description";
 			public const string DeviceNotifications_EmailContent = "DeviceNotifications_EmailContent";
 			public const string DeviceNotifications_EmailSubject = "DeviceNotifications_EmailSubject";

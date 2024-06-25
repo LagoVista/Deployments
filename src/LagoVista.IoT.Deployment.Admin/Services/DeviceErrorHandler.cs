@@ -134,7 +134,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                 var notification = new RaisedDeviceNotification()
                 {
-                    DeviceId = exception.DeviceUniqueId,
+                    DeviceUniqueId = exception.DeviceUniqueId,
                     DeviceRepositoryId = exception.DeviceRepositoryId,
                     NotificationKey = deviceErrorCode.DeviceNotification.Key,
                 };
@@ -146,9 +146,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     notification.AdditionalExternalContacts = distroList.ExternalContacts;
                 }
 
-                await _deviceNotificationManager.RaiseNotificationAsync(notification, org, user);
-
-                _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}");
+                if((await _deviceNotificationManager.RaiseNotificationAsync(notification, org, user)).Successful) 
+                    _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}");
+                else
+                    _adminLogger.AddError($"[DeviceErrorHandler__SendDeviceNotification]", $"Did not send notification - {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
             }
         }
 
