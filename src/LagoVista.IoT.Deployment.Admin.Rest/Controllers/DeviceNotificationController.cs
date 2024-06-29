@@ -78,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
-        public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "true")
+        public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
         {
             return _notificationManager.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
