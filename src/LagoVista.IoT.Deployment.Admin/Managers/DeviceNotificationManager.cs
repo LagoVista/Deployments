@@ -132,7 +132,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             else
                 template = template.Replace("[DeviceLocation]", string.Empty);
 
+            var sensorHtml = new StringBuilder("<h4>Sensors</h4>");
 
+            if(device.SensorCollection != null)
+            {
+                foreach(var sensor in device.SensorCollection)
+                {
+                    sensorHtml.AppendLine($"<div>{sensor.Name}: {sensor.Value}</div>");
+                }
+            }
+            template = template.Replace("[DeviceSensors]", sensorHtml.ToString());
             template = template.Replace("[DeviceSummary]", device.Summary);
             template = template.Replace("[NotificationTimeStamp]", DateTime.Now.ToString());
 
@@ -221,7 +230,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             {
                 _logger.Trace("[DeviceNotificationManager__RaiseNotificationAsync] - Including Landindg page");
                 var template = await ReplaceTags(_appConfig.WebAddress, notification.LandingPageContent, device.Result, location);
-                if (deployment.TestMode)
+                if (deployment.TestMode || raisedNotification.TestMode)
                     template = $"<h1>TESTING - TESTING</h1> {template}";
 
                 _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync] - Tags replaced in template");
@@ -249,7 +258,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (notification.SendSMS)
                 smsContent = await ReplaceTags(_appConfig.WebAddress, notification.SmsContent, device.Result, location);
 
-            if (deployment.TestMode)
+            if (deployment.TestMode || raisedNotification.TestMode)
             {
                 emailContent = $"<h1>TESTING - TESTING</h1> {emailContent}";
                 smsContent = $"TESTING TESTING - {smsContent}";
@@ -316,6 +325,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         UserName = $"{user.FirstName} {user.LastName}",
                         OrgId = orgEntityHeader.Id,
                         StaticPageId = pageId,
+                        Notification = notification.Name,
+                        NotificationId = notification.Id,
                         TestMode = raisedNotification.TestMode,
                         SentTimeStamp = DateTime.UtcNow.ToJSONString(),
                         SentEmail = notification.SendEmail,
@@ -371,6 +382,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     UserId = recpient.Id,
                     UserName = $"{recpient.FirstName} {recpient.LastName}",
                     OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
                     StaticPageId = pageId,
                     TestMode = raisedNotification.TestMode,
                     SentTimeStamp = DateTime.UtcNow.ToJSONString(),

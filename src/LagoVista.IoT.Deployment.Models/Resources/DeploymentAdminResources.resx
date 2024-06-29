@@ -1593,4 +1593,10 @@
   <data name="DeviceErrorCode_NotifyOnRaise" xml:space="preserve">
     <value>Send notification when raised</value>
   </data>
+  <data name="DeviceNotificationHistory_Description" xml:space="preserve">
+    <value>List of notifications that have been sent to a device</value>
+  </data>
+  <data name="DeviceNotificationHistory_Title" xml:space="preserve">
+    <value>Device Notification History</value>
+  </data>
 </root>

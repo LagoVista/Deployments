@@ -1,10 +1,12 @@
-﻿using LagoVista.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using LagoVista.Core.Attributes;
+using LagoVista.Core.Models;
+using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Models
 {
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceNotificationHistory_Title, DeploymentAdminResources.Names.DeviceNotificationHistory_Description, DeploymentAdminResources.Names.DeviceNotificationHistory_Description,
+       EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1")]
     public class DeviceNotificationHistory : TableStorageEntity
     {
         public DeviceNotificationHistory(string deviceId, string rowKey)
@@ -12,6 +14,9 @@ namespace LagoVista.IoT.Deployment.Models
             RowKey = rowKey;
             PartitionKey = deviceId;
         }
+
+        public string Notification { get; set; }
+        public string NotificationId { get; set; }
 
         public string StaticPageId { get; set; }
         public string DeviceId {  get => PartitionKey;  }
