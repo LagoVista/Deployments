@@ -43,18 +43,21 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SendEmail { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SMSContent, HelpResource:DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SMSContent, HelpResource:DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources),
+            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp")]
         public string SmsContent { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_IncludeLandingPageContent, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IncludeLandingPage { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_LandingPageContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_LandingPageContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
+            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp")]
         public string LandingPageContent { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
+            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp")]
         public string EmailContent { get; set; }
 
         public FormConditionals GetConditionalFields()

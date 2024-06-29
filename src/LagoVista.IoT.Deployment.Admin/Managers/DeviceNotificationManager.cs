@@ -114,7 +114,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     var adminContact = await _appUserRepo.FindByIdAsync(location.AdminContact.Id);
                     if (adminContact != null)
                     {
-                        template.Replace("[Location_Admin_Contact]", adminContact.Name + (String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $" ({adminContact.PhoneNumber})"));
+                        var phoneHtml = String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $"<a href='tel:{adminContact.PhoneNumber}> ({adminContact.PhoneNumber})</a>";
+                        template.Replace("[Location_Admin_Contact]", $"<div>{adminContact.Name} {phoneHtml}</div>");
                     }
                 }
 
@@ -123,7 +124,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     var technicalContact = await _appUserRepo.FindByIdAsync(location.TechnicalContact.Id);
                     if(technicalContact != null)
                     {
-                        template.Replace("[Location_Admin_Contact]", technicalContact.Name + (String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $" ({technicalContact.PhoneNumber})"));
+                        var phoneHtml = String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $"<a href='tel:{technicalContact.PhoneNumber}> ({technicalContact.PhoneNumber})</a>";
+                        template.Replace("[Location_Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
                     }
                 }
             }
