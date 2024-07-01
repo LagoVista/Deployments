@@ -16,13 +16,15 @@ namespace LagoVista.IoT.Deployment.Models
     public class SystemTest : EntityBase, ISummaryFactory, IIconEntity, IDescriptionEntity, IValidateable, IFormDescriptor
     {
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
+        public string Icon { get; set; } = "icon-fo-laptop-protection";
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeviceLibraryResources))]
         public string Description { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public EntityHeader Category { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeviceLibraryResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Steps, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<SystemTestStep> Steps { get; set; } = new List<SystemTestStep>();
 
         public SystemTestSummary CreateSummary()
@@ -44,6 +46,8 @@ namespace LagoVista.IoT.Deployment.Models
             {
                 nameof(Name),
                 nameof(Key),
+                nameof(Icon),
+                nameof(Category),
                 nameof(Description),
                 nameof(Steps),
             };
@@ -55,7 +59,7 @@ namespace LagoVista.IoT.Deployment.Models
         }
     }
 
-    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.SystemTest_Title, DeploymentAdminResources.Names.SystemTest_Title,
+    [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.SystemTests_Title, DeploymentAdminResources.Names.SystemTest_Title,
         DeploymentAdminResources.Names.SystemTestStep_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-fo-laptop-protection",
         ListUIUrl: "/iotstudio/settings/systemtests", EditUIUrl: "/iotstudio/settings/systemtest/{id}", CreateUIUrl: "/iotstudio/settings/systemtest/add",
         GetListUrl: "/api/systemtests", SaveUrl: "/api/systemtest", GetUrl: "/api/systemtest/{id}", DeleteUrl: "/api/systemtest/{id}", FactoryUrl: "/api/systemtest/factory")]

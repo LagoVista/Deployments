@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.SystemTest_Title, DeploymentAdminResources.Names.SystemTest_Title,
-        DeploymentAdminResources.Names.SystemTestStep_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-fo-laptop-protection",       
+        DeploymentAdminResources.Names.SystemTestStep_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-device-config",       
         FactoryUrl: "/api/systemtest/step/factory")]
     public class SystemTestStep : IValidateable, IFormDescriptor, IIDEntity, IIconEntity
     {
@@ -28,6 +28,9 @@ namespace LagoVista.IoT.Deployment.Models
         public string Key { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
+        public string Icon { get; set; } = "icon-ae-device-config";
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Summary, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Summary { get; set; }
@@ -39,15 +42,13 @@ namespace LagoVista.IoT.Deployment.Models
 
         public string Id { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         public List<string> GetFormFields()
         {
             return new List<string>()
             {
                 nameof(Name),
                 nameof(Key),
+                nameof(Icon),
                 nameof(Summary),
                 nameof(Details)
             };

@@ -1,4 +1,4 @@
-﻿/*7/1/2024 12:25:42 PM*/
+﻿/*7/1/2024 6:22:56 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1458,9 +1458,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTest_Description
 
 		public static string SystemTest_Description { get { return GetResourceString("SystemTest_Description"); } }
+//Resources:DeploymentAdminResources:SystemTest_Steps
+
+		public static string SystemTest_Steps { get { return GetResourceString("SystemTest_Steps"); } }
 //Resources:DeploymentAdminResources:SystemTest_Title
 
 		public static string SystemTest_Title { get { return GetResourceString("SystemTest_Title"); } }
+//Resources:DeploymentAdminResources:SystemTests_Title
+
+		public static string SystemTests_Title { get { return GetResourceString("SystemTests_Title"); } }
 //Resources:DeploymentAdminResources:SystemTestStep_Description
 
 		public static string SystemTestStep_Description { get { return GetResourceString("SystemTestStep_Description"); } }
@@ -2052,7 +2058,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_Version = "Solution_Version";
 			public const string Solutions_Title = "Solutions_Title";
 			public const string SystemTest_Description = "SystemTest_Description";
+			public const string SystemTest_Steps = "SystemTest_Steps";
 			public const string SystemTest_Title = "SystemTest_Title";
+			public const string SystemTests_Title = "SystemTests_Title";
 			public const string SystemTestStep_Description = "SystemTestStep_Description";
 			public const string SystemTestStep_Details = "SystemTestStep_Details";
 			public const string SystemTestStep_Summary = "SystemTestStep_Summary";
