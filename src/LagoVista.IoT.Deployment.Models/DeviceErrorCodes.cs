@@ -93,6 +93,13 @@ namespace LagoVista.IoT.Deployment.Models
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
         public EntityHeader ServiceTicketTemplate { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_IncidentProtocol,
+            HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_IncidentProtocol_Help,
+            EntityHeaderPickerUrl: "/api/incident/protocols",
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_IncidentProtocol_Select, FieldType: FieldTypes.EntityHeaderPicker,
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
+        public EntityHeader IncidentProtocol { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationIntervalQuantity, FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public double? NotificationIntervalQuantity { get; set; }
@@ -170,6 +177,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Category),
                 nameof(ServiceTicketTemplate),
                 nameof(TriggerOnEachOccurrence),
+                nameof(IncidentProtocol),
                 nameof(DistroList),
                 nameof(DeviceNotification),
                 nameof(SendEmail),

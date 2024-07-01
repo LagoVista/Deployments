@@ -1599,4 +1599,49 @@
   <data name="DeviceNotificationHistory_Title" xml:space="preserve">
     <value>Device Notification History</value>
   </data>
+  <data name="Incident_Description" xml:space="preserve">
+    <value>An incident is an unplanned event or occurrence that disrupts normal operations, potentially causing harm or loss. Incidents can range from minor issues, such as software glitches, to major events, like security breaches or natural disasters. They typically require a response to mitigate any negative impact and to restore normal functioning.</value>
+  </data>
+  <data name="Incident_Title" xml:space="preserve">
+    <value>Incident</value>
+  </data>
+  <data name="SystemTestStep_Description" xml:space="preserve">
+    <value>A Test Step is a function that is performed as part of a System Test that ensure the system is functioning correctly.</value>
+  </data>
+  <data name="SystemTestStep_Title" xml:space="preserve">
+    <value>System Test Step</value>
+  </data>
+  <data name="SystemTest_Description" xml:space="preserve">
+    <value>A System Test is a series of steps conducted at predetermined intervals to ensure the system is functioning correctly and that the personnel responsible for operating it are knowledgeable in its use.</value>
+  </data>
+  <data name="SystemTest_Title" xml:space="preserve">
+    <value>System Test</value>
+  </data>
+  <data name="DeviceErrorCode_IncidentProtocol" xml:space="preserve">
+    <value>Incident Protocol</value>
+  </data>
+  <data name="DeviceErrorCode_IncidentProtocol_Help" xml:space="preserve">
+    <value>Associate an incident protocol that should be employed when this error code is generated.</value>
+  </data>
+  <data name="DeviceErrorCode_IncidentProtocol_Select" xml:space="preserve">
+    <value>-select incident protocol-</value>
+  </data>
+  <data name="IncidentProtocols_Title" xml:space="preserve">
+    <value>Incident Protocols</value>
+  </data>
+  <data name="IncidentProtocol_Description" xml:space="preserve">
+    <value>An Incident Protocol is a set of steps that define how an incident should be addressed</value>
+  </data>
+  <data name="IncidentProtocol_Title" xml:space="preserve">
+    <value>Incident Protocol</value>
+  </data>
+  <data name="Incidents_Title" xml:space="preserve">
+    <value>Incidents</value>
+  </data>
+  <data name="SystemTestStep_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="SystemTestStep_Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
 </root>

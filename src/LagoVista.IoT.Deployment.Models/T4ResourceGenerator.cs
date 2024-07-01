@@ -1,4 +1,4 @@
-﻿/*6/25/2024 7:52:44 AM*/
+﻿/*7/1/2024 12:25:42 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -498,6 +498,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCode_Hours
 
 		public static string DeviceErrorCode_Hours { get { return GetResourceString("DeviceErrorCode_Hours"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_IncidentProtocol
+
+		public static string DeviceErrorCode_IncidentProtocol { get { return GetResourceString("DeviceErrorCode_IncidentProtocol"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_IncidentProtocol_Help
+
+		public static string DeviceErrorCode_IncidentProtocol_Help { get { return GetResourceString("DeviceErrorCode_IncidentProtocol_Help"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_IncidentProtocol_Select
+
+		public static string DeviceErrorCode_IncidentProtocol_Select { get { return GetResourceString("DeviceErrorCode_IncidentProtocol_Select"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_Minutes
 
 		public static string DeviceErrorCode_Minutes { get { return GetResourceString("DeviceErrorCode_Minutes"); } }
@@ -942,6 +951,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:HostType_MultiTenantMQTT
 
 		public static string HostType_MultiTenantMQTT { get { return GetResourceString("HostType_MultiTenantMQTT"); } }
+//Resources:DeploymentAdminResources:Incident_Description
+
+		public static string Incident_Description { get { return GetResourceString("Incident_Description"); } }
+//Resources:DeploymentAdminResources:Incident_Title
+
+		public static string Incident_Title { get { return GetResourceString("Incident_Title"); } }
+//Resources:DeploymentAdminResources:IncidentProtocol_Description
+
+		public static string IncidentProtocol_Description { get { return GetResourceString("IncidentProtocol_Description"); } }
+//Resources:DeploymentAdminResources:IncidentProtocol_Title
+
+		public static string IncidentProtocol_Title { get { return GetResourceString("IncidentProtocol_Title"); } }
+//Resources:DeploymentAdminResources:IncidentProtocols_Title
+
+		public static string IncidentProtocols_Title { get { return GetResourceString("IncidentProtocols_Title"); } }
+//Resources:DeploymentAdminResources:Incidents_Title
+
+		public static string Incidents_Title { get { return GetResourceString("Incidents_Title"); } }
 //Resources:DeploymentAdminResources:Instance_Caches
 
 		public static string Instance_Caches { get { return GetResourceString("Instance_Caches"); } }
@@ -1428,6 +1455,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Solutions_Title
 
 		public static string Solutions_Title { get { return GetResourceString("Solutions_Title"); } }
+//Resources:DeploymentAdminResources:SystemTest_Description
+
+		public static string SystemTest_Description { get { return GetResourceString("SystemTest_Description"); } }
+//Resources:DeploymentAdminResources:SystemTest_Title
+
+		public static string SystemTest_Title { get { return GetResourceString("SystemTest_Title"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Description
+
+		public static string SystemTestStep_Description { get { return GetResourceString("SystemTestStep_Description"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Details
+
+		public static string SystemTestStep_Details { get { return GetResourceString("SystemTestStep_Details"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Summary
+
+		public static string SystemTestStep_Summary { get { return GetResourceString("SystemTestStep_Summary"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Title
+
+		public static string SystemTestStep_Title { get { return GetResourceString("SystemTestStep_Title"); } }
 //Resources:DeploymentAdminResources:TaggedContainer_CreationDate
 
 		public static string TaggedContainer_CreationDate { get { return GetResourceString("TaggedContainer_CreationDate"); } }
@@ -1687,6 +1732,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_ErrorCode = "DeviceErrorCode_ErrorCode";
 			public const string DeviceErrorCode_Help = "DeviceErrorCode_Help";
 			public const string DeviceErrorCode_Hours = "DeviceErrorCode_Hours";
+			public const string DeviceErrorCode_IncidentProtocol = "DeviceErrorCode_IncidentProtocol";
+			public const string DeviceErrorCode_IncidentProtocol_Help = "DeviceErrorCode_IncidentProtocol_Help";
+			public const string DeviceErrorCode_IncidentProtocol_Select = "DeviceErrorCode_IncidentProtocol_Select";
 			public const string DeviceErrorCode_Minutes = "DeviceErrorCode_Minutes";
 			public const string DeviceErrorCode_NotApplicable = "DeviceErrorCode_NotApplicable";
 			public const string DeviceErrorCode_NotificationInterval = "DeviceErrorCode_NotificationInterval";
@@ -1835,6 +1883,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string HostStatus_WaitingForServer = "HostStatus_WaitingForServer";
 			public const string HostType_Development = "HostType_Development";
 			public const string HostType_MultiTenantMQTT = "HostType_MultiTenantMQTT";
+			public const string Incident_Description = "Incident_Description";
+			public const string Incident_Title = "Incident_Title";
+			public const string IncidentProtocol_Description = "IncidentProtocol_Description";
+			public const string IncidentProtocol_Title = "IncidentProtocol_Title";
+			public const string IncidentProtocols_Title = "IncidentProtocols_Title";
+			public const string Incidents_Title = "Incidents_Title";
 			public const string Instance_Caches = "Instance_Caches";
 			public const string Instance_Credentials = "Instance_Credentials";
 			public const string Instance_Credentials_Help = "Instance_Credentials_Help";
@@ -1997,6 +2051,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_Title = "Solution_Title";
 			public const string Solution_Version = "Solution_Version";
 			public const string Solutions_Title = "Solutions_Title";
+			public const string SystemTest_Description = "SystemTest_Description";
+			public const string SystemTest_Title = "SystemTest_Title";
+			public const string SystemTestStep_Description = "SystemTestStep_Description";
+			public const string SystemTestStep_Details = "SystemTestStep_Details";
+			public const string SystemTestStep_Summary = "SystemTestStep_Summary";
+			public const string SystemTestStep_Title = "SystemTestStep_Title";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";
 			public const string TaggedContainer_Help = "TaggedContainer_Help";
