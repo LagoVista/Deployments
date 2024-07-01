@@ -25,15 +25,15 @@ namespace LagoVista.IoT.Deployment.Models
 
         [FormField(LabelResource: LagoVistaCommonStrings.Names.Common_Key, HelpResource: LagoVistaCommonStrings.Names.Common_Key_Help, FieldType: FieldTypes.Key,
             RegExValidationMessageResource: LagoVistaCommonStrings.Names.Common_Key_Validation, ResourceType: typeof(LagoVistaCommonStrings), IsRequired: true)]
-
         public string Key { get; set; }
 
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Summary, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(LagoVistaCommonStrings), IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Summary, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Summary { get; set; }
+
         
-        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Details, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(LagoVistaCommonStrings), IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Details, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Details { get; set; }
 
 
