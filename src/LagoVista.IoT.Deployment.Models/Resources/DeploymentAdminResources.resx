@@ -1647,6 +1647,9 @@
   <data name="SystemTests_Title" xml:space="preserve">
     <value>System Tests</value>
   </data>
+  <data name="SystemTest_Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
   <data name="SystemTest_Steps" xml:space="preserve">
     <value>Steps</value>
   </data>

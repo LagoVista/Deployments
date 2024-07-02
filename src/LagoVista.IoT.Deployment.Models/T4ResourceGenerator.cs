@@ -1,4 +1,4 @@
-﻿/*7/1/2024 6:22:56 PM*/
+﻿/*7/2/2024 11:46:14 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1458,6 +1458,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTest_Description
 
 		public static string SystemTest_Description { get { return GetResourceString("SystemTest_Description"); } }
+//Resources:DeploymentAdminResources:SystemTest_Schedule
+
+		public static string SystemTest_Schedule { get { return GetResourceString("SystemTest_Schedule"); } }
 //Resources:DeploymentAdminResources:SystemTest_Steps
 
 		public static string SystemTest_Steps { get { return GetResourceString("SystemTest_Steps"); } }
@@ -2058,6 +2061,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_Version = "Solution_Version";
 			public const string Solutions_Title = "Solutions_Title";
 			public const string SystemTest_Description = "SystemTest_Description";
+			public const string SystemTest_Schedule = "SystemTest_Schedule";
 			public const string SystemTest_Steps = "SystemTest_Steps";
 			public const string SystemTest_Title = "SystemTest_Title";
 			public const string SystemTests_Title = "SystemTests_Title";

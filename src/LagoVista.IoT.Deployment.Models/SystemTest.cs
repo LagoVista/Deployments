@@ -27,6 +27,9 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Steps, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<SystemTestStep> Steps { get; set; } = new List<SystemTestStep>();
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Schedule, FieldType: FieldTypes.Schedule, ResourceType: typeof(DeploymentAdminResources))]
+        public Schedule Schedule { get; set; }
+
         public SystemTestSummary CreateSummary()
         {
             return new SystemTestSummary()
@@ -49,6 +52,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Icon),
                 nameof(Category),
                 nameof(Description),
+                nameof(Schedule),
                 nameof(Steps),
             };
         }
