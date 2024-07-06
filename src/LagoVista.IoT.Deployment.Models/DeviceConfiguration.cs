@@ -81,6 +81,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public List<SensorDefinition> SensorDefinitions { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfig_Commands, HelpResource: DeploymentAdminResources.Names.DeviceConfig_Commands_Help, FactoryUrl: "/api/deviceconfig/command/factory", FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeploymentAdminResources))]
+        public List<DeviceCommand> Commands { get; set; } = new List<DeviceCommand>();
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
@@ -204,9 +208,10 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.DeviceIdLabel),
                     nameof(DeviceConfiguration.DeviceNameLabel),
                     nameof(DeviceConfiguration.DeviceTypeLabel),
-                    nameof(DeviceConfiguration.WatchdogEnabledDefault),
-                    nameof(DeviceConfiguration.WatchdogSeconds),
                     nameof(DeviceConfiguration.Properties),
+                    nameof(DeviceConfiguration.Commands),
+                    nameof(DeviceConfiguration.WatchdogEnabledDefault),
+                    nameof(DeviceConfiguration.WatchdogSeconds),                    
                     nameof(DeviceConfiguration.MessageWatchDogs),
                 };
         }

@@ -130,6 +130,27 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        ///  Device Config Command - Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/command/factory")]
+        public DetailResponse<DeviceCommand> CreateDeviceConfigCommand()
+        {
+            return DetailResponse<DeviceCommand>.Create();
+        }
+
+
+        /// <summary>
+        ///  Device Config Command Parameter- Create New
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/command/parameter/factory")]
+        public DetailResponse<Parameter> CreateCommandParameter()
+        {
+            return DetailResponse<Parameter>.Create();
+        }
+
+        /// <summary>
         ///  Device Config - Create New
         /// </summary>
         /// <returns></returns>

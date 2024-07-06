@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
-using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Rpc.Client;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.DeviceAdmin.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
@@ -98,6 +99,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return await propertyManager.SendPropertyAsync(deviceUniqueId, propertyIndex);
         }
 
+
         public async Task<InvokeResult<string>> ApplyFirmwareAsync(string deviceRepoId, string deviceUniqueId, string firmwareId, string firmwareRevisionId, bool triggerRemotely, EntityHeader org, EntityHeader user)
         {
             if (String.IsNullOrEmpty(deviceRepoId)) throw new ArgumentNullException(deviceRepoId);
@@ -140,6 +142,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
                 return InvokeResult<string>.Create(firmwareRequest.Result.DownloadId);
+        }
+
+        public async Task<InvokeResult> SendCommandAsync(string deviceRepoId, string deviceUniqueId, string commandId, List<KeyValuePair<string, string>> parameters, EntityHeader org, EntityHeader user)
+        {
+            var repo = await _repoManager.GetDeviceRepositoryAsync(deviceRepoId, org, user);
+            if (EntityHeader.IsNullOrEmpty(repo.Instance))
+            {
+                return InvokeResult.FromError("Instance not deployed, can not set property.");
+            }
+
+            var propertyManager = _proxyFactory.Create<IRemotePropertyNamanager>(new ProxySettings()
+            {
+                InstanceId = repo.Instance.Id,
+                OrganizationId = repo.OwnerOrganization.Id
+            });
+
+            return await propertyManager.SendCommandAsync(deviceUniqueId, commandId, parameters);
         }
     }
 }

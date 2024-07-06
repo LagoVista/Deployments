@@ -1,4 +1,4 @@
-﻿/*7/2/2024 11:46:14 AM*/
+﻿/*7/4/2024 12:14:11 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -354,6 +354,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeploymentType_Shared
 
 		public static string DeploymentType_Shared { get { return GetResourceString("DeploymentType_Shared"); } }
+//Resources:DeploymentAdminResources:DeviceCommand_Description
+
+		public static string DeviceCommand_Description { get { return GetResourceString("DeviceCommand_Description"); } }
+//Resources:DeploymentAdminResources:DeviceCommand_TItle
+
+		public static string DeviceCommand_TItle { get { return GetResourceString("DeviceCommand_TItle"); } }
+//Resources:DeploymentAdminResources:DeviceConfig_Commands
+
+		public static string DeviceConfig_Commands { get { return GetResourceString("DeviceConfig_Commands"); } }
+//Resources:DeploymentAdminResources:DeviceConfig_Commands_Help
+
+		public static string DeviceConfig_Commands_Help { get { return GetResourceString("DeviceConfig_Commands_Help"); } }
 //Resources:DeploymentAdminResources:DeviceConfiguration_CustomStatusType
 
 		public static string DeviceConfiguration_CustomStatusType { get { return GetResourceString("DeviceConfiguration_CustomStatusType"); } }
@@ -1693,6 +1705,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeploymentType_Managed = "DeploymentType_Managed";
 			public const string DeploymentType_OnPremise = "DeploymentType_OnPremise";
 			public const string DeploymentType_Shared = "DeploymentType_Shared";
+			public const string DeviceCommand_Description = "DeviceCommand_Description";
+			public const string DeviceCommand_TItle = "DeviceCommand_TItle";
+			public const string DeviceConfig_Commands = "DeviceConfig_Commands";
+			public const string DeviceConfig_Commands_Help = "DeviceConfig_Commands_Help";
 			public const string DeviceConfiguration_CustomStatusType = "DeviceConfiguration_CustomStatusType";
 			public const string DeviceConfiguration_CustomStatusType_Help = "DeviceConfiguration_CustomStatusType_Help";
 			public const string DeviceConfiguration_CustomStatusType_Watermark = "DeviceConfiguration_CustomStatusType_Watermark";

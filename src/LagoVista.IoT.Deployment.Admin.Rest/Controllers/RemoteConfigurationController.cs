@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Reflection.Metadata;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -45,6 +47,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult> QueryRemoteConfigAsync(string repoid, string id)
         {
             return _remoteConfigMgr.QueryRemoteConfigurationAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpPost("/api/device/remoteconfig/{repoid}/{id}/command/{cmdid}")]
+        public Task<InvokeResult> SendRemoteCommand(string repoid, string id, string cmdid, [FromBody] List<KeyValuePair<string, string>> parameters)
+        {
+            return _remoteConfigMgr.SendCommandAsync(repoid, id, cmdid, parameters, OrgEntityHeader, UserEntityHeader);
         }
 
         [HttpGet("/api/device/remoteconfig/{repoid}/{id}/restart")]
