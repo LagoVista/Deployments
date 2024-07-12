@@ -5,6 +5,7 @@ using LagoVista.Core.Resources;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using LagoVista.MediaServices.Models;
 using System;
 using System.Collections.Generic;
 
@@ -39,6 +40,12 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Details, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Details { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_WebLink, FieldType: FieldTypes.WebLink, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public string WebLink { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
+        public List<MediaResourceSummary> Resources { get; set; } = new List<MediaResourceSummary>();
 
         public string Id { get; set; }
 
@@ -50,7 +57,9 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Key),
                 nameof(Icon),
                 nameof(Summary),
-                nameof(Details)
+                nameof(WebLink),
+                nameof(Details),
+                nameof(Resources)
             };
         }
     }

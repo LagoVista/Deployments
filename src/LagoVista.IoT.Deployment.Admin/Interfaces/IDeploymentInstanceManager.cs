@@ -97,5 +97,9 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> RemoveInstanceServiceAsync(string instanceId, string instanceServiceId, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
 
         Task<InvokeResult> SetSilenceAlarmAsync(string instanceId, string id, bool silenced, EntityHeader org, EntityHeader user);
+
+        Task<InvokeResult<bool>> DeploymentInDebugMode(string instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<bool>> DeploymentInTestMode(string instanceId, EntityHeader org, EntityHeader user);
+
     }
 }

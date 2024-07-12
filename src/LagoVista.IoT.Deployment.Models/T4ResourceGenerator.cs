@@ -1,4 +1,4 @@
-﻿/*7/4/2024 12:14:11 PM*/
+﻿/*7/11/2024 10:35:52 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1488,12 +1488,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTestStep_Details
 
 		public static string SystemTestStep_Details { get { return GetResourceString("SystemTestStep_Details"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Resources
+
+		public static string SystemTestStep_Resources { get { return GetResourceString("SystemTestStep_Resources"); } }
 //Resources:DeploymentAdminResources:SystemTestStep_Summary
 
 		public static string SystemTestStep_Summary { get { return GetResourceString("SystemTestStep_Summary"); } }
 //Resources:DeploymentAdminResources:SystemTestStep_Title
 
 		public static string SystemTestStep_Title { get { return GetResourceString("SystemTestStep_Title"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_WebLink
+
+		public static string SystemTestStep_WebLink { get { return GetResourceString("SystemTestStep_WebLink"); } }
 //Resources:DeploymentAdminResources:TaggedContainer_CreationDate
 
 		public static string TaggedContainer_CreationDate { get { return GetResourceString("TaggedContainer_CreationDate"); } }
@@ -2083,8 +2089,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string SystemTests_Title = "SystemTests_Title";
 			public const string SystemTestStep_Description = "SystemTestStep_Description";
 			public const string SystemTestStep_Details = "SystemTestStep_Details";
+			public const string SystemTestStep_Resources = "SystemTestStep_Resources";
 			public const string SystemTestStep_Summary = "SystemTestStep_Summary";
 			public const string SystemTestStep_Title = "SystemTestStep_Title";
+			public const string SystemTestStep_WebLink = "SystemTestStep_WebLink";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";
 			public const string TaggedContainer_Help = "TaggedContainer_Help";

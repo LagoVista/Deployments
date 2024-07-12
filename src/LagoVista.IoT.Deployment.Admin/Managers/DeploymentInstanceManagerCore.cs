@@ -380,6 +380,18 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return result;
         }
 
+        public async Task<InvokeResult<bool>> DeploymentInTestMode(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            return InvokeResult<bool>.Create(instance.TestMode);
+        }
+
+        public async Task<InvokeResult<bool>> DeploymentInDebugMode(string instanceId, EntityHeader org, EntityHeader user)
+        {
+            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            return InvokeResult<bool>.Create(instance.TestMode);
+        }
+
         public async Task<InvokeResult<DeploymentInstance>> GetInstanceAsync(string instanceId, EntityHeader org, EntityHeader user)
         {
             var sw = Stopwatch.StartNew();

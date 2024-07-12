@@ -215,6 +215,44 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Deployment Instance - Is In Test Mode
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/testmode")]
+        public Task<InvokeResult<bool>> IsInTestMode(String id)
+        {
+            return _instanceManager.DeploymentInTestMode(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/debugmode")]
+        public Task<InvokeResult<bool>> IsInDebugMode(String id)
+        {
+            return _instanceManager.DeploymentInDebugMode(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// Deployment Instance - Get
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="testmode"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/{id}/testmode/{testmode}")]
+        public async Task<InvokeResult> GetInstanceAsync(String id, bool testmode)
+        {
+            var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
+            deviceInstance.Result.TestMode = testmode;
+            await  _instanceManager.UpdateInstanceAsync(deviceInstance.Result, OrgEntityHeader, UserEntityHeader);
+            return InvokeResult.Success;
+        }
+
+
+        /// <summary>
         /// Deployment Instance - Get default listener with any required passwords
         /// </summary>
         /// <param name="instanceid"></param>

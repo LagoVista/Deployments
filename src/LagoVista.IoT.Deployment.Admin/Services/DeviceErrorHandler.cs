@@ -142,7 +142,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
                 {
                     var distroList = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
-                    notification.AdditionalUsers = distroList.AppUsers;
+                    notification.AdditionalUsers = distroList.AppUsers.Select(usr=>EntityHeader.Create(usr.Id, usr.Key, usr.Text)).ToList();
                     notification.AdditionalExternalContacts = distroList.ExternalContacts;
                 }
 

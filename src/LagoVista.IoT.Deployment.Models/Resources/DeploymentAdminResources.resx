@@ -1665,4 +1665,10 @@
   <data name="SystemTest_Steps" xml:space="preserve">
     <value>Steps</value>
   </data>
+  <data name="SystemTestStep_Resources" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="SystemTestStep_WebLink" xml:space="preserve">
+    <value>Web Link</value>
+  </data>
 </root>
