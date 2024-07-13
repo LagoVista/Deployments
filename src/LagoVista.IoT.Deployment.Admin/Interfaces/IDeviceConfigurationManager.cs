@@ -25,5 +25,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<EntityHeader<StateSet>> GetCustomDeviceStatesAsync(string deviceConfigId, EntityHeader org, EntityHeader user);
 
         Task<Route> CreateRouteWithDefaultsAsync(EntityHeader org);
+
+        Task<string> GetCustomPageForDeviceConfigAsync(string id, EntityHeader org, EntityHeader user);
     }
 }

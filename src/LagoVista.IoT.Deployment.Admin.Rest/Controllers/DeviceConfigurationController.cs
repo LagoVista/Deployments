@@ -87,6 +87,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Device Config - Get custom page for device configuration
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deviceconfig/{id}/custompage")]
+        public Task<string> GetCustomPageForDeviceConfigAsync(String id)
+        {
+            return _deviceConfigManager.GetCustomPageForDeviceConfigAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// Device Config - Key In Use
         /// </summary>
         /// <returns></returns>

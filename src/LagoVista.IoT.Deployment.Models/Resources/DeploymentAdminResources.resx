@@ -1671,4 +1671,16 @@
   <data name="SystemTestStep_WebLink" xml:space="preserve">
     <value>Web Link</value>
   </data>
+  <data name="DeviceConfiugration_CustomPage" xml:space="preserve">
+    <value>Custom Page</value>
+  </data>
+  <data name="DeviceConfiugration_CustomPage_Help" xml:space="preserve">
+    <value>Provide a link that can be used to pull up a custom page for this device</value>
+  </data>
+  <data name="DeviceConfiugration_CustomPage_QuickLink" xml:space="preserve">
+    <value>Cusotm Page (Quick Link)</value>
+  </data>
+  <data name="DeviceConfiugration_CustomPage_QuickLink_Help" xml:space="preserve">
+    <value>Provide a link that will be used to create a custom page as a quick link to view information about this device.  This page is typically a mobile page that is protected by a PIN</value>
+  </data>
 </root>

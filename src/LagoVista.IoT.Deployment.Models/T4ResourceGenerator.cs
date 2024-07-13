@@ -1,4 +1,4 @@
-﻿/*7/11/2024 10:35:52 AM*/
+﻿/*7/13/2024 8:11:46 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -462,6 +462,18 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomPage
+
+		public static string DeviceConfiugration_CustomPage { get { return GetResourceString("DeviceConfiugration_CustomPage"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomPage_Help
+
+		public static string DeviceConfiugration_CustomPage_Help { get { return GetResourceString("DeviceConfiugration_CustomPage_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomPage_QuickLink
+
+		public static string DeviceConfiugration_CustomPage_QuickLink { get { return GetResourceString("DeviceConfiugration_CustomPage_QuickLink"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomPage_QuickLink_Help
+
+		public static string DeviceConfiugration_CustomPage_QuickLink_Help { get { return GetResourceString("DeviceConfiugration_CustomPage_QuickLink_Help"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_AutoExpiresTimespan
 
 		public static string DeviceErrorCode_AutoExpiresTimespan { get { return GetResourceString("DeviceErrorCode_AutoExpiresTimespan"); } }
@@ -1747,6 +1759,10 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
 			public const string DeviceConfigurations_Title = "DeviceConfigurations_Title";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
+			public const string DeviceConfiugration_CustomPage = "DeviceConfiugration_CustomPage";
+			public const string DeviceConfiugration_CustomPage_Help = "DeviceConfiugration_CustomPage_Help";
+			public const string DeviceConfiugration_CustomPage_QuickLink = "DeviceConfiugration_CustomPage_QuickLink";
+			public const string DeviceConfiugration_CustomPage_QuickLink_Help = "DeviceConfiugration_CustomPage_QuickLink_Help";
 			public const string DeviceErrorCode_AutoExpiresTimespan = "DeviceErrorCode_AutoExpiresTimespan";
 			public const string DeviceErrorCode_AutoExpiresTimespan_Help = "DeviceErrorCode_AutoExpiresTimespan_Help";
 			public const string DeviceErrorCode_AutoExpiresTimespanQuantity = "DeviceErrorCode_AutoExpiresTimespanQuantity";

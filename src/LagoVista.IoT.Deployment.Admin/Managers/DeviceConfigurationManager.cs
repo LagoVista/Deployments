@@ -569,6 +569,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             await _routeSupportRepo.SetDefaultPipelineModulesAsync(org, route);
             return route;
         }
+
+        public Task<string> GetCustomPageForDeviceConfigAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            return _deviceConfigRepo.GetCustomPageForDeviceConfigAsync(id);
+        }
     }
 
     public class MetaDataCache

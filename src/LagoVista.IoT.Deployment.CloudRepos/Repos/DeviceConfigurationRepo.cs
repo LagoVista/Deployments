@@ -1,12 +1,10 @@
 ﻿using LagoVista.CloudStorage.DocumentDB;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
-using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 
@@ -59,6 +57,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task DeleteDeviceConfigurationAsync(string id)
         {
             return DeleteDocumentAsync(id);
+        }
+
+        public async Task<string> GetCustomPageForDeviceConfigAsync(string id)
+        {
+            var doc = await GetDocumentAsync(id);
+            return doc.CustomPage;
         }
     }
 }

@@ -85,6 +85,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public List<DeviceCommand> Commands { get; set; } = new List<DeviceCommand>();
 
 
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage, HelpResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        public string CustomPage { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_QuickLink, HelpResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_QuickLink_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        public string CustomPageQuickLink { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
@@ -208,6 +215,8 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.DeviceIdLabel),
                     nameof(DeviceConfiguration.DeviceNameLabel),
                     nameof(DeviceConfiguration.DeviceTypeLabel),
+                    nameof(DeviceConfiguration.CustomPage),
+                    nameof(DeviceConfiguration.CustomPageQuickLink),
                     nameof(DeviceConfiguration.Properties),
                     nameof(DeviceConfiguration.Commands),
                     nameof(DeviceConfiguration.WatchdogEnabledDefault),

@@ -13,5 +13,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task UpdateDeviceConfigurationAsync(DeviceConfiguration deviceConfiguration);
         Task DeleteDeviceConfigurationAsync(string id);
         Task<bool> QueryKeyInUseAsync(string key, string orgId);
+
+        Task<string> GetCustomPageForDeviceConfigAsync(string id);
     }
 }
