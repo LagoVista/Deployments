@@ -14,6 +14,7 @@ using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceAdmin.Models;
 using System.Collections.Generic;
 using LagoVista.IoT.Deployment.Models;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -92,9 +93,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deviceconfig/{id}/custompage")]
-        public Task<string> GetCustomPageForDeviceConfigAsync(String id)
+        public async Task<InvokeResult<string>> GetCustomPageForDeviceConfigAsync(String id)
         {
-            return _deviceConfigManager.GetCustomPageForDeviceConfigAsync(id, OrgEntityHeader, UserEntityHeader);
+            var customPage = await  _deviceConfigManager.GetCustomPageForDeviceConfigAsync(id, OrgEntityHeader, UserEntityHeader);
+            return InvokeResult<string>.Create(customPage);
         }
 
         /// <summary>
