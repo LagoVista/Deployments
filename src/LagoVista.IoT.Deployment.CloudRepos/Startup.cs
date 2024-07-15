@@ -1,7 +1,9 @@
 ﻿using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.CloudRepos.Repos;
+using LagoVista.IoT.Deployment.Models;
 
 namespace LagoVista.IoT.Deployment.CloudRepos
 {
@@ -34,6 +36,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<ISystemTestRepo, SystemTestRepo>();
             services.AddTransient<IIncidentRepo, IncidentRepo>();
             services.AddTransient<IIncidentProtocolRepo, IncidentProtocolRepo>();
+            services.AddTransient<ISystemTestExecutionRepo, SystemTestExecutionRepo>();
         }
     }
 }

@@ -87,5 +87,66 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return await _systemTestManager.DeleteSystemTestAsync(id, OrgEntityHeader, UserEntityHeader);
         }
+
+        /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/{id}/start")]
+        public Task<InvokeResult<SystemTestExecution>> StartSystemTest(string id)
+        {
+            return _systemTestManager.StartTestAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/{id}/abort")]
+        public Task<InvokeResult<SystemTestExecution>> AbortSystemTest(string id)
+        {
+            return _systemTestManager.AbortTestAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/execution/{id}/result")]
+        public Task<InvokeResult<SystemTestExecution>> GetSystemTestExecutionResult(string id)
+        {
+            return _systemTestManager.GetTestResultAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("/api/systemtest/execution/{id}")]
+        public Task<InvokeResult> DeleteResultAsync(string id)
+        {
+            return _systemTestManager.DeleteExecutionAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/execution/results")]
+        public Task<ListResponse<SystemTestExecutionSummary>> GetSystemTestExecutionResults()
+        {
+            return _systemTestManager.GetTestResultsAsync(GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// System Test Execution - Complete Step
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/api/systemtest/{systemTestExecutionId}/step/{stepId}/complete")]
+        public Task<InvokeResult<SystemTestExecution>> AddTestStep(string systemTestExecutionId, string stepId, [FromBody] TestStepUpdate update)
+        {
+            return _systemTestManager.CompleteStepAsync(systemTestExecutionId, stepId, update, OrgEntityHeader, UserEntityHeader);
+        }
     }
 }

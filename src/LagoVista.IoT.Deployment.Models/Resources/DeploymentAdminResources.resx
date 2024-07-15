@@ -1683,4 +1683,46 @@
   <data name="DeviceConfiugration_CustomPage_QuickLink_Help" xml:space="preserve">
     <value>Provide a link that will be used to create a custom page as a quick link to view information about this device.  This page is typically a mobile page that is protected by a PIN</value>
   </data>
+  <data name="SystemTestExecutions_Description" xml:space="preserve">
+    <value>A system test is the definition of a test to be ran to ensure the system is working properly.  System Test Execution is the execution of the test.</value>
+  </data>
+  <data name="SystemTestExecutions_Title" xml:space="preserve">
+    <value>System Test Executions</value>
+  </data>
+  <data name="SystemTestExecution_AbortedBy" xml:space="preserve">
+    <value>Aborted By</value>
+  </data>
+  <data name="SystemTestExecution_CompletedBy" xml:space="preserve">
+    <value>Completed By</value>
+  </data>
+  <data name="SystemTestExecution_EndTimeStamp" xml:space="preserve">
+    <value>End Time Stamp</value>
+  </data>
+  <data name="SystemTestExecution_StartedBy" xml:space="preserve">
+    <value>Started By</value>
+  </data>
+  <data name="SystemTestExecution_StartTimeStamp" xml:space="preserve">
+    <value>Start Time Stamp</value>
+  </data>
+  <data name="SystemTestExecution_State_Aborted" xml:space="preserve">
+    <value>Aborted</value>
+  </data>
+  <data name="SystemTestExecution_State_Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="SystemTestExecution_State_InProcess" xml:space="preserve">
+    <value>In Process</value>
+  </data>
+  <data name="SystemTestExecution_State_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="SystemTestExecution_State_Passed" xml:space="preserve">
+    <value>Passed</value>
+  </data>
+  <data name="SystemTestExecution_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SystemTestExecution_SystemTest" xml:space="preserve">
+    <value>System Test</value>
+  </data>
 </root>

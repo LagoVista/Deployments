@@ -1,4 +1,4 @@
-﻿/*7/13/2024 8:11:46 AM*/
+﻿/*7/15/2024 3:02:41 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1491,6 +1491,48 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTest_Title
 
 		public static string SystemTest_Title { get { return GetResourceString("SystemTest_Title"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_AbortedBy
+
+		public static string SystemTestExecution_AbortedBy { get { return GetResourceString("SystemTestExecution_AbortedBy"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_CompletedBy
+
+		public static string SystemTestExecution_CompletedBy { get { return GetResourceString("SystemTestExecution_CompletedBy"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_EndTimeStamp
+
+		public static string SystemTestExecution_EndTimeStamp { get { return GetResourceString("SystemTestExecution_EndTimeStamp"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_StartedBy
+
+		public static string SystemTestExecution_StartedBy { get { return GetResourceString("SystemTestExecution_StartedBy"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_StartTimeStamp
+
+		public static string SystemTestExecution_StartTimeStamp { get { return GetResourceString("SystemTestExecution_StartTimeStamp"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_State_Aborted
+
+		public static string SystemTestExecution_State_Aborted { get { return GetResourceString("SystemTestExecution_State_Aborted"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_State_Failed
+
+		public static string SystemTestExecution_State_Failed { get { return GetResourceString("SystemTestExecution_State_Failed"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_State_InProcess
+
+		public static string SystemTestExecution_State_InProcess { get { return GetResourceString("SystemTestExecution_State_InProcess"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_State_New
+
+		public static string SystemTestExecution_State_New { get { return GetResourceString("SystemTestExecution_State_New"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_State_Passed
+
+		public static string SystemTestExecution_State_Passed { get { return GetResourceString("SystemTestExecution_State_Passed"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_Status
+
+		public static string SystemTestExecution_Status { get { return GetResourceString("SystemTestExecution_Status"); } }
+//Resources:DeploymentAdminResources:SystemTestExecution_SystemTest
+
+		public static string SystemTestExecution_SystemTest { get { return GetResourceString("SystemTestExecution_SystemTest"); } }
+//Resources:DeploymentAdminResources:SystemTestExecutions_Description
+
+		public static string SystemTestExecutions_Description { get { return GetResourceString("SystemTestExecutions_Description"); } }
+//Resources:DeploymentAdminResources:SystemTestExecutions_Title
+
+		public static string SystemTestExecutions_Title { get { return GetResourceString("SystemTestExecutions_Title"); } }
 //Resources:DeploymentAdminResources:SystemTests_Title
 
 		public static string SystemTests_Title { get { return GetResourceString("SystemTests_Title"); } }
@@ -2102,6 +2144,20 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string SystemTest_Schedule = "SystemTest_Schedule";
 			public const string SystemTest_Steps = "SystemTest_Steps";
 			public const string SystemTest_Title = "SystemTest_Title";
+			public const string SystemTestExecution_AbortedBy = "SystemTestExecution_AbortedBy";
+			public const string SystemTestExecution_CompletedBy = "SystemTestExecution_CompletedBy";
+			public const string SystemTestExecution_EndTimeStamp = "SystemTestExecution_EndTimeStamp";
+			public const string SystemTestExecution_StartedBy = "SystemTestExecution_StartedBy";
+			public const string SystemTestExecution_StartTimeStamp = "SystemTestExecution_StartTimeStamp";
+			public const string SystemTestExecution_State_Aborted = "SystemTestExecution_State_Aborted";
+			public const string SystemTestExecution_State_Failed = "SystemTestExecution_State_Failed";
+			public const string SystemTestExecution_State_InProcess = "SystemTestExecution_State_InProcess";
+			public const string SystemTestExecution_State_New = "SystemTestExecution_State_New";
+			public const string SystemTestExecution_State_Passed = "SystemTestExecution_State_Passed";
+			public const string SystemTestExecution_Status = "SystemTestExecution_Status";
+			public const string SystemTestExecution_SystemTest = "SystemTestExecution_SystemTest";
+			public const string SystemTestExecutions_Description = "SystemTestExecutions_Description";
+			public const string SystemTestExecutions_Title = "SystemTestExecutions_Title";
 			public const string SystemTests_Title = "SystemTests_Title";
 			public const string SystemTestStep_Description = "SystemTestStep_Description";
 			public const string SystemTestStep_Details = "SystemTestStep_Details";
