@@ -12,6 +12,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.Core;
 using LagoVista.Core.Exceptions;
 using System.Linq;
+using RingCentral;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -93,14 +94,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 LastUpdatedBy = user,
                 Icon = test.Icon,
                 CreationDate = timeStamp,
+                Status = EntityHeader<TestExecutionStates>.Create(TestExecutionStates.New),
                 LastUpdatedDate = timeStamp,
+                Description = test.Description,
                 OwnerOrganization = org,
                 SystemTest = EntityHeader.Create(test.Id, test.Key, test.Name),
                 Name = $"{test.Name} {DateTime.Now.ToString()}" ,
                 Key = $"{test.Key}{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}"
             };
 
-            var idx = 0;
+            var idx = 1;
 
             foreach(var step in test.Steps)
             {
@@ -131,10 +134,22 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var timeStamp = DateTime.UtcNow.ToJSONString();
 
             var execution = await _systemTestExecutionRepo.GetSystemTestExecutionAsync(testExecutionId);
+            await AuthorizeAsync(user, org, typeof(SystemTestExecution), Actions.Update, testExecutionId);
+
             if (execution.Status.Value == TestExecutionStates.New)
             {
                 execution.Status = EntityHeader<TestExecutionStates>.Create(TestExecutionStates.InProcess);
             }
+
+            var stepResult = execution.StepResults.Find(stp => stp.Id == stepResultId);
+            if (stepResult == null)
+                throw new RecordNotFoundException(nameof(SystemTestStepResult), stepResultId);
+
+            stepResult.Passed = update.Passed;
+            stepResult.Notes = update.Notes ?? String.Empty;
+            stepResult.ReasonFailed = update.ReasonFailed;
+            stepResult.CompletedBy = user;
+            stepResult.TimeStamp = timeStamp;
 
             var inProcess = execution.StepResults.Any(step => !step.Passed.HasValue);
             if(!inProcess)
@@ -146,23 +161,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 execution.EndTimeStamp = timeStamp;
             }
 
-            var stepResult = execution.StepResults.Find(stp => stp.Id == stepResultId);
-            if (stepResult == null)
-                throw new RecordNotFoundException(nameof(SystemTestStepResult), stepResultId);
-
-            stepResult.Passed = update.Passed;
-            stepResult.Notes = update.Notes;
-            stepResult.ReasonFailed = update.ReasonFailed;
-            stepResult.CompletedBy = user;
-            stepResult.TimeStamp = timeStamp;
-
             execution.LastUpdatedBy = user;
             execution.LastUpdatedDate = timeStamp;
 
             await _systemTestExecutionRepo.UpdateSystemTestExecutionAsync(execution);
 
-            await AuthorizeAsync(user, org, typeof(SystemTestExecution), Actions.Update, testExecutionId);
-
+           
             return InvokeResult<SystemTestExecution>.Create(execution);
         }
 
@@ -196,6 +200,30 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             await AuthorizeAsync(user, org, typeof(SystemTestExecution), Actions.Update, testExecutionId);
 
+            return InvokeResult<SystemTestExecution>.Create(execution);
+        }
+
+        public async Task<InvokeResult<SystemTestExecution>> UndoStepAsync(string testExecutionId, string stepResultId, EntityHeader org, EntityHeader user)
+        {
+            var execution = await _systemTestExecutionRepo.GetSystemTestExecutionAsync(testExecutionId);
+            var stepResult = execution.StepResults.Find(stp => stp.Id == stepResultId);
+            if (stepResult == null)
+                throw new RecordNotFoundException(nameof(SystemTestStepResult), stepResultId);
+
+            execution.Status = EntityHeader<TestExecutionStates>.Create(TestExecutionStates.InProcess);
+            execution.CompletedBy = null;
+            execution.EndTimeStamp = null;
+
+            stepResult.Passed = null;
+            stepResult.ReasonFailed = null;
+            stepResult.Notes = null;
+            stepResult.CompletedBy = null;
+            stepResult.TimeStamp = null;
+
+            execution.LastUpdatedBy = user;
+            execution.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+
+            await _systemTestExecutionRepo.UpdateSystemTestExecutionAsync(execution);
             return InvokeResult<SystemTestExecution>.Create(execution);
         }
 

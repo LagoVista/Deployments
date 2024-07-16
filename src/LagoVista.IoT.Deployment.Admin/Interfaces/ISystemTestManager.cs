@@ -20,5 +20,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<SystemTestExecution>> GetTestResultAsync(string systemTestExecutionId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<SystemTestExecution>> AbortTestAsync(string systemTestExecutionId, EntityHeader org, EntityHeader user);
         Task<InvokeResult> DeleteExecutionAsync(string id, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<SystemTestExecution>> UndoStepAsync(string testExecutionId, string stepResultId, EntityHeader org, EntityHeader user);
     }
 }

@@ -148,5 +148,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return _systemTestManager.CompleteStepAsync(systemTestExecutionId, stepId, update, OrgEntityHeader, UserEntityHeader);
         }
+
+        /// <summary>
+        /// System Test Execution - Undo Test Step
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/{systemTestExecutionId}/step/{stepId}/undo")]
+        public Task<InvokeResult<SystemTestExecution>> UndoTestStep(string systemTestExecutionId, string stepId)
+        {
+            return _systemTestManager.UndoStepAsync(systemTestExecutionId, stepId, OrgEntityHeader, UserEntityHeader);
+        }
     }
 }
