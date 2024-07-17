@@ -71,6 +71,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return incidentProtocol;
         }
 
+        [HttpGet("/api/incident/protocol/step/factory")]
+        public DetailResponse<IncidentProtocolStep> CreateIncidentProtocolStep()
+        {
+            return DetailResponse<IncidentProtocolStep>.Create();
+        }
+
         /// <summary>
         /// Device Error Code - Get For Organization
         /// </summary>

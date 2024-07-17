@@ -82,6 +82,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Device Error Code - Get For Organization
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/incidents/open")]
+        public Task<ListResponse<IncidentSummary>> GetOpenIncidentsForOrg()
+        {
+            return _incidentManager.GetIncidentsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
+        }
+
+        /// <summary>
         /// Device Error Code - Delete Device Error Code
         /// </summary>
         /// <param name="id"></param>

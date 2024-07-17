@@ -5,6 +5,10 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models.Resources;
+using LagoVista.MediaServices.Models;
+using LagoVista.UserAdmin.Models.Orgs;
+using System.Collections.Generic;
+using System.Data.Common;
 
 namespace LagoVista.IoT.Deployment.Models
 {
@@ -20,6 +24,21 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeviceLibraryResources))]
         public string Description { get; set; }
 
+        public EntityHeader IncidentProtocol { get; set; }
+
+        public string OpenedTimeStamp { get; set; }
+
+        public List<NotificationContact> DistributionList { get; set; } = new List<NotificationContact>();
+
+        public EntityHeader ResolvedBy { get; set; }
+
+        public string ResolvedTimeStamp { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources))]
+        public List<MediaResourceSummary> Resources { get; set; } = new List<MediaResourceSummary>();
+
+
+        public List<IncidentStepResult> StepResults { get; set; } = new List<IncidentStepResult>();
 
         public SystemTestSummary CreateSummary()
         {
@@ -40,6 +59,16 @@ namespace LagoVista.IoT.Deployment.Models
         }       
     }
 
+    public class IncidentStepResult
+    {
+        public string Id { get; set; }
+        public int Index { get; set; }
+        public EntityHeader CompletedBy { get; set; }
+        public EntityHeader IncidentProtocolStep { get; set; }
+        public string TimeStamp { get; set; }
+        public string Notes { get; set; }
+    }
+
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Incidents_Title, DeploymentAdminResources.Names.Incident_Description,
         DeploymentAdminResources.Names.Incident_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-critical",
         ListUIUrl: "/iotstudio/incidents", EditUIUrl: "/iotstudio/incident/{id}", CreateUIUrl: "/iotstudio/incident/add",
@@ -47,5 +76,15 @@ namespace LagoVista.IoT.Deployment.Models
     public class IncidentSummary : SummaryData
     {
 
+    }
+
+
+
+    public class NotificationContact
+    {
+        public string AppUserId { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

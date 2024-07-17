@@ -1,4 +1,5 @@
 ﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
@@ -10,13 +11,17 @@ using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
+using Npgsql.NameTranslation;
+using RingCentral;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using static LagoVista.Core.Networking.Models.uPnPDevice;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -34,10 +39,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly IDeviceNotificationManager _deviceNotificationManager;
         private readonly IDeviceErrorCodesManager _errorCodeManager;
         private readonly IDeviceExceptionRepo _exceptionRepo;
+        private readonly IIncidentManager _incidentManager;
+        private readonly IIncidentProtocolManager _incidentProtocolManager;
+        private readonly IDistributionListRepo _distroListRepo;
 
 
         public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager, IDeviceExceptionRepo exceptionRepo,
-                                  IDeviceErrorCodesManager errorCodeManager, IDistributionManager distroManager, IUserManager userManager, IEmailSender emailSender, ISmsSender smsSender, IDeviceNotificationManager deviceNotificationManager)
+                                 IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, IEmailSender emailSender, 
+                                 ISmsSender smsSender, IDeviceNotificationManager deviceNotificationManager)
         {
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
@@ -51,6 +60,57 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _deviceNotificationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             _errorCodeManager = errorCodeManager ?? throw new ArgumentNullException(nameof(errorCodeManager));
             _exceptionRepo = exceptionRepo ?? throw new ArgumentNullException(nameof(exceptionRepo));
+            _incidentManager = incidentManager ?? throw new ArgumentNullException(nameof(incidentManager));
+            _incidentProtocolManager = incidentProtocolManager ?? throw new ArgumentNullException(nameof(incidentProtocolManager));
+            _distroListRepo = distroListRepo ?? throw new ArgumentNullException(nameof(distroListRepo));
+        }
+
+
+        private async Task<List<NotificationContact>> GetAllContacts(EntityHeader deviceErrorCodeDL, EntityHeader deviceRepoDL, EntityHeader deviceDL)
+        {
+            var contacts = new List<NotificationContact>();
+
+            if (!EntityHeader.IsNullOrEmpty(deviceErrorCodeDL))
+            {
+                var distroList = await _distroListRepo.GetDistroListAsync(deviceErrorCodeDL.Id);
+                contacts.AddRange(distroList.AppUsers.Select(ap => new NotificationContact { Name = ap.Text, AppUserId = ap.Id }));
+                contacts.AddRange(distroList.ExternalContacts.Select(ap => new NotificationContact { Name =  $"{ap.FirstName} {ap.LastName}", Email = ap.SendEmail ? ap.Email.ToLower() : null, Phone = ap.SendSMS ? ap.Phone : null }));
+            }
+
+            if (!EntityHeader.IsNullOrEmpty(deviceRepoDL))
+            {
+                var distroList = await _distroListRepo.GetDistroListAsync(deviceRepoDL.Id);
+                contacts.AddRange(distroList.AppUsers.Select(ap => new NotificationContact { Name = ap.Text, AppUserId = ap.Id }));
+                contacts.AddRange(distroList.ExternalContacts.Select(ap => new NotificationContact { Name = $"{ap.FirstName} {ap.LastName}", Email = ap.SendEmail ? ap.Email.ToLower() : null, Phone = ap.SendSMS ? ap.Phone : null }));
+            }
+
+            if (!EntityHeader.IsNullOrEmpty(deviceRepoDL))
+            {
+                var distroList = await _distroListRepo.GetDistroListAsync(deviceDL.Id);
+                contacts.AddRange(distroList.AppUsers.Select(ap => new NotificationContact { Name = ap.Text, AppUserId = ap.Id }));
+                contacts.AddRange(distroList.ExternalContacts.Select(ap => new NotificationContact { Name = $"{ap.FirstName} {ap.LastName}", Email = ap.SendEmail ? ap.Email.ToLower() : null, Phone = ap.SendSMS ? ap.Phone : null }));
+            }
+
+            var uniqueAppUsers = contacts.Where(p=>!String.IsNullOrEmpty(p.AppUserId)).GroupBy(p => p.AppUserId).Select(p => p.First()).ToList();
+            foreach(var usr in uniqueAppUsers)
+            {
+                var appUser = await _userManager.FindByIdAsync(usr.AppUserId);
+                if(appUser != null)
+                {
+                    foreach(var cnt in contacts)
+                    {
+                        if(usr.AppUserId == cnt.AppUserId)
+                        {
+                            cnt.Email = appUser.Email.ToLower();
+                            cnt.Phone = appUser.PhoneNumber;
+                        }
+                    }
+                }
+            }
+
+            return contacts
+                .GroupBy(p => new { p.Email, p.Phone })
+                .Select(g => g.First()).ToList();
         }
 
         private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, EntityHeader org, EntityHeader user)
@@ -191,6 +251,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             return InvokeResult.Success;
         }
 
+        private async Task<InvokeResult> CreateIncidentAsync(DeviceException exception, DeviceErrorCode errorCode, List<NotificationContact> contacts)
+        {
+            await Task.Delay(1);
+            return InvokeResult.Success;
+        }
+
         public async Task<InvokeResult> HandleDeviceExceptionAsync(DeviceException exception, EntityHeader org, EntityHeader user)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
@@ -236,6 +302,20 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
             }
 
+            if(!EntityHeader.IsNullOrEmpty(deviceErrorCode.IncidentProtocol))
+            {
+                var protocol = await _incidentProtocolManager.GetIncidentProtocolAsync(deviceErrorCode.IncidentProtocol.Id, org, user);
+                if (protocol != null)
+                {
+                    var incident = new Incident()
+                    {
+                        OpenedTimeStamp = timeStamp,
+                    };
+                }
+            }
+
+            var contacts = await GetAllContacts(deviceErrorCode.DistroList, repo.DistroList, device.Result.DistributionList);
+            
             _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Device Error Code: {deviceErrorCode.Name}");
 
             var deviceError = device.Result.Errors.Where(err => err.DeviceErrorCode == exception.ErrorCode).FirstOrDefault();

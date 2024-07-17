@@ -1,4 +1,4 @@
-﻿/*7/15/2024 3:02:41 PM*/
+﻿/*7/16/2024 11:13:19 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -102,6 +102,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Common_Description
 
 		public static string Common_Description { get { return GetResourceString("Common_Description"); } }
+//Resources:DeploymentAdminResources:Common_Details
+
+		public static string Common_Details { get { return GetResourceString("Common_Details"); } }
 //Resources:DeploymentAdminResources:Common_Icon
 
 		public static string Common_Icon { get { return GetResourceString("Common_Icon"); } }
@@ -129,6 +132,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Common_Notes
 
 		public static string Common_Notes { get { return GetResourceString("Common_Notes"); } }
+//Resources:DeploymentAdminResources:Common_Resources
+
+		public static string Common_Resources { get { return GetResourceString("Common_Resources"); } }
+//Resources:DeploymentAdminResources:Common_Summary
+
+		public static string Common_Summary { get { return GetResourceString("Common_Summary"); } }
 //Resources:DeploymentAdminResources:ContainerRepositories_Title
 
 		public static string ContainerRepositories_Title { get { return GetResourceString("ContainerRepositories_Title"); } }
@@ -984,12 +993,24 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:IncidentProtocol_Description
 
 		public static string IncidentProtocol_Description { get { return GetResourceString("IncidentProtocol_Description"); } }
+//Resources:DeploymentAdminResources:IncidentProtocol_Steps
+
+		public static string IncidentProtocol_Steps { get { return GetResourceString("IncidentProtocol_Steps"); } }
 //Resources:DeploymentAdminResources:IncidentProtocol_Title
 
 		public static string IncidentProtocol_Title { get { return GetResourceString("IncidentProtocol_Title"); } }
 //Resources:DeploymentAdminResources:IncidentProtocols_Title
 
 		public static string IncidentProtocols_Title { get { return GetResourceString("IncidentProtocols_Title"); } }
+//Resources:DeploymentAdminResources:IncidentProtocolStep_AssignedTo
+
+		public static string IncidentProtocolStep_AssignedTo { get { return GetResourceString("IncidentProtocolStep_AssignedTo"); } }
+//Resources:DeploymentAdminResources:IncidentProtocolStep_Description
+
+		public static string IncidentProtocolStep_Description { get { return GetResourceString("IncidentProtocolStep_Description"); } }
+//Resources:DeploymentAdminResources:IncidentProtocolStep_Title
+
+		public static string IncidentProtocolStep_Title { get { return GetResourceString("IncidentProtocolStep_Title"); } }
 //Resources:DeploymentAdminResources:Incidents_Title
 
 		public static string Incidents_Title { get { return GetResourceString("Incidents_Title"); } }
@@ -1681,6 +1702,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Common_Category = "Common_Category";
 			public const string Common_Category_Select = "Common_Category_Select";
 			public const string Common_Description = "Common_Description";
+			public const string Common_Details = "Common_Details";
 			public const string Common_Icon = "Common_Icon";
 			public const string Common_Id = "Common_Id";
 			public const string Common_IsPublic = "Common_IsPublic";
@@ -1690,6 +1712,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Common_Key_Validation = "Common_Key_Validation";
 			public const string Common_Name = "Common_Name";
 			public const string Common_Notes = "Common_Notes";
+			public const string Common_Resources = "Common_Resources";
+			public const string Common_Summary = "Common_Summary";
 			public const string ContainerRepositories_Title = "ContainerRepositories_Title";
 			public const string ContainerRepository_Description = "ContainerRepository_Description";
 			public const string ContainerRepository_Help = "ContainerRepository_Help";
@@ -1975,8 +1999,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Incident_Description = "Incident_Description";
 			public const string Incident_Title = "Incident_Title";
 			public const string IncidentProtocol_Description = "IncidentProtocol_Description";
+			public const string IncidentProtocol_Steps = "IncidentProtocol_Steps";
 			public const string IncidentProtocol_Title = "IncidentProtocol_Title";
 			public const string IncidentProtocols_Title = "IncidentProtocols_Title";
+			public const string IncidentProtocolStep_AssignedTo = "IncidentProtocolStep_AssignedTo";
+			public const string IncidentProtocolStep_Description = "IncidentProtocolStep_Description";
+			public const string IncidentProtocolStep_Title = "IncidentProtocolStep_Title";
 			public const string Incidents_Title = "Incidents_Title";
 			public const string Instance_Caches = "Instance_Caches";
 			public const string Instance_Credentials = "Instance_Credentials";
