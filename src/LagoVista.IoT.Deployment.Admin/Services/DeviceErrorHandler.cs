@@ -113,56 +113,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 .Select(g => g.First()).ToList();
         }
 
-        private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, EntityHeader org, EntityHeader user)
+        private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, List<NotificationContact> contacts)
         {
             var subject = String.IsNullOrEmpty(deviceErrorCode.EmailSubject) ? deviceErrorCode.Name : deviceErrorCode.EmailSubject.Replace("[DEVICEID]", device.DeviceId).Replace("[DEVICENAME]", device.Name);
 
-            var appUsers = new List<EntityHeader>();
-            var externalContacts = new List<ExternalContact>();
 
-            if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
+            foreach (var contact in contacts)
             {
-                var distroList = await _distroManager.GetListAsync(deviceErrorCode.DistroList.Id, org, user);
-                appUsers.AddRange(distroList.AppUsers);
-                externalContacts.AddRange(distroList.ExternalContacts);
-            }
-
-            if(!EntityHeader.IsNullOrEmpty(device.DistributionList))
-            {
-                var distroList = await _distroManager.GetListAsync(device.DistributionList.Id, org, user);
-                appUsers.AddRange(distroList.AppUsers);
-                externalContacts.AddRange(distroList.ExternalContacts);
-            }
-
-            foreach (var notificationUser in appUsers)
-            {
-                var appUser = await _userManager.FindByIdAsync(notificationUser.Id);
-                if (deviceErrorCode.SendEmail)
-                {
-                    var body = $"The error [{deviceErrorCode.Name}] was detected on the device {device.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
-                    if (exception.AdditionalDetails.Any())
-                    {
-                        body += "<br>";
-                        body += "<b>Additional Details:<br /><b>";
-                        body += "<ul>";
-                        foreach (var detail in exception.AdditionalDetails)
-                            body += $"<li>{detail}</li>";
-
-                        body += "</ul>";
-                    }
-                    await _emailSender.SendAsync(appUser.Email, subject, body);
-                }
-
-                if (deviceErrorCode.SendSMS && String.IsNullOrEmpty(appUser.PhoneNumber))
-                {
-                    var body = $"Device {device.Name} generated error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
-                    await _smsSender.SendAsync(appUser.PhoneNumber, body);
-                }
-            }
-
-            foreach (var notificationUser in externalContacts)
-            {
-                if (deviceErrorCode.SendEmail && notificationUser.SendSMS)
+                if (deviceErrorCode.SendEmail && !String.IsNullOrEmpty(contact.Email))
                 {
                     var body = $"The error  [{deviceErrorCode.Key}] was detected on the device {device.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
                     if (exception.AdditionalDetails.Any())
@@ -175,13 +133,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                         body += "</ul>";
                     }
-                    await _emailSender.SendAsync(notificationUser.Email, subject, body);
+                    await _emailSender.SendAsync(contact.Email, subject, body);
                 }
 
-                if (deviceErrorCode.SendSMS && notificationUser.SendSMS)
+                if (deviceErrorCode.SendSMS && !String.IsNullOrEmpty(contact.Phone))
                 {
                     var body = $"Device {device.Name} generated error code [${deviceErrorCode.Key}] {deviceErrorCode.Description} {exception.Details}";
-                    await _smsSender.SendAsync(notificationUser.Phone, body);
+                    await _smsSender.SendAsync(contact.Phone, body);
                 }
             }
         }
@@ -223,7 +181,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DistroList))
             {
-                await SendEmailAndSMSNotification(deviceErrorCode, device, exception, org, user);
+          //      await SendEmailAndSMSNotification(deviceErrorCode, device, exception, org, user);
             }
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DeviceNotification))
