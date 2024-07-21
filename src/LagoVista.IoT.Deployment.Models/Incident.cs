@@ -7,6 +7,7 @@ using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.DeviceAdmin.Models.Resources;
 using LagoVista.MediaServices.Models;
 using LagoVista.UserAdmin.Models.Orgs;
+using LagoVista.UserAdmin.Models.Users;
 using System.Collections.Generic;
 using System.Data.Common;
 
@@ -76,15 +77,5 @@ namespace LagoVista.IoT.Deployment.Models
     public class IncidentSummary : SummaryData
     {
 
-    }
-
-
-
-    public class NotificationContact
-    {
-        public string AppUserId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
     }
 }
