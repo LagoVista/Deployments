@@ -14,7 +14,7 @@ using System.Text;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceNotification_Title, DeploymentAdminResources.Names.DeviceNotifications_Description,
-            DeploymentAdminResources.Names.DeviceNotifications_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1",
+            DeploymentAdminResources.Names.DeviceNotifications_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1", Cloneable: true,
             ListUIUrl: "/iotstudio/device/notifications", EditUIUrl: "/iotstudio/device/notification/{id}", CreateUIUrl: "/iotstudio/device/notification/add",
             GetListUrl: "/api/notifications", SaveUrl: "/api/notification", GetUrl: "/api/notification/{id}", DeleteUrl: "/api/notification/{id}", FactoryUrl: "/api/notification/factory")]
     public class DeviceNotification : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, ICategorized, IFormConditionalFields, ISummaryFactory
@@ -137,8 +137,8 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceNotifications_Title, DeploymentAdminResources.Names.DeviceNotifications_Description,
-        DeploymentAdminResources.Names.DeviceNotifications_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1",
-        ListUIUrl: "/iotstudio/device/notifications", EditUIUrl: "/iotstudio/device/notification/{id}", CreateUIUrl: "/iotstudio/device/notification/add",
+        DeploymentAdminResources.Names.DeviceNotifications_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1",
+        ListUIUrl: "/iotstudio/device/notifications", EditUIUrl: "/iotstudio/device/notification/{id}", CreateUIUrl: "/iotstudio/device/notification/add", Cloneable: true,
         GetListUrl: "/api/notifications", SaveUrl: "/api/notification", GetUrl: "/api/notification/{id}", DeleteUrl: "/api/notification/{id}", FactoryUrl: "/api/notification/factory")]
     public class DeviceNotificationSummary : SummaryData
     {

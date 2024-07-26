@@ -17,7 +17,7 @@ using System.Linq;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceConfiguration_Title, DeploymentAdminResources.Names.DeviceConfiguration_Help,
-        DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources),
+        DeploymentAdminResources.Names.DeviceConfiguration_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Cloneable:true,
         SaveUrl: "/api/deviceconfig", FactoryUrl: "/api/deviceconfig/factory", GetUrl: "/api/deviceconfig/{id}", GetListUrl: "/api/deviceconfigs", DeleteUrl: "/api/deviceconfig/{id}",
         ListUIUrl: "/iotstudio/device/deviceconfigurations", EditUIUrl: "/iotstudio/device/deviceconfiguration/{id}", CreateUIUrl: "/iotstudio/device/deviceconfiguration/add",
         Icon: "icon-ae-device-config")]

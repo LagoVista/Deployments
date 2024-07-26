@@ -13,8 +13,8 @@ using System.Text;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.IncidentProtocol_Title, DeploymentAdminResources.Names.IncidentProtocol_Description,
-        DeploymentAdminResources.Names.IncidentProtocol_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-critical",
-        ListUIUrl: "/iotstudio/settings/incidentprotocols", EditUIUrl: "/iotstudio/settings/incidentprotocol/{id}", CreateUIUrl: "/iotstudio/settingsincident/add",
+        DeploymentAdminResources.Names.IncidentProtocol_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-critical", Cloneable: true,
+        ListUIUrl: "/iotstudio/settings/incidentprotocols", EditUIUrl: "/iotstudio/settings/incidentprotocol/{id}", CreateUIUrl: "/iotstudio/settingsincident/add", 
         GetListUrl: "/api/incident/protocols", SaveUrl: "/api/incident/protocol", GetUrl: "/api/incident/protocol/{id}", DeleteUrl: "/api/incident/protocol/{id}", FactoryUrl: "/api/incident/protocol/factory")]
     public class IncidentProtocol : EntityBase, ISummaryFactory, IIconEntity, IDescriptionEntity, IValidateable, IFormDescriptor
     {

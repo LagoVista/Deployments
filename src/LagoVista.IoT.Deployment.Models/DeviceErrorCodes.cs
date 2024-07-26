@@ -29,7 +29,7 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCode_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
-        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
+        DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1", Cloneable: true,
         ListUIUrl: "/iotstudio/device/errorcodes", EditUIUrl: "/iotstudio/device/errorcode/{id}", CreateUIUrl: "/iotstudio/device/errorcode/add",
         GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
     public class DeviceErrorCode : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase,  IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, IFormConditionalFields, ISummaryFactory, ICategorized
@@ -223,7 +223,7 @@ namespace LagoVista.IoT.Deployment.Models
     }
 
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.DeviceErrorCodes_Title, DeploymentAdminResources.Names.DeviceErrorCode_Help,
-      DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1",
+      DeploymentAdminResources.Names.DeviceErrorCode_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-error-1", Cloneable: true,
       GetListUrl: "/api/errorcodes", SaveUrl: "/api/errorcode", GetUrl: "/api/errorcode/{id}", DeleteUrl: "/api/errorcode/{id}", FactoryUrl: "/api/errorcode/factory")]
     public class DeviceErrorCodeSummary : CategorizedSummaryData
     {
