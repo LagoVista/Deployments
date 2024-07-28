@@ -36,9 +36,14 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Summary, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Summary { get; set; }
 
-        
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Details, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
         public string Details { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Troubleshooting, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public string TroubleShooting { get; set; }
+        
 
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_WebLink, FieldType: FieldTypes.WebLink, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string WebLink { get; set; }
@@ -57,8 +62,9 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Key),
                 nameof(Icon),
                 nameof(Summary),
-                nameof(WebLink),
                 nameof(Details),
+                nameof(TroubleShooting),
+                nameof(WebLink),
                 nameof(Resources)
             };
         }

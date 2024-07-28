@@ -1,4 +1,4 @@
-﻿/*7/16/2024 11:13:19 AM*/
+﻿/*7/28/2024 7:53:06 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1503,6 +1503,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTest_Description
 
 		public static string SystemTest_Description { get { return GetResourceString("SystemTest_Description"); } }
+//Resources:DeploymentAdminResources:SystemTest_EstimatedDuration
+
+		public static string SystemTest_EstimatedDuration { get { return GetResourceString("SystemTest_EstimatedDuration"); } }
+//Resources:DeploymentAdminResources:SystemTest_EstimatedDuration_Help
+
+		public static string SystemTest_EstimatedDuration_Help { get { return GetResourceString("SystemTest_EstimatedDuration_Help"); } }
+//Resources:DeploymentAdminResources:SystemTest_OnFailedInstructions
+
+		public static string SystemTest_OnFailedInstructions { get { return GetResourceString("SystemTest_OnFailedInstructions"); } }
 //Resources:DeploymentAdminResources:SystemTest_Schedule
 
 		public static string SystemTest_Schedule { get { return GetResourceString("SystemTest_Schedule"); } }
@@ -1572,6 +1581,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:SystemTestStep_Title
 
 		public static string SystemTestStep_Title { get { return GetResourceString("SystemTestStep_Title"); } }
+//Resources:DeploymentAdminResources:SystemTestStep_Troubleshooting
+
+		public static string SystemTestStep_Troubleshooting { get { return GetResourceString("SystemTestStep_Troubleshooting"); } }
 //Resources:DeploymentAdminResources:SystemTestStep_WebLink
 
 		public static string SystemTestStep_WebLink { get { return GetResourceString("SystemTestStep_WebLink"); } }
@@ -2169,6 +2181,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Solution_Version = "Solution_Version";
 			public const string Solutions_Title = "Solutions_Title";
 			public const string SystemTest_Description = "SystemTest_Description";
+			public const string SystemTest_EstimatedDuration = "SystemTest_EstimatedDuration";
+			public const string SystemTest_EstimatedDuration_Help = "SystemTest_EstimatedDuration_Help";
+			public const string SystemTest_OnFailedInstructions = "SystemTest_OnFailedInstructions";
 			public const string SystemTest_Schedule = "SystemTest_Schedule";
 			public const string SystemTest_Steps = "SystemTest_Steps";
 			public const string SystemTest_Title = "SystemTest_Title";
@@ -2192,6 +2207,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string SystemTestStep_Resources = "SystemTestStep_Resources";
 			public const string SystemTestStep_Summary = "SystemTestStep_Summary";
 			public const string SystemTestStep_Title = "SystemTestStep_Title";
+			public const string SystemTestStep_Troubleshooting = "SystemTestStep_Troubleshooting";
 			public const string SystemTestStep_WebLink = "SystemTestStep_WebLink";
 			public const string TaggedContainer_CreationDate = "TaggedContainer_CreationDate";
 			public const string TaggedContainer_Description = "TaggedContainer_Description";

@@ -24,11 +24,21 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public EntityHeader Category { get; set; }
 
+        
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Steps, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<SystemTestStep> Steps { get; set; } = new List<SystemTestStep>();
 
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_OnFailedInstructions, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
+        public string OnFailureInstructions { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Schedule, FieldType: FieldTypes.Schedule, ResourceType: typeof(DeploymentAdminResources))]
         public Schedule Schedule { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_EstimatedDuration, FieldType: FieldTypes.Integer, HelpResource: DeploymentAdminResources.Names.SystemTest_EstimatedDuration_Help, ResourceType: typeof(DeploymentAdminResources))]
+        public int EstimatedDuration { get; set; } = 15;
 
         public SystemTestSummary CreateSummary()
         {
@@ -51,8 +61,10 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Key),
                 nameof(Icon),
                 nameof(Category),
-                nameof(Description),
                 nameof(Schedule),
+                nameof(OnFailureInstructions),
+                nameof(Description),
+                nameof(EstimatedDuration),
                 nameof(Steps),
             };
         }

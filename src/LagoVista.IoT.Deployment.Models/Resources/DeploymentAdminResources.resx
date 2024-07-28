@@ -1746,4 +1746,16 @@
   <data name="IncidentProtocol_Steps" xml:space="preserve">
     <value>Steps</value>
   </data>
+  <data name="SystemTestStep_Troubleshooting" xml:space="preserve">
+    <value>Troubleshooting</value>
+  </data>
+  <data name="SystemTest_EstimatedDuration" xml:space="preserve">
+    <value>Estimated Duration (15 minutes)</value>
+  </data>
+  <data name="SystemTest_EstimatedDuration_Help" xml:space="preserve">
+    <value>How long in minutes this test should take to perform.</value>
+  </data>
+  <data name="SystemTest_OnFailedInstructions" xml:space="preserve">
+    <value>Failure Instructions</value>
+  </data>
 </root>
