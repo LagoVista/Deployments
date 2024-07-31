@@ -43,10 +43,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public double ConfigurationVersion { get; set; }
 
 
-        [FKeyProperty(nameof(StateSet), "CustomStatusType.Id = {0}", "")]
+        [FKeyProperty(nameof(StateSet), typeof(StateSet), "CustomStatusType.Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Help, WaterMark: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<StateSet> CustomStatusType { get; set; }
-
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]

@@ -44,20 +44,20 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         public EntityHeader Category { get; set; }
 
 
-        [FKeyProperty(nameof(ListenerConfiguration), nameof(DefaultListener) + ".Id = {0}", "")]
+        [FKeyProperty(nameof(ListenerConfiguration),typeof(ListenerConfiguration), nameof(DefaultListener) + ".Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DefaultListener, HelpResource: DeploymentAdminResources.Names.Solution_DefaultListener_Help,  WaterMark: DeploymentAdminResources.Names.Solution_DefaultListener_Select, IsRequired:false, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader DefaultListener { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Version, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string Version { get; set; }
 
-        [FKeyProperty(nameof(ListenerConfiguration), nameof(Listeners) + "[*].Id = {0}", "")]
+        [FKeyProperty(nameof(ListenerConfiguration), typeof(ListenerConfiguration), nameof(Listeners) + "[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Listeners, HelpResource: DeploymentAdminResources.Names.Deployment_Listeners_Help,
             ChildListDisplayMember: nameof(EntityHeader.Text), FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/pipeline/admin/listeners", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ListenerConfiguration>> Listeners { get; set; }
 
 
-        [FKeyProperty(nameof(PlannerConfiguration), nameof(Planner) + ".Id = {0}", "")]
+        [FKeyProperty(nameof(PlannerConfiguration), typeof(PlannerConfiguration), nameof(Planner) + ".Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Deployment_Planner, WaterMark: DeploymentAdminResources.Names.Deployment_Planner_Select, EntityHeaderPickerUrl: "/api/pipeline/admin/planners", 
             HelpResource: DeploymentAdminResources.Names.Deployment_Planner_Help, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired:true)]
         public EntityHeader<PlannerConfiguration> Planner { get; set; }
@@ -68,7 +68,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Icon, FieldType:FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
 
-        [FKeyProperty(nameof(DeviceConfiguration), nameof(DeviceConfigurations) + "[*].Id = {0}", "")]
+        [FKeyProperty(nameof(DeviceConfiguration), typeof(DeviceConfiguration), nameof(DeviceConfigurations) + "[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations, HelpResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations_Help, 
             ChildListDisplayMember:nameof(EntityHeader.Text), FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DeviceConfiguration>> DeviceConfigurations { get; set; }

@@ -78,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FKeyProperty(nameof(DeploymentInstance), "DeploymentInstance.Id = {0}", "")]
+        [FKeyProperty(nameof(DeploymentInstance),typeof(DeploymentInstance), "DeploymentInstance.Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_Instance,  FieldType: FieldTypes.EntityHeaderPicker, WaterMark: DeploymentAdminResources.Names.ClientApp_SelectInstance, 
             EntityHeaderPickerUrl: "/api/deployment/instances", 
             ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
@@ -89,12 +89,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 		public EntityHeader Kiosk { get; set; }
 
 
-        [FKeyProperty(nameof(DeviceType), "DeviceTypes[*].Id = {0}", "")]
+        [FKeyProperty(nameof(DeviceType), typeof(DeviceType), "DeviceTypes[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceTypes, ChildListDisplayMember: "text", FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/devicetypes",
             ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceTypes { get; set; }
 
-        [FKeyProperty(nameof(DeviceConfiguration), "DeviceConfigurations[*].Id = {0}","")]
+        [FKeyProperty(nameof(DeviceConfiguration), typeof(DeviceConfiguration), "DeviceConfigurations[*].Id = {0}","")]
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_DeviceConfigs, ChildListDisplayMember: "text", FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs",
             ResourceType: typeof(DeploymentAdminResources))]
         public ObservableCollection<EntityHeader> DeviceConfigurations { get; set; }

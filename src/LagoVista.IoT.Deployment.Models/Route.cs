@@ -35,7 +35,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Route_IsDefault, HelpResource: DeploymentAdminResources.Names.Route_IsDefault_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IsDefault { get; set; }
 
-        [FKeyProperty(nameof(DeviceMessageDefinition), "ARRAY_CONTAINS(c.Routes, {MessageDefinition:{Id:@id}}, true)")]
+        [FKeyProperty(nameof(DeviceMessageDefinition), typeof(DeviceMessageDefinition), "ARRAY_CONTAINS(c.Routes, {MessageDefinition:{Id:@id}}, true)")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Route_Messages, HelpResource: DeploymentAdminResources.Names.Route_Messages_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/devicemessagetypes",
           IsRequired:true, WaterMark:DeploymentAdminResources.Names.Route_Message_Help,  ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<DeviceMessageDefinition> MessageDefinition { get; set; }

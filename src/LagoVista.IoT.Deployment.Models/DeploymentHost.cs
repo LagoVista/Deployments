@@ -216,7 +216,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }
 
-        [FKeyProperty(nameof(DeploymentInstance), nameof(DedicatedInstance) + ".Id = {0}")]
+        [FKeyProperty(nameof(DeploymentInstance), typeof(DeploymentInstance), nameof(DedicatedInstance) + ".Id = {0}")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_DedicatedInstance, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public EntityHeader DedicatedInstance { get; set; }
 

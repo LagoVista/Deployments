@@ -163,11 +163,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public List<InstanceService> ServiceHosts { get; set; }
 
 
-        [FKeyProperty(nameof(DataStream), "DataStreams[*].Id = {0}","")]
+        [FKeyProperty(nameof(DataStream), typeof(DataStream), "DataStreams[*].Id = {0}","")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_DataStreams,  FieldType: FieldTypes.ChildListInlinePicker, FactoryUrl: "/api/datastream/factory", EntityHeaderPickerUrl: "/api/datastreams", ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<DataStream>> DataStreams { get; set; }
 
-        [FKeyProperty(nameof(ApplicationCache), "ApplicationCaches[*].Id = {0}", "")]
+        [FKeyProperty(nameof(ApplicationCache), typeof(ApplicationCache), "ApplicationCaches[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_Caches, FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/appcaches", FactoryUrl: "/api/appcache/factory",
             ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
@@ -178,7 +178,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public List<InstanceAccount> InstanceAccounts { get; set; }
 
 
-        [FKeyProperty(nameof(Integration), "Integrations[*].Id = {0}", "")]
+        [FKeyProperty(nameof(Integration), typeof(Integration), "Integrations[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Integrations, EntityHeaderPickerUrl: "/api/integrations", FactoryUrl: "/api/integration/factory",
             FieldType: FieldTypes.ChildListInlinePicker, ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<Integration>> Integrations { get; set; }
@@ -187,7 +187,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string UpSince { get; set; }
 
-        [FKeyProperty(nameof(LagoVista.UserAdmin.Models.Orgs.Subscription), nameof(Subscription) + ".Id = {0}")]
+        [FKeyProperty(nameof(LagoVista.UserAdmin.Models.Orgs.Subscription), typeof(LagoVista.UserAdmin.Models.Orgs.Subscription), nameof(Subscription) + ".Id = {0}")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, 
            HelpResource:DeploymentAdminResources.Names.Instance_Subscription_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/subscriptions", FactoryUrl: "/api/subscription/factory",
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
@@ -210,7 +210,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_Version, HelpResource: DeploymentAdminResources.Names.DeploymentInstance_Version_Help, WaterMark: DeploymentAdminResources.Names.DeploymentInstance_Version_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public EntityHeader Version { get; set; }
 
-        [FKeyProperty(nameof(Models.ContainerRepository), nameof(ContainerRepository) + ".Id")]
+        [FKeyProperty(nameof(Models.ContainerRepository), typeof(Models.ContainerRepository), nameof(ContainerRepository) + ".Id")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ContainerRepository, WaterMark: DeploymentAdminResources.Names.Host_ContainerRepository_Select, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ContainerRepository { get; set; }
 
@@ -256,7 +256,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_PrimaryCacheType, EnumType: (typeof(CacheTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_PrimaryCacheType_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<CacheTypes> PrimaryCacheType { get; set; }
 
-        [FKeyProperty(nameof(ApplicationCache), nameof(PrimaryCache) + ".Id = {0}", "")]
+        [FKeyProperty(nameof(ApplicationCache), typeof(ApplicationCache), nameof(PrimaryCache) + ".Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_PrimaryCache, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Instance_PrimaryCache_Select, IsRequired: false, IsUserEditable: true)]
         public EntityHeader<ApplicationCache> PrimaryCache { get; set; }
 
