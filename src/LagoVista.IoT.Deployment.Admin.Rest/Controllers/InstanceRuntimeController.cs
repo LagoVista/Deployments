@@ -404,7 +404,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                         throw new InvalidDataException(errors: new string[] { "Body and Subject are required to send an email." });
                     }
 
-                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
+                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body, OrgEntityHeader, UserEntityHeader);
                     break;
                 case MessageTypes.SMS:
                     if (String.IsNullOrEmpty(message.Body))
@@ -422,7 +422,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                     }
 
                     await _smsSender.SendAsync(message.Phone, message.Body);
-                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
+                    await _emailSender.SendAsync(message.Email, message.Subject, message.Body, OrgEntityHeader, UserEntityHeader);
                     break;
             }
 
@@ -468,7 +468,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             if(!String.IsNullOrEmpty(message.Email))
             {
-                var sendResult = await _emailSender.SendAsync(message.Email, message.Subject, message.Body);
+                var sendResult = await _emailSender.SendAsync(message.Email, message.Subject, message.Body, OrgEntityHeader, UserEntityHeader);
                 if (!sendResult.Successful) return sendResult;
             }
 

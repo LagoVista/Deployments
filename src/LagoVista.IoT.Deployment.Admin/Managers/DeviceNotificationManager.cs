@@ -295,7 +295,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                         else
                         {
                             _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__AppUser] - Sending Email To {user.FirstName} {user.LastName} {user.Email} -  {shortenedLink.Result} ({actualInk})");
-                            result = await _emailSender.SendAsync(user.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>");
+                            result = await _emailSender.SendAsync(user.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>", orgEntityHeader, userEntityHeader);
                             if (result.Successful)
                                 emailsSent++;
                             else
@@ -353,7 +353,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     else
                     {
                         _logger.Trace($"[DeviceNotificationManager__RaiseNotificationAsync__ExternalContact] - Sending Email To {recpient.FirstName} {recpient.LastName} {recpient.Email} -  {shortenedLink.Result} ({actualInk})");
-                        result = await _emailSender.SendAsync(recpient.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>");
+                        result = await _emailSender.SendAsync(recpient.Email, notification.EmailSubject, emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>", orgEntityHeader, userEntityHeader);
                         if (result.Successful)
                             emailsSent++;
                         else

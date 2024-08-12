@@ -113,7 +113,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 .Select(g => g.First()).ToList();
         }
 
-        private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, List<NotificationContact> contacts)
+        private async Task SendEmailAndSMSNotification(DeviceErrorCode deviceErrorCode, Device device, DeviceException exception, List<NotificationContact> contacts, EntityHeader org, EntityHeader user)
         {
             var subject = String.IsNullOrEmpty(deviceErrorCode.EmailSubject) ? deviceErrorCode.Name : deviceErrorCode.EmailSubject.Replace("[DEVICEID]", device.DeviceId).Replace("[DEVICENAME]", device.Name);
 
@@ -133,7 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                         body += "</ul>";
                     }
-                    await _emailSender.SendAsync(contact.Email, subject, body);
+                    await _emailSender.SendAsync(contact.Email, subject, body, org, user);
                 }
 
                 if (deviceErrorCode.SendSMS && !String.IsNullOrEmpty(contact.Phone))
@@ -413,7 +413,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     if (deviceErrorCode.SendEmail)
                     {
                         var body = $"The error {deviceErrorCode.Name} was cleared on the device {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
-                        await _emailSender.SendAsync(appUser.Email, subject, body);
+                        await _emailSender.SendAsync(appUser.Email, subject, body, org, user);
                         _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to AppUser {appUser.Email}");
                     }
 
@@ -430,7 +430,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     if (externalContact.SendEmail)
                     {
                         var body = $"[{deviceErrorCode.Name}] resolved error {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
-                        await _emailSender.SendAsync(externalContact.Email, subject, body);
+                        await _emailSender.SendAsync(externalContact.Email, subject, body, org, user);
                         _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to External Contact {externalContact.Email}");
                     }
 
