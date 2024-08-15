@@ -252,7 +252,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpDelete("/api/store/vms")]
         public async Task<ListResponse<ProductOffering>> GetAvailableHostTypes()
         {
-            var vms = await _productStore.GetProductsAsync("vms");
+            // hard coded but the SL organization will always have the products for the VMS that will be doing the hosting
+            // perhaps we need a different approach here.  Most orgs won't buy VM's directly so I think this works
+            var vms = await _productStore.GetProductsAsync("softwarelogistics", "vms");
             return ListResponse<ProductOffering>.Create(vms);
         }
 
