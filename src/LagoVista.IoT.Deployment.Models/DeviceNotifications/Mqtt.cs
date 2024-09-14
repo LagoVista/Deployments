@@ -72,18 +72,25 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
 
         public string CertificateSecureId { get; set; }
 
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.MqttNotification_CertificatePassword, SecureIdFieldName: nameof(CertificatePasswordSecureId), FieldType: FieldTypes.Password, ResourceType: typeof(DeploymentAdminResources))]
+        public string CertificatePassword { get; set; }
+
+        public string CertificatePasswordSecureId { get; set; }
+
+
         public FormConditionals GetConditionalFields()
         {
             return new FormConditionals()
             {
-                ConditionalFields = new List<string>() { nameof(UserName), nameof(Password), nameof(ClientId), nameof(Certificate) },
+                ConditionalFields = new List<string>() { nameof(UserName), nameof(Password), nameof(ClientId), nameof(Certificate), nameof(CertificatePassword) },
                 Conditionals = new List<FormConditional>()
                 {
                     new FormConditional()
                     {
                         Field = nameof(SecureConnection),
                         Value = "true",
-                        VisibleFields = new List<string>() {Certificate},
+                        VisibleFields = new List<string>() {nameof(Certificate), nameof(CertificatePassword)},
                     },
                     new FormConditional()
                     {
@@ -112,6 +119,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                 nameof(Password),
                 nameof(SecureConnection),
                 nameof(Certificate),
+                nameof(CertificatePassword),
                 nameof(Topic),
                 nameof(Payload),
             };

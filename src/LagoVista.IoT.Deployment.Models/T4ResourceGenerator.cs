@@ -1,4 +1,4 @@
-﻿/*9/14/2024 4:25:09 PM*/
+﻿/*9/14/2024 5:02:57 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -1419,6 +1419,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:MqttNotification_Certificate
 
 		public static string MqttNotification_Certificate { get { return GetResourceString("MqttNotification_Certificate"); } }
+//Resources:DeploymentAdminResources:MqttNotification_CertificatePassword
+
+		public static string MqttNotification_CertificatePassword { get { return GetResourceString("MqttNotification_CertificatePassword"); } }
 //Resources:DeploymentAdminResources:MqttNotification_ClientId
 
 		public static string MqttNotification_ClientId { get { return GetResourceString("MqttNotification_ClientId"); } }
@@ -2315,6 +2318,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string MqttNotification_Address = "MqttNotification_Address";
 			public const string MqttNotification_Anonymous = "MqttNotification_Anonymous";
 			public const string MqttNotification_Certificate = "MqttNotification_Certificate";
+			public const string MqttNotification_CertificatePassword = "MqttNotification_CertificatePassword";
 			public const string MqttNotification_ClientId = "MqttNotification_ClientId";
 			public const string MqttNotification_ClientId_Help = "MqttNotification_ClientId_Help";
 			public const string MqttNotification_Password = "MqttNotification_Password";

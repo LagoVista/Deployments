@@ -1920,4 +1920,7 @@
   <data name="RestNotification_UserName" xml:space="preserve">
     <value>Basic Auth - User Name</value>
   </data>
+  <data name="MqttNotification_CertificatePassword" xml:space="preserve">
+    <value>Certificate Password</value>
+  </data>
 </root>

@@ -8,6 +8,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Models;
@@ -42,9 +43,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IDeploymentInstanceRepo _deploymentRepo;
         private readonly ILogger _logger;
         private readonly IAppUserRepo _appUserRepo;
+        private readonly ISecureStorage _secureStorage;
 
         public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceRepositoryManager repoManager, ILinkShortener linkShortner, IDeviceNotificationTracking notificationTracking,
-                IDistributionListRepo distroListRepo, IOrgLocationRepo orgLocationRepo, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, IEmailSender emailSender, ISmsSender smsSender,
+                IDistributionListRepo distroListRepo, IOrgLocationRepo orgLocationRepo, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, IEmailSender emailSender, ISmsSender smsSender, ISecureStorage secureStorage,
                 IAppUserRepo appUserRepo, IStaticPageStorage staticPageStorage, IDeploymentInstanceRepo deploymentRepo, ILogger logger, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
             base(logger, appConfig, dependencyManager, security)
         {
@@ -62,12 +64,55 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
             _appUserRepo = appUserRepo ?? throw new ArgumentNullException(nameof(appUserRepo));
+            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
         {
             ValidationCheck(notification, Actions.Create);
             await AuthorizeAsync(notification, AuthorizeResult.AuthorizeActions.Create, user, org);
+
+            foreach (var mqtt in notification.MqttNotifications)
+            {
+                if (!String.IsNullOrEmpty(mqtt.Password))
+                {
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.Password);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.PasswordSecretId = result.Result;
+                    mqtt.Password = null;
+                }
+
+                if (!String.IsNullOrEmpty(mqtt.Certificate))
+                {
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.Certificate);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.CertificateSecureId = result.Result;
+                    mqtt.Certificate = null;
+                }
+
+                if (!String.IsNullOrEmpty(mqtt.CertificatePassword))
+                {
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.CertificatePassword);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.CertificatePasswordSecureId = result.Result;
+                    mqtt.CertificatePassword = null;
+                }
+            }
+
+            foreach (var rest in notification.RestNotifications)
+            {
+                if (!String.IsNullOrEmpty(rest.BasicAuthPassword))
+                {
+                    var result = await _secureStorage.AddSecretAsync(org, rest.BasicAuthPassword);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    rest.BasicAuthPasswordSecretId = result.Result;
+                    rest.BasicAuthPassword = null;
+                }
+            }
 
             await _deviceNotificationRepo.AddNotificationAsync(notification);
 
@@ -122,7 +167,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
                 {
                     var technicalContact = await _appUserRepo.FindByIdAsync(location.TechnicalContact.Id);
-                    if(technicalContact != null)
+                    if (technicalContact != null)
                     {
                         var phoneHtml = String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $"<a href='tel:{technicalContact.PhoneNumber}> ({technicalContact.PhoneNumber})</a>";
                         template.Replace("[Location_Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
@@ -134,9 +179,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var sensorHtml = new StringBuilder("<h4>Sensors</h4>");
 
-            if(device.SensorCollection != null)
+            if (device.SensorCollection != null)
             {
-                foreach(var sensor in device.SensorCollection)
+                foreach (var sensor in device.SensorCollection)
                 {
                     sensorHtml.AppendLine($"<div>{sensor.Name}: {sensor.Value}</div>");
                 }
@@ -166,9 +211,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             InvokeResult<Device> device = null;
 
-            if(!String.IsNullOrEmpty(raisedNotification.DeviceId))
+            if (!String.IsNullOrEmpty(raisedNotification.DeviceId))
                 device = await _deviceManager.GetDeviceByDeviceIdAsync(repo, raisedNotification.DeviceId, orgEntityHeader, userEntityHeader);
-            else if(!string.IsNullOrEmpty(raisedNotification.DeviceUniqueId))
+            else if (!string.IsNullOrEmpty(raisedNotification.DeviceUniqueId))
                 device = await _deviceManager.GetDeviceByIdAsync(repo, raisedNotification.DeviceUniqueId, orgEntityHeader, userEntityHeader);
             else
                 return InvokeResult.FromError($"Must provide either DeviceId or DeviceUniqueId.");
@@ -186,10 +231,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var appUsers = new List<EntityHeader>();
             var externalContacts = new List<ExternalContact>();
 
-            if(raisedNotification.AdditionalUsers != null)
+            if (raisedNotification.AdditionalUsers != null)
                 appUsers.AddRange(raisedNotification.AdditionalUsers);
 
-            if(raisedNotification.AdditionalExternalContacts != null)
+            if (raisedNotification.AdditionalExternalContacts != null)
                 externalContacts.AddRange(raisedNotification.AdditionalExternalContacts);
 
             if (!EntityHeader.IsNullOrEmpty(device.Result.DistributionList))
@@ -407,6 +452,69 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             ValidationCheck(notification, Actions.Create);
             await AuthorizeAsync(notification, AuthorizeResult.AuthorizeActions.Update, user, org);
+
+            foreach (var mqtt in notification.MqttNotifications)
+            {
+
+                if (!String.IsNullOrEmpty(mqtt.Password))
+                {
+                    if (!String.IsNullOrEmpty(mqtt.PasswordSecretId))
+                    {
+                        await _secureStorage.RemoveSecretAsync(org, mqtt.PasswordSecretId);
+                    }
+
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.Password);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.PasswordSecretId = result.Result;
+                    mqtt.Password = null;
+                }
+
+                if (!String.IsNullOrEmpty(mqtt.Certificate))
+                {
+                    if (!String.IsNullOrEmpty(mqtt.CertificateSecureId))
+                    {
+                        await _secureStorage.RemoveSecretAsync(org, mqtt.CertificateSecureId);
+                    }
+
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.Certificate);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.CertificateSecureId = result.Result;
+                    mqtt.Certificate = null;
+                }
+
+                if (!String.IsNullOrEmpty(mqtt.CertificatePassword))
+                {
+                    if (!String.IsNullOrEmpty(mqtt.CertificatePasswordSecureId))
+                    {
+                        await _secureStorage.RemoveSecretAsync(org, mqtt.CertificatePasswordSecureId);
+                    }
+
+                    var result = await _secureStorage.AddSecretAsync(org, mqtt.CertificatePassword);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    mqtt.CertificatePasswordSecureId = result.Result;
+                    mqtt.CertificatePassword = null;
+                }
+            }
+
+            foreach (var rest in notification.RestNotifications)
+            {
+                if (!String.IsNullOrEmpty(rest.BasicAuthPassword))
+                {
+                    if (!String.IsNullOrEmpty(rest.BasicAuthPasswordSecretId))
+                    {
+                        await _secureStorage.RemoveSecretAsync(org, rest.BasicAuthPasswordSecretId);
+                    }
+
+                    var result = await _secureStorage.AddSecretAsync(org, rest.BasicAuthPassword);
+                    if (!result.Successful) return result.ToInvokeResult();
+
+                    rest.BasicAuthPasswordSecretId = result.Result;
+                    rest.BasicAuthPassword = null;
+                }
+            }
 
             await _deviceNotificationRepo.UpdateNotificationAsync(notification);
 

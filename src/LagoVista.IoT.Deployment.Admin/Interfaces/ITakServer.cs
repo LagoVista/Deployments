@@ -13,9 +13,8 @@ namespace LagoVista.IoT.Deployment.Admin
         event EventHandler TakServerDisconnected;
         event EventHandler<Event> MessageReceived;
 
-        Task<InvokeResult> InitAsync(string dataPackageResourceId);
         Task<InvokeResult> InitAsync(Stream stream);
-        Task<bool> Connected();
+        Task<InvokeResult> GetIsConnectedAsync();
         Task<InvokeResult> ConnectAsync();
         Task<InvokeResult> ListenAsync(CancellationToken cancellationToken = default);
         Task<InvokeResult> DisconnectAsync();
