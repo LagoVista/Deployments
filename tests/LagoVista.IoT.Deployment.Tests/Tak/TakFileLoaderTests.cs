@@ -1,5 +1,5 @@
 ﻿using LagoVista.Core.Validation;
-using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

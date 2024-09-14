@@ -36,18 +36,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly ISmsSender _smsSender;
         private readonly IDistributionManager _distroManager;
         private readonly IUserManager _userManager;
-        private readonly IDeviceNotificationManager _deviceNotificationManager;
         private readonly IDeviceErrorCodesManager _errorCodeManager;
         private readonly IDeviceExceptionRepo _exceptionRepo;
         private readonly IIncidentManager _incidentManager;
         private readonly IIncidentProtocolManager _incidentProtocolManager;
         private readonly IDistributionListRepo _distroListRepo;
-
+        private readonly INotificationSender _notificationSender;
 
         public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager, IDeviceExceptionRepo exceptionRepo,
                                  IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, IEmailSender emailSender, 
-                                 ISmsSender smsSender, IDeviceNotificationManager deviceNotificationManager)
+                                 ISmsSender smsSender, INotificationSender notificationSender, IDeviceNotificationManager deviceNotificationManager)
         {
+            _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));            
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _repoManager = deviceRepoManager ?? throw new ArgumentNullException(nameof(deviceRepoManager));
@@ -57,7 +57,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _smsSender = smsSender ?? throw new ArgumentNullException(nameof(smsSender));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _distroManager = distroManager ?? throw new ArgumentNullException(nameof(distroManager));
-            _deviceNotificationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             _errorCodeManager = errorCodeManager ?? throw new ArgumentNullException(nameof(errorCodeManager));
             _exceptionRepo = exceptionRepo ?? throw new ArgumentNullException(nameof(exceptionRepo));
             _incidentManager = incidentManager ?? throw new ArgumentNullException(nameof(incidentManager));
@@ -164,7 +163,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     notification.AdditionalExternalContacts = distroList.ExternalContacts;
                 }
 
-                if((await _deviceNotificationManager.RaiseNotificationAsync(notification, org, user)).Successful) 
+                if((await _notificationSender.RaiseNotificationAsync(notification, org, user)).Successful) 
                     _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}");
                 else
                     _adminLogger.AddError($"[DeviceErrorHandler__SendDeviceNotification]", $"Did not send notification - {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));

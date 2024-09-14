@@ -50,10 +50,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IModelManager _modelManager;
         private readonly IDeploymentInstanceRepo _instanceRepo;
         private readonly IRemoteServiceManager _remoteServiceManager;
-        private readonly IDeviceNotificationManager _deviceNoficationManager;
         private readonly IDeviceErrorHandler _deviceErrorHandler;
         private readonly IDeviceManager _deviceManager;
-        private readonly IMediaServicesManager _mediaServicesManager; 
+        private readonly IMediaServicesManager _mediaServicesManager;
+        private readonly INotificationSender _notificationSender;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -67,9 +67,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
-            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager,
+            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager,
-            IDeviceErrorHandler deviceErrorHandler, IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
+            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -84,10 +84,10 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._smsSender = smsSendeer ?? throw new ArgumentNullException(nameof(smsSendeer));
             this._modelManager = modelManager ?? throw new ArgumentNullException(nameof(modelManager));
             this._remoteServiceManager = remoteServiceManager ?? throw new ArgumentNullException(nameof(remoteServiceManager));
-            this._deviceNoficationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             this._deviceErrorHandler = deviceErrorHandler ?? throw new ArgumentNullException(nameof(deviceErrorHandler));
             this._deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             this._mediaServicesManager = mediaServicesManager ?? throw new ArgumentNullException(nameof(mediaServicesManager));
+            this._notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -736,7 +736,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
 
-            return await _deviceNoficationManager.RaiseNotificationAsync(raisedNotification, OrgEntityHeader, UserEntityHeader);
+            return await _notificationSender.RaiseNotificationAsync(raisedNotification, OrgEntityHeader, UserEntityHeader);
         }
 
         [HttpPost("/api/device/status/online")]

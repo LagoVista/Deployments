@@ -17,7 +17,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.Core;
 
-namespace LagoVista.IoT.Deployment.Admin.Services
+namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
     public class TakClient : ITakClient
     {
@@ -27,10 +27,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly bool _ignoreCertificateValidationIssues;
 
         private readonly TcpClient _client = new TcpClient();
-        private SslStream? _sslStream;
+        private SslStream _sslStream;
 
         private Thread _eventListenerThread;
-        private readonly IAdminLogger _adminLogger; 
+        private readonly IAdminLogger _adminLogger;
 
         private CancellationToken _cancellationToken;
 
@@ -182,7 +182,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                 _running = true;
 
-                _eventListenerThread = new System.Threading.Thread(ListenerThread);
+                _eventListenerThread = new Thread(ListenerThread);
                 _eventListenerThread.Start();
 
                 return InvokeResult.Success;
@@ -224,7 +224,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
             return events;
         }
-        
+
         public async Task<InvokeResult> SendAsync(Message message, CancellationToken cancellationToken = default)
         {
             var xml = message.ToXmlString();
@@ -241,7 +241,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
 
 
-            var buffer = System.Text.ASCIIEncoding.ASCII.GetBytes(message);
+            var buffer = Encoding.ASCII.GetBytes(message);
             Console.WriteLine($"[TakClient__SendAsync_RawXML] Message Content:\n{message}");
 
             try
@@ -257,7 +257,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-        private bool CertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+        private bool CertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (_ignoreCertificateValidationIssues)
                 return true;
@@ -318,7 +318,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     if (connectionString == null)
                         return InvokeResult<Preferences>.FromError($"Could not find entry in {ConnectionStringKey} in entry node of preferences file to identify the connection string.");
 
-                    if (String.IsNullOrEmpty(connectionString.Text))
+                    if (string.IsNullOrEmpty(connectionString.Text))
                         return InvokeResult<Preferences>.FromError($"value is null for entry in {ConnectionStringKey} in entry node of preferences file to identify the connection string.");
 
 
@@ -327,7 +327,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                         return InvokeResult<Preferences>.FromError($"At minimum the connection string should contain two parts separated by a : such as mytaksever.com:port.");
 
                     _host = connectionParams[0];
-                    _port = Int32.Parse(connectionParams[1]);
+                    _port = int.Parse(connectionParams[1]);
 
                     if (connectionParams.Length > 2)
                     {

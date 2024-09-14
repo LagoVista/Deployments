@@ -14,7 +14,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult> DeleteNotificationAsync(string id, EntityHeader org, EntityHeader user);
         Task<DeviceNotification> GetNotificationAsync(string id, EntityHeader org, EntityHeader user);
         Task<ListResponse<DeviceNotificationSummary>> GetNotificationsForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest);
-        Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
         Task<InvokeResult> UpdateNotificationAsync(DeviceNotification Notification, EntityHeader org, EntityHeader user);
         Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistoryAsync(string deviceid, ListRequest listRequest, EntityHeader org, EntityHeader user);
         Task<InvokeResult> AcknowledgeNotificationAsync(string notifid, string recipientid);

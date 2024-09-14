@@ -3,6 +3,7 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
 using LagoVista.IoT.Deployment.Admin.Services;
+using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using LagoVista.IoT.Deployment.Admin.Validation;
 using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core;
@@ -52,6 +53,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IIncidentManager, IncidentManager>();
             services.AddTransient<IIncidentProtocolManager, IncidentProtocolManager>();
             services.AddTransient<ITakClient, TakClient>();
+            services.AddTransient<INotificationSender, NotificationSender>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

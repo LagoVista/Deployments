@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.Logging.Loggers;
@@ -21,13 +22,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     [ConfirmedUser]
     public class DeviceNotificationController : LagoVistaBaseController
     {
-        IDeviceNotificationManager _notificationManager;
-        ILocationDiagramRepo _locationDiagramRepo;
+        private readonly IDeviceNotificationManager _notificationManager;
+        private readonly ILocationDiagramRepo _locationDiagramRepo;
+        private readonly INotificationSender _notificationSender;
 
-        public DeviceNotificationController(IDeviceNotificationManager notificationManager, ILocationDiagramRepo locationDiagramRepo, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+
+        public DeviceNotificationController(IDeviceNotificationManager notificationManager, INotificationSender notificationSender, ILocationDiagramRepo locationDiagramRepo, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
             _locationDiagramRepo = locationDiagramRepo ?? throw new ArgumentNullException(nameof(locationDiagramRepo));
+            _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
         }
 
         /// <summary>
@@ -106,7 +110,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
         public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
         {
-            return _notificationManager.RaiseNotificationAsync(new RaisedDeviceNotification()
+            return _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
                 TestMode = testing == "true",
                 DeviceUniqueId = deviceuniqueid,
