@@ -28,9 +28,10 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admins;
-using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.MediaServices.Interfaces;
+
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -52,6 +53,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceNotificationManager _deviceNoficationManager;
         private readonly IDeviceErrorHandler _deviceErrorHandler;
         private readonly IDeviceManager _deviceManager;
+        private readonly IMediaServicesManager _mediaServicesManager; 
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -66,7 +68,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager,
-            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger,
+            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager,
             IDeviceErrorHandler deviceErrorHandler, IDeviceNotificationManager deviceNotificationManager, IRemoteServiceManager remoteServiceManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
@@ -85,6 +87,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceNoficationManager = deviceNotificationManager ?? throw new ArgumentNullException(nameof(deviceNotificationManager));
             this._deviceErrorHandler = deviceErrorHandler ?? throw new ArgumentNullException(nameof(deviceErrorHandler));
             this._deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            this._mediaServicesManager = mediaServicesManager ?? throw new ArgumentNullException(nameof(mediaServicesManager));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -805,6 +808,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             var accounts = await _instanceManager.GetInstanceAccountsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
             return ListResponse<InstanceAccount>.Create(accounts);
+        }
+
+        /// <summary>
+        /// Media Resource - Download a media resource file.
+        /// </summary>
+        /// <param name="orgid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/mediaa/{id}/download")]
+        public async Task<IActionResult> DownloadMedia(string id)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            var response = await _mediaServicesManager.GetResourceMediaAsync(id, OrgEntityHeader, UserEntityHeader);
+            var ms = new System.IO.MemoryStream(response.ImageBytes);
+            return File(ms, response.ContentType, response.FileName);
         }
     }
 }
