@@ -15,7 +15,7 @@ namespace LagoVista.IoT.Deployment.Admin
 
         Task<InvokeResult> InitAsync(string dataPackageResourceId);
         Task<InvokeResult> InitAsync(Stream stream);
-        Task<bool> Connectd();
+        Task<bool> Connected();
         Task<InvokeResult> ConnectAsync();
         Task<InvokeResult> ListenAsync(CancellationToken cancellationToken = default);
         Task<InvokeResult> DisconnectAsync();

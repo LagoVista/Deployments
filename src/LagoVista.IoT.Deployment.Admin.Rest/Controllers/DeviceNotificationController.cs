@@ -2,6 +2,7 @@
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
@@ -76,6 +77,31 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             SetOwnedProperties(notification.Model);
             return notification;
         }
+
+        [HttpGet("/api/notification/rest/factory")]
+        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Rest> CreateNewRestNotification()
+        {
+            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Rest>.Create();
+        }
+
+        [HttpGet("/api/notification/mqtt/factory")]
+        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Mqtt> CreateNewMqttnotification()
+        {
+            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Mqtt>.Create();
+        }
+
+        [HttpGet("/api/notification/cot/factory")]
+        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.CursorOnTarget> CreateNewCotnotification()
+        {
+            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.CursorOnTarget>.Create();
+        }
+
+        [HttpGet("/api/notification/rest/header/factory")]
+        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Header> CreateNewRestHeader()
+        {
+            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Header>.Create();
+        }
+
 
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
         public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")

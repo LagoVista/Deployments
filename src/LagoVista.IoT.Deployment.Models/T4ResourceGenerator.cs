@@ -1,4 +1,4 @@
-﻿/*7/28/2024 7:53:06 AM*/
+﻿/*9/14/2024 4:25:09 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -198,6 +198,45 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ContainerRepository_UserName_Help
 
 		public static string ContainerRepository_UserName_Help { get { return GetResourceString("ContainerRepository_UserName_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_DataPackageFile
+
+		public static string CotNotification_DataPackageFile { get { return GetResourceString("CotNotification_DataPackageFile"); } }
+//Resources:DeploymentAdminResources:CotNotification_DataPackageFile_Help
+
+		public static string CotNotification_DataPackageFile_Help { get { return GetResourceString("CotNotification_DataPackageFile_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_Description
+
+		public static string CotNotification_Description { get { return GetResourceString("CotNotification_Description"); } }
+//Resources:DeploymentAdminResources:CotNotification_FillColor
+
+		public static string CotNotification_FillColor { get { return GetResourceString("CotNotification_FillColor"); } }
+//Resources:DeploymentAdminResources:CotNotification_Help
+
+		public static string CotNotification_Help { get { return GetResourceString("CotNotification_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_IncludeLocationPolygon
+
+		public static string CotNotification_IncludeLocationPolygon { get { return GetResourceString("CotNotification_IncludeLocationPolygon"); } }
+//Resources:DeploymentAdminResources:CotNotification_Remarks
+
+		public static string CotNotification_Remarks { get { return GetResourceString("CotNotification_Remarks"); } }
+//Resources:DeploymentAdminResources:CotNotification_StaleSeconds
+
+		public static string CotNotification_StaleSeconds { get { return GetResourceString("CotNotification_StaleSeconds"); } }
+//Resources:DeploymentAdminResources:CotNotification_StaleSeconds_Help
+
+		public static string CotNotification_StaleSeconds_Help { get { return GetResourceString("CotNotification_StaleSeconds_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_Title
+
+		public static string CotNotification_Title { get { return GetResourceString("CotNotification_Title"); } }
+//Resources:DeploymentAdminResources:CotNotification_Type_Help
+
+		public static string CotNotification_Type_Help { get { return GetResourceString("CotNotification_Type_Help"); } }
+//Resources:DeploymentAdminResources:CotNotifications_Title
+
+		public static string CotNotifications_Title { get { return GetResourceString("CotNotifications_Title"); } }
+//Resources:DeploymentAdminResources:CotNotifiication_Type
+
+		public static string CotNotifiication_Type { get { return GetResourceString("CotNotifiication_Type"); } }
 //Resources:DeploymentAdminResources:Deployment_Listeners
 
 		public static string Deployment_Listeners { get { return GetResourceString("Deployment_Listeners"); } }
@@ -603,6 +642,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotificationHistory_Title
 
 		public static string DeviceNotificationHistory_Title { get { return GetResourceString("DeviceNotificationHistory_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_CotNotifications
+
+		public static string DeviceNotifications_CotNotifications { get { return GetResourceString("DeviceNotifications_CotNotifications"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_Description
 
 		public static string DeviceNotifications_Description { get { return GetResourceString("DeviceNotifications_Description"); } }
@@ -618,6 +660,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotifications_LandingPageContent
 
 		public static string DeviceNotifications_LandingPageContent { get { return GetResourceString("DeviceNotifications_LandingPageContent"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_MqttNotifications
+
+		public static string DeviceNotifications_MqttNotifications { get { return GetResourceString("DeviceNotifications_MqttNotifications"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_RestNotifications
+
+		public static string DeviceNotifications_RestNotifications { get { return GetResourceString("DeviceNotifications_RestNotifications"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_SendEmail
 
 		public static string DeviceNotifications_SendEmail { get { return GetResourceString("DeviceNotifications_SendEmail"); } }
@@ -1362,6 +1410,54 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:MessageWatchDog_WeekdayExclusions
 
 		public static string MessageWatchDog_WeekdayExclusions { get { return GetResourceString("MessageWatchDog_WeekdayExclusions"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Address
+
+		public static string MqttNotification_Address { get { return GetResourceString("MqttNotification_Address"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Anonymous
+
+		public static string MqttNotification_Anonymous { get { return GetResourceString("MqttNotification_Anonymous"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Certificate
+
+		public static string MqttNotification_Certificate { get { return GetResourceString("MqttNotification_Certificate"); } }
+//Resources:DeploymentAdminResources:MqttNotification_ClientId
+
+		public static string MqttNotification_ClientId { get { return GetResourceString("MqttNotification_ClientId"); } }
+//Resources:DeploymentAdminResources:MqttNotification_ClientId_Help
+
+		public static string MqttNotification_ClientId_Help { get { return GetResourceString("MqttNotification_ClientId_Help"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Password
+
+		public static string MqttNotification_Password { get { return GetResourceString("MqttNotification_Password"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Payload
+
+		public static string MqttNotification_Payload { get { return GetResourceString("MqttNotification_Payload"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Payload_Help
+
+		public static string MqttNotification_Payload_Help { get { return GetResourceString("MqttNotification_Payload_Help"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Port
+
+		public static string MqttNotification_Port { get { return GetResourceString("MqttNotification_Port"); } }
+//Resources:DeploymentAdminResources:MqttNotification_SecureConnection
+
+		public static string MqttNotification_SecureConnection { get { return GetResourceString("MqttNotification_SecureConnection"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Title
+
+		public static string MqttNotification_Title { get { return GetResourceString("MqttNotification_Title"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Topic
+
+		public static string MqttNotification_Topic { get { return GetResourceString("MqttNotification_Topic"); } }
+//Resources:DeploymentAdminResources:MqttNotification_Topic_Help
+
+		public static string MqttNotification_Topic_Help( string deviceid) { return GetResourceString("MqttNotification_Topic_Help", "{deviceid}", deviceid); }
+//Resources:DeploymentAdminResources:MqttNotification_UserName
+
+		public static string MqttNotification_UserName { get { return GetResourceString("MqttNotification_UserName"); } }
+//Resources:DeploymentAdminResources:MqttNotifications_Help
+
+		public static string MqttNotifications_Help { get { return GetResourceString("MqttNotifications_Help"); } }
+//Resources:DeploymentAdminResources:MqttNotifications_Title
+
+		public static string MqttNotifications_Title { get { return GetResourceString("MqttNotifications_Title"); } }
 //Resources:DeploymentAdminResources:NuvIoT_Edition
 
 		public static string NuvIoT_Edition { get { return GetResourceString("NuvIoT_Edition"); } }
@@ -1398,6 +1494,72 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:RemoteDeployment_Title
 
 		public static string RemoteDeployment_Title { get { return GetResourceString("RemoteDeployment_Title"); } }
+//Resources:DeploymentAdminResources:RestNotificaiton_AdditionalHeader_Help
+
+		public static string RestNotificaiton_AdditionalHeader_Help { get { return GetResourceString("RestNotificaiton_AdditionalHeader_Help"); } }
+//Resources:DeploymentAdminResources:RestNotificaiton_AdditionalHeader_Title
+
+		public static string RestNotificaiton_AdditionalHeader_Title { get { return GetResourceString("RestNotificaiton_AdditionalHeader_Title"); } }
+//Resources:DeploymentAdminResources:RestNotification_AdditionalHeaders
+
+		public static string RestNotification_AdditionalHeaders { get { return GetResourceString("RestNotification_AdditionalHeaders"); } }
+//Resources:DeploymentAdminResources:RestNotification_Address
+
+		public static string RestNotification_Address { get { return GetResourceString("RestNotification_Address"); } }
+//Resources:DeploymentAdminResources:RestNotification_Address_Help
+
+		public static string RestNotification_Address_Help( string deviceid) { return GetResourceString("RestNotification_Address_Help", "{deviceid}", deviceid); }
+//Resources:DeploymentAdminResources:RestNotification_Anonymous
+
+		public static string RestNotification_Anonymous { get { return GetResourceString("RestNotification_Anonymous"); } }
+//Resources:DeploymentAdminResources:RestNotification_ContentType
+
+		public static string RestNotification_ContentType { get { return GetResourceString("RestNotification_ContentType"); } }
+//Resources:DeploymentAdminResources:RestNotification_HeaderName
+
+		public static string RestNotification_HeaderName { get { return GetResourceString("RestNotification_HeaderName"); } }
+//Resources:DeploymentAdminResources:RestNotification_HeaderValue
+
+		public static string RestNotification_HeaderValue { get { return GetResourceString("RestNotification_HeaderValue"); } }
+//Resources:DeploymentAdminResources:RestNotification_Help
+
+		public static string RestNotification_Help { get { return GetResourceString("RestNotification_Help"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method
+
+		public static string RestNotification_Method { get { return GetResourceString("RestNotification_Method"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_DELETE
+
+		public static string RestNotification_Method_DELETE { get { return GetResourceString("RestNotification_Method_DELETE"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_GET
+
+		public static string RestNotification_Method_GET { get { return GetResourceString("RestNotification_Method_GET"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_PATCH
+
+		public static string RestNotification_Method_PATCH { get { return GetResourceString("RestNotification_Method_PATCH"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_POST
+
+		public static string RestNotification_Method_POST { get { return GetResourceString("RestNotification_Method_POST"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_PUT
+
+		public static string RestNotification_Method_PUT { get { return GetResourceString("RestNotification_Method_PUT"); } }
+//Resources:DeploymentAdminResources:RestNotification_Method_Select
+
+		public static string RestNotification_Method_Select { get { return GetResourceString("RestNotification_Method_Select"); } }
+//Resources:DeploymentAdminResources:RestNotification_Password
+
+		public static string RestNotification_Password { get { return GetResourceString("RestNotification_Password"); } }
+//Resources:DeploymentAdminResources:RestNotification_Payload
+
+		public static string RestNotification_Payload { get { return GetResourceString("RestNotification_Payload"); } }
+//Resources:DeploymentAdminResources:RestNotification_Title
+
+		public static string RestNotification_Title { get { return GetResourceString("RestNotification_Title"); } }
+//Resources:DeploymentAdminResources:RestNotification_UserName
+
+		public static string RestNotification_UserName { get { return GetResourceString("RestNotification_UserName"); } }
+//Resources:DeploymentAdminResources:RestNotifications_Title
+
+		public static string RestNotifications_Title { get { return GetResourceString("RestNotifications_Title"); } }
 //Resources:DeploymentAdminResources:Route_Description
 
 		public static string Route_Description { get { return GetResourceString("Route_Description"); } }
@@ -1746,6 +1908,19 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ContainerRepository_Title = "ContainerRepository_Title";
 			public const string ContainerRepository_UserName = "ContainerRepository_UserName";
 			public const string ContainerRepository_UserName_Help = "ContainerRepository_UserName_Help";
+			public const string CotNotification_DataPackageFile = "CotNotification_DataPackageFile";
+			public const string CotNotification_DataPackageFile_Help = "CotNotification_DataPackageFile_Help";
+			public const string CotNotification_Description = "CotNotification_Description";
+			public const string CotNotification_FillColor = "CotNotification_FillColor";
+			public const string CotNotification_Help = "CotNotification_Help";
+			public const string CotNotification_IncludeLocationPolygon = "CotNotification_IncludeLocationPolygon";
+			public const string CotNotification_Remarks = "CotNotification_Remarks";
+			public const string CotNotification_StaleSeconds = "CotNotification_StaleSeconds";
+			public const string CotNotification_StaleSeconds_Help = "CotNotification_StaleSeconds_Help";
+			public const string CotNotification_Title = "CotNotification_Title";
+			public const string CotNotification_Type_Help = "CotNotification_Type_Help";
+			public const string CotNotifications_Title = "CotNotifications_Title";
+			public const string CotNotifiication_Type = "CotNotifiication_Type";
 			public const string Deployment_Listeners = "Deployment_Listeners";
 			public const string Deployment_Listeners_Help = "Deployment_Listeners_Help";
 			public const string Deployment_Logging = "Deployment_Logging";
@@ -1881,11 +2056,14 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotification_Title = "DeviceNotification_Title";
 			public const string DeviceNotificationHistory_Description = "DeviceNotificationHistory_Description";
 			public const string DeviceNotificationHistory_Title = "DeviceNotificationHistory_Title";
+			public const string DeviceNotifications_CotNotifications = "DeviceNotifications_CotNotifications";
 			public const string DeviceNotifications_Description = "DeviceNotifications_Description";
 			public const string DeviceNotifications_EmailContent = "DeviceNotifications_EmailContent";
 			public const string DeviceNotifications_EmailSubject = "DeviceNotifications_EmailSubject";
 			public const string DeviceNotifications_IncludeLandingPageContent = "DeviceNotifications_IncludeLandingPageContent";
 			public const string DeviceNotifications_LandingPageContent = "DeviceNotifications_LandingPageContent";
+			public const string DeviceNotifications_MqttNotifications = "DeviceNotifications_MqttNotifications";
+			public const string DeviceNotifications_RestNotifications = "DeviceNotifications_RestNotifications";
 			public const string DeviceNotifications_SendEmail = "DeviceNotifications_SendEmail";
 			public const string DeviceNotifications_SendSMS = "DeviceNotifications_SendSMS";
 			public const string DeviceNotifications_SMSContent = "DeviceNotifications_SMSContent";
@@ -2134,6 +2312,22 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string MessageWatchdog_Timeout_Interval_Select = "MessageWatchdog_Timeout_Interval_Select";
 			public const string MessageWatchDog_Title = "MessageWatchDog_Title";
 			public const string MessageWatchDog_WeekdayExclusions = "MessageWatchDog_WeekdayExclusions";
+			public const string MqttNotification_Address = "MqttNotification_Address";
+			public const string MqttNotification_Anonymous = "MqttNotification_Anonymous";
+			public const string MqttNotification_Certificate = "MqttNotification_Certificate";
+			public const string MqttNotification_ClientId = "MqttNotification_ClientId";
+			public const string MqttNotification_ClientId_Help = "MqttNotification_ClientId_Help";
+			public const string MqttNotification_Password = "MqttNotification_Password";
+			public const string MqttNotification_Payload = "MqttNotification_Payload";
+			public const string MqttNotification_Payload_Help = "MqttNotification_Payload_Help";
+			public const string MqttNotification_Port = "MqttNotification_Port";
+			public const string MqttNotification_SecureConnection = "MqttNotification_SecureConnection";
+			public const string MqttNotification_Title = "MqttNotification_Title";
+			public const string MqttNotification_Topic = "MqttNotification_Topic";
+			public const string MqttNotification_Topic_Help = "MqttNotification_Topic_Help";
+			public const string MqttNotification_UserName = "MqttNotification_UserName";
+			public const string MqttNotifications_Help = "MqttNotifications_Help";
+			public const string MqttNotifications_Title = "MqttNotifications_Title";
 			public const string NuvIoT_Edition = "NuvIoT_Edition";
 			public const string NuvIoTEdition_App = "NuvIoTEdition_App";
 			public const string NuvIoTEdition_Cluster = "NuvIoTEdition_Cluster";
@@ -2146,6 +2340,28 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string RemoteDeployment_PrimaryMCP = "RemoteDeployment_PrimaryMCP";
 			public const string RemoteDeployment_SecondaryMCP = "RemoteDeployment_SecondaryMCP";
 			public const string RemoteDeployment_Title = "RemoteDeployment_Title";
+			public const string RestNotificaiton_AdditionalHeader_Help = "RestNotificaiton_AdditionalHeader_Help";
+			public const string RestNotificaiton_AdditionalHeader_Title = "RestNotificaiton_AdditionalHeader_Title";
+			public const string RestNotification_AdditionalHeaders = "RestNotification_AdditionalHeaders";
+			public const string RestNotification_Address = "RestNotification_Address";
+			public const string RestNotification_Address_Help = "RestNotification_Address_Help";
+			public const string RestNotification_Anonymous = "RestNotification_Anonymous";
+			public const string RestNotification_ContentType = "RestNotification_ContentType";
+			public const string RestNotification_HeaderName = "RestNotification_HeaderName";
+			public const string RestNotification_HeaderValue = "RestNotification_HeaderValue";
+			public const string RestNotification_Help = "RestNotification_Help";
+			public const string RestNotification_Method = "RestNotification_Method";
+			public const string RestNotification_Method_DELETE = "RestNotification_Method_DELETE";
+			public const string RestNotification_Method_GET = "RestNotification_Method_GET";
+			public const string RestNotification_Method_PATCH = "RestNotification_Method_PATCH";
+			public const string RestNotification_Method_POST = "RestNotification_Method_POST";
+			public const string RestNotification_Method_PUT = "RestNotification_Method_PUT";
+			public const string RestNotification_Method_Select = "RestNotification_Method_Select";
+			public const string RestNotification_Password = "RestNotification_Password";
+			public const string RestNotification_Payload = "RestNotification_Payload";
+			public const string RestNotification_Title = "RestNotification_Title";
+			public const string RestNotification_UserName = "RestNotification_UserName";
+			public const string RestNotifications_Title = "RestNotifications_Title";
 			public const string Route_Description = "Route_Description";
 			public const string Route_Help = "Route_Help";
 			public const string Route_InputTranslator = "Route_InputTranslator";

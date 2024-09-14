@@ -1758,4 +1758,166 @@
   <data name="SystemTest_OnFailedInstructions" xml:space="preserve">
     <value>Failure Instructions</value>
   </data>
+  <data name="CotNotifications_Title" xml:space="preserve">
+    <value>Cursor on Target Notifications</value>
+  </data>
+  <data name="CotNotification_DataPackageFile" xml:space="preserve">
+    <value>Data Package File</value>
+  </data>
+  <data name="CotNotification_DataPackageFile_Help" xml:space="preserve">
+    <value>Upload a data package file to connect to TAK server.  https://mytecknet.com/creating-tak-data-packages-for-enrollment/</value>
+  </data>
+  <data name="CotNotification_Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CotNotification_FillColor" xml:space="preserve">
+    <value>Fill Color</value>
+  </data>
+  <data name="CotNotification_Help" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CotNotification_IncludeLocationPolygon" xml:space="preserve">
+    <value>Include Location Polygon</value>
+  </data>
+  <data name="CotNotification_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="CotNotification_StaleSeconds" xml:space="preserve">
+    <value>Stale Seconds</value>
+  </data>
+  <data name="CotNotification_StaleSeconds_Help" xml:space="preserve">
+    <value>Number of seconds until this message is considered stale and should be removed from the map.</value>
+  </data>
+  <data name="CotNotification_Title" xml:space="preserve">
+    <value>Cursor on Target Notification</value>
+  </data>
+  <data name="CotNotification_Type_Help" xml:space="preserve">
+    <value> u-d-r for drawing polygon.  https://github.com/Esri/defense-solutions-proofs-of-concept/blob/master/geoevent-components/solutions-geoevent/adapters/cot-adapter/src/main/resources/CoTTypes/CoTtypes.xml</value>
+  </data>
+  <data name="CotNotifiication_Type" xml:space="preserve">
+    <value>COT Message Type</value>
+  </data>
+  <data name="DeviceNotifications_CotNotifications" xml:space="preserve">
+    <value>Cursor on Target Notifications</value>
+  </data>
+  <data name="DeviceNotifications_MqttNotifications" xml:space="preserve">
+    <value>MQTT Notificaitons</value>
+  </data>
+  <data name="DeviceNotifications_RestNotifications" xml:space="preserve">
+    <value>REST Notifications (Web Hooks)</value>
+  </data>
+  <data name="MqttNotifications_Help" xml:space="preserve">
+    <value>Publish an MQTT topic with or without a payload.</value>
+  </data>
+  <data name="MqttNotifications_Title" xml:space="preserve">
+    <value>MQTT Notifications</value>
+  </data>
+  <data name="MqttNotification_Address" xml:space="preserve">
+    <value>MQTT Broker Address</value>
+  </data>
+  <data name="MqttNotification_Anonymous" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
+  <data name="MqttNotification_Certificate" xml:space="preserve">
+    <value>Certificate</value>
+  </data>
+  <data name="MqttNotification_ClientId" xml:space="preserve">
+    <value>MQTT Client Id</value>
+  </data>
+  <data name="MqttNotification_ClientId_Help" xml:space="preserve">
+    <value>The MQTT Client Id is used when connecting to the MQTT broker to identify the client, if it is not present, the key will be used.</value>
+  </data>
+  <data name="MqttNotification_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="MqttNotification_Payload" xml:space="preserve">
+    <value>Payload</value>
+  </data>
+  <data name="MqttNotification_Payload_Help" xml:space="preserve">
+    <value>They payload should be a string, and will have the standard device tags replaced as in the help.</value>
+  </data>
+  <data name="MqttNotification_Port" xml:space="preserve">
+    <value>MQTT Broker Port</value>
+  </data>
+  <data name="MqttNotification_SecureConnection" xml:space="preserve">
+    <value>Secure Connection</value>
+  </data>
+  <data name="MqttNotification_Title" xml:space="preserve">
+    <value>MQTT Notification</value>
+  </data>
+  <data name="MqttNotification_Topic" xml:space="preserve">
+    <value>Topic</value>
+  </data>
+  <data name="MqttNotification_Topic_Help" xml:space="preserve">
+    <value>The topic will have {deviceid} replaced by the Device Id.</value>
+  </data>
+  <data name="MqttNotification_UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="RestNotificaiton_AdditionalHeader_Help" xml:space="preserve">
+    <value>Additional headers that should be sent with the request.</value>
+  </data>
+  <data name="RestNotificaiton_AdditionalHeader_Title" xml:space="preserve">
+    <value>Additional Header</value>
+  </data>
+  <data name="RestNotifications_Title" xml:space="preserve">
+    <value>REST Notifications</value>
+  </data>
+  <data name="RestNotification_AdditionalHeaders" xml:space="preserve">
+    <value>Additional Headers</value>
+  </data>
+  <data name="RestNotification_Address" xml:space="preserve">
+    <value>Web Address</value>
+  </data>
+  <data name="RestNotification_Address_Help" xml:space="preserve">
+    <value>The address for the REST request.  The tag {deviceid} will be replaced in the URL.</value>
+  </data>
+  <data name="RestNotification_Anonymous" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
+  <data name="RestNotification_ContentType" xml:space="preserve">
+    <value>Content Type</value>
+  </data>
+  <data name="RestNotification_HeaderName" xml:space="preserve">
+    <value>Header Name</value>
+  </data>
+  <data name="RestNotification_HeaderValue" xml:space="preserve">
+    <value>Header Value</value>
+  </data>
+  <data name="RestNotification_Help" xml:space="preserve">
+    <value>Send a POST, PUT or GET HTTP Request for this notification.</value>
+  </data>
+  <data name="RestNotification_Method" xml:space="preserve">
+    <value>REST Method</value>
+  </data>
+  <data name="RestNotification_Method_DELETE" xml:space="preserve">
+    <value>DELETE</value>
+  </data>
+  <data name="RestNotification_Method_GET" xml:space="preserve">
+    <value>GET</value>
+  </data>
+  <data name="RestNotification_Method_PATCH" xml:space="preserve">
+    <value>PATCH</value>
+  </data>
+  <data name="RestNotification_Method_POST" xml:space="preserve">
+    <value>POST</value>
+  </data>
+  <data name="RestNotification_Method_PUT" xml:space="preserve">
+    <value>PUT</value>
+  </data>
+  <data name="RestNotification_Method_Select" xml:space="preserve">
+    <value>-select method type-</value>
+  </data>
+  <data name="RestNotification_Password" xml:space="preserve">
+    <value>Basic Auth - Password</value>
+  </data>
+  <data name="RestNotification_Payload" xml:space="preserve">
+    <value>Payload</value>
+  </data>
+  <data name="RestNotification_Title" xml:space="preserve">
+    <value>REST Notification</value>
+  </data>
+  <data name="RestNotification_UserName" xml:space="preserve">
+    <value>Basic Auth - User Name</value>
+  </data>
 </root>

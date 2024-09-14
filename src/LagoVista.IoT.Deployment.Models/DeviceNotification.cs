@@ -5,6 +5,7 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin;
+using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.UserAdmin.Models.Orgs;
 using System;
@@ -60,6 +61,16 @@ namespace LagoVista.IoT.Deployment.Models
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp")]
         public string EmailContent { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_CotNotifications, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/notification/cot/factory", ResourceType: typeof(DeploymentAdminResources))]
+        public List<CursorOnTarget> CotNotifications { get; set; } = new List<CursorOnTarget>();
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_RestNotifications, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/notification/rest/factory", ResourceType: typeof(DeploymentAdminResources))]
+        public List<Rest> RestNotifications { get; set; } = new List<Rest>();
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_MqttNotifications, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/notification/mqtt/factory", ResourceType: typeof(DeploymentAdminResources))]
+
+        public List<Mqtt> MqttNotifications { get; set; } = new List<Mqtt>();
+
         public FormConditionals GetConditionalFields()
         {
             return new FormConditionals()
@@ -113,6 +124,9 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Key),
                 nameof(Icon),
                 nameof(Category),
+                nameof(RestNotifications),
+                nameof(MqttNotifications),
+                nameof(CotNotifications),
             };
         }
 
