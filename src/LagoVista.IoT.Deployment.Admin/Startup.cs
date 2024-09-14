@@ -51,6 +51,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ISystemTestManager, SystemTestManager>();
             services.AddTransient<IIncidentManager, IncidentManager>();
             services.AddTransient<IIncidentProtocolManager, IncidentProtocolManager>();
+            services.AddTransient<ITakClient, TakClient>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
