@@ -1,6 +1,7 @@
 ﻿using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;

@@ -4,7 +4,6 @@ using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -15,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LagoVista.Core;
 using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 
 namespace LagoVista.IoT.Deployment.Tests.Host
 {

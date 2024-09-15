@@ -29,23 +29,19 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IDistributionListRepo _distroListRepo;
         private readonly IOrgLocationRepo _orgLocationRepo;
         private readonly LagoVista.IoT.DeviceManagement.Core.IDeviceManager _deviceManager;
-        private readonly IStaticPageStorage _staticPageStorage;
         private readonly IDeviceRepositoryManager _repoManager;
-        private readonly IAppConfig _appConfig;
         private readonly IDeploymentInstanceRepo _deploymentRepo;
-        private readonly ILinkShortener _linkShortener;
         private readonly IAppUserRepo _appUserRepo;
         private readonly IDeviceNotificationRepo _deviceNotificationRepo;
-        private readonly ITagReplacementService _tagReplacementService;
         private readonly ICOTSender _cotSender;
         private readonly IMqttSender _mqttSender;
         private readonly IRestSender _restSender;
         private readonly INotificationLandingPage _landingPageBuilder;
 
-        public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, ITagReplacementService tagReplacementService, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo, 
+        public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo, 
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder,
-                                  IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, IStaticPageStorage staticPageStorage, ILinkShortener linkShortner, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
-                                  IDeploymentInstanceRepo deploymentRepo, IAppConfig appConfig)
+                                  IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
+                                  IDeploymentInstanceRepo deploymentRepo)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -55,12 +51,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _orgLocationRepo = orgLocationRepo ?? throw new ArgumentNullException(nameof(orgLocationRepo));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
-            _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
-            _linkShortener = linkShortner ?? throw new ArgumentNullException(nameof(linkShortner));
             _deploymentRepo = deploymentRepo ?? throw new ArgumentNullException(nameof(deploymentRepo));
             _appUserRepo = appUserRepo ?? throw new ArgumentNullException(nameof(appUserRepo));
-            _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
-            _tagReplacementService = tagReplacementService ?? throw new ArgumentNullException(nameof(tagReplacementService));
             _notificationTracking = notificationTracking ?? throw new ArgumentNullException(nameof(notificationTracking));
             _restSender = restSender ?? throw new ArgumentNullException(nameof(restSender));
             _cotSender = cotSender ?? throw new ArgumentNullException(nameof(cotSender));

@@ -6,7 +6,6 @@ using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.Deployment.Admin.Services;
 using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,7 @@ using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.Core.Exceptions;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {

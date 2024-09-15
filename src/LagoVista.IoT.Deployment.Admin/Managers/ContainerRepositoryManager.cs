@@ -2,6 +2,7 @@
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -16,9 +17,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     {
         IContainerRepositoryRepo _repo;
         ISecureStorage _secureStorage;
-        Services.IDockerRegisteryServices _dockerRegistryServices;
+        IDockerRegisteryServices _dockerRegistryServices;
 
-        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, IAdminLogger logger, Services.IDockerRegisteryServices dockerRegistryServices,
+        public ContainerRepositoryManager(IContainerRepositoryRepo repo,  ISecureStorage secureStorage, IAdminLogger logger, IDockerRegisteryServices dockerRegistryServices,
                 IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) 
             : base(logger, appConfig, dependencyManager, security)
         {

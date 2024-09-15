@@ -2,7 +2,7 @@
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 
-namespace LagoVista.IoT.Deployment.Admin.Services
+namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IDockerRegisteryServices
     {

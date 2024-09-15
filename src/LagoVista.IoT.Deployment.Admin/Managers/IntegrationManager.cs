@@ -3,6 +3,7 @@ using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Logging.Loggers;
 using System;
@@ -16,9 +17,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     {
         IIntegrationRepo _repo;
         ISecureStorage _secureStorage;
-        Services.IDockerRegisteryServices _dockerRegistryServices;
+        IDockerRegisteryServices _dockerRegistryServices;
 
-        public IntegrationManager(IIntegrationRepo repo, ISecureStorage secureStorage, IAdminLogger logger, Services.IDockerRegisteryServices dockerRegistryServices,
+        public IntegrationManager(IIntegrationRepo repo, ISecureStorage secureStorage, IAdminLogger logger, IDockerRegisteryServices dockerRegistryServices,
                 IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security)
             : base(logger, appConfig, dependencyManager, security)
         {

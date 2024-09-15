@@ -2,10 +2,9 @@
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
-using LagoVista.IoT.Deployment.Models;
 using System.Threading.Tasks;
 
-namespace LagoVista.IoT.Deployment.Admin.Services
+namespace LagoVista.IoT.Deployment.Admin
 {
     public interface IDeploymentConnectorService
     {

@@ -5,6 +5,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
