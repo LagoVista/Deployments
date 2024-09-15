@@ -689,7 +689,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Web Socket URI - Get a URI to Receive Web Socket Notifications
         /// </summary>
-        /// <param name="channel"></param>
         /// <param name="orgid"></param>
         /// <param name="repoid"></param>
         /// <param name="id"></param>

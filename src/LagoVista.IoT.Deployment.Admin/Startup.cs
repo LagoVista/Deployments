@@ -54,6 +54,10 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IIncidentProtocolManager, IncidentProtocolManager>();
             services.AddTransient<ITakClient, TakClient>();
             services.AddTransient<INotificationSender, NotificationSender>();
+            services.AddTransient<ITagReplacementService, TagReplacementService>();
+            services.AddTransient<IRestSender, RESTSender>();
+            services.AddTransient<IMqttSender, MQTTSender>();
+            services.AddTransient<ICOTSender, COTSender>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

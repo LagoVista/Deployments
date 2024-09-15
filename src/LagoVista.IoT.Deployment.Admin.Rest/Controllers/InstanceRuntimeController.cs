@@ -43,7 +43,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IRuntimeTokenManager _runtimeTokenManager;
         private readonly IAppUserManagerReadOnly _userManager;
         private readonly IOrgUserRepo _orgUserRepo;
-        private readonly IEmailSender _emailSender;
+        private readonly UserAdmin.Interfaces.Managers.IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly IServiceTicketCreator _ticketCreator;
         private readonly IDistributionManager _distroManager;
@@ -67,7 +67,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
-            IServiceTicketCreator ticketCreator, IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
+            IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager)
         {
@@ -813,7 +813,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <summary>
         /// Media Resource - Download a media resource file.
         /// </summary>
-        /// <param name="orgid"></param>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/api/deployment/instance/mediaa/{id}/download")]

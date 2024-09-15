@@ -32,7 +32,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly IDeviceManager _deviceManager;
         private readonly IDeviceRepositoryManager _repoManager;
         private readonly IDeviceConfigurationManager _deviceConfigManager;
-        private readonly IEmailSender _emailSender;
+        private readonly UserAdmin.Interfaces.Managers.IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly IDistributionManager _distroManager;
         private readonly IUserManager _userManager;
@@ -44,7 +44,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly INotificationSender _notificationSender;
 
         public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager, IDeviceExceptionRepo exceptionRepo,
-                                 IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, IEmailSender emailSender, 
+                                 IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, UserAdmin.Interfaces.Managers.IEmailSender emailSender, 
                                  ISmsSender smsSender, INotificationSender notificationSender, IDeviceNotificationManager deviceNotificationManager)
         {
             _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));            
