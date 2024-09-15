@@ -58,6 +58,9 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IRestSender, RESTSender>();
             services.AddTransient<IMqttSender, MQTTSender>();
             services.AddTransient<ICOTSender, COTSender>();
+            services.AddTransient<ISMSSender, SMSSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<INotificationLandingPage, NotificationLandingPage>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
