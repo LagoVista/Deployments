@@ -20,5 +20,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             _tagReplacer = new TagReplacementService(AppUserRepo.Object, AppConfig.Object);
         }
 
+        [TestMethod]
+        public async Task ReplaceTags()
+        {
+            var templates = "TeST";
+
+            await _tagReplacer.ReplaceTagsAsync(templates, false, GetDevice(), GetLocation());
+        }
     }
 }

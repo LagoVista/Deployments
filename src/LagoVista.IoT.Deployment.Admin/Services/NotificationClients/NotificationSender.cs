@@ -160,7 +160,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var page = pageResult.Result;
 
-            await _smsSender.PrepareMessage(notification, device.Result, location);
+            await _smsSender.PrepareMessage(notification, deployment.TestMode, device.Result, location);
             await _emailSender.PrepareMessage(notification, deployment.TestMode, device.Result, location);
 
             var recipientsResult = await GetRecipientsAsync(raisedNotification, device.Result, orgEntityHeader, userEntityHeader);

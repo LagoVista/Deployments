@@ -22,5 +22,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
                 AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeploymentInstanceRepo.Object);
         }
 
+
+        [TestMethod]
+        public async Task SendNotificationAsync()
+        {
+            var result =  await _sender.RaiseNotificationAsync(GetRaisedNotification(), OrgEH, UserEH);
+            Assert.AreEqual(result.Successful, result.ErrorMessage);
+        }
     }
 }

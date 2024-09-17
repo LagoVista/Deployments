@@ -34,7 +34,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _smsSender = smsSender ?? throw new ArgumentNullException(nameof(smsSender));
         }
 
-        public async Task<InvokeResult> PrepareMessage(DeviceNotification notification, Device device, OrgLocation location)
+        public async Task<InvokeResult> PrepareMessage(DeviceNotification notification, bool testMode, Device device, OrgLocation location)
         {
             _smsContent = await _tagReplacer.ReplaceTagsAsync(notification.SmsContent, false, device, location);
 

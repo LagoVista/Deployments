@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
     public interface ISMSSender
     {
         int TextMessagesSent { get; }
-         Task<InvokeResult> PrepareMessage(DeviceNotification notification, Device device, OrgLocation location);
+         Task<InvokeResult> PrepareMessage(DeviceNotification notification, bool testMode, Device device, OrgLocation location);
         Task<InvokeResult> SendAsync(NotificationRecipient recipient, NotificationLinks links, EntityHeader org, EntityHeader user);
     }
 }

@@ -93,7 +93,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 await _sslStream.AuthenticateAsClientAsync(_host, _certCollection, false);
 
-                TakServerConnected(this, null);
+                TakServerConnected?.Invoke(this, null);
 
                 return InvokeResult.Success;
             }

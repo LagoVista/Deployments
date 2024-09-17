@@ -1,10 +1,6 @@
 ﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Tests.Notifications
@@ -20,5 +16,16 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             _smsSender = new SMSSender(AdminLogger, AppConfig.Object, TagReplacer.Object, LinkShortener.Object, SMSMessageSender.Object);
         }
 
+        [TestMethod]
+        public async Task PreparePageTest()
+        {
+            await _smsSender.PrepareMessage(GetNotification(), GetTestMode(), GetDevice(), GetLocation());
+        }
+
+        [TestMethod] 
+        public async Task SendTest()
+        {
+            await _smsSender.SendAsync(GetRecipient(), GetLinks(), OrgEH, UserEH);
+        }
     }
 }

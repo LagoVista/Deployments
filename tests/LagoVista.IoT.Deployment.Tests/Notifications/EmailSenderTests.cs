@@ -1,10 +1,6 @@
 ﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Tests.Notifications
@@ -20,6 +16,21 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             _emailSender = new EmailSender(AdminLogger, TagReplacer.Object, EmailMessageSender.Object, LinkShortener.Object);
         }
 
+        [TestMethod]
+        public async Task PreparePageTest()
+        {
+            var result = await _emailSender.PrepareMessage(GetNotification(), GetTestMode(), GetDevice(), GetLocation());
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
+        }
 
+        [TestMethod]
+        public async Task SendTest()
+        {
+            var result = await _emailSender.PrepareMessage(GetNotification(), GetTestMode(), GetDevice(), GetLocation());
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
+
+            result = await _emailSender.SendAsync(GetNotification(), GetRecipient(), GetLinks(), OrgEH, UserEH);
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
+        }
     }
 }
