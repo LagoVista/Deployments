@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         ISMSSender _smsSender;
 
         [TestInitialize]
-        public void Init() 
+        public void Init()
         {
             _smsSender = new SMSSender(AdminLogger, AppConfig.Object, TagReplacer.Object, LinkShortener.Object, SMSMessageSender.Object);
         }
@@ -22,10 +22,11 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             await _smsSender.PrepareMessage(GetNotification(), GetTestMode(), GetDevice(), GetLocation());
         }
 
-        [TestMethod] 
+        [TestMethod]
         public async Task SendTest()
         {
-            await _smsSender.SendAsync(GetRecipient(), GetLinks(), OrgEH, UserEH);
+            var result = await _smsSender.SendAsync(GetRecipient(), GetLinks(), OrgEH, UserEH);
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
     }
 }
