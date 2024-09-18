@@ -36,7 +36,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public async Task<InvokeResult> PrepareMessage(DeviceNotification notification, bool testMode, Device device, OrgLocation location)
         {
-            _smsContent = await _tagReplacer.ReplaceTagsAsync(notification.SmsContent, false, device, location);
+            if (!String.IsNullOrEmpty(notification.SmsContent))
+                _smsContent = await _tagReplacer.ReplaceTagsAsync(notification.SmsContent, false, device, location);
+            else
+                _smsContent = "[no content]";
 
             return InvokeResult.Success;
         }
