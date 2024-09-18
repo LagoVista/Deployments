@@ -28,10 +28,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         {
             var restNotif = new Rest()
             {
-
+                Address = "https://www.nuviot.com",
+                Method = Core.Models.EntityHeader<RestMethods>.Create(RestMethods.GET)
             };           
 
-            await _restSender.SendAsync(restNotif, GetDevice(), GetLocation(), OrgEH, UserEH);
+            var result = await _restSender.SendAsync(restNotif, GetDevice(), GetLocation(), OrgEH, UserEH);
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
     }
 }
