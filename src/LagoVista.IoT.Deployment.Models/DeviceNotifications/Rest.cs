@@ -66,7 +66,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
             FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<RestMethods> Method { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_Payload, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_Payload, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string Payload { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_ContentType, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]

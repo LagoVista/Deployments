@@ -40,7 +40,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
         public EntityHeader Category { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_Title, HelpResource: DeploymentAdminResources.Names.CotNotification_StaleSeconds_Help, IsRequired:true, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotifiication_Type, HelpResource: DeploymentAdminResources.Names.CotNotification_Type_Help, IsRequired:true, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string NotificationType { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_StaleSeconds, HelpResource:DeploymentAdminResources.Names.CotNotification_StaleSeconds_Help, FieldType: FieldTypes.Integer, ResourceType: typeof(DeploymentAdminResources))]
@@ -83,8 +83,8 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                 nameof(Key),
                 nameof(Icon),
                 nameof(Category),
-                nameof(Icon),
                 nameof(NotificationType),
+                nameof(StaleSeconds),
                 nameof(DataPackageFile),
                 nameof(Remarks),
                 nameof(IncludeLocationPoloygon),
