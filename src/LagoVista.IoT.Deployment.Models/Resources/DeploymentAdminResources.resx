@@ -1681,7 +1681,7 @@
     <value>Custom Page (Quick Link)</value>
   </data>
   <data name="DeviceConfiugration_CustomPage_QuickLink_Help" xml:space="preserve">
-    <value>Provide a link that will be used to create a custom page as a quick link to view information about this device.  This page is typically a mobile page that is protected by a PIN</value>
+    <value>Provide a link that will be used to create a custom page as a quick link to view information about this device.  This page is typically a mobile page that is protected by a PIN.  You can use the following fields as part of the URL such as {orgid} = Organization Id, {repoid} = RepositoryId, {deviceid} = DeviceId.  A typical url may look like /app/mycustompage/{orgid}/{repoid}/{deviceid} </value>
   </data>
   <data name="SystemTestExecutions_Description" xml:space="preserve">
     <value>A system test is the definition of a test to be ran to ensure the system is working properly.  System Test Execution is the execution of the test.</value>

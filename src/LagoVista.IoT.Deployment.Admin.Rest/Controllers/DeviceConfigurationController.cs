@@ -99,6 +99,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return InvokeResult<string>.Create(customPage);
         }
 
+        [HttpGet("/api/deviceconfig/{id}/custompage/quicklink")]
+        public async Task<InvokeResult<string>> GetQuickLinkCustomPageForDeviceConfigAsync(String id)
+        {
+            var customPage = await _deviceConfigManager.GetQuickLinkCustomPageForDeviceConfigAsync(id, OrgEntityHeader, UserEntityHeader);
+            return InvokeResult<string>.Create(customPage);
+        }
+
         /// <summary>
         /// Device Config - Key In Use
         /// </summary>

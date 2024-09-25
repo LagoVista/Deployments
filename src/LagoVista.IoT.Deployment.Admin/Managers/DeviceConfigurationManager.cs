@@ -574,6 +574,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             return _deviceConfigRepo.GetCustomPageForDeviceConfigAsync(id);
         }
+
+        public Task<string> GetQuickLinkCustomPageForDeviceConfigAsync(string id, EntityHeader org, EntityHeader user)
+        {
+            return _deviceConfigRepo.GetQuickLinkCustomPageForDeviceConfigAsync(id);
+        }
     }
 
     public class MetaDataCache

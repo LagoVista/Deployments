@@ -15,5 +15,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
         Task<bool> QueryKeyInUseAsync(string key, string orgId);
 
         Task<string> GetCustomPageForDeviceConfigAsync(string id);
+
+        Task<string> GetQuickLinkCustomPageForDeviceConfigAsync(string id);
     }
 }

@@ -73,6 +73,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (raisedNotification.AdditionalExternalContacts != null)
                 externalContacts.AddRange(raisedNotification.AdditionalExternalContacts);
 
+            externalContacts.AddRange(device.NotificationContacts);
+
             if (!EntityHeader.IsNullOrEmpty(device.DistributionList))
             {
                 var distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id);

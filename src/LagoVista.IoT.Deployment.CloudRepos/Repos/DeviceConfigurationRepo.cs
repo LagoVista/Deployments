@@ -64,5 +64,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             var doc = await GetDocumentAsync(id);
             return doc.CustomPage;
         }
+
+        public async Task<string> GetQuickLinkCustomPageForDeviceConfigAsync(string id)
+        {
+            var doc = await GetDocumentAsync(id);
+            return doc.CustomPageQuickLink;
+        }
     }
 }
