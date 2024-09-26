@@ -6,6 +6,7 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceAdmin.Models;
+using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Pipeline.Admin.Models;
@@ -19,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -684,25 +686,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
         {
             return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
-        }
+        }        
+    }
 
-        /// <summary>
-        /// Web Socket URI - Get a URI to Receive Web Socket Notifications
-        /// </summary>
-        /// <param name="orgid"></param>
-        /// <param name="repoid"></param>
-        /// <param name="id"></param>
-        /// <param name="pin"></param>
-        /// <param name="verbosity"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet("/api/wsuri/device/{orgid}/{repoid}/{id}/{verbosity}/{pin}")]
-        public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string orgid, string repoid, string id, string verbosity, string pin)
+    public class DeviceOwnerMonitoringController : DeviceOwnerBaseController
+    {
+        private readonly IDeploymentInstanceManager _instanceManager;
+
+        public DeviceOwnerMonitoringController(IAdminLogger adminLogger, IDeploymentInstanceManager instanceManager) : base(adminLogger)
         {
-            var org = EntityHeader.Create(orgid, "PIN Device Access");
-            var user = EntityHeader.Create(Guid.Empty.ToId(), "PIN Device Access");
-            return _instanceManager.GetRemoteMonitoringURIForDeviceWithPINAsync("device", repoid, id, pin, verbosity, org, user);
+            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager)); ;
         }
 
+        [HttpGet("/deviceapi/wsuri/monitor/{verbosity}")]
+        public Task<InvokeResult<string>> GetDeviceMonitorUriWithPinAsync(string verbosity)
+        {
+            return _instanceManager.GetRemoteMonitoringURIAsync("device", CurrentDevice.Id, verbosity, OrgEntityHeader, UserEntityHeader);
+        }
     }
 }

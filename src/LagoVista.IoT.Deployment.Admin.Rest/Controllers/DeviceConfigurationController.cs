@@ -14,7 +14,9 @@ using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.DeviceAdmin.Models;
 using System.Collections.Generic;
 using LagoVista.IoT.Deployment.Models;
-using MongoDB.Bson.Serialization.Serializers;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.IoT.DeviceManagement.Core;
+using System.Diagnostics;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
@@ -243,6 +245,48 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public DetailResponse<DeviceErrorCode> CreateErrorCodeConfig()
         {
             return DetailResponse<DeviceErrorCode>.Create();
+        }
+    }
+
+    public class DeviceOwnerConfigController : DeviceOwnerBaseController
+    {
+        private readonly IDeviceRepositoryManager _repoManager;
+        private readonly IDeviceConfigurationManager _configRepo;
+        private readonly IDeviceManager _deviceManager;
+
+        public DeviceOwnerConfigController(IAdminLogger adminLogger, IDeviceRepositoryManager repoManager, IDeviceConfigurationManager configManager, IDeviceManager deviceManager) : base(adminLogger)
+        {
+            _configRepo = configManager ?? throw new ArgumentNullException(nameof(configManager));
+            _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+        }
+
+        [HttpGet("/device/api/deviceconfig")]
+        public async Task<InvokeResult<DeviceConfiguration>> GetDeviceConfigurationAsync()
+        {
+            var sw = Stopwatch.StartNew();
+            var result = new InvokeResult<DeviceConfiguration>();
+
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(CurrentDeviceRepo.Id, OrgEntityHeader, UserEntityHeader);
+            result.Timings.Add(new ResultTiming() { Key = "Loaded Device Repository", Ms = sw.Elapsed.TotalMilliseconds });
+
+            sw.Restart();
+            var loadDeviceResult = await _deviceManager.GetDeviceByIdAsync(repo, CurrentDevice.Id, OrgEntityHeader, UserEntityHeader);
+            result.Timings.Add(new ResultTiming() { Key = "Loaded Device", Ms = sw.Elapsed.TotalMilliseconds });
+
+            if (loadDeviceResult.Successful)
+            {
+                sw.Restart();
+                var config = await _configRepo.GetDeviceConfigurationAsync(loadDeviceResult.Result.DeviceConfiguration.Id, OrgEntityHeader, UserEntityHeader);
+                result.Timings.Add(new ResultTiming() { Key = "Loaded Device Configuration", Ms = sw.Elapsed.TotalMilliseconds });
+                result.Result = config;
+                return result;
+            }
+            else
+            {
+                result.Concat(loadDeviceResult);
+                return result;
+            }
         }
     }
 }
