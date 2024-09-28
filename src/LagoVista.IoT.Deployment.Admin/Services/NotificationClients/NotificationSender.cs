@@ -89,12 +89,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 appUsers.AddRange(distroList.AppUsers);
                 externalContacts.AddRange(distroList.ExternalContacts);
             }
-            else
-            {
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No distribution list on device, will not attempt to send.");
-                return InvokeResult<List<NotificationRecipient>>.Create(recipients);
-            }
-
+     
             foreach (var appUser in appUsers)
             {
                 if (!recipients.Any(rec => rec.Id == appUser.Id))
