@@ -740,17 +740,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpPost("/api/device/status/online")]
-        public async Task<InvokeResult<Device>> DeviceOnlineAsync([FromBody] Device device)
+        public async Task<InvokeResult<Device>> DeviceOnlineAsync([FromBody] Device device, long secondsoffline)
         {
             await ValidateRequest(HttpContext.Request);
+
+            await _notificationSender.SendDeviceOnlineNotificationAsync(device, secondsoffline, false, OrgEntityHeader, UserEntityHeader);
 
             return await _deviceManager.HandleDeviceOnlineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
 
         [HttpPost("/api/device/status/offline")]
-        public async Task<InvokeResult<Device>> DeviceOfflineAsync([FromBody] Device device)
+        public async Task<InvokeResult<Device>> DeviceOfflineAsync([FromBody] Device device, string lastcontact)
         {
             await ValidateRequest(HttpContext.Request);
+
+            await _notificationSender.SendDeviceOfflineNotificationAsync(device, lastcontact, false, OrgEntityHeader, UserEntityHeader);
+
             return await _deviceManager.HandleDeviceOfflineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
 

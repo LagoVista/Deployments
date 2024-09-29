@@ -38,11 +38,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IMqttSender _mqttSender;
         private readonly IRestSender _restSender;
         private readonly INotificationLandingPage _landingPageBuilder;
+        private readonly ITimeZoneServices _timeZoneService;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo, 
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder,
-                                  IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
-                                  IDeploymentInstanceRepo deploymentRepo)
+                                  IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, 
+                                  IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -59,6 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _cotSender = cotSender ?? throw new ArgumentNullException(nameof(cotSender));
             _mqttSender = mqttSender ?? throw new ArgumentNullException(nameof(mqttSender));
             _landingPageBuilder = landingPageBuilder ?? throw new ArgumentNullException(nameof(landingPageBuilder));
+            _timeZoneService = timeZoneService ?? throw new ArgumentNullException(nameof(timeZoneService));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
@@ -107,8 +109,43 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
 
             recipients.AddRange(externalContacts.Select(eu => NotificationRecipient.FromExternalContext(eu)));
+            EnsureUniqueNotifications(recipients);
 
             return InvokeResult<List<NotificationRecipient>>.Create(recipients);
+        }
+
+        private string CleanPhoneNumber(string phone)
+        {
+            if (String.IsNullOrEmpty(phone))
+                return String.Empty;
+
+            return phone.Replace("-", "").Replace("(", "").Replace(")", "");
+        }
+
+        private void EnsureUniqueNotifications(List<NotificationRecipient> recipients)
+        { 
+            foreach(var  recipient in recipients)
+            {
+                if (!String.IsNullOrEmpty(recipient.Email))
+                {
+                    var distinctEmails = recipients.Where(recip => recip.Email?.ToUpper() == recipient.Email.ToUpper() && recip.NotificationRecipientId != recipient.NotificationRecipientId);
+                    foreach (var item in distinctEmails)
+                    {
+                        item.Email = null;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(recipient.Phone))
+                {
+                    var distinctEmails = recipients.Where(recip => CleanPhoneNumber(recip.Phone) == CleanPhoneNumber(recip.Phone) && recip.NotificationRecipientId != recipient.NotificationRecipientId);
+                    foreach (var item in distinctEmails)
+                    {
+                        item.Email = null;
+                    }
+                }
+
+            }
+        
         }
 
         private async Task<InvokeResult<Device>> GetDeviceAsync(RaisedDeviceNotification raisedNotification, DeviceRepository repo, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
@@ -214,20 +251,21 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, bool testMode, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, long secondsOffline, bool testMode, EntityHeader org, EntityHeader user)
         {
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id,org, user);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
-
-
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, bool testMode, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, string lastContact, bool testMode, EntityHeader org, EntityHeader user)
         {
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id, org, user);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
-           
+
+            var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
+            if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
+
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
 
@@ -239,7 +277,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information");
-
 
             if (!EntityHeader.IsNullOrEmpty(repo.OfflineDistributionList))
             {
@@ -253,15 +290,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 }
             }
 
-            DeviceNotification notification;
-
-            if (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification))
-            {
-                notification = await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id);            
-            }
-            else
-            {
-                notification = new DeviceNotification()
+            var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?
+                await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id) :
+                new DeviceNotification()
                 {
                     SendEmail = true,
                     SendSMS = true,
@@ -269,13 +300,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     SmsContent = "",
                     EmailSubject = "",
                 };
-            }
-
+         
             var notifId = DateTime.UtcNow.ToInverseTicksRowKey();
             var pageResult = await _landingPageBuilder.PreparePage(notifId, notification, testMode, device, location, org, user);
             var page = pageResult.Result;
 
+            if (notification.SendEmail && !String.IsNullOrEmpty(notification.EmailContent))
+                notification.EmailContent = notification.EmailContent.Replace("[LastContactTime]", "");
+
+            if (notification.SendEmail && !String.IsNullOrEmpty(notification.EmailSubject))
+                notification.EmailSubject = notification.EmailSubject.Replace("[LastContactTime]", "");
+
+            if (notification.SendSMS && !String.IsNullOrEmpty(notification.SmsContent))
+                notification.SmsContent = notification.SmsContent.Replace("[LastContactTime]", "");
+
             await _smsSender.PrepareMessage(notification, testMode, device, location);
+            await _emailSender.PrepareMessage(notification, testMode, device, location);
 
             if(!EntityHeader.IsNullOrEmpty(device.WatchdogNotificationUser))
             {
@@ -288,6 +328,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 var watchDogNotifUser = await _appUserRepo.FindByIdAsync(repo.WatchdogNotificationUser.Id);
                 contacts.Add(NotificationRecipient.FromAppUser(watchDogNotifUser));
             }
+
+            EnsureUniqueNotifications(contacts);
 
             foreach (var recipient in contacts)
             {

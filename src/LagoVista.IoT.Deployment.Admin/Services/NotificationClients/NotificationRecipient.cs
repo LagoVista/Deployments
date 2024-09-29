@@ -1,10 +1,18 @@
-﻿using LagoVista.UserAdmin.Models.Orgs;
+﻿using LagoVista.Core;
+using LagoVista.UserAdmin.Models.Orgs;
 using LagoVista.UserAdmin.Models.Users;
+using System;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
     public class NotificationRecipient
     {
+        public NotificationRecipient()
+        {
+            NotificationRecipientId = Guid.NewGuid().ToId();
+        } 
+
+        public string NotificationRecipientId { get;  } 
         public bool IsAppUser { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

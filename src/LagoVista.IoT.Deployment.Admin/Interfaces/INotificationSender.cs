@@ -10,7 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
     {
         Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader);
 
-        Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, bool testMode, EntityHeader org, EntityHeader user);
-        Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, bool testMode, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, long secondsOffline, bool testMode, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, string lastContact, bool testMode, EntityHeader org, EntityHeader user);
     }
 }
