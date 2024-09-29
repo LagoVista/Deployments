@@ -27,7 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
         }
 
-        public async Task<InvokeResult<NotificationLinks>> PreparePage(RaisedDeviceNotification raisedNotification, DeviceNotification notification, bool testMode, Device device, OrgLocation location, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<NotificationLinks>> PreparePage(string raisedNotificationId, DeviceNotification notification, bool testMode, Device device, OrgLocation location, EntityHeader org, EntityHeader user)
         {
             var links = new NotificationLinks();
 
@@ -47,13 +47,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 links.PageId = storageResult.Result;
                 // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
-                links.FullLandingPageLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotification.Id}/{org.Id}/[RecipientId]/{links.PageId}";
+                links.FullLandingPageLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotificationId}/{org.Id}/[RecipientId]/{links.PageId}";
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.FullLandingPageLink}");
             }
             else
             {
                 // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
-                links.AcknowledgeLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotification.Id}/{org.Id}/[RecipientId]/acknowledge";
+                links.AcknowledgeLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotificationId}/{org.Id}/[RecipientId]/acknowledge";
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.AcknowledgeLink}");
             }
 

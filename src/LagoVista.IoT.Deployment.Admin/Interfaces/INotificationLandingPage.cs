@@ -10,7 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
 {
     public interface INotificationLandingPage
     {
-        Task<InvokeResult<NotificationLinks>> PreparePage(RaisedDeviceNotification raisedNotification, DeviceNotification notification, bool testMode,
+        Task<InvokeResult<NotificationLinks>> PreparePage(string raisedNotificationId, DeviceNotification notification, bool testMode,
             Device device, OrgLocation location, EntityHeader org, EntityHeader user);
     }
 }

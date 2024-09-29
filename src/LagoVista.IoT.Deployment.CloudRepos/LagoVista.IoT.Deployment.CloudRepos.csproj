@@ -3,8 +3,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
    </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.CloudStorage" Version="3.0.2322.1721" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" Version="3.0.2322.1721" />
+    <PackageReference Include="LagoVista.CloudStorage" Version="3.0.2692.0652" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" Version="3.0.2692.0652" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />

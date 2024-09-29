@@ -2,25 +2,25 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Models</id>
-    <version>3.0.2072.1618</version>
+    <version>3.0.2692.0652</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://www.nuviot.com</projectUrl>
     <iconUrl>http://bytemaster.blob.core.windows.net/icons/LagoVistaIcon.png</iconUrl>
     <description>Provides Models for Managing Deployments with the LagoVista Devices, IoT and Home Automation Frameworks.</description>
-    <copyright>Copyright Software Logistics - 2023</copyright>
+    <copyright>Copyright Software Logistics - 2024</copyright>
     <tags>HomeAutomation IoT</tags>
     <icon>LagoVistaIcon.png</icon>
-    <releaseNotes>Build Date: 1/18/2023 9:18:49 PM UTC</releaseNotes>
+    <releaseNotes>Build Date: 9/29/2024 10:52:06 AM UTC</releaseNotes>
     <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
       <group targetFramework="netstandard2.1">
-        <dependency id="LagoVista.IoT.DeviceAdmin.Models" version="3.0.2072.1618" />
-        <dependency id="LagoVista.IoT.Pipeline.Models" version="3.0.2072.1618" />
-        <dependency id="LagoVista.UserAdmin.Models" version="3.0.2072.1618" />
-        <dependency id="LagoVista.IoT.DeviceMessaging.Models" version="3.0.2072.1618" />
-        <dependency id="LagoVista.IoT.DeviceManagement.Models" version="3.0.2072.1618" />
+        <dependency id="LagoVista.IoT.DeviceAdmin.Models" version="3.0.2692.0652" />
+        <dependency id="LagoVista.IoT.Pipeline.Models" version="3.0.2692.0652" />
+        <dependency id="LagoVista.UserAdmin.Models" version="3.0.2692.0652" />
+        <dependency id="LagoVista.IoT.DeviceMessaging.Models" version="3.0.2692.0652" />
+        <dependency id="LagoVista.IoT.DeviceManagement.Models" version="3.0.2692.0652" />
       </group>
     </dependencies>
   </metadata>

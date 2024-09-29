@@ -23,7 +23,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestMethod]
         public async Task CreateLandingPage()
         {
-            var result = await _builder.PreparePage(GetRaisedNotification(), GetNotification(), GetTestMode(), GetDevice(), GetLocation(), OrgEH, UserEH);
+            var result = await _builder.PreparePage(GetRaisedNotification().Id, GetNotification(), GetTestMode(), GetDevice(), GetLocation(), OrgEH, UserEH);
             Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
     }

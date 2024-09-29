@@ -743,6 +743,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult<Device>> DeviceOnlineAsync([FromBody] Device device)
         {
             await ValidateRequest(HttpContext.Request);
+
             return await _deviceManager.HandleDeviceOnlineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
 
