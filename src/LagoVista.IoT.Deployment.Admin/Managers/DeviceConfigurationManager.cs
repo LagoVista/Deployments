@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
@@ -349,17 +350,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
+            Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] Start;");
+
             var result = new InvokeResult();
             if (EntityHeader.IsNullOrEmpty(instanceEH))
             {
-                result.AddSystemError($"Device does not have a valid device configuration Device Id={device.Id}");
-                return result;
+                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Does not have Intance EH, can not populate end points.");
+                instanceEH = EntityHeader.Create(Guid.Empty.ToId(), "none");
             }
 
             var fullSw = Stopwatch.StartNew();
             var deviceConfigMetaJSON = await _cacheProvider.GetFromCollection(GetDeviceConfigMetaDataKey(instanceEH.Id), device.DeviceConfiguration.Id);
-            if(!String.IsNullOrEmpty(deviceConfigMetaJSON))
+            if (!String.IsNullOrEmpty(deviceConfigMetaJSON))
             {
+                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] Found in Cache;");
+
                 var cachedMetaData = JsonConvert.DeserializeObject<MetaDataCache>(deviceConfigMetaJSON);
                 device.DeviceType.Value = cachedMetaData.DeviceType;
                 device.DeviceLabel = cachedMetaData.DeviceConfiguration.DeviceLabel;
@@ -384,6 +389,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return result;
             }
 
+            Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Did not find in cache, populte manually;");
+
             var sw = Stopwatch.StartNew();
             device.DeviceType.Value = await _deviceTypeRepo.GetDeviceTypeAsync(device.DeviceType.Id);
             result.Timings.Add(new ResultTiming() { Key = "GetDeviceType", Ms = sw.Elapsed.TotalMilliseconds });
@@ -393,6 +400,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfig = await _deviceConfigRepo.GetDeviceConfigurationAsync(device.DeviceConfiguration.Id);
             if (deviceConfig == null)
             {
+                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - No Device Configuration, can not populate (System Error, should be a required field.");
                 result.AddSystemError($"Could Not Load Device Configuration with Device Configuration {device.DeviceConfiguration.Text}, Id={device.DeviceConfiguration.Id}.");
                 return result;
             }
@@ -421,140 +429,172 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                 }
             }
-           
+
             sw.Restart();
-            var instanceResult = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
-            result.Timings.AddRange(instanceResult.Timings);
-            var instance = instanceResult.Result;
+            DeploymentInstance instance = null;
 
-            result.Timings.Add(new ResultTiming() { Key = "GetInstanceAsync", Ms = sw.Elapsed.TotalMilliseconds });
-
-            if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
+            var workflowKeys = new List<string>();
+            foreach (var route in deviceConfig.Routes)
             {
-                if (instance.InputCommandSSL)
+                foreach (var module in route.PipelineModules)
                 {
-                    device.DeviceURI = $"https://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
-                }
-                else
-                {
-                    device.DeviceURI = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
-                }
-
-                var workflowKeys = new List<string>();
-                var endpoints = new List<InputCommandEndPoint>();
-                foreach (var route in deviceConfig.Routes)
-                {
-                    foreach (var module in route.PipelineModules)
+                    if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                     {
-                        if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
+                        sw.Restart();
+
+                        var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                        result.Timings.AddRange(wfLoadResult.Timings);
+                        result.Timings.Add(new ResultTiming() { Key = $"LoadFullDeviceWorkflowAsync - {wfLoadResult.Result.Name}", Ms = sw.Elapsed.TotalMilliseconds });
+                        if (wfLoadResult.Successful && !workflowKeys.Contains(wfLoadResult.Result.Key))
                         {
-                            sw.Restart();
-
-                            var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
-                            result.Timings.AddRange(wfLoadResult.Timings);
-                            result.Timings.Add(new ResultTiming() { Key = $"LoadFullDeviceWorkflowAsync - {wfLoadResult.Result.Name}", Ms = sw.Elapsed.TotalMilliseconds });
-                            if (wfLoadResult.Successful && !workflowKeys.Contains(wfLoadResult.Result.Key))
+                            workflowKeys.Add(wfLoadResult.Result.Key);
+                            if (wfLoadResult.Result.Attributes != null)
                             {
-                                workflowKeys.Add(wfLoadResult.Result.Key);
-                                if (wfLoadResult.Result.Attributes != null)
+                                foreach (var attribute in wfLoadResult.Result.Attributes)
                                 {
-                                    foreach (var attribute in wfLoadResult.Result.Attributes)
+                                    if (device.AttributeMetaData == null)
                                     {
-                                        if (device.AttributeMetaData == null)
-                                        {
-                                            device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
-                                        }
-
-                                        if (!device.AttributeMetaData.Where(attr => attr.Key == attribute.Key).Any())
-                                        {
-                                            device.AttributeMetaData.Add(attribute);
-                                        }
-                                    }
-                                }
-
-                                if (wfLoadResult.Result.StateMachines != null)
-                                {
-                                    if (device.StateMachineMetaData == null)
-                                    {
-                                        device.StateMachineMetaData = new List<StateMachine>();
+                                        device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
                                     }
 
-                                    foreach (var stateMachine in wfLoadResult.Result.StateMachines)
+                                    if (!device.AttributeMetaData.Where(attr => attr.Key == attribute.Key).Any())
                                     {
-                                        if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
-                                        {
-                                            device.StateMachineMetaData.Add(stateMachine);
-                                        }
-                                    }
-                                }
-
-                                if (wfLoadResult.Result.InputCommands != null)
-                                {
-                                    foreach (var inputCommand in wfLoadResult.Result.InputCommands)
-                                    {
-                                        var protocol = instance.InputCommandSSL ? "https://" : "http://";
-                                        var endPoint = new InputCommandEndPoint
-                                        {
-                                            EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/[DEVICEID]",
-                                            InputCommand = inputCommand
-                                        };
-
-                                        foreach (var param in inputCommand.Parameters)
-                                        {
-                                            if (param.ParameterType.Value == ParameterTypes.State)
-                                            {
-                                                sw.Restart();
-                                                param.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(param.StateSet.Id, org, user);
-                                                result.Timings.Add(new ResultTiming() { Key = $"GetStateSetAsync - {param.StateSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
-                                            }
-                                            else if (param.ParameterType.Value == ParameterTypes.ValueWithUnit)
-                                            {
-                                                sw.Restart();
-                                                param.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(param.UnitSet.Id, org, user);
-                                                result.Timings.Add(new ResultTiming() { Key = $"GetAttributeUnitSetAsync - {param.UnitSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
-                                            }
-                                        }
-
-                                        if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
-                                        {
-                                            endpoints.Add(endPoint);
-                                        }
+                                        device.AttributeMetaData.Add(attribute);
                                     }
                                 }
                             }
-                            else
+
+                            if (wfLoadResult.Result.StateMachines != null)
                             {
-                                result.Concat(result);
+                                if (device.StateMachineMetaData == null)
+                                {
+                                    device.StateMachineMetaData = new List<StateMachine>();
+                                }
+
+                                foreach (var stateMachine in wfLoadResult.Result.StateMachines)
+                                {
+                                    if (!device.StateMachineMetaData.Where(attr => attr.Key == stateMachine.Key).Any())
+                                    {
+                                        device.StateMachineMetaData.Add(stateMachine);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-                device.InputCommandEndPoints = endpoints;
+            }
+
+            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Loaded attributes and state machines to device configurations.");
+
+            if (instanceEH.Id != Guid.Empty.ToId())
+            {
+                var instanceResult = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+                result.Timings.AddRange(instanceResult.Timings);
+                instance = instanceResult.Result;
+
+                result.Timings.Add(new ResultTiming() { Key = "GetInstanceAsync", Ms = sw.Elapsed.TotalMilliseconds });
+
+
+                if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
+                {
+                    if (instance.InputCommandSSL)
+                    {
+                        device.DeviceURI = $"https://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
+                    }
+                    else
+                    {
+                        device.DeviceURI = $"http://{instance.DnsHostName}:{instance.InputCommandPort}/devices/{device.Id}";
+                    }
+
+                    var endpoints = new List<InputCommandEndPoint>();
+                    foreach (var route in deviceConfig.Routes)
+                    {
+                        foreach (var module in route.PipelineModules)
+                        {
+                            if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
+                            {
+                                sw.Restart();
+
+                                var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
+                                result.Timings.AddRange(wfLoadResult.Timings);
+                                result.Timings.Add(new ResultTiming() { Key = $"LoadFullDeviceWorkflowAsync - {wfLoadResult.Result.Name}", Ms = sw.Elapsed.TotalMilliseconds });
+                                if (wfLoadResult.Successful && !workflowKeys.Contains(wfLoadResult.Result.Key))
+                                {
+                                    workflowKeys.Add(wfLoadResult.Result.Key);
+                                    if (wfLoadResult.Result.InputCommands != null)
+                                    {
+                                        foreach (var inputCommand in wfLoadResult.Result.InputCommands)
+                                        {
+                                            var protocol = instance.InputCommandSSL ? "https://" : "http://";
+                                            var endPoint = new InputCommandEndPoint
+                                            {
+                                                EndPoint = $"{protocol}{instance.DnsHostName}:{instance.InputCommandPort}/{deviceConfig.Key}/{route.Key}/{wfLoadResult.Result.Key}/{inputCommand.Key}/[DEVICEID]",
+                                                InputCommand = inputCommand
+                                            };
+
+                                            foreach (var param in inputCommand.Parameters)
+                                            {
+                                                if (param.ParameterType.Value == ParameterTypes.State)
+                                                {
+                                                    sw.Restart();
+                                                    param.StateSet.Value = await _deviceAdminManager.GetStateSetAsync(param.StateSet.Id, org, user);
+                                                    result.Timings.Add(new ResultTiming() { Key = $"GetStateSetAsync - {param.StateSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
+                                                }
+                                                else if (param.ParameterType.Value == ParameterTypes.ValueWithUnit)
+                                                {
+                                                    sw.Restart();
+                                                    param.UnitSet.Value = await _deviceAdminManager.GetAttributeUnitSetAsync(param.UnitSet.Id, org, user);
+                                                    result.Timings.Add(new ResultTiming() { Key = $"GetAttributeUnitSetAsync - {param.UnitSet.Text}", Ms = sw.Elapsed.TotalMilliseconds });
+                                                }
+                                            }
+
+                                            if (!endpoints.Where(end => end.EndPoint == endPoint.EndPoint).Any())
+                                            {
+                                                endpoints.Add(endPoint);
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    result.Concat(result);
+                                }
+                            }
+                        }
+                    }
+                    device.InputCommandEndPoints = endpoints;
+                }
+
+                foreach (var ep in device.InputCommandEndPoints)
+                {
+                    ep.EndPoint = ep.EndPoint.Replace("[DEVICEID]", device.DeviceId);
+                }
+
             }
             else
             {
+                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Instance not available, can't populate end points.");
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
-                device.AttributeMetaData = new List<DeviceAdmin.Models.Attribute>();
-                device.StateMachineMetaData = new List<StateMachine>();
             }
 
             var metaDataCache = new MetaDataCache()
             {
                 DeviceType = device.DeviceType.Value,
                 DeviceConfiguration = deviceConfig,
-                EndpointPort = instance.InputCommandPort,
-                EndpointSSL = instance.InputCommandSSL,
-                DnsHostName = instance.DnsHostName,
                 InputCommandEndPoints = device.InputCommandEndPoints,
                 AttributeMetaData = device.AttributeMetaData,
                 StateMachineMetaData = device.StateMachineMetaData,
                 PropertiesMetaData = device.PropertiesMetaData,
             };
 
-            foreach(var ep in device.InputCommandEndPoints)
+            if (instance != null)
             {
-              ep.EndPoint = ep.EndPoint.Replace("[DEVICEID]", device.DeviceId);
+                metaDataCache.EndpointPort = instance.InputCommandPort;
+                metaDataCache.EndpointSSL = instance.InputCommandSSL;
+                metaDataCache.DnsHostName = instance.DnsHostName;
             }
+
+            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Added meta data to cache with cache key: ${GetDeviceConfigMetaDataKey(instanceEH.Id)}.");
 
             await _cacheProvider.AddToCollectionAsync(GetDeviceConfigMetaDataKey(instanceEH.Id), deviceConfig.Id, JsonConvert.SerializeObject(metaDataCache));
            

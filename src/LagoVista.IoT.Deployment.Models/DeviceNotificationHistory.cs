@@ -29,6 +29,8 @@ namespace LagoVista.IoT.Deployment.Models
     
         public bool SentEmail { get; set; }
         public bool SentSMS { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
     
         public bool TestMode { get; set; }
     }

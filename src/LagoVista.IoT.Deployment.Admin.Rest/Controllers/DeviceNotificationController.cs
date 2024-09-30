@@ -1,9 +1,12 @@
-﻿using LagoVista.Core.Models.UIMetaData;
+﻿using LagoVista.Core;
+using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Models.DeviceNotifications;
+using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Attributes;
 using LagoVista.IoT.Web.Common.Controllers;
@@ -25,13 +28,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceNotificationManager _notificationManager;
         private readonly ILocationDiagramRepo _locationDiagramRepo;
         private readonly INotificationSender _notificationSender;
+        private readonly IDeviceRepositoryManager _repoManager;
+        private readonly IDeviceManager _deviceManager;
 
 
-        public DeviceNotificationController(IDeviceNotificationManager notificationManager, INotificationSender notificationSender, ILocationDiagramRepo locationDiagramRepo, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        public DeviceNotificationController(IDeviceNotificationManager notificationManager, INotificationSender notificationSender, ILocationDiagramRepo locationDiagramRepo,
+                                            IDeviceRepositoryManager repoManager, IDeviceManager deviceManaager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
             _locationDiagramRepo = locationDiagramRepo ?? throw new ArgumentNullException(nameof(locationDiagramRepo));
             _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
+            _deviceManager = deviceManaager ?? throw new ArgumentNullException(nameof(DeviceNotification));
+            _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
         }
 
         /// <summary>
@@ -106,6 +114,28 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Header>.Create();
         }
 
+        [HttpGet("/api/notification/device/{repoid}/{id}/online/test")]
+        public async Task<InvokeResult> TestOnlineNotification(string repoid, string id, int secondsoffline = 420)
+        {
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
+            var result = await _deviceManager.GetDeviceByIdAsync(repo, id, OrgEntityHeader, UserEntityHeader);
+            if (!result.Successful)
+                return result.ToInvokeResult(); 
+
+            return await _notificationSender.SendDeviceOnlineNotificationAsync(result.Result, secondsoffline, true, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/notification/device/{repoid}/{id}/offline/test")]
+        public async Task<InvokeResult> TestOfflineNotification(string repoid, string id, string lastcontact)
+        {
+            if (String.IsNullOrEmpty(lastcontact))
+                lastcontact = DateTime.UtcNow.AddHours(1.5).ToJSONString();
+
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
+            var device = await _deviceManager.GetDeviceByIdAsync(repo, id, OrgEntityHeader, UserEntityHeader);
+
+            return await _notificationSender.SendDeviceOfflineNotificationAsync(device.Result, lastcontact, true, OrgEntityHeader, UserEntityHeader);
+        }
 
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
         public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
