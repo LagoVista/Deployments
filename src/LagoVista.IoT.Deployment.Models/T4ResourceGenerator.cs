@@ -1,4 +1,4 @@
-﻿/*9/14/2024 5:02:57 PM*/
+﻿/*9/30/2024 6:44:22 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -630,6 +630,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCodes_Title
 
 		public static string DeviceErrorCodes_Title { get { return GetResourceString("DeviceErrorCodes_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_EmailSubject
+
+		public static string DeviceNotification_EmailSubject { get { return GetResourceString("DeviceNotification_EmailSubject"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_EmailSubject_Help
+
+		public static string DeviceNotification_EmailSubject_Help { get { return GetResourceString("DeviceNotification_EmailSubject_Help"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_SMS_Help
+
+		public static string DeviceNotification_SMS_Help { get { return GetResourceString("DeviceNotification_SMS_Help"); } }
 //Resources:DeploymentAdminResources:DeviceNotification_TagHelp
 
 		public static string DeviceNotification_TagHelp { get { return GetResourceString("DeviceNotification_TagHelp"); } }
@@ -2055,6 +2064,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_TriggerOnEachOccurrence = "DeviceErrorCode_TriggerOnEachOccurrence";
 			public const string DeviceErrorCode_TriggerOnEachOccurrence_Help = "DeviceErrorCode_TriggerOnEachOccurrence_Help";
 			public const string DeviceErrorCodes_Title = "DeviceErrorCodes_Title";
+			public const string DeviceNotification_EmailSubject = "DeviceNotification_EmailSubject";
+			public const string DeviceNotification_EmailSubject_Help = "DeviceNotification_EmailSubject_Help";
+			public const string DeviceNotification_SMS_Help = "DeviceNotification_SMS_Help";
 			public const string DeviceNotification_TagHelp = "DeviceNotification_TagHelp";
 			public const string DeviceNotification_Title = "DeviceNotification_Title";
 			public const string DeviceNotificationHistory_Description = "DeviceNotificationHistory_Description";

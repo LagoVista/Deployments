@@ -4,7 +4,7 @@ using LagoVista.Core.Validation;
 using LagoVista.Core;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Models;
-using LagoVista.UserAdmin.Interfaces.Managers;
+using LagoVista;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Models.Orgs;
 using System;
@@ -16,8 +16,7 @@ using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using System.Linq;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
-using RingCentral;
-using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Security;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -223,8 +222,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         public async Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, long secondsOffline, bool testMode, EntityHeader org, EntityHeader user)
         {
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id,org, user);
-            if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
-            return InvokeResult.Success;
+            var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?
+            await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id) :
+            new DeviceNotification()
+            {
+                SendEmail = true,
+                SendSMS = true,
+                EmailContent = $"<h4>Device Offline {device.Name}</h4><p>Last Contact [LastContactTime]</p>",
+                SmsContent = $"Device Offline {device.Name}, Last Contact [LastContactTime]",
+                EmailSubject = $"Device Offline {device.Name}",
+            };
+
+            return await SendNotification(device, repo, device.LastContact, notification, testMode, org, user);
         }
 
         public async Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, string lastContact, bool testMode, EntityHeader org, EntityHeader user)
@@ -232,9 +241,24 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id, org, user);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
 
-            //var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
-            //if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
+            var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?
+            await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id) :
+            new DeviceNotification()
+            {
+                SendEmail = true,
+                SendSMS = true,
+                EmailContent = $"<h4>Device Offline {device.Name}</h4><p>Last Contact [LastContactTime]</p>",
+                SmsContent = $"Device Offline {device.Name}, Last Contact [LastContactTime]",
+                EmailSubject = $"Device Offline {device.Name}",
+            };
 
+            return await SendNotification(device, repo, lastContact, notification, testMode, org, user);
+        }
+
+
+        private async Task<InvokeResult> SendNotification(Device device, DeviceRepository repo, string lastContact, DeviceNotification notification, bool testMode, EntityHeader org, EntityHeader user)
+        {
+        
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
 
@@ -282,38 +306,40 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     tz = _timeZoneService.GetTimeZoneById(orgInfo.TimeZone.Id);
                 }
             }
-            
+
+            var dateTime = lastContact.ToDateTime();
+            var delta = DateTime.UtcNow - dateTime;
+            var deltaStr = delta.ToDescription();            
+
             var lastContactDT = TimeZoneInfo.ConvertTime(lastContact.ToDateTime(), tz);
             var lastContactStr = $"{lastContactDT.ToShortDateString()} {lastContactDT.ToShortTimeString()} {tz.Id}";
-            
-            var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?
-                await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id) :
-                new DeviceNotification()
-                {
-                    SendEmail = true,
-                    SendSMS = true,
-                    EmailContent = $"<h4>Device Offline {device.Name}</h4><p>Last Contact {lastContactStr}</p>",
-                    SmsContent = $"Device Offline {device.Name}, Last Contact {lastContactStr}",
-                    EmailSubject = $"Device Offline {device.Name}",
-                };
-         
+                             
+
             var notifId = DateTime.UtcNow.ToInverseTicksRowKey();
             var pageResult = await _landingPageBuilder.PreparePage(notifId, notification, testMode, device, location, org, user);
             var page = pageResult.Result;
 
             if (notification.SendEmail && !String.IsNullOrEmpty(notification.EmailContent))
-                notification.EmailContent = notification.EmailContent.Replace("[LastContactTime]", "");
+            {
+                notification.EmailContent = notification.EmailContent.Replace("[LastContactTime]", lastContactStr);
+                notification.EmailContent = notification.EmailContent.Replace("[TimeSinceLastContact]", deltaStr);
+            }
 
             if (notification.SendEmail && !String.IsNullOrEmpty(notification.EmailSubject))
-                notification.EmailSubject = notification.EmailSubject.Replace("[LastContactTime]", "");
+            {
+                notification.EmailSubject = notification.EmailSubject.Replace("[LastContactTime]", lastContactStr);
+                notification.EmailSubject = notification.EmailSubject.Replace("[TimeSinceLastContact]", deltaStr);
+            }
 
             if (notification.SendSMS && !String.IsNullOrEmpty(notification.SmsContent))
-                notification.SmsContent = notification.SmsContent.Replace("[LastContactTime]", "");
+            {
+                notification.SmsContent = notification.SmsContent.Replace("[LastContactTime]", lastContactStr);
+                notification.SmsContent = notification.SmsContent.Replace("[TimeSinceLastContact]", deltaStr);
+            }
 
-            await _smsSender.PrepareMessage(notification, testMode, device, location);
+                await _smsSender.PrepareMessage(notification, testMode, device, location);
             await _emailSender.PrepareMessage(notification, testMode, device, location);
             
-
             if (!EntityHeader.IsNullOrEmpty(device.WatchdogNotificationUser))
             {
                 var watchDogNotifUser = await _appUserRepo.FindByIdAsync(device.WatchdogNotificationUser.Id);
