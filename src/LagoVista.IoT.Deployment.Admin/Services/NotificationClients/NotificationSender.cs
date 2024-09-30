@@ -39,9 +39,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IRestSender _restSender;
         private readonly INotificationLandingPage _landingPageBuilder;
         private readonly ITimeZoneServices _timeZoneService;
+        private readonly IOrganizationRepo _orgRepo;
 
-        public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo, 
-            LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder,
+        public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
+            LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
                                   IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, 
                                   IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
@@ -61,6 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _mqttSender = mqttSender ?? throw new ArgumentNullException(nameof(mqttSender));
             _landingPageBuilder = landingPageBuilder ?? throw new ArgumentNullException(nameof(landingPageBuilder));
             _timeZoneService = timeZoneService ?? throw new ArgumentNullException(nameof(timeZoneService));
+            _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
@@ -109,44 +111,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
 
             recipients.AddRange(externalContacts.Select(eu => NotificationRecipient.FromExternalContext(eu)));
-            EnsureUniqueNotifications(recipients);
+            recipients.EnsureUniqueNotifications();
 
             return InvokeResult<List<NotificationRecipient>>.Create(recipients);
         }
-
-        private string CleanPhoneNumber(string phone)
-        {
-            if (String.IsNullOrEmpty(phone))
-                return String.Empty;
-
-            return phone.Replace("-", "").Replace("(", "").Replace(")", "");
-        }
-
-        private void EnsureUniqueNotifications(List<NotificationRecipient> recipients)
-        { 
-            foreach(var  recipient in recipients)
-            {
-                if (!String.IsNullOrEmpty(recipient.Email))
-                {
-                    var distinctEmails = recipients.Where(recip => recip.Email?.ToUpper() == recipient.Email.ToUpper() && recip.NotificationRecipientId != recipient.NotificationRecipientId);
-                    foreach (var item in distinctEmails)
-                    {
-                        item.Email = null;
-                    }
-                }
-
-                if (!String.IsNullOrEmpty(recipient.Phone))
-                {
-                    var distinctEmails = recipients.Where(recip => CleanPhoneNumber(recip.Phone) == CleanPhoneNumber(recip.Phone) && recip.NotificationRecipientId != recipient.NotificationRecipientId);
-                    foreach (var item in distinctEmails)
-                    {
-                        item.Email = null;
-                    }
-                }
-
-            }
         
-        }
 
         private async Task<InvokeResult<Device>> GetDeviceAsync(RaisedDeviceNotification raisedNotification, DeviceRepository repo, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
@@ -269,9 +238,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
 
-
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - ----->> >> >> 1");
-
             OrgLocation location = null;
             if (!EntityHeader.IsNullOrEmpty(device.Location))
             {
@@ -293,17 +259,42 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 }
             }
 
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - ----->> >> >> 2");
-
+            var tz = TimeZoneInfo.Local;
+            if (device.TimeZone.Id != "UTC")
+            {
+                tz = _timeZoneService.GetTimeZoneById(device.TimeZone.Id);
+            }
+            else if (location != null && location.TimeZone.Id != "UTC")
+            {
+                tz = _timeZoneService.GetTimeZoneById(location.TimeZone.Id);
+            }
+            else if (!EntityHeader.IsNullOrEmpty(repo.Instance))
+            {
+                var instance = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
+                tz = _timeZoneService.GetTimeZoneById(instance.TimeZone.Id);
+                Console.WriteLine($"=====> ----> {repo.Name} {instance.Name} {instance.TimeZone.Text} {tz}");
+            }
+            else
+            {
+                var orgInfo = await _orgRepo.GetOrganizationAsync(org.Id);
+                if(orgInfo.TimeZone.Id != "UTC")
+                {
+                    tz = _timeZoneService.GetTimeZoneById(orgInfo.TimeZone.Id);
+                }
+            }
+            
+            var lastContactDT = TimeZoneInfo.ConvertTime(lastContact.ToDateTime(), tz);
+            var lastContactStr = $"{lastContactDT.ToShortDateString()} {lastContactDT.ToShortTimeString()} {tz.Id}";
+            
             var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?
                 await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOfflinNotification.Id) :
                 new DeviceNotification()
                 {
                     SendEmail = true,
                     SendSMS = true,
-                    EmailContent = "",
-                    SmsContent = "",
-                    EmailSubject = "",
+                    EmailContent = $"<h4>Device Offline {device.Name}</h4><p>Last Contact {lastContactStr}</p>",
+                    SmsContent = $"Device Offline {device.Name}, Last Contact {lastContactStr}",
+                    EmailSubject = $"Device Offline {device.Name}",
                 };
          
             var notifId = DateTime.UtcNow.ToInverseTicksRowKey();
@@ -321,8 +312,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             await _smsSender.PrepareMessage(notification, testMode, device, location);
             await _emailSender.PrepareMessage(notification, testMode, device, location);
-
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - ----->> >> >> 3");
+            
 
             if (!EntityHeader.IsNullOrEmpty(device.WatchdogNotificationUser))
             {
@@ -336,7 +326,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 contacts.Add(NotificationRecipient.FromAppUser(watchDogNotifUser));
             }
 
-            EnsureUniqueNotifications(contacts);
+            contacts.EnsureUniqueNotifications();
 
             foreach (var recipient in contacts)
             {
@@ -376,6 +366,43 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
 
             return InvokeResult.Success;
+        }
+    }
+
+    public static class NotificationExtensions
+    {
+        private static string CleanPhoneNumber(string phone)
+        {
+            if (String.IsNullOrEmpty(phone))
+                return String.Empty;
+
+            return phone.Replace("-", "").Replace("(", "").Replace(")", "");
+        }
+
+        public static void EnsureUniqueNotifications(this List<NotificationRecipient> recipients )
+        {
+            foreach (var recipient in recipients)
+            {
+                if (!String.IsNullOrEmpty(recipient.Email))
+                {
+                    var distinctEmails = recipients.Where(recip => recip.Email?.ToUpper() == recipient.Email.ToUpper() && recip.NotificationRecipientId != recipient.NotificationRecipientId);
+                    foreach (var item in distinctEmails)
+                    {
+                        item.Email = null;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(recipient.Phone))
+                {
+                    var distinctEmails = recipients.Where(recip => CleanPhoneNumber(recip.Phone) == CleanPhoneNumber(recipient.Phone) && recip.NotificationRecipientId != recipient.NotificationRecipientId);
+                    foreach (var item in distinctEmails)
+                    {
+                        item.Phone = null;
+                    }
+                }
+
+            }
+
         }
     }
 }

@@ -129,7 +129,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult> TestOfflineNotification(string repoid, string id, string lastcontact)
         {
             if (String.IsNullOrEmpty(lastcontact))
-                lastcontact = DateTime.UtcNow.AddHours(1.5).ToJSONString();
+                lastcontact = DateTime.UtcNow.AddHours(-1.5).ToJSONString();
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
             var device = await _deviceManager.GetDeviceByIdAsync(repo, id, OrgEntityHeader, UserEntityHeader);

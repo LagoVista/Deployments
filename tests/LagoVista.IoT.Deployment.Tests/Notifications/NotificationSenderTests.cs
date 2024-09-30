@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestInitialize]
         public void Init()
         {
-            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object,
+            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object,
                 AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeploymentInstanceRepo.Object, TimeZoneService.Object);
         }
 
@@ -28,6 +28,26 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         {
             var result =  await _sender.RaiseNotificationAsync(GetRaisedNotification(), OrgEH, UserEH);
             Assert.AreEqual(result.Successful, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void UniqueNotificationsTest()
+        {
+            var contacts = new List<NotificationRecipient>()
+            {
+                new NotificationRecipient() {LastName = "1", Phone = "12345", Email = "abc@foo.com"},
+                new NotificationRecipient() {LastName = "2", Phone = "12345", Email = "abc@foo.com"},
+                new NotificationRecipient() {LastName = "3", Phone = "12345", Email = "abc@foo2.com"},
+                new NotificationRecipient() {LastName = "4", Phone = "123", Email = "abc@foo.com"},
+                new NotificationRecipient() {LastName = "5", Phone = "2345", Email = "abc@foo.com"}
+            };
+
+            contacts.EnsureUniqueNotifications();
+
+            foreach(var contact in contacts)
+            {
+                Console.WriteLine($"{contact.LastName} {contact.Phone} {contact.Email}");
+            }
         }
     }
 }

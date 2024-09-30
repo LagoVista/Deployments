@@ -52,6 +52,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<ITagReplacementService> TagReplacer = new Mock<ITagReplacementService>();
         protected Mock<IStaticPageStorage> StaticPageService = new Mock<IStaticPageStorage>();
         protected Mock<IMediaServicesManager> MediaServicesManager = new Mock<IMediaServicesManager>();
+        protected Mock<IOrganizationRepo> OrgRepo = new Mock<IOrganizationRepo>();
         protected Mock<ITimeZoneServices> TimeZoneService = new Mock<ITimeZoneServices>();
 
         [TestInitialize]
