@@ -57,6 +57,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.AcknowledgeLink}");
             }
 
+            links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/silence";
+
             return InvokeResult<NotificationLinks>.Create(links);
         }
 

@@ -25,7 +25,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestMethod]
         public async Task SendTest()
         {
-            var result = await _smsSender.SendAsync(GetRecipient(), GetLinks(), OrgEH, UserEH);
+            var result = await _smsSender.SendAsync("dontcare", GetRecipient(), GetLinks(), false, OrgEH, UserEH);
             Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
     }

@@ -8,6 +8,8 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task<ListResponse<DeviceNotificationHistory>> GetHistoryAsync(string deviceId, ListRequest listRequest);
 
+        Task<DeviceNotificationHistory> GetHistoryAsync(string deviceId, string rowkey);
+
         Task AddHistoryAsync(DeviceNotificationHistory history);
 
         Task MarkAsViewed(string staticPageId);

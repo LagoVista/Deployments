@@ -19,7 +19,9 @@ namespace LagoVista.IoT.Deployment.Models
         public string NotificationId { get; set; }
 
         public string StaticPageId { get; set; }
-        public string DeviceId {  get => PartitionKey;  }
+        public string DeviceUniqueId { get => PartitionKey; }
+        public string DeviceRepoId { get; set; }
+        public string DeviceId { get; set; }
         public string OrgId { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }

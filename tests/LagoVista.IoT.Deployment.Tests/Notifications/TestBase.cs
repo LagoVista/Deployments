@@ -78,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
 
             EmailMessageSender.Setup(ems => ems.SendAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult.Success);
             SMSMessageSender.Setup(sms => sms.SendAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(InvokeResult.Success);
-            SMSSender.Setup(sms => sms.SendAsync(It.IsAny<NotificationRecipient>(), It.IsAny<NotificationLinks>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult.Success);
+            SMSSender.Setup(sms => sms.SendAsync(It.IsAny<string>(), It.IsAny<NotificationRecipient>(), It.IsAny<NotificationLinks>(), It.IsAny<bool>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult.Success);
             TimeZoneService.Setup(tms => tms.GetTimeZoneById(It.IsAny<string>())).Returns(TimeZoneInfo.Local);
        
         }

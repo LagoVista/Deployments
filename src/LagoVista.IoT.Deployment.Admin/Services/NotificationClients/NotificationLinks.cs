@@ -9,5 +9,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         public string PageId { get; set; }
         public string FullLandingPageLink { get; set; }
         public string AcknowledgeLink { get; set; }
+        public string SilenceLink { get; set; }
     }
 }

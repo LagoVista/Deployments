@@ -3,13 +3,13 @@ using LagoVista.Core.Models;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
+using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
-using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.UserAdmin.Models.Orgs;
-using RingCentral;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
@@ -22,6 +22,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly ILinkShortener _linkShortener;
 
         private string _emailContent;
+        private string _emailSubject;
         public int EmailsSent { get; private set; }
 
         public EmailSender(IAdminLogger logger, ITagReplacementService tagReplacer, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ILinkShortener linkShortener)
@@ -34,6 +35,17 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public async Task<InvokeResult> PrepareMessage(DeviceNotification notification, bool testMode, Device device, OrgLocation location)
         {
+            if(!String.IsNullOrEmpty(notification.EmailSubject))
+            {
+                _emailSubject = await _tagReplacer.ReplaceTagsAsync(notification.EmailSubject, true, device, location);
+                if (testMode)
+                    _emailSubject = $"TESTING: {_emailSubject}";
+            }
+            else
+            {
+                _emailSubject = "[no subject]";
+            }
+
             if (!String.IsNullOrEmpty(notification.EmailContent))
             {
                 _emailContent = await _tagReplacer.ReplaceTagsAsync(notification.EmailContent, true, device, location);
@@ -48,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> SendAsync(DeviceNotification notification, NotificationRecipient recipient, NotificationLinks links, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult> SendAsync(string id, DeviceNotification notification, NotificationRecipient recipient, bool allowSilence, NotificationLinks links, EntityHeader org, EntityHeader user)
         {
             if (!recipient.SendEmail)
                 return InvokeResult.FromError("Should not send email to recipient (SendEmail is false).");
@@ -62,8 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var shortenedLink = await _linkShortener.ShortenLinkAsync(actualInk);
             if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
 
-            var linkLabel = String.IsNullOrEmpty(links.FullLandingPageLink) ? "Details" : "Acknowledge";
-
+            var linkLabel = String.IsNullOrEmpty(links.FullLandingPageLink) ? "Details" : "Acknowledge";           
             if (String.IsNullOrEmpty(recipient.Email))
             {
                 _logger.AddCustomEvent(LogLevel.Warning, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
@@ -73,8 +84,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else
             {
+                var contentToSend = _emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>";
+
+                if (allowSilence)
+                {
+                    var silencedLink = links.SilenceLink.Replace("[NotificationHistoryId]", id.Replace(".","%2e").Replace("-","%2d"));
+                    var shortenedSilenceLink = await _linkShortener.ShortenLinkAsync(silencedLink);
+                    if (!shortenedSilenceLink.Successful) return shortenedSilenceLink.ToInvokeResult();
+                    contentToSend += $"<div><a href='{shortenedSilenceLink.Result}'>Silence Notifications</a></div>";
+                }
+
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending Email To {recipient.FirstName} {recipient.LastName} {recipient.Email} -  {shortenedLink.Result} ({actualInk})");
-                var result = await _emailSender.SendAsync(recipient.Email, notification.EmailSubject, _emailContent + $"<div style='font-size:16px'><a href='{shortenedLink.Result}'>{linkLabel}</a></div>", org, user);
+                var result = await _emailSender.SendAsync(recipient.Email, _emailSubject, contentToSend, org, user);
                 if (result.Successful)
                     EmailsSent++;
                 else
@@ -83,6 +104,5 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 return result;
             }
         }
-
     }
 }

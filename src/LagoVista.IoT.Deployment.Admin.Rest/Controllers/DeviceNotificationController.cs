@@ -1,10 +1,10 @@
 ﻿using LagoVista.Core;
+using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
-using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
+using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
-using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Logging.Loggers;
@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -30,9 +29,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly INotificationSender _notificationSender;
         private readonly IDeviceRepositoryManager _repoManager;
         private readonly IDeviceManager _deviceManager;
+        private readonly IDeviceNotificationTracking _notificationTracking;
 
-
-        public DeviceNotificationController(IDeviceNotificationManager notificationManager, INotificationSender notificationSender, ILocationDiagramRepo locationDiagramRepo,
+        public DeviceNotificationController(IDeviceNotificationManager notificationManager, IDeviceNotificationTracking notificationTracking, INotificationSender notificationSender, ILocationDiagramRepo locationDiagramRepo,
                                             IDeviceRepositoryManager repoManager, IDeviceManager deviceManaager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
@@ -40,6 +39,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
             _deviceManager = deviceManaager ?? throw new ArgumentNullException(nameof(DeviceNotification));
             _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
+            _notificationTracking = notificationTracking ?? throw new ArgumentNullException(nameof(notificationTracking));
         }
 
         /// <summary>
@@ -232,6 +232,21 @@ payload +
         public async Task<LocationDiagram> GetLocationDiagram(string diagramid)
         {
             return await _locationDiagramRepo.GetLocationDiagramAsync(diagramid);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("/device/notififcation/{deviceuniqueid}/{historyid}/{pin}/silence")]
+        public async Task<InvokeResult> SilenceAlarmAsync(string deviceuniqueid, string historyid, string pin)
+        {
+            Console.WriteLine($"try here {deviceuniqueid} - {historyid}");
+
+            var notificationHistory = await _notificationTracking.GetHistoryAsync(deviceuniqueid, historyid);
+            var user = EntityHeader.Create(notificationHistory.UserId, notificationHistory.UserName);
+            var org = EntityHeader.Create(notificationHistory.OrgId, "TBD");
+
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(notificationHistory.DeviceRepoId, org, user);
+            org = repo.OwnerOrganization;
+            return await _deviceManager.SilenceAlarmsAsync(repo, deviceuniqueid, pin, org, user);
         }
     }
 }

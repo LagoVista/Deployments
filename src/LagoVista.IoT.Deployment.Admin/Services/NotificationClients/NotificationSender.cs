@@ -175,10 +175,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             foreach (var recipient in recipients)
             {
-                await _smsSender.SendAsync(recipient, page, orgEntityHeader, userEntityHeader);
-                await _emailSender.SendAsync(notification, recipient, page, orgEntityHeader, userEntityHeader);
-
-                await _notificationTracking.AddHistoryAsync(new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{recipient.Id}")
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{recipient.Id}")
                 {
                     UserId = recipient.Id,
                     UserName = $"{recipient.FirstName} {recipient.LastName}",
@@ -189,8 +186,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     TestMode = raisedNotification.TestMode,
                     SentTimeStamp = DateTime.UtcNow.ToJSONString(),
                     SentEmail = notification.SendEmail && recipient.SendEmail,
-                    SentSMS = notification.SendSMS && recipient.SendSMS
-                });
+                    SentSMS = notification.SendSMS && recipient.SendSMS,
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id
+                };
+
+                await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, false, orgEntityHeader, userEntityHeader);
+                await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, false, page, orgEntityHeader, userEntityHeader);
+
+                await _notificationTracking.AddHistoryAsync(notificationHistory);
             }
 
             // these could fail but the individual sender will track that.  Also don't want to abort if one of these fails.
@@ -233,7 +237,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 EmailSubject = $"Device {device.Name} came online",
             };
 
-            return await SendNotification(device, repo, lastContact, notification, testMode, org, user);
+            return await SendNotification(device, repo, false, lastContact, notification, testMode, org, user);
         }
 
         public async Task<InvokeResult> SendDeviceOfflineNotificationAsync(Device device, string lastContact, bool testMode, EntityHeader org, EntityHeader user)
@@ -252,10 +256,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 EmailSubject = $"Device Offline {device.Name}",
             };
 
-            return await SendNotification(device, repo, lastContact, notification, testMode, org, user);
+            return await SendNotification(device, repo, true, lastContact, notification, testMode, org, user);
         }
 
-        private async Task<InvokeResult> SendNotification(Device device, DeviceRepository repo, string lastContact, DeviceNotification notification, bool testMode, EntityHeader org, EntityHeader user)
+        private async Task<InvokeResult> SendNotification(Device device, DeviceRepository repo, bool allowSilence, string lastContact, DeviceNotification notification, bool testMode, EntityHeader org, EntityHeader user)
         {
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
@@ -294,7 +298,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 var instance = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
                 tz = _timeZoneService.GetTimeZoneById(instance.TimeZone.Id);
-                Console.WriteLine($"=====> ----> {repo.Name} {instance.Name} {instance.TimeZone.Text} {tz}");
             }
             else
             {
@@ -358,10 +361,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             foreach (var recipient in contacts)
             {
-                await _smsSender.SendAsync(recipient, page, org, user);
-                await _emailSender.SendAsync(notification, recipient, page, org, user);
-
-                await _notificationTracking.AddHistoryAsync(new DeviceNotificationHistory(device.Id, $"{notifId}-{recipient.Id}")
+                var notificationHistory = new DeviceNotificationHistory(device.Id, $"{notifId}-{recipient.Id}")
                 {
                     UserId = recipient.Id,
                     UserName = $"{recipient.FirstName} {recipient.LastName}",
@@ -374,8 +374,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     SentEmail = notification.SendEmail && recipient.SendEmail,
                     SentSMS = notification.SendSMS && recipient.SendSMS,
                     Email = recipient.Email,
-                    Phone = recipient.Phone
-                });
+                    Phone = recipient.Phone,
+                    DeviceId = device.DeviceId,
+                    DeviceRepoId = repo.Id,
+                };
+
+                await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
+                await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
+
+                await _notificationTracking.AddHistoryAsync(notificationHistory);
             }
 
             foreach (var cot in notification.CotNotifications)

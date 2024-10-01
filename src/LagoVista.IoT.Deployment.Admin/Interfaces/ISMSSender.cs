@@ -12,6 +12,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
     {
         int TextMessagesSent { get; }
         Task<InvokeResult> PrepareMessage(DeviceNotification notification, bool testMode, Device device, OrgLocation location);
-        Task<InvokeResult> SendAsync(NotificationRecipient recipient, NotificationLinks links, EntityHeader org, EntityHeader user);
+        Task<InvokeResult> SendAsync(string id, NotificationRecipient recipient, NotificationLinks links, bool allowSilence, EntityHeader org, EntityHeader user);
     }
 }

@@ -44,14 +44,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             return InvokeResult.Success;
         }
 
-        public async Task<InvokeResult> SendAsync(NotificationRecipient recipient, NotificationLinks links, EntityHeader org, EntityHeader user)
-        {
-            var actualInk = String.IsNullOrEmpty(links.FullLandingPageLink) ? links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id)
-                            : links.FullLandingPageLink.Replace("[RecipientId]", recipient.Id);
-
-            var shortenedLink = await _linkShortener.ShortenLinkAsync(actualInk);
-            if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
-
+        public async Task<InvokeResult> SendAsync(string id, NotificationRecipient recipient, NotificationLinks links, bool allowSilence, EntityHeader org, EntityHeader user)
+        {            
             if (String.IsNullOrEmpty(recipient.Phone))
             {
                 _logger.AddCustomEvent(LogLevel.Warning, $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact]",
@@ -60,8 +54,32 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else
             {
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone} -  {shortenedLink.Result} ({actualInk})");
-                var result = await _smsSender.SendAsync(recipient.Phone, $"{_smsContent} {shortenedLink.Result}");
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
+
+                var result = await _smsSender.SendAsync(recipient.Phone, _smsContent);
+
+                if(!String.IsNullOrEmpty(links.FullLandingPageLink))
+                {
+                    var shortenedLink = await _linkShortener.ShortenLinkAsync(links.FullLandingPageLink.Replace("[RecipientId]", recipient.Id));
+                    if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
+
+                    await _smsSender.SendAsync(recipient.Phone, $"View: {shortenedLink.Result}");
+                }
+                else if (!String.IsNullOrEmpty(links.AcknowledgeLink))
+                {
+                    var shortenedLink = await _linkShortener.ShortenLinkAsync(links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id));
+                    if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
+                    await _smsSender.SendAsync(recipient.Phone, $"Acknowledge: {shortenedLink.Result}");
+                }
+
+                if (allowSilence)
+                {
+                    var silencedLink = links.SilenceLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
+                    var shortenedSilenceLink = await _linkShortener.ShortenLinkAsync(silencedLink);
+                    if (!shortenedSilenceLink.Successful) return shortenedSilenceLink.ToInvokeResult();
+                    await _smsSender.SendAsync(recipient.Phone, $"Silence notifiations: {shortenedSilenceLink.Result}");
+                }
+                
                 if (result.Successful)
                 {
                     TextMessagesSent++;

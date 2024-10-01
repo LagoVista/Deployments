@@ -29,7 +29,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             var result = await _emailSender.PrepareMessage(GetNotification(), GetTestMode(), GetDevice(), GetLocation());
             Assert.IsTrue(result.Successful, result.ErrorMessage);
 
-            result = await _emailSender.SendAsync(GetNotification(), GetRecipient(), GetLinks(), OrgEH, UserEH);
+            result = await _emailSender.SendAsync("dontcare", GetNotification(), GetRecipient(), false, GetLinks(), OrgEH, UserEH);
             Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
     }
