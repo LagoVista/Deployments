@@ -115,14 +115,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/notification/device/{repoid}/{id}/online/test")]
-        public async Task<InvokeResult> TestOnlineNotification(string repoid, string id, int secondsoffline = 420)
+        public async Task<InvokeResult> TestOnlineNotification(string repoid, string id, string lastcontact)
         {
+            if (String.IsNullOrEmpty(lastcontact))
+                lastcontact = DateTime.UtcNow.AddHours(-1.5).ToJSONString();
+
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
             var result = await _deviceManager.GetDeviceByIdAsync(repo, id, OrgEntityHeader, UserEntityHeader);
             if (!result.Successful)
                 return result.ToInvokeResult(); 
 
-            return await _notificationSender.SendDeviceOnlineNotificationAsync(result.Result, secondsoffline, true, OrgEntityHeader, UserEntityHeader);
+            return await _notificationSender.SendDeviceOnlineNotificationAsync(result.Result, lastcontact, true, OrgEntityHeader, UserEntityHeader);
         }
 
         [HttpGet("/api/notification/device/{repoid}/{id}/offline/test")]
