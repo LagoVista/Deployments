@@ -19,6 +19,7 @@ using LagoVista.IoT.Pipeline.Admin;
 using LagoVista.IoT.Pipeline.Admin.Managers;
 using LagoVista.IoT.Pipeline.Admin.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Crmf;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -618,6 +619,17 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public Task<string> GetQuickLinkCustomPageForDeviceConfigAsync(string id, EntityHeader org, EntityHeader user)
         {
             return _deviceConfigRepo.GetQuickLinkCustomPageForDeviceConfigAsync(id);
+        }
+
+        public async Task<HomePages> GetHomePagesAsync(string deviceConfigId, EntityHeader org, EntityHeader user)
+        {
+            var config = await _deviceConfigRepo.GetDeviceConfigurationAsync(deviceConfigId);
+            return new HomePages()
+            {
+                 CustomMobilePage = config.CustomMobilePage,
+                 CustomPage = config.CustomPage,
+                 CustomPageQuickLink = config.CustomPageQuickLink
+            };
         }
     }
 

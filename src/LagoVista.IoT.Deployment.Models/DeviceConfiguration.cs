@@ -87,9 +87,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage, HelpResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string CustomPage { get; set; }
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomMobilePage, HelpResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomMobilePage_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        public string CustomMobilePage { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_QuickLink, HelpResource: DeploymentAdminResources.Names.DeviceConfiugration_CustomPage_QuickLink_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string CustomPageQuickLink { get; set; }
+        
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; }
@@ -215,6 +218,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                     nameof(DeviceConfiguration.DeviceNameLabel),
                     nameof(DeviceConfiguration.DeviceTypeLabel),
                     nameof(DeviceConfiguration.CustomPage),
+                    nameof(DeviceConfiguration.CustomMobilePage),
                     nameof(DeviceConfiguration.CustomPageQuickLink),
                     nameof(DeviceConfiguration.Properties),
                     nameof(DeviceConfiguration.Commands),

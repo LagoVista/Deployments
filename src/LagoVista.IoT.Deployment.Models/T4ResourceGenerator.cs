@@ -1,4 +1,4 @@
-﻿/*9/30/2024 6:44:22 PM*/
+﻿/*10/2/2024 11:57:22 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -510,6 +510,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceConfiguratoin_DeviceTypeLabel_Help
 
 		public static string DeviceConfiguratoin_DeviceTypeLabel_Help { get { return GetResourceString("DeviceConfiguratoin_DeviceTypeLabel_Help"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomMobilePage
+
+		public static string DeviceConfiugration_CustomMobilePage { get { return GetResourceString("DeviceConfiugration_CustomMobilePage"); } }
+//Resources:DeploymentAdminResources:DeviceConfiugration_CustomMobilePage_Help
+
+		public static string DeviceConfiugration_CustomMobilePage_Help { get { return GetResourceString("DeviceConfiugration_CustomMobilePage_Help"); } }
 //Resources:DeploymentAdminResources:DeviceConfiugration_CustomPage
 
 		public static string DeviceConfiugration_CustomPage { get { return GetResourceString("DeviceConfiugration_CustomPage"); } }
@@ -2024,6 +2030,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceConfiguration_WatchDogTimeout_Help = "DeviceConfiguration_WatchDogTimeout_Help";
 			public const string DeviceConfigurations_Title = "DeviceConfigurations_Title";
 			public const string DeviceConfiguratoin_DeviceTypeLabel_Help = "DeviceConfiguratoin_DeviceTypeLabel_Help";
+			public const string DeviceConfiugration_CustomMobilePage = "DeviceConfiugration_CustomMobilePage";
+			public const string DeviceConfiugration_CustomMobilePage_Help = "DeviceConfiugration_CustomMobilePage_Help";
 			public const string DeviceConfiugration_CustomPage = "DeviceConfiugration_CustomPage";
 			public const string DeviceConfiugration_CustomPage_Help = "DeviceConfiugration_CustomPage_Help";
 			public const string DeviceConfiugration_CustomPage_QuickLink = "DeviceConfiugration_CustomPage_QuickLink";

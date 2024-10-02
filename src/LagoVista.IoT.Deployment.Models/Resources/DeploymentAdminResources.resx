@@ -1932,4 +1932,10 @@
   <data name="DeviceNotification_SMS_Help" xml:space="preserve">
     <value>The following tags can be used in the SMS message that will be replaced with live values: DeviceName, DeviceId, DeviceInfoPage, DeviceLocation, Location_Admin_Contact, Location_Technical_Contact, DeviceSummary, NotificationTimeStamp, LastContactTime, TimeSinceLastContact</value>
   </data>
+  <data name="DeviceConfiugration_CustomMobilePage" xml:space="preserve">
+    <value>Custom Mobile Page</value>
+  </data>
+  <data name="DeviceConfiugration_CustomMobilePage_Help" xml:space="preserve">
+    <value>Page that will be used when the user logs in to the mobile app to configure the device.</value>
+  </data>
 </root>
