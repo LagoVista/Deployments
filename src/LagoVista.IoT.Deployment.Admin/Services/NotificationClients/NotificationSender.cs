@@ -17,6 +17,7 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using System.Linq;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using Org.BouncyCastle.Security;
+using MQTTnet.Packets;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -112,6 +113,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             recipients.AddRange(externalContacts.Select(eu => NotificationRecipient.FromExternalContext(eu)));
             recipients.EnsureUniqueNotifications();
 
+            var uniuqueEmail = recipients.Count(recp => !String.IsNullOrEmpty(recp.Email));
+            var uniuqueSms = recipients.Count(recp => !String.IsNullOrEmpty(recp.Phone));
+            _logger.Trace($"[NotificationSender__GetRecipients] Total Count {recipients.Count} Email: {uniuqueEmail} SMS: {uniuqueSms}.");
+
             return InvokeResult<List<NotificationRecipient>>.Create(recipients);
         }
         
@@ -128,7 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public async Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Starting - Test Mode {raisedNotification.TestMode}");
+            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] {raisedNotification.NotificationKey} - Starting - Test Mode {raisedNotification.TestMode}");
 
             var result = raisedNotification.Validate();
             if (!result.Successful)
