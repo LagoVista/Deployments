@@ -12,8 +12,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos
     public class ClientAppRepo : DocumentDBRepoBase<ClientApp>, IClientAppRepo
     {
         private bool _shouldConsolidateCollections;
-        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependency)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, dependencyManager:dependency)
+        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependency, ICacheProvider cacheProvider)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider, dependencyManager:dependency)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

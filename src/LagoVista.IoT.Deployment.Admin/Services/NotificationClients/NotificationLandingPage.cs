@@ -54,7 +54,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
                 links.AcknowledgeLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotificationId}/{org.Id}/[RecipientId]/acknowledge";
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.AcknowledgeLink}");
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No Landindg page, just acknowledge link - {links.AcknowledgeLink}");
             }
 
             links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/silence";
