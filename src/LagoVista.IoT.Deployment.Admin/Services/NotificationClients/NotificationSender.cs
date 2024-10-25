@@ -18,6 +18,7 @@ using System.Linq;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using Org.BouncyCastle.Security;
 using MQTTnet.Packets;
+using System.Diagnostics;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -218,7 +219,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 await _restSender.SendAsync(rest, device.Result, location, orgEntityHeader, userEntityHeader);
             }
 
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Completed");
             _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync]", $"Completed",
                 raisedNotification.TestMode.ToString().ToKVP("testMode"),
                 raisedNotification.Id.ToKVP("id"),
@@ -266,6 +266,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         private async Task<InvokeResult> SendNotification(Device device, DeviceRepository repo, bool allowSilence, string lastContact, DeviceNotification notification, bool testMode, EntityHeader org, EntityHeader user)
         {
+            var sw = Stopwatch.StartNew();
+
+            _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}");
+
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
 
@@ -273,10 +277,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!EntityHeader.IsNullOrEmpty(device.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - found location {location.Name} on device, can not append location information");
+                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, can not append location information");
             }
             else
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information");
+                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information");
 
             if (!EntityHeader.IsNullOrEmpty(repo.OfflineDistributionList))
             {
@@ -347,7 +351,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 notification.SmsContent = notification.SmsContent.Replace("[TimeSinceLastContact]", deltaStr);
             }
 
-                await _smsSender.PrepareMessage(notification, testMode, device, location);
+            await _smsSender.PrepareMessage(notification, testMode, device, location);
             await _emailSender.PrepareMessage(notification, testMode, device, location);
             
             if (!EntityHeader.IsNullOrEmpty(device.WatchdogNotificationUser))
@@ -404,6 +408,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 await _restSender.SendAsync(rest, device, location, org, user);
             }
+
+            _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__SendNotification]", $"Completed",
+                testMode.ToString().ToKVP("testMode"),
+                notification.Key.ToKVP("key"),
+                sw.Elapsed.TotalMilliseconds.ToString().ToKVP("ms"),
+                _emailSender.EmailsSent.ToString().ToKVP("emailsSent"),
+                _smsSender.TextMessagesSent.ToString().ToKVP("textSent"));
 
             return InvokeResult.Success;
         }
