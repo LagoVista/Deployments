@@ -383,9 +383,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
+            var bldr = TimingBuilder.StartNew();
             await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
+
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
-            return await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
+            bldr.CompleteAndRestart("[DeploymentInstanceManager__GetRemoteMonitoringURIAsync__GetNotificationsHostAsync]");
+
+            var connector = await GetConnector(notificationHost, org.Id, id).GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
+            bldr.CompleteAndRestart("[DeploymentInstanceManager__GetRemoteMonitoringURIAsync__GetConnector__GetRemoteMonitoringUriAsync]");
+            connector.Timings.AddRange(bldr.ResultTimings);
+            return connector;
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIForDeviceWithPINAsync(string channel, string repoId, string id, string pin, string verbosity, EntityHeader org, EntityHeader user)

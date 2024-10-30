@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -683,9 +684,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="verbosity"></param>
         /// <returns></returns>
         [HttpGet("/api/wsuri/{channel}/{id}/{verbosity}")]
-        public Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
+        public async Task<InvokeResult<string>> GetMonitorUriAsync(string channel, string id, string verbosity)
         {
-            return _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
+            var sw = Stopwatch.StartNew();
+            var response = await  _instanceManager.GetRemoteMonitoringURIAsync(channel, id, verbosity, OrgEntityHeader, UserEntityHeader);
+            response.Timings.Add(new ResultTiming() { Key = "full", Ms = sw.ElapsedMilliseconds });
+            return response;
         }        
     }
 
