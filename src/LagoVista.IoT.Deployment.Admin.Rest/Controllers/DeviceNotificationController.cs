@@ -277,6 +277,7 @@ payload +
                 PhoneNumberConfirmed = true,
                 LoginType = LoginTypes.DeviceOwner,
                 CurrentDevice = EntityHeader.Create(result.Result.Id, result.Result.Key, result.Result.Name),
+                CurrentDeviceConfig = result.Result.DeviceConfiguration,
                 CurrentDeviceId = result.Result.DeviceId,
                 OwnerOrganization = org,
                 CurrentRepo = result.Result.DeviceRepository
