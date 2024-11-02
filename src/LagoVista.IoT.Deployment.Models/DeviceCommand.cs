@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Models
 {
     [EntityDescription(DeviceAdminDomain.DeviceAdmin, DeploymentAdminResources.Names.DeviceCommand_TItle, DeploymentAdminResources.Names.DeviceCommand_Description, DeploymentAdminResources.Names.DeviceCommand_Description, EntityDescriptionAttribute.EntityTypes.SimpleModel,
-        typeof(DeviceLibraryResources), FactoryUrl: "/api/deviceconfig/command/factory", Icon: "icon-pz-paper-plane")]
+        typeof(DeviceLibraryResources), FactoryUrl: "/api/deviceconfig/command/factory", Icon: "icon-fo-internet-3")]
     public class DeviceCommand : IFormDescriptor, IFormDescriptorCol2
     {
         public DeviceCommand()
@@ -30,7 +30,7 @@ namespace LagoVista.IoT.Deployment.Models
         public string Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-pz-paper-plane";
+        public string Icon { get; set; } = "icon-fo-internet-3";
 
         [FormField(LabelResource: DeviceLibraryResources.Names.InputCommand_Parameters, HelpResource: DeviceLibraryResources.Names.Parameter_Help,
         FactoryUrl: "/api/deviceconfig/command/factory", FieldType: FieldTypes.ChildListInline, ResourceType: typeof(DeviceLibraryResources))]
