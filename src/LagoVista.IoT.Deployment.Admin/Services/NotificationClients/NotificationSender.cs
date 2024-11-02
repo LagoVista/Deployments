@@ -86,11 +86,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 var distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id);
                 if (!distroList.ExternalContacts.Any())
                 {
-                    _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Found distribution list, but no external contacts, will not attempt to send.");
+                    _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Found distribution list, but no external contacts, will not attempt to send.", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
                     return InvokeResult<List<NotificationRecipient>>.Create(recipients);
                 }
 
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts");
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
                 appUsers.AddRange(distroList.AppUsers);
                 externalContacts.AddRange(distroList.ExternalContacts);
@@ -116,7 +116,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var uniuqueEmail = recipients.Count(recp => !String.IsNullOrEmpty(recp.Email));
             var uniuqueSms = recipients.Count(recp => !String.IsNullOrEmpty(recp.Phone));
-            _logger.Trace($"[NotificationSender__GetRecipients] Total Count {recipients.Count} Email: {uniuqueEmail} SMS: {uniuqueSms}.");
+            _logger.Trace($"[NotificationSender__GetRecipients] Total Count {recipients.Count} Email: {uniuqueEmail} SMS: {uniuqueSms}.", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             return InvokeResult<List<NotificationRecipient>>.Create(recipients);
         }
@@ -134,7 +134,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public async Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] {raisedNotification.NotificationKey} - Starting - Test Mode {raisedNotification.TestMode}");
+            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] {raisedNotification.NotificationKey} - Starting - Test Mode {raisedNotification.TestMode}", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var result = raisedNotification.Validate();
             if (!result.Successful)
@@ -154,18 +154,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);           
             if (!device.Successful) return InvokeResult.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Result.Name} in {repo.Name} repository");
+            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             OrgLocation location = null;
             if (!EntityHeader.IsNullOrEmpty(device.Result.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Result.Location.Id);
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - found location {location.Name} on device, can not append location information");
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - found location {location.Name} on device, can not append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
             }
             else
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information");
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
-           var pageResult = await _landingPageBuilder.PreparePage(raisedNotification.Id, notification, deployment.TestMode, device.Result, location, orgEntityHeader, userEntityHeader);
+            var pageResult = await _landingPageBuilder.PreparePage(raisedNotification.Id, notification, deployment.TestMode, device.Result, location, orgEntityHeader, userEntityHeader);
 
             var page = pageResult.Result;
 
@@ -194,11 +194,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     SentEmail = notification.SendEmail && recipient.SendEmail,
                     SentSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.Result.DeviceId,
-                    DeviceRepoId = repo.Id
-                };
+                    DeviceRepoId = repo.Id,
+               };
 
-                await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, false, orgEntityHeader, userEntityHeader);
-                await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, false, page, orgEntityHeader, userEntityHeader);
+                if(recipient.SendSMS)
+                    await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, false, orgEntityHeader, userEntityHeader);
+               
+                if (recipient.SendEmail)
+                    await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, false, page, orgEntityHeader, userEntityHeader);
 
                 await _notificationTracking.AddHistoryAsync(notificationHistory);
             }
@@ -222,7 +225,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync]", $"Completed",
                 raisedNotification.TestMode.ToString().ToKVP("testMode"),
                 raisedNotification.Id.ToKVP("id"),
-                _emailSender.EmailsSent.ToString().ToKVP("emailsSent"),
+                orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"),
+            _emailSender.EmailsSent.ToString().ToKVP("emailsSent"),
                 _smsSender.TextMessagesSent.ToString().ToKVP("textSent"));
 
             return InvokeResult.Success;
@@ -237,6 +241,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 SendEmail = true,
                 SendSMS = true,
+                Name = "Device Online",
                 EmailContent = $"<h4>Device {device.Name} came online.</h4><p>Last Contact [LastContactTime]</p>",
                 SmsContent = $"Device{device.Name} came online, Last Contact [LastContactTime]",
                 EmailSubject = $"Device {device.Name} came online",
@@ -256,6 +261,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 SendEmail = true,
                 SendSMS = true,
+                Name = "Device Offline",
                 EmailContent = $"<h4>Device Offline {device.Name}</h4><p>Last Contact [LastContactTime]</p>",
                 SmsContent = $"Device Offline {device.Name}, Last Contact [LastContactTime]",
                 EmailSubject = $"Device Offline {device.Name}",
@@ -268,7 +274,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             var sw = Stopwatch.StartNew();
 
-            _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}");
+            _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
@@ -277,10 +283,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!EntityHeader.IsNullOrEmpty(device.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
-                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, can not append location information");
+                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
             }
             else
-                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information");
+                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             if (!EntityHeader.IsNullOrEmpty(repo.OfflineDistributionList))
             {
@@ -388,8 +394,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     DeviceRepoId = repo.Id,
                 };
 
-                await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
-                await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
+                if(recipient.SendSMS)
+                    await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
+                
+                if(recipient.SendEmail)
+                    await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
 
                 await _notificationTracking.AddHistoryAsync(notificationHistory);
             }
@@ -412,6 +421,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__SendNotification]", $"Completed",
                 testMode.ToString().ToKVP("testMode"),
                 notification.Key.ToKVP("key"),
+                org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"),
                 sw.Elapsed.TotalMilliseconds.ToString().ToKVP("ms"),
                 _emailSender.EmailsSent.ToString().ToKVP("emailsSent"),
                 _smsSender.TextMessagesSent.ToString().ToKVP("textSent"));

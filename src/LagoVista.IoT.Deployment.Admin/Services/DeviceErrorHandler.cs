@@ -147,7 +147,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DeviceNotification))
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Has Device Notification {deviceErrorCode.DeviceNotification.Text}");
+                _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Has Device Notification {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
 
                 var notification = new RaisedDeviceNotification()
                 {
@@ -164,7 +164,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
 
                 if((await _notificationSender.RaiseNotificationAsync(notification, org, user)).Successful) 
-                    _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}");
+                    _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
                 else
                     _adminLogger.AddError($"[DeviceErrorHandler__SendDeviceNotification]", $"Did not send notification - {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
             }
@@ -174,7 +174,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             if(!String.IsNullOrEmpty(deviceError.NextNotification) && (deviceError.NextNotification.ToDateTime().ToUniversalTime() > DateTime.UtcNow))
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Not sending any notifiations, will send notification at {deviceError.NextNotification.ToDateTime()}.");
+                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Not sending any notifiations, will send notification at {deviceError.NextNotification.ToDateTime()}.", exception.DeviceId.ToKVP("deviceId"));
                 return InvokeResult.Success;
             }
 
@@ -191,18 +191,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (EntityHeader.IsNullOrEmpty(deviceErrorCode.NotificationIntervalTimeSpan) || deviceErrorCode.NotificationIntervalTimeSpan.Value == TimeSpanIntervals.NotApplicable)
             {
                 deviceError.NextNotification = null;
-                _adminLogger.Trace("[DeviceErrorHandler__NotifyAsync] - Interval Time Span is null or set to not applicable.");
+                _adminLogger.Trace("[DeviceErrorHandler__NotifyAsync] - Interval Time Span is null or set to not applicable.", exception.DeviceId.ToKVP("deviceId"));
             }
             else if (deviceErrorCode.NotificationIntervalQuantity.HasValue && deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable)
             {
                 deviceError.NextNotification = deviceErrorCode.NotificationIntervalTimeSpan.Value.AddTimeSpan(deviceErrorCode.NotificationIntervalQuantity.Value);
-                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Scheduled Next Notification for {deviceError.NextNotification}.");
+                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Scheduled Next Notification for {deviceError.NextNotification}.", exception.DeviceId.ToKVP("deviceId"));
             }
             else
             {
                 deviceError.NextNotification = null;
                 _adminLogger.AddCustomEvent(Core.PlatformSupport.LogLevel.Error, "[DeviceErrorHandler__NotifyAsync]", "Invalid quantity on NotificationIntervalQuantity", device.DeviceId.ToKVP("deviceId"), exception.ErrorCode.ToKVP("errorCode"));
-                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Invalid data, will not schedule next notification.");
+                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Invalid data, will not schedule next notification.", exception.DeviceId.ToKVP("deviceId"));
             }
             
             return InvokeResult.Success;
@@ -230,7 +230,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             await _exceptionRepo.AddDeviceExceptionAsync(repo, exception);
 
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Repo: {repo.Name} - {repo.OwnerOrganization.Text}");
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Repo: {repo.Name} - {repo.OwnerOrganization.Text}", exception.DeviceId.ToKVP("deviceId"));
 
             var device = await _deviceManager.GetDeviceByIdAsync(repo, exception.DeviceUniqueId, org, user);
             if (device == null)
@@ -238,7 +238,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 return InvokeResult.FromError($"FSLite - Handle Device Exception - Could not find device for: {exception.DeviceUniqueId}");
             }
 
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device: {device.Result.Name} - {device.Result.OwnerOrganization.Text}");
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device: {device.Result.Name} - {device.Result.OwnerOrganization.Text}", exception.DeviceId.ToKVP("deviceId"));
 
             var deviceConfig = await _deviceConfigManager.GetDeviceConfigurationAsync(device.Result.DeviceConfiguration.Id, org, user);
 
@@ -247,7 +247,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 return InvokeResult.FromError($"DeviceErrorHandler - Handle Device Exception - Could not find device configuration: {device.Result.DeviceConfiguration.Text}");
             }
 
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device Configuration: {deviceConfig.Name} - {deviceConfig.OwnerOrganization.Text}");
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device Configuration: {deviceConfig.Name} - {deviceConfig.OwnerOrganization.Text}", exception.DeviceId.ToKVP("deviceId"));
 
             var deviceErrorCode = deviceConfig.ErrorCodes.FirstOrDefault(err => err.Key == exception.ErrorCode);
             if (deviceErrorCode == null)
@@ -273,7 +273,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             var contacts = await GetAllContacts(deviceErrorCode.DistroList, repo.DistroList, device.Result.DistributionList);
             
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Device Error Code: {deviceErrorCode.Name}");
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Device Error Code: {deviceErrorCode.Name}", exception.DeviceId.ToKVP("deviceId"));
 
             var deviceError = device.Result.Errors.Where(err => err.DeviceErrorCode == exception.ErrorCode).FirstOrDefault();
 
@@ -293,7 +293,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                 device.Result.Errors.Add(deviceError);
 
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Does not have existing error on device: {deviceError.DeviceErrorCode}, creating device error.");
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Does not have existing error on device: {deviceError.DeviceErrorCode}, creating device error.", exception.DeviceId.ToKVP("deviceId"));
             }
             else
             {
@@ -309,7 +309,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     deviceError.Expires = deviceErrorCode.AutoexpireTimespan.Value.AddTimeSpan(deviceErrorCode.AutoexpireTimespanQuantity.Value);
                 }
 
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has exisiting device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.");
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has exisiting device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.", exception.DeviceId.ToKVP("deviceId"));
             }
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.ServiceTicketTemplate))
@@ -340,7 +340,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             device.Result.Errors = errorCollection;
             await _deviceManager.UpdateDeviceAsync(repo, device.Result, org, user);
             
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Completed Error Code Processing - Error Count {device.Result.Errors.Count}, full update in {sw.Elapsed.TotalMilliseconds}ms");
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Completed Error Code Processing - Error Count {device.Result.Errors.Count}, full update in {sw.Elapsed.TotalMilliseconds}ms", exception.DeviceId.ToKVP("deviceId"));
 
             return InvokeResult.Success;
         }
@@ -372,11 +372,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             {
                 device.Result.Errors.Remove(deviceError);
                 await _deviceManager.UpdateDeviceAsync(repo, device.Result, org, user);
-                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Removed Device Exception {exception.ErrorCode}, error count: {device.Errors.Count}");
+                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Removed Device Exception {exception.ErrorCode}, error count: {device.Errors.Count}", exception.DeviceId.ToKVP("deviceId"));
             }
             else
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Could not find existing error to remove from device [{device.Result.Name}] code: [{exception.ErrorCode}]");
+                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Could not find existing error to remove from device [{device.Result.Name}] code: [{exception.ErrorCode}]", exception.DeviceId.ToKVP("deviceId"));
             }
             
             await _exceptionRepo.AddDeviceExceptionClearedAsync(repo, exception);
@@ -385,7 +385,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             if (deviceErrorCode.NotifyOnClear)
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Will notify on clear {exception.ErrorCode}");
+                _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Will notify on clear {exception.ErrorCode}", exception.DeviceId.ToKVP("deviceId"));
 
                 var appUsers = new List<EntityHeader>();
                 var externalContacts = new List<ExternalContact>();
@@ -413,14 +413,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     {
                         var body = $"The error {deviceErrorCode.Name} was cleared on the device {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
                         await _emailSender.SendAsync(appUser.Email, subject, body, org, user);
-                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to AppUser {appUser.Email}");
+                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to AppUser {appUser.Email}", exception.DeviceId.ToKVP("deviceId"));
                     }
 
                     if (deviceErrorCode.SendSMS)
                     {
                         var body = $"{device.Result.Name} reesolved {deviceErrorCode.Name} {deviceErrorCode.Description} {exception.Details}";
                         await _smsSender.SendAsync(appUser.PhoneNumber, body);
-                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent SMS to AppUser {appUser.PhoneNumber}");
+                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent SMS to AppUser {appUser.PhoneNumber}", exception.DeviceId.ToKVP("deviceId"));
                     }
                 }
 
@@ -430,14 +430,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     {
                         var body = $"[{deviceErrorCode.Name}] resolved error {device.Result.Name}<br>{deviceErrorCode.Description}<br>{exception.Details}";
                         await _emailSender.SendAsync(externalContact.Email, subject, body, org, user);
-                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to External Contact {externalContact.Email}");
+                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent Email to External Contact {externalContact.Email}", exception.DeviceId.ToKVP("deviceId"));
                     }
 
                     if (externalContact.SendSMS)
                     {
                         var body = $"{device.Result.Name} resolved error {deviceErrorCode.Name} {deviceErrorCode.Description} {exception.Details}";
                         await _smsSender.SendAsync(externalContact.Phone, body);
-                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent SMS to External Contact {externalContact.Phone}");
+                        _adminLogger.Trace($"[DeviceErrorHandler__ClearDeviceExceptionAsync] - Sent SMS to External Contact {externalContact.Phone}", exception.DeviceId.ToKVP("deviceId"));
                     }
                 }
             }
