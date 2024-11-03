@@ -164,9 +164,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 }
 
                 if((await _notificationSender.RaiseNotificationAsync(notification, org, user)).Successful) 
-                    _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
+                    _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Sent Device Notification {deviceErrorCode.DeviceNotification.Text} {notification.AdditionalUsers.Count} additional users, {notification.AdditionalExternalContacts} additional external contacts", exception.DeviceId.ToKVP("deviceId"));
                 else
                     _adminLogger.AddError($"[DeviceErrorHandler__SendDeviceNotification]", $"Did not send notification - {deviceErrorCode.DeviceNotification.Text}", exception.DeviceId.ToKVP("deviceId"));
+            }
+            else
+            {
+                _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Device Error Code: {deviceErrorCode.Key} does not have a notification configured, not sending.", exception.DeviceId.ToKVP("deviceId"));
             }
         }
 
@@ -174,7 +178,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             if(!String.IsNullOrEmpty(deviceError.NextNotification) && (deviceError.NextNotification.ToDateTime().ToUniversalTime() > DateTime.UtcNow))
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Not sending any notifiations, will send notification at {deviceError.NextNotification.ToDateTime()}.", exception.DeviceId.ToKVP("deviceId"));
+                _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Not sending any notifications, will send notification at {deviceError.NextNotification.ToDateTime()}.", exception.DeviceId.ToKVP("deviceId"));
                 return InvokeResult.Success;
             }
 
@@ -185,7 +189,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DeviceNotification))
             {
-                await SendDeviceNotification(deviceErrorCode, exception, org, user);
+                await SendDeviceNotification(deviceErrorCode, exception, org, user);                
+            }
+            else
+            {
+                _adminLogger.Trace($"[DeviceErrorHandler__SendDeviceNotification] - Device Error Code: {deviceErrorCode.Key} does not have a notification configured, not sending.", exception.DeviceId.ToKVP("deviceId"));
             }
                     
             if (EntityHeader.IsNullOrEmpty(deviceErrorCode.NotificationIntervalTimeSpan) || deviceErrorCode.NotificationIntervalTimeSpan.Value == TimeSpanIntervals.NotApplicable)
@@ -300,6 +308,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 deviceError.Count++;
                 deviceError.Timestamp = timeStamp;
                 deviceError.LastSeen = timeStamp;
+                deviceError.ErrorDescription = deviceErrorCode.Description;
 
                 if (!deviceError.Active)
                     deviceError.FirstSeen = timeStamp;
@@ -309,7 +318,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     deviceError.Expires = deviceErrorCode.AutoexpireTimespan.Value.AddTimeSpan(deviceErrorCode.AutoexpireTimespanQuantity.Value);
                 }
 
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has exisiting device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.", exception.DeviceId.ToKVP("deviceId"));
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has existing device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.", exception.DeviceId.ToKVP("deviceId"));
             }
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.ServiceTicketTemplate))
@@ -329,7 +338,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
             else
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not genreate ticket .");
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not generate ticket .");
             }
 
             await NotifyAsync(deviceErrorCode, deviceError, device.Result, exception, org, user);
