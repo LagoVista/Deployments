@@ -27,7 +27,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
         }
 
-        public async Task<InvokeResult<NotificationLinks>> PreparePage(string raisedNotificationId, DeviceNotification notification, bool testMode, Device device, OrgLocation location, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<NotificationLinks>> PreparePage(string raisedNotificationId, string errorId, DeviceNotification notification, bool testMode, Device device, OrgLocation location, EntityHeader org, EntityHeader user)
         {
             var links = new NotificationLinks();
 
@@ -57,7 +57,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No Landindg page, just acknowledge link - {links.AcknowledgeLink}");
             }
 
-            links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/silence";
+            if(String.IsNullOrEmpty(errorId))
+                links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/silence";
+            else
+                links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/errors/{errorId}/silence";
 
             return InvokeResult<NotificationLinks>.Create(links);
         }

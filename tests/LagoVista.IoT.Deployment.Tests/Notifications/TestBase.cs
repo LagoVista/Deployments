@@ -71,7 +71,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
 
             LinkShortener.Setup(lnks => lnks.ShortenLinkAsync(It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("https://alert.com/abcd"));
 
-            LandingPageBuilder.Setup(lpg => lpg.PreparePage(It.IsAny<string>(), It.IsAny<DeviceNotification>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).
+            LandingPageBuilder.Setup(lpg => lpg.PreparePage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DeviceNotification>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).
                 ReturnsAsync(Core.Validation.InvokeResult<NotificationLinks>.Create(GetLinks()));
 
             EmailMessageSender.Setup(ems => ems.SendAsync(It.IsAny<Email>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult<string>.Create("{A12ADAA2-5D66-421D-A9A0-D1C8B05B1D6F}"));

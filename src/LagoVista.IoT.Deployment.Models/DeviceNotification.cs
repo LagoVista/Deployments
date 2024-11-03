@@ -168,6 +168,8 @@ namespace LagoVista.IoT.Deployment.Models
         public string DeviceUniqueId { get; set; }
         public string DeviceRepositoryId { get; set; }
 
+        public string DeviceErrorId { get; set; }
+
         public List<EntityHeader> AdditionalUsers { get; set; } = new List<EntityHeader>();
         public List<ExternalContact> AdditionalExternalContacts { get; set; } = new List<ExternalContact>();
 

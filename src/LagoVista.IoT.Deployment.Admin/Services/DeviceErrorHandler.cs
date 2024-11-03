@@ -143,7 +143,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-        private async Task SendDeviceNotification(DeviceErrorCode deviceErrorCode, DeviceException exception, EntityHeader org, EntityHeader user)
+        private async Task SendDeviceNotification(DeviceErrorCode deviceErrorCode, DeviceError deviceError, DeviceException exception, EntityHeader org, EntityHeader user)
         {
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DeviceNotification))
             {
@@ -153,6 +153,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 {
                     DeviceUniqueId = exception.DeviceUniqueId,
                     DeviceRepositoryId = exception.DeviceRepositoryId,
+                    DeviceErrorId = deviceError.Id,
                     NotificationKey = deviceErrorCode.DeviceNotification.Key,
                 };
 
@@ -189,7 +190,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.DeviceNotification))
             {
-                await SendDeviceNotification(deviceErrorCode, exception, org, user);                
+                await SendDeviceNotification(deviceErrorCode, deviceError, exception, org, user);
             }
             else
             {
@@ -341,7 +342,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not generate ticket .");
             }
 
-            await NotifyAsync(deviceErrorCode, deviceError, device.Result, exception, org, user);
+            if(!deviceError.Silenced)
+                await NotifyAsync(deviceErrorCode, deviceError, device.Result, exception, org, user);
+            else
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not genreate ticket .", exception.DeviceId.ToKVP("deviceId"));
 
             var errorCollection = device.Result.Errors;
             var sw = Stopwatch.StartNew();
