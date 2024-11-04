@@ -187,7 +187,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string UpSince { get; set; }
 
-        [FKeyProperty(nameof(LagoVista.UserAdmin.Models.Orgs.Subscription), typeof(LagoVista.UserAdmin.Models.Orgs.Subscription), nameof(Subscription) + ".Id = {0}")]
+        [FKeyProperty(nameof(Subscription), typeof(LagoVista.UserAdmin.Models.Orgs.SubscriptionDTO), nameof(Subscription) + ".Id = {0}")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, 
            HelpResource:DeploymentAdminResources.Names.Instance_Subscription_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/subscriptions", FactoryUrl: "/api/subscription/factory",
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
