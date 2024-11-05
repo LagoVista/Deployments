@@ -51,6 +51,19 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 return result.ToInvokeResult();
         }
 
+        [HttpGet("/api/device/remoteconfig/{repoid}/{id}/all/send")]
+        public async Task<InvokeResult> SendAllRemotePropertiesAsync(string repoid, string id)
+        {
+            return await _remoteConfigMgr.SendAllPropertiesAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        [HttpGet("/api/device/remoteconfig/{repoid}/{id}/{idx}/send")]
+        public async Task<InvokeResult> SendRemotePropertyAsync(string repoid, string id, int idx)
+        {
+            return await _remoteConfigMgr.SendPropertyAsync(repoid, id, idx, OrgEntityHeader, UserEntityHeader);
+        }
+
 
         [HttpGet("/api/device/remoteconfig/{orgid}/{repoid}/{id}/{pin}/{idx}/send")]
         public async Task<InvokeResult> SendRemotePropertyAsync(string orgid, string repoid, string id, string pin, int idx)
