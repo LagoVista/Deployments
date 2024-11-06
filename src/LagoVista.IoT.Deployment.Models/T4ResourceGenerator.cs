@@ -1,4 +1,4 @@
-﻿/*10/2/2024 11:57:22 AM*/
+﻿/*11/6/2024 4:10:17 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -198,6 +198,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:ContainerRepository_UserName_Help
 
 		public static string ContainerRepository_UserName_Help { get { return GetResourceString("ContainerRepository_UserName_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_CustomCertExpires
+
+		public static string CotNotification_CustomCertExpires { get { return GetResourceString("CotNotification_CustomCertExpires"); } }
 //Resources:DeploymentAdminResources:CotNotification_DataPackageFile
 
 		public static string CotNotification_DataPackageFile { get { return GetResourceString("CotNotification_DataPackageFile"); } }
@@ -213,9 +216,31 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:CotNotification_Help
 
 		public static string CotNotification_Help { get { return GetResourceString("CotNotification_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_IgnoreCertificateErrors
+
+		public static string CotNotification_IgnoreCertificateErrors { get { return GetResourceString("CotNotification_IgnoreCertificateErrors"); } }
+//Resources:DeploymentAdminResources:CotNotification_IgnoreCertificateErrors_Help
+
+		public static string CotNotification_IgnoreCertificateErrors_Help { get { return GetResourceString("CotNotification_IgnoreCertificateErrors_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_IncludeDeviceLocation
+
+
+		///<summary>
+		///Include Device Location
+		///</summary>
+		public static string CotNotification_IncludeDeviceLocation { get { return GetResourceString("CotNotification_IncludeDeviceLocation"); } }
 //Resources:DeploymentAdminResources:CotNotification_IncludeLocationPolygon
 
 		public static string CotNotification_IncludeLocationPolygon { get { return GetResourceString("CotNotification_IncludeLocationPolygon"); } }
+//Resources:DeploymentAdminResources:CotNotification_IncludeLocationPolygon_Help
+
+		public static string CotNotification_IncludeLocationPolygon_Help { get { return GetResourceString("CotNotification_IncludeLocationPolygon_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_PublicRootCert
+
+		public static string CotNotification_PublicRootCert { get { return GetResourceString("CotNotification_PublicRootCert"); } }
+//Resources:DeploymentAdminResources:CotNotification_PublicRootCert_Help
+
+		public static string CotNotification_PublicRootCert_Help { get { return GetResourceString("CotNotification_PublicRootCert_Help"); } }
 //Resources:DeploymentAdminResources:CotNotification_Remarks
 
 		public static string CotNotification_Remarks { get { return GetResourceString("CotNotification_Remarks"); } }
@@ -231,6 +256,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:CotNotification_Type_Help
 
 		public static string CotNotification_Type_Help { get { return GetResourceString("CotNotification_Type_Help"); } }
+//Resources:DeploymentAdminResources:CotNotification_UseCustomRoot
+
+		public static string CotNotification_UseCustomRoot { get { return GetResourceString("CotNotification_UseCustomRoot"); } }
+//Resources:DeploymentAdminResources:CotNotification_UseCustomRoot_Help
+
+		public static string CotNotification_UseCustomRoot_Help { get { return GetResourceString("CotNotification_UseCustomRoot_Help"); } }
 //Resources:DeploymentAdminResources:CotNotifications_Title
 
 		public static string CotNotifications_Title { get { return GetResourceString("CotNotifications_Title"); } }
@@ -1926,17 +1957,26 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string ContainerRepository_Title = "ContainerRepository_Title";
 			public const string ContainerRepository_UserName = "ContainerRepository_UserName";
 			public const string ContainerRepository_UserName_Help = "ContainerRepository_UserName_Help";
+			public const string CotNotification_CustomCertExpires = "CotNotification_CustomCertExpires";
 			public const string CotNotification_DataPackageFile = "CotNotification_DataPackageFile";
 			public const string CotNotification_DataPackageFile_Help = "CotNotification_DataPackageFile_Help";
 			public const string CotNotification_Description = "CotNotification_Description";
 			public const string CotNotification_FillColor = "CotNotification_FillColor";
 			public const string CotNotification_Help = "CotNotification_Help";
+			public const string CotNotification_IgnoreCertificateErrors = "CotNotification_IgnoreCertificateErrors";
+			public const string CotNotification_IgnoreCertificateErrors_Help = "CotNotification_IgnoreCertificateErrors_Help";
+			public const string CotNotification_IncludeDeviceLocation = "CotNotification_IncludeDeviceLocation";
 			public const string CotNotification_IncludeLocationPolygon = "CotNotification_IncludeLocationPolygon";
+			public const string CotNotification_IncludeLocationPolygon_Help = "CotNotification_IncludeLocationPolygon_Help";
+			public const string CotNotification_PublicRootCert = "CotNotification_PublicRootCert";
+			public const string CotNotification_PublicRootCert_Help = "CotNotification_PublicRootCert_Help";
 			public const string CotNotification_Remarks = "CotNotification_Remarks";
 			public const string CotNotification_StaleSeconds = "CotNotification_StaleSeconds";
 			public const string CotNotification_StaleSeconds_Help = "CotNotification_StaleSeconds_Help";
 			public const string CotNotification_Title = "CotNotification_Title";
 			public const string CotNotification_Type_Help = "CotNotification_Type_Help";
+			public const string CotNotification_UseCustomRoot = "CotNotification_UseCustomRoot";
+			public const string CotNotification_UseCustomRoot_Help = "CotNotification_UseCustomRoot_Help";
 			public const string CotNotifications_Title = "CotNotifications_Title";
 			public const string CotNotifiication_Type = "CotNotifiication_Type";
 			public const string Deployment_Listeners = "Deployment_Listeners";

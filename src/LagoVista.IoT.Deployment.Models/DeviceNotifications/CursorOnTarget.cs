@@ -49,7 +49,30 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
         [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_DataPackageFile, HelpResource: DeploymentAdminResources.Names.CotNotification_DataPackageFile_Help, FieldType: FieldTypes.FileUpload, PrivateFileUpload: true, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader DataPackageFile { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_IncludeLocationPolygon, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_IgnoreCertificateErrors, HelpResource: DeploymentAdminResources.Names.CotNotification_IgnoreCertificateErrors_Help,
+            FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool IgnoreCertificateErrors { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_UseCustomRoot, HelpResource: DeploymentAdminResources.Names.CotNotification_UseCustomRoot_Help,
+            FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool UseCustomCertificate { get; set; }
+
+        
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_CustomCertExpires, FieldType: FieldTypes.Date, ResourceType: typeof(DeploymentAdminResources))]
+        public string CustomCertExpires { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_PublicRootCert, HelpResource: DeploymentAdminResources.Names.CotNotification_PublicRootCert_Help, 
+            FieldType: FieldTypes.FileUpload, PrivateFileUpload: true, IsRequired: true, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader CustomRootCert { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_IncludeDeviceLocation, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool IncludeDeviceLocation { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_IncludeLocationPolygon, HelpResource:DeploymentAdminResources.Names.CotNotification_IncludeLocationPolygon_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IncludeLocationPoloygon { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_FillColor, FieldType: FieldTypes.Color, ResourceType: typeof(DeploymentAdminResources))]
@@ -62,7 +85,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
         {
             return new FormConditionals()
             {
-                 ConditionalFields = new List<string>() { nameof(FillColor)},
+                  ConditionalFields = new List<string>() { nameof(FillColor), nameof(CustomRootCert), nameof(CustomCertExpires)},
                   Conditionals = new List<FormConditional>()
                   {
                        new FormConditional()
@@ -70,6 +93,13 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                             Field = nameof(IncludeLocationPoloygon),
                             Value = "true",
                             VisibleFields = new List<string>() { nameof(FillColor)}
+                       },
+                       new FormConditional()
+                       {
+                           Field = nameof(UseCustomCertificate),
+                           Value = "true",
+                           VisibleFields = new List<string>() {nameof(CustomRootCert), nameof(CustomCertExpires) },
+                           RequiredFields = new List<string>() {nameof(CustomRootCert), nameof(CustomCertExpires) }
                        }
                   },
             };
@@ -86,12 +116,15 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                 nameof(NotificationType),
                 nameof(StaleSeconds),
                 nameof(DataPackageFile),
+                nameof(IgnoreCertificateErrors),
+                nameof(UseCustomCertificate),
+                nameof(CustomRootCert),
+                nameof(CustomCertExpires),
                 nameof(Remarks),
+                nameof(IncludeDeviceLocation),
                 nameof(IncludeLocationPoloygon),
                 nameof(FillColor),
             };
         }
-
-
     }
 }

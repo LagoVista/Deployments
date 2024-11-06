@@ -23,9 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
     {
         private const string CoTStreamsKey = "cot_streams";
         private const string ConnectionStringKey = "connectString0";
-
-        private readonly bool _ignoreCertificateValidationIssues;
-
+        
         private readonly TcpClient _client = new TcpClient();
         private SslStream _sslStream;
 
@@ -36,8 +34,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         private bool _running = false;
 
-        private readonly CertificateCollectionProvider _certCollectionProvider;
+        private readonly CertificateCollectionProvider _certCollectionProvider;       
 
+        X509Certificate _customRootCert;
         X509CertificateCollection _certCollection;
         Preferences _preferences;
         Manifest _manifest;
@@ -51,6 +50,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         public event EventHandler TakServerConnected;
         public event EventHandler TakServerDisconnected;
         public event EventHandler<Event> MessageReceived;
+
+        public bool IgnoreCertificateErrors { get; set; }
 
         public TakClient(IAdminLogger adminLogger)
         {
@@ -104,6 +105,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
         }
 
+        public Task<InvokeResult> ConnectAsync(byte[] customCert)
+        {
+            _customRootCert = new X509Certificate(customCert);
+            return ConnectAsync();
+        }
 
         public Task<InvokeResult> GetIsConnectedAsync()
         {
@@ -120,9 +126,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             return Task.FromResult(InvokeResult.Success);
         }
 
-        public async Task<InvokeResult> DisconnectAsync()
+        public Task<InvokeResult> DisconnectAsync()
         {
-            return InvokeResult.Success;
+            return Task.FromResult(InvokeResult.Success);
         }
 
         private async void ListenerThread()
@@ -259,10 +265,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         private bool CertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            if (_ignoreCertificateValidationIssues)
+            if (IgnoreCertificateErrors)
                 return true;
 
-            return sslPolicyErrors == SslPolicyErrors.None;
+            if (sslPolicyErrors == SslPolicyErrors.None)
+                return true;
+
+            return _customRootCert.GetPublicKeyString() ==
+                chain.ChainElements[chain.ChainElements.Count - 1].Certificate.GetPublicKeyString();
         }
 
         private InvokeResult<Manifest> GetManifest(ZipArchive package)
@@ -338,6 +348,5 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 }
             }
         }
-
     }
 }

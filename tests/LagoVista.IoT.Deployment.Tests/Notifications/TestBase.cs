@@ -12,12 +12,14 @@ using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Utils;
 using LagoVista.MediaServices.Interfaces;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using LagoVista.UserAdmin.Models.Orgs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+
 
 namespace LagoVista.IoT.Deployment.Tests.Notifications
 {
@@ -35,7 +37,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<IDistributionListRepo> DistroLibRepo = new Mock<IDistributionListRepo>();
         protected Mock<IDeviceNotificationRepo> NotificationRepo = new Mock<IDeviceNotificationRepo>();
         protected Mock<IOrgLocationRepo> OrgLocationRepo = new Mock<IOrgLocationRepo>();
-        protected Mock<IEmailSender> EmailSender = new Mock<IEmailSender>();
+        protected Mock<Admin.Interfaces.IEmailSender> EmailSender = new Mock<Admin.Interfaces.IEmailSender>();
         protected Mock<ISecureStorage> SecureStorege = new Mock<ISecureStorage>();
         protected Mock<UserAdmin.Interfaces.Managers.ISmsSender> SMSMessageSender = new Mock<UserAdmin.Interfaces.Managers.ISmsSender>();
         protected Mock<ISMSSender> SMSSender = new Mock<ISMSSender>();
@@ -53,7 +55,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<IStaticPageStorage> StaticPageService = new Mock<IStaticPageStorage>();
         protected Mock<IMediaServicesManager> MediaServicesManager = new Mock<IMediaServicesManager>();
         protected Mock<IOrganizationRepo> OrgRepo = new Mock<IOrganizationRepo>();
+        protected Mock<IOrganizationManager> OrgMananager = new Mock<IOrganizationManager>();
         protected Mock<ITimeZoneServices> TimeZoneService = new Mock<ITimeZoneServices>();
+
+        protected const string ROOT_CERT_ID = "ROOTABC1235";
+        protected const string CERT_SECRET_ID = "CERTSECRETID";
+        protected const string USER_FILE_ID = "USErFILEDEF9876543";
 
         [TestInitialize]
         public void InitBase()
@@ -62,9 +69,24 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
 
             var buffer = System.IO.File.ReadAllBytes("kevin.zip");
 
-            MediaServicesManager.Setup(msm => msm.GetResourceMediaAsync(It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new MediaServices.Models.MediaItemResponse()
+            SecureStorege.Setup(ss => ss.GetSecretAsync(It.IsAny<EntityHeader>(), It.Is<string>(str => str == CERT_SECRET_ID), It.IsAny<EntityHeader>())).ReturnsAsync(new InvokeResult<string>()
+            {
+
+                Result = "atakatak"
+            });
+
+            
+
+            MediaServicesManager.Setup(msm => msm.GetResourceMediaAsync(It.Is<string>(str => str == USER_FILE_ID), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new MediaServices.Models.MediaItemResponse()
             {
                  ImageBytes = buffer,
+            });
+
+
+            var cert = System.IO.File.ReadAllBytes("slroot.crt");
+            MediaServicesManager.Setup(msm => msm.GetResourceMediaAsync(It.Is<string>(str => str == ROOT_CERT_ID), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new MediaServices.Models.MediaItemResponse()
+            {
+                ImageBytes = cert,
             });
 
             TagReplacer.Setup(trs => trs.ReplaceTagsAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>())).ReturnsAsync("JUST SOME CONTENT");

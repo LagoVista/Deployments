@@ -16,6 +16,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<InvokeResult> InitAsync(Stream stream);
         Task<InvokeResult> GetIsConnectedAsync();
         Task<InvokeResult> ConnectAsync();
+        Task<InvokeResult> ConnectAsync(byte[] customCert);
         Task<InvokeResult> ListenAsync(CancellationToken cancellationToken = default);
         Task<InvokeResult> DisconnectAsync();
         Task<InvokeResult> SendAsync(Message message, CancellationToken cancellationToken = default);

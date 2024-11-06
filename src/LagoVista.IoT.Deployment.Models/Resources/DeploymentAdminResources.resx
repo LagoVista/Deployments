@@ -1768,13 +1768,13 @@
     <value>Upload a data package file to connect to TAK server.  https://mytecknet.com/creating-tak-data-packages-for-enrollment/</value>
   </data>
   <data name="CotNotification_Description" xml:space="preserve">
-    <value />
+    <value>Notification to be sent to Cursor on Target</value>
   </data>
   <data name="CotNotification_FillColor" xml:space="preserve">
     <value>Fill Color</value>
   </data>
   <data name="CotNotification_Help" xml:space="preserve">
-    <value />
+    <value>Notification to be sent to a Cursor on Target Server.</value>
   </data>
   <data name="CotNotification_IncludeLocationPolygon" xml:space="preserve">
     <value>Include Location Polygon</value>
@@ -1937,5 +1937,33 @@
   </data>
   <data name="DeviceConfiugration_CustomMobilePage_Help" xml:space="preserve">
     <value>Page that will be used when the user logs in to the mobile app to configure the device.</value>
+  </data>
+  <data name="CotNotification_IgnoreCertificateErrors" xml:space="preserve">
+    <value>Ignore Certificate Errors (not recommended)</value>
+  </data>
+  <data name="CotNotification_PublicRootCert" xml:space="preserve">
+    <value>Root SSL Certificate</value>
+  </data>
+  <data name="CotNotification_PublicRootCert_Help" xml:space="preserve">
+    <value>In a number of cases the TAK server may not have a publicly signed root certificate.  If this is the case for this installation, you can upload the .crt file for the root cert.  This can usually be obtained from the browser address bar.</value>
+  </data>
+  <data name="CotNotification_UseCustomRoot" xml:space="preserve">
+    <value>Use Custom Root SSL Cerfificate</value>
+  </data>
+  <data name="CotNotification_UseCustomRoot_Help" xml:space="preserve">
+    <value>In a number of cases the TAK server may not have a publicly signed root certificate.  If this is the case for this installation, you can upload the .crt file for the root cert.  This can usually be obtained from the browser address bar.</value>
+  </data>
+  <data name="CotNotification_IgnoreCertificateErrors_Help" xml:space="preserve">
+    <value>If you are testing our a new TAK server, you may choose to not enforce the SSL certificate being valid, this should not be used in a production environment.</value>
+  </data>
+  <data name="CotNotification_IncludeLocationPolygon_Help" xml:space="preserve">
+    <value>If this option is selected the bounding box associated with the device will be sent with the notification.  If the device does not have a bounding box, it will check the location assocaited with the device and use that if it's present.  If that is not present, it will just send the location of the device.</value>
+  </data>
+  <data name="CotNotification_IncludeDeviceLocation" xml:space="preserve">
+    <value>Include Device Location</value>
+    <comment>Include Device Location</comment>
+  </data>
+  <data name="CotNotification_CustomCertExpires" xml:space="preserve">
+    <value>Custom Certificate Expires</value>
   </data>
 </root>
