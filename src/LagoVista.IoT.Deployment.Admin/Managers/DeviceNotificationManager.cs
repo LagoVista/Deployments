@@ -201,5 +201,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             return _notificationTracking.GetHistoryAsync(deviceid, listRequest);
         }
+
+
+        public Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistoryForRepoAsync(string repoId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            return _notificationTracking.GetHistoryForRepoAsync(repoId, listRequest);
+        }
     }
 }

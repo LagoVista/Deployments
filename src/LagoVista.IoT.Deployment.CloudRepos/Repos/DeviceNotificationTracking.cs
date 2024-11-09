@@ -32,6 +32,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetAsync(deviceId, rowkey);
         }
 
+        public Task<ListResponse<DeviceNotificationHistory>> GetHistoryForRepoAsync(string repoId, ListRequest listRequest)
+        {
+            return this.GetPagedResultsAsync(listRequest, FilterOptions.Create(nameof(DeviceNotificationHistory.DeviceRepoId), FilterOptions.Operators.Equals, repoId));
+        }
+
         public async Task MarkAsViewed(string staticPageId)
         {
             var history = await this.GetAsync(staticPageId);

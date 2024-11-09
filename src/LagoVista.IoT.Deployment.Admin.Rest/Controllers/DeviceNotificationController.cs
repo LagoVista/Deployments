@@ -181,6 +181,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return await _notificationManager.GetNotificationHistoryAsync(deviceid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
+        [HttpGet("/api/device/notification/repo/{repoid}/history")]
+        public async Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistoryForRepo(string repoid)
+        {
+            return await _notificationManager.GetNotificationHistoryForRepoAsync(repoid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+
         private string GetMessage(string payload)
         {
             var html = @"<html>
