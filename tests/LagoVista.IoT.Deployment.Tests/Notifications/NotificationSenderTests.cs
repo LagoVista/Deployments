@@ -19,7 +19,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         public void Init()
         {
             _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object,
-                AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeploymentInstanceRepo.Object, TimeZoneService.Object);
+                                RasiedDeviceNotificationRepo.Object, AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeploymentInstanceRepo.Object, TimeZoneService.Object);
         }
 
 

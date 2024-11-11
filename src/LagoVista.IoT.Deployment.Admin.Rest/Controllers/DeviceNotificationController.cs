@@ -142,15 +142,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
-        public Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
+        public async Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
         {
-            return _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
+            var result = await  _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
                 TestMode = testing == "true",
                 DeviceUniqueId = deviceuniqueid,
                 DeviceRepositoryId = repoid,
                 NotificationKey = notificationkey
             }, OrgEntityHeader, UserEntityHeader);
+
+            if (!result.Successful)
+                return result;
+
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
+
+            return await _deviceManager.UpdateDeviceCustomStatusAsync(repo, deviceuniqueid, notificationkey, OrgEntityHeader, UserEntityHeader);
         }
 
         /// <summary>
@@ -186,6 +193,21 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             return await _notificationManager.GetNotificationHistoryForRepoAsync(repoid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
+
+
+
+        [HttpGet("/api/device/notification/raised/{deviceid}/history")]
+        public async Task<ListResponse<RaisedNotificationHistory>> GetRaisedNotificationHistory(string deviceid)
+        {
+            return await _notificationManager.GetRaisedNotificationHistoryForRepoAsync(deviceid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/device/notification/raised/repo/{repoid}/history")]
+        public async Task<ListResponse<RaisedNotificationHistory>> GetRaisedNotificationHistoryForRepo(string repoid)
+        {
+            return await _notificationManager.GetRaisedNotificationHistoryForRepoAsync(repoid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
 
 
         private string GetMessage(string payload)

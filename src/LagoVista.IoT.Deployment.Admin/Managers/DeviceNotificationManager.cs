@@ -18,15 +18,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IDeviceNotificationTracking _notificationTracking;
         private readonly ISecureStorage _secureStorage;
         private readonly IStaticPageStorage _staticPageStorage;
+        private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
 
         public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceNotificationTracking notificationTracking,
-                ILogger logger,  ISecureStorage secureStorage, IStaticPageStorage staticPageStorage,  IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
+                ILogger logger,  ISecureStorage secureStorage, IStaticPageStorage staticPageStorage, IRaisedNotificationHistoryRepo raisedNotificationHistoryRepo, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
             base(logger, appConfig, dependencyManager, security)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
             _notificationTracking = notificationTracking ?? throw new ArgumentNullException(nameof(notificationTracking));
-            _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));            
-            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
+            _raisedNotificationHistoryRepo = raisedNotificationHistoryRepo ?? throw new ArgumentNullException(nameof(raisedNotificationHistoryRepo));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
@@ -202,10 +203,20 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _notificationTracking.GetHistoryAsync(deviceid, listRequest);
         }
 
-
         public Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistoryForRepoAsync(string repoId, ListRequest listRequest, EntityHeader org, EntityHeader user)
         {
             return _notificationTracking.GetHistoryForRepoAsync(repoId, listRequest);
         }
+
+        public Task<ListResponse<RaisedNotificationHistory>> GetRasiedNotificationHistoryAsync(string deviceid, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            return _raisedNotificationHistoryRepo.GetHistoryAsync(deviceid, listRequest);
+        }
+
+        public Task<ListResponse<RaisedNotificationHistory>> GetRaisedNotificationHistoryForRepoAsync(string repoId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            return _raisedNotificationHistoryRepo.GetHistoryForRepoAsync(repoId, listRequest);
+        }
+
     }
 }

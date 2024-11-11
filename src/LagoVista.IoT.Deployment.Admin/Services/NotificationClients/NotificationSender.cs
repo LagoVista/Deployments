@@ -19,6 +19,7 @@ using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using Org.BouncyCastle.Security;
 using MQTTnet.Packets;
 using System.Diagnostics;
+using RingCentral;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -41,10 +42,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly INotificationLandingPage _landingPageBuilder;
         private readonly ITimeZoneServices _timeZoneService;
         private readonly IOrganizationRepo _orgRepo;
+        private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, 
+                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, 
                                   IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -64,6 +66,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _landingPageBuilder = landingPageBuilder ?? throw new ArgumentNullException(nameof(landingPageBuilder));
             _timeZoneService = timeZoneService ?? throw new ArgumentNullException(nameof(timeZoneService));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
+            _raisedNotificationHistoryRepo = raisedNotificationHistory ?? throw new ArgumentNullException(nameof(raisedNotificationHistory));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
@@ -178,6 +181,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 return result.ToInvokeResult();
 
             var recipients = recipientsResult.Result;
+
+
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Result.Id)
+            {
+                OrgId = device.Result.OwnerOrganization.Id,
+                DeviceId = device.Result.DeviceId,
+                DeviceRepoId = device.Result.DeviceRepository.Id,
+                Notification = notification.Name,
+                NotificationId = notification.Id,
+                TestMode = false,
+                TimeStamp = DateTime.UtcNow.ToJSONString()
+            });
 
             foreach (var recipient in recipients)
             {
@@ -373,6 +388,17 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
 
             contacts.EnsureUniqueNotifications();
+
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Id)
+            {
+                OrgId = device.OwnerOrganization.Id,
+                 DeviceId = device.DeviceId,
+                 DeviceRepoId = device.DeviceRepository.Id,
+                 Notification = notification.Name,
+                 NotificationId = notification.Id,
+                 TestMode = testMode,
+                 TimeStamp = DateTime.UtcNow.ToJSONString()
+            });
 
             foreach (var recipient in contacts)
             {

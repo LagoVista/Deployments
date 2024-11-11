@@ -166,6 +166,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 deviceConfiguration.DeviceLabel = DeploymentAdminResources.DeviceConfiguration_DeviceLabel_Default;
             }
 
+            if(!EntityHeader.IsNullOrEmpty(deviceConfiguration.CustomStatusType))
+            {
+                deviceConfiguration.CustomStatusType.Value = await _stateSetRepo.GetStateSetAsync(deviceConfiguration.CustomStatusType.Id);
+            }
+
             foreach (var route in deviceConfiguration.Routes)
             {
                 await PopulateRoutes(route, org, user);
