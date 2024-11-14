@@ -11,10 +11,10 @@ namespace LagoVista.IoT.Deployment.Models
        EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1")]
     public class RaisedNotificationHistory : TableStorageEntity
     {
-        public RaisedNotificationHistory(string deviceId)
+        public RaisedNotificationHistory(string deviceRepoId)
         {
             RowKey = DateTime.UtcNow.ToInverseTicksRowKey();
-            PartitionKey = deviceId;
+            PartitionKey = deviceRepoId;
         }
 
         public string TimeStamp { get; set; }
@@ -22,7 +22,7 @@ namespace LagoVista.IoT.Deployment.Models
         public string Notification { get; set; }
         public string NotificationId { get; set; }
 
-        public string DeviceUniqueId { get => PartitionKey; }
+        public string DeviceUniqueId { get; set; }
         public string DeviceRepoId { get; set; }
         public string DeviceId { get; set; }
         public string OrgId { get; set; }    

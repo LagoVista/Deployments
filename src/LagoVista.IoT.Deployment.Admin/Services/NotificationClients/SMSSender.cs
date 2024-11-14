@@ -54,22 +54,23 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else
             {
+
+                var smsContent = _smsContent;
+
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
-
-                var result = await _smsSender.SendAsync(recipient.Phone, _smsContent);
-
+                
                 if(!String.IsNullOrEmpty(links.FullLandingPageLink))
                 {
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.FullLandingPageLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
 
-                    await _smsSender.SendAsync(recipient.Phone, $"View: {shortenedLink.Result}");
+                   smsContent += $" view: {shortenedLink.Result}";
                 }
                 else if (!String.IsNullOrEmpty(links.AcknowledgeLink))
                 {
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
-                    await _smsSender.SendAsync(recipient.Phone, $"Acknowledge: {shortenedLink.Result}");
+                    smsContent += $" Acknowledge: {shortenedLink.Result}";
                 }
 
                 if (allowSilence)
@@ -77,9 +78,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     var silencedLink = links.SilenceLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
                     var shortenedSilenceLink = await _linkShortener.ShortenLinkAsync(silencedLink);
                     if (!shortenedSilenceLink.Successful) return shortenedSilenceLink.ToInvokeResult();
-                    await _smsSender.SendAsync(recipient.Phone, $"Silence notifiations: {shortenedSilenceLink.Result}");
+                    smsContent += $"Silence notifiations: {shortenedSilenceLink.Result}";
                 }
-                
+
+                var result = await _smsSender.SendAsync(recipient.Phone, smsContent);
+
                 if (result.Successful)
                 {
                     TextMessagesSent++;

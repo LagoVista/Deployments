@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -208,7 +209,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return await _notificationManager.GetRaisedNotificationHistoryForRepoAsync(repoid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
         }
 
+        // TODO: Need to secure
+        //[AllowAnonymous]
+        //[HttpGet("/deviceapi/device/notification/{orgid}/raised/repo/{repoid}/history")]
+        //public async Task<ListResponse<RaisedNotificationHistory>> GetRaisedNotificationHistoryForRepo(string orgid, string repoid)
+        //{
+        //    var orgEH = EntityHeader.Create(orgid, "PUBLIC");
+        //    var userEH = EntityHeader.Create(Guid.Empty.ToId(), "PULBIC");
 
+        //    return await _notificationManager.GetRaisedNotificationHistoryForRepoAsync(repoid, GetListRequestFromHeader(), orgEH,userEH);
+        //}
 
         private string GetMessage(string payload)
         {
@@ -227,42 +237,43 @@ payload +
             return html;
         }
 
-        [AllowAnonymous]
-        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/acknowledge")]
-        public async Task<ActionResult> AcknowledgAsync(string notifid, string orgid, string recipientid, string pageid)
-        {
-            var result = await _notificationManager.AcknowledgeNotificationAsync(notifid, recipientid);
-            if (result.Successful)
-            {
-                var content = Content(GetMessage("Thank you for acknowledging the notification."));
-                content.ContentType = "text/html";
-                return content;
-            }
-            else
-                return NotFound();
-        }
+        // TODO: Need to secure!
+        //[AllowAnonymous]
+        //[HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/acknowledge")]
+        //public async Task<ActionResult> AcknowledgAsync(string notifid, string orgid, string recipientid, string pageid)
+        //{
+        //    var result = await _notificationManager.AcknowledgeNotificationAsync(notifid, recipientid);
+        //    if (result.Successful)
+        //    {
+        //        var content = Content(GetMessage("Thank you for acknowledging the notification."));
+        //        content.ContentType = "text/html";
+        //        return content;
+        //    }
+        //    else
+        //        return NotFound();
+        //}
 
-        [AllowAnonymous]
-        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
-        public async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
-        {
-            var result = await _notificationManager.HandleNotificationAsync(notifid, orgid, recipientid, pageid);
-            if (result.Successful)
-            {
-                var content = Content(GetMessage(result.Result));
-                content.ContentType = "text/html";
-                return content;
-            } else
-                return NotFound();
-        }
+        //[AllowAnonymous]
+        //[HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
+        //public async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
+        //{
+        //    var result = await _notificationManager.HandleNotificationAsync(notifid, orgid, recipientid, pageid);
+        //    if (result.Successful)
+        //    {
+        //        var content = Content(GetMessage(result.Result));
+        //        content.ContentType = "text/html";
+        //        return content;
+        //    } else
+        //        return NotFound();
+        //}
 
 
-        [AllowAnonymous]
-        [HttpGet("/device/notifications/diagram/{diagramid}")]
-        public async Task<LocationDiagram> GetLocationDiagram(string diagramid)
-        {
-            return await _locationDiagramRepo.GetLocationDiagramAsync(diagramid);
-        }
+        //[AllowAnonymous]
+        //[HttpGet("/device/notifications/diagram/{diagramid}")]
+        //public async Task<LocationDiagram> GetLocationDiagram(string diagramid)
+        //{
+        //    return await _locationDiagramRepo.GetLocationDiagramAsync(diagramid);
+        //}
     }
 
     public class PublicNotifications : Controller

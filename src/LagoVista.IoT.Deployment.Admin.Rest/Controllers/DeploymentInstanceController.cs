@@ -708,4 +708,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _instanceManager.GetRemoteMonitoringURIAsync("device", CurrentDevice.Id, verbosity, OrgEntityHeader, UserEntityHeader);
         }
     }
+
+    public class PublicRepoController : Controller
+    {
+        private readonly IDeploymentInstanceManager _instanceManager;
+
+        public PublicRepoController(IAdminLogger adminLogger, IDeploymentInstanceManager instanceManager)
+        {
+            _instanceManager = instanceManager ?? throw new ArgumentNullException(nameof(instanceManager)); ;
+        }
+
+        // TODO: Need to secure
+        //[AllowAnonymous]
+        //[HttpGet("/deviceapi/wsuri/monitor/{orgid}/repo/{repoid}/{verbosity}")]
+        //public Task<InvokeResult<string>> GetRepoMonitorUriAsync(string orgid, string repoid, string verbosity)
+        //{
+        //    var orgEH = EntityHeader.Create(orgid, "PUBLIC");
+        //    var userEH = EntityHeader.Create(Guid.Empty.ToId(), "PULBIC");
+
+        //    return _instanceManager.GetRemoteMonitoringURIAsync("devicerepository", repoid, verbosity, orgEH, userEH);
+        //}
+    }
 }

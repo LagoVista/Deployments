@@ -30,6 +30,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             template = template.Replace("[DeviceId]", device.DeviceId);
             if (location != null)
             {
+                var geoAddress = $"{location.Addr1} {location.City}, {location.StateProvince} {location.PostalCode}";
+
+                template = template.Replace("[DeviceStreetAddress]", geoAddress);
+
+                template = template.Replace("[DeviceLocationName]", location.Name);
                 template = template.Replace("[DeviceLocation]", location.ToHTML(_appConfig.WebAddress));
                 if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
                 {
@@ -37,8 +42,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     if (adminContact != null)
                     {
                         var phoneHtml = String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $"<a href='tel:{adminContact.PhoneNumber}> ({adminContact.PhoneNumber})</a>";
-                        template.Replace("[Location_Admin_Contact]", $"<div>{adminContact.Name} {phoneHtml}</div>");
+                        template = template.Replace("[Location_Admin_Contact]", $"<div>{adminContact.Name} {phoneHtml}</div>");
                     }
+                    else
+                        template = template.Replace("[Location_Admin_Contact]", String.Empty);
                 }
 
                 if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
@@ -47,12 +54,19 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     if (technicalContact != null)
                     {
                         var phoneHtml = String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $"<a href='tel:{technicalContact.PhoneNumber}> ({technicalContact.PhoneNumber})</a>";
-                        template.Replace("[Location_Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
+                        template = template.Replace("[Location_Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
                     }
+                    else
+                        template = template.Replace("[Location_Technical_Contact]", String.Empty);
                 }
             }
             else
+            {
+                template = template.Replace("[DeviceStreetAddress]", String.Empty);
+                template = template.Replace("[Location_Admin_Contact]", String.Empty);
+                template = template.Replace("[Location_Technical_Contact]", String.Empty);
                 template = template.Replace("[DeviceLocation]", string.Empty);
+            }
 
             var sensorHtml = new StringBuilder("<h4>Sensors</h4>");
 

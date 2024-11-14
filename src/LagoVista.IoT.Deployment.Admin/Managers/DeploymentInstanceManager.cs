@@ -384,7 +384,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIAsync(string channel, string id, string verbosity, EntityHeader org, EntityHeader user)
         {
             var bldr = TimingBuilder.StartNew();
-            await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
+            if(org.Text != "PUBLIC")
+                await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
 
             var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
             bldr.CompleteAndRestart("[DeploymentInstanceManager__GetRemoteMonitoringURIAsync__GetNotificationsHostAsync]");

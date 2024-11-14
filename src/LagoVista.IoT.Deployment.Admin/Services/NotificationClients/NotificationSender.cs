@@ -46,7 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, 
+                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
                                   IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -78,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (raisedNotification.AdditionalUsers != null)
                 appUsers.AddRange(raisedNotification.AdditionalUsers);
-            
+
             if (raisedNotification.AdditionalExternalContacts != null)
                 externalContacts.AddRange(raisedNotification.AdditionalExternalContacts);
 
@@ -98,7 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 appUsers.AddRange(distroList.AppUsers);
                 externalContacts.AddRange(distroList.ExternalContacts);
             }
-     
+
             foreach (var appUser in appUsers)
             {
                 if (!recipients.Any(rec => rec.Id == appUser.Id))
@@ -123,7 +123,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             return InvokeResult<List<NotificationRecipient>>.Create(recipients);
         }
-        
+
 
         private async Task<InvokeResult<Device>> GetDeviceAsync(RaisedDeviceNotification raisedNotification, DeviceRepository repo, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
@@ -155,7 +155,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var deployment = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
 
-            var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);           
+            var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);
             if (!device.Successful) return InvokeResult.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
             _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
@@ -183,10 +183,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var recipients = recipientsResult.Result;
 
 
-            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Result.Id)
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Result.DeviceRepository.Id)
             {
                 OrgId = device.Result.OwnerOrganization.Id,
                 DeviceId = device.Result.DeviceId,
+                DeviceUniqueId = device.Result.Id,
                 DeviceRepoId = device.Result.DeviceRepository.Id,
                 Notification = notification.Name,
                 NotificationId = notification.Id,
@@ -210,11 +211,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     SentSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.Result.DeviceId,
                     DeviceRepoId = repo.Id,
-               };
+                };
 
-                if(recipient.SendSMS)
+                if (recipient.SendSMS)
                     await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), orgEntityHeader, userEntityHeader);
-               
+
                 if (recipient.SendEmail)
                     await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
 
@@ -249,7 +250,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public async Task<InvokeResult> SendDeviceOnlineNotificationAsync(Device device, string lastContact, bool testMode, EntityHeader org, EntityHeader user)
         {
-            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id,org, user);
+            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id, org, user);
             var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOnlinNotification)) ?
             await _deviceNotificationRepo.GetNotificationAsync(repo.DeviceOnlinNotification.Id) :
             new DeviceNotification()
@@ -292,7 +293,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             var contacts = new List<NotificationRecipient>();
-            contacts.AddRange(device.NotificationContacts.Select(cnt=> NotificationRecipient.FromExternalContext(cnt)));
+            contacts.AddRange(device.NotificationContacts.Select(cnt => NotificationRecipient.FromExternalContext(cnt)));
 
             OrgLocation location = null;
             if (!EntityHeader.IsNullOrEmpty(device.Location))
@@ -332,7 +333,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             else
             {
                 var orgInfo = await _orgRepo.GetOrganizationAsync(org.Id);
-                if(orgInfo.TimeZone.Id != "UTC")
+                if (orgInfo.TimeZone.Id != "UTC")
                 {
                     tz = _timeZoneService.GetTimeZoneById(orgInfo.TimeZone.Id);
                 }
@@ -348,7 +349,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 var lastContactDT = TimeZoneInfo.ConvertTime(lastContact.ToDateTime(), tz);
                 lastContactStr = $"{lastContactDT.ToShortDateString()} {lastContactDT.ToShortTimeString()} {tz.Id}";
-            }               
+            }
 
             var notifId = DateTime.UtcNow.ToInverseTicksRowKey();
             var pageResult = await _landingPageBuilder.PreparePage(notifId, null, notification, testMode, device, location, org, user);
@@ -374,7 +375,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             await _smsSender.PrepareMessage(notification, testMode, device, location);
             await _emailSender.PrepareMessage(notification, testMode, device, location);
-            
+
             if (!EntityHeader.IsNullOrEmpty(device.WatchdogNotificationUser))
             {
                 var watchDogNotifUser = await _appUserRepo.FindByIdAsync(device.WatchdogNotificationUser.Id);
@@ -389,15 +390,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             contacts.EnsureUniqueNotifications();
 
-            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Id)
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.DeviceRepository.Id)
             {
                 OrgId = device.OwnerOrganization.Id,
-                 DeviceId = device.DeviceId,
-                 DeviceRepoId = device.DeviceRepository.Id,
-                 Notification = notification.Name,
-                 NotificationId = notification.Id,
-                 TestMode = testMode,
-                 TimeStamp = DateTime.UtcNow.ToJSONString()
+                DeviceId = device.DeviceId,
+                DeviceUniqueId = device.Id,
+                DeviceRepoId = device.DeviceRepository.Id,
+                Notification = notification.Name,
+                NotificationId = notification.Id,
+                TestMode = testMode,
+                TimeStamp = DateTime.UtcNow.ToJSONString()
             });
 
             foreach (var recipient in contacts)
@@ -420,10 +422,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     DeviceRepoId = repo.Id,
                 };
 
-                if(recipient.SendSMS)
+                if (recipient.SendSMS)
                     await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
-                
-                if(recipient.SendEmail)
+
+                if (recipient.SendEmail)
                     await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
 
                 await _notificationTracking.AddHistoryAsync(notificationHistory);
@@ -466,7 +468,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             return phone.Replace("-", "").Replace("(", "").Replace(")", "");
         }
 
-        public static void EnsureUniqueNotifications(this List<NotificationRecipient> recipients )
+        public static void EnsureUniqueNotifications(this List<NotificationRecipient> recipients)
         {
             foreach (var recipient in recipients)
             {

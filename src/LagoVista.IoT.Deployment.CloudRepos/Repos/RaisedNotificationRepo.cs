@@ -23,14 +23,15 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return InsertAsync(history);
         }
 
-        public Task<ListResponse<RaisedNotificationHistory>> GetHistoryAsync(string deviceId, ListRequest listRequest)
+        public Task<ListResponse<RaisedNotificationHistory>> GetHistoryAsync(string deviceUniqueId, ListRequest listRequest)
         {
-            return this.GetPagedResultsAsync(deviceId, listRequest);
+
+            return this.GetPagedResultsAsync(listRequest, FilterOptions.Create(nameof(DeviceNotificationHistory.DeviceUniqueId), FilterOptions.Operators.Equals, deviceUniqueId));
         }
 
         public Task<ListResponse<RaisedNotificationHistory>> GetHistoryForRepoAsync(string repoId, ListRequest listRequest)
         {
-            return this.GetPagedResultsAsync(listRequest, FilterOptions.Create(nameof(DeviceNotificationHistory.DeviceRepoId), FilterOptions.Operators.Equals, repoId));
+            return this.GetPagedResultsAsync(repoId, listRequest);
         }
     }
 }
