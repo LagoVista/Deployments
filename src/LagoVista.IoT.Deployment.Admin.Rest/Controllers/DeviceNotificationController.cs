@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -156,9 +157,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             if (!result.Successful)
                 return result;
 
+            var sw = Stopwatch.StartNew();
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
+            result.Timings.Add(new ResultTiming() {  Key = "ctrl=getrep", Ms = sw.ElapsedMilliseconds });
 
-            return await _deviceManager.UpdateDeviceCustomStatusAsync(repo, deviceuniqueid, notificationkey, OrgEntityHeader, UserEntityHeader);
+            var updateCustomStatus = await _deviceManager.UpdateDeviceCustomStatusAsync(repo, deviceuniqueid, notificationkey, OrgEntityHeader, UserEntityHeader);
+            result.Timings.AddRange(updateCustomStatus.Timings);
+            return result;
         }
 
         /// <summary>

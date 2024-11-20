@@ -9,6 +9,7 @@ using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Logging.Utils;
 using LagoVista.MediaServices.Interfaces;
@@ -48,6 +49,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<IAppUserRepo> AppUserRepo = new Mock<IAppUserRepo>();
         protected Mock<IAppConfig> AppConfig = new Mock<IAppConfig>();
         protected Mock<IDeviceRepositoryManager> RepoManager = new Mock<IDeviceRepositoryManager>();
+        protected Mock<IDeviceRepositoryRepo> RepoRepo = new Mock<IDeviceRepositoryRepo>();
         protected Mock<INotificationLandingPage> LandingPageBuilder = new Mock<INotificationLandingPage>();
         protected Mock<IDeviceManager> DeviceManager = new Mock<IDeviceManager>();
         protected Mock<IDeviceNotificationTracking> NotificationTacker = new Mock<IDeviceNotificationTracking>();

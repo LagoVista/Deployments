@@ -12,17 +12,21 @@ using LagoVista.IoT.Pipeline.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
+using Newtonsoft.Json;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeploymentInstanceRepo : DocumentDBRepoBase<DeploymentInstance>, IDeploymentInstanceRepo
     {
 
+        private readonly ICacheProvider _cacheProvider;
+
         private bool _shouldConsolidateCollections;
-        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependencyMgr) : 
+        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependencyMgr, ICacheProvider cacheProvider) : 
             base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger, dependencyManager: dependencyMgr)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
+            _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider)); // We don't natively cache this object since it can be updated by services that don't have access to the cache, we do provide a readonly version of this object that is cached.
         }
 
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
@@ -38,6 +42,17 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task DeleteInstanceAsync(string instanceId)
         {
             return DeleteDocumentAsync(instanceId);
+        }
+
+        public async Task<DeploymentInstance> GetReadOnlyInstanceAsync(string id)
+        {
+            var existing = await _cacheProvider.GetAsync($"{nameof(DeploymentInstance)}-{id}");
+            if(!String.IsNullOrEmpty(existing))
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<DeploymentInstance>(existing);
+
+            var instance = await GetInstanceAsync(id);
+            await _cacheProvider.AddAsync($"{nameof(DeploymentInstance)}-{id}", JsonConvert.SerializeObject(instance));
+            return instance;
         }
 
         public async Task<ListResponse<DeploymentInstanceSummary>> GetAllActiveInstancesAsync(ListRequest listRequest)
@@ -103,12 +118,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return items.Any();
         }
 
-        public Task UpdateInstanceAsync(DeploymentInstance instance)
+        public async Task UpdateInstanceAsync(DeploymentInstance instance)
         {
             instance.SharedAccessKey1 = null;
             instance.SharedAccessKey2 = null;
 
-            return UpsertDocumentAsync(instance);
+            await _cacheProvider.RemoveAsync($"{nameof(DeploymentInstance)}-{instance.Id}");
+            await UpsertDocumentAsync(instance);
         }
     }
 }

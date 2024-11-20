@@ -28,6 +28,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _notificationTracking = notificationTracking ?? throw new ArgumentNullException(nameof(notificationTracking));
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
             _raisedNotificationHistoryRepo = raisedNotificationHistoryRepo ?? throw new ArgumentNullException(nameof(raisedNotificationHistoryRepo));
+            _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
