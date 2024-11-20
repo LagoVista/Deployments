@@ -38,7 +38,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 template = template.Replace("[DeviceLocation]", location.ToHTML(_appConfig.WebAddress));
                 if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
                 {
-                    var adminContact = await _appUserRepo.FindByIdAsync(location.AdminContact.Id);
+                    var adminContact = await _appUserRepo.GetCachedAppUserAsync(location.AdminContact.Id);
                     if (adminContact != null)
                     {
                         var phoneHtml = String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $"<a href='tel:{adminContact.PhoneNumber}> ({adminContact.PhoneNumber})</a>";
@@ -50,7 +50,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
                 {
-                    var technicalContact = await _appUserRepo.FindByIdAsync(location.TechnicalContact.Id);
+                    var technicalContact = await _appUserRepo.GetCachedAppUserAsync(location.TechnicalContact.Id);
                     if (technicalContact != null)
                     {
                         var phoneHtml = String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $"<a href='tel:{technicalContact.PhoneNumber}> ({technicalContact.PhoneNumber})</a>";
