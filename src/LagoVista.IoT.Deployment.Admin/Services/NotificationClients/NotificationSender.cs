@@ -4,7 +4,6 @@ using LagoVista.Core.Validation;
 using LagoVista.Core;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core.Models;
-using LagoVista;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Models.Orgs;
 using System;
@@ -16,20 +15,18 @@ using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using System.Linq;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
-using Org.BouncyCastle.Security;
-using MQTTnet.Packets;
 using System.Diagnostics;
-using RingCentral;
-using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.Core.Exceptions;
-using LagoVista.Core.Rpc.Client;
-using Org.BouncyCastle.Ocsp;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
+using System.Diagnostics.Metrics;
+using Prometheus;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
     public class NotificationSender : INotificationSender
     {
+        protected static readonly Counter SentNotifications = Metrics.CreateCounter("nuviot_send_notification", "Raise notification to be sent..", "entity");
+
         private readonly ILogger _logger;
         private readonly Interfaces.IEmailSender _emailSender;
         private readonly ISMSSender _smsSender;
@@ -161,7 +158,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var result = InvokeResult.Success;
             var sw = Stopwatch.StartNew();
             var fullSw = Stopwatch.StartNew();
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] {raisedNotification.NotificationKey} - Starting - Test Mode {raisedNotification.TestMode}", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] {raisedNotification.NotificationKey} - Starting - Test Mode {raisedNotification.TestMode}", orgEntityHeader.Text.ToKVP("org"), 
+                raisedNotification.NotificationKey.ToKVP("notification"),  orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var validationResult = raisedNotification.Validate();
             if (!result.Successful)
@@ -327,6 +325,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             result.Timings.Add(new ResultTiming() { Key = "commpleted", Ms = fullSw.Elapsed.TotalMilliseconds });
 
+            SentNotifications.Inc();
+
             return result;
         }
 
@@ -372,7 +372,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             var sw = Stopwatch.StartNew();
 
-            _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+            _logger.Trace($"[NotificationSender__SendNotification] {notification.Key} - Starting - Test Mode {testMode}",  org.Text.ToKVP("org"), notification.Key.ToKVP("notiifcation"), org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt => NotificationRecipient.FromExternalContext(cnt)));
@@ -381,7 +381,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!EntityHeader.IsNullOrEmpty(device.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
-                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, loaded location and will append.", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
             }
             else
                 _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
@@ -409,7 +409,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else if (!EntityHeader.IsNullOrEmpty(repo.Instance))
             {
-                var instance = await _deploymentRepo.GetInstanceAsync(repo.Instance.Id);
+                var instance = await _deploymentRepo.GetReadOnlyInstanceAsync(repo.Instance.Id);
                 tz = _timeZoneService.GetTimeZoneById(instance.TimeZone.Id);
             }
             else
@@ -535,6 +535,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 sw.Elapsed.TotalMilliseconds.ToString().ToKVP("ms"),
                 _emailSender.EmailsSent.ToString().ToKVP("emailsSent"),
                 _smsSender.TextMessagesSent.ToString().ToKVP("textSent"));
+
+            SentNotifications.Inc();
 
             return InvokeResult.Success;
         }
