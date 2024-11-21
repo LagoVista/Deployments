@@ -146,24 +146,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
         public async Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
         {
-            var result = await  _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
+            return await _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
                 TestMode = testing == "true",
                 DeviceUniqueId = deviceuniqueid,
                 DeviceRepositoryId = repoid,
                 NotificationKey = notificationkey
             }, OrgEntityHeader, UserEntityHeader);
-
-            if (!result.Successful)
-                return result;
-
-            var sw = Stopwatch.StartNew();
-            var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(repoid, OrgEntityHeader, UserEntityHeader);
-            result.Timings.Add(new ResultTiming() {  Key = "ctrl=getrep", Ms = sw.ElapsedMilliseconds });
-
-            var updateCustomStatus = await _deviceManager.UpdateDeviceCustomStatusAsync(repo, deviceuniqueid, notificationkey, OrgEntityHeader, UserEntityHeader);
-            result.Timings.AddRange(updateCustomStatus.Timings);
-            return result;
         }
 
         /// <summary>

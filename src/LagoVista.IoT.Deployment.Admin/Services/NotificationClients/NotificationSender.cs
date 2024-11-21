@@ -23,6 +23,8 @@ using RingCentral;
 using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.Core.Exceptions;
 using LagoVista.Core.Rpc.Client;
+using Org.BouncyCastle.Ocsp;
+using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -43,13 +45,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IMqttSender _mqttSender;
         private readonly IRestSender _restSender;
         private readonly INotificationLandingPage _landingPageBuilder;
+        private readonly IDeviceConfigHelper _deviceConfigHelper;
         private readonly ITimeZoneServices _timeZoneService;
         private readonly IOrganizationRepo _orgRepo;
+        private readonly IBackgroundServiceTaskQueue _taskQueue;
         private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
+                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IBackgroundServiceTaskQueue taskQueue, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager, ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender,
                                   IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -70,6 +74,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _timeZoneService = timeZoneService ?? throw new ArgumentNullException(nameof(timeZoneService));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
             _raisedNotificationHistoryRepo = raisedNotificationHistory ?? throw new ArgumentNullException(nameof(raisedNotificationHistory));
+            _taskQueue = taskQueue ?? throw new ArgumentNullException(nameof(raisedNotificationHistory));
+            _deviceConfigHelper = deviceConfigHelper ?? throw new ArgumentNullException(nameof(deviceConfigHelper));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
@@ -270,7 +276,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 if (recipient.SendEmail)
                     await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
 
-                await _notificationTracking.AddHistoryAsync(notificationHistory);
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
+                
             }
 
             result.Timings.Add(new ResultTiming() { Key = "sendemailandsms", Ms = sw.Elapsed.TotalMilliseconds });
@@ -292,6 +302,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 await _restSender.SendAsync(rest, device.Result, location, orgEntityHeader, userEntityHeader);
             }
 
+
+            sw = Stopwatch.StartNew();
+            var deviceStates = await _deviceConfigHelper.GetCustomDeviceStatesAsync(device.Result.DeviceConfiguration.Id, orgEntityHeader, userEntityHeader);
+            if (deviceStates.HasValue)
+            {
+                var newDeviceState = deviceStates.Value.States.Where(st => st.Key.ToLower() == raisedNotification.NotificationKey).FirstOrDefault();
+                if (newDeviceState != null)
+                {
+                    device.Result.CustomStatus = EntityHeader.Create(newDeviceState.Key, newDeviceState.Name);
+
+
+                    await _deviceManager.UpdateDeviceAsync(repo, device.Result, orgEntityHeader, userEntityHeader);
+                    result.Timings.Add(new ResultTiming() { Key = "updated custom status", Ms = sw.Elapsed.TotalMilliseconds });
+                }
+            }
+
             _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync]", $"Completed",
                 raisedNotification.TestMode.ToString().ToKVP("testMode"),
                 raisedNotification.Id.ToKVP("id"),
@@ -300,8 +326,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 _smsSender.TextMessagesSent.ToString().ToKVP("textSent"));
 
             result.Timings.Add(new ResultTiming() { Key = "commpleted", Ms = fullSw.Elapsed.TotalMilliseconds });
-            sw.Restart();
-
 
             return result;
         }

@@ -7,6 +7,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core.Repos;
@@ -47,6 +48,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<IDeploymentInstanceRepo> DeploymentInstanceRepo = new Mock<IDeploymentInstanceRepo>();
         protected Mock<ICOTSender> COTSender = new Mock<ICOTSender>();
         protected Mock<IAppUserRepo> AppUserRepo = new Mock<IAppUserRepo>();
+        protected Mock<IDeviceConfigHelper> DeviceConfigHelper = new Mock<IDeviceConfigHelper>();
         protected Mock<IAppConfig> AppConfig = new Mock<IAppConfig>();
         protected Mock<IDeviceRepositoryManager> RepoManager = new Mock<IDeviceRepositoryManager>();
         protected Mock<IDeviceRepositoryRepo> RepoRepo = new Mock<IDeviceRepositoryRepo>();
@@ -60,6 +62,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<IOrganizationManager> OrgMananager = new Mock<IOrganizationManager>();
         protected Mock<ITimeZoneServices> TimeZoneService = new Mock<ITimeZoneServices>();
         protected Mock<IRaisedNotificationHistoryRepo> RasiedDeviceNotificationRepo = new Mock<IRaisedNotificationHistoryRepo>();
+        protected Mock<IBackgroundServiceTaskQueue> BackgroundTaskQueue = new Mock<IBackgroundServiceTaskQueue>();
 
         protected const string ROOT_CERT_ID = "ROOTABC1235";
         protected const string CERT_SECRET_ID = "CERTSECRETID";

@@ -81,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     smsContent += $"Silence notifiations: {shortenedSilenceLink.Result}";
                 }
 
-                var result = await _smsSender.SendAsync(recipient.Phone, smsContent);
+                var result = await _smsSender.SendInBackgroundAsync(recipient.Phone, smsContent);
 
                 if (result.Successful)
                 {

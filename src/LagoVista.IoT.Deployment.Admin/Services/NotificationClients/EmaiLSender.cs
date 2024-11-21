@@ -95,7 +95,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 }
 
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending Email To {recipient.FirstName} {recipient.LastName} {recipient.Email} -  {shortenedLink.Result} ({actualInk})");
-                var result = await _emailSender.SendAsync(recipient.Email, _emailSubject, contentToSend, org, user);
+                var result = await _emailSender.SendInBackgroundAsync(recipient.Email, _emailSubject, contentToSend, org, user);
                 if (result.Successful)
                     EmailsSent++;
                 else
