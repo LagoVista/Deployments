@@ -47,17 +47,26 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SMSContent, HelpResource:DeploymentAdminResources.Names.DeviceNotification_SMS_Help, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string SmsContent { get; set; }
 
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_ForwardToParent, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool ForwardToParentDevice { get; set; }
+
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_ForwardToParentBody, HelpResource: DeploymentAdminResources.Names.DeviceNotification_SMS_Help, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
+        public string ForwardToParentDeviceBody { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_IncludeLandingPageContent, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool IncludeLandingPage { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_LandingPageContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
-            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
+            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
         public string LandingPageContent { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
-            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Notification Time Stamp-NotificationTimeStamp;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
+            ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
         public string EmailContent { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_CotNotifications, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/notification/cot/factory", ResourceType: typeof(DeploymentAdminResources))]
@@ -74,7 +83,7 @@ namespace LagoVista.IoT.Deployment.Models
         {
             return new FormConditionals()
             {
-                ConditionalFields = new List<string>() { nameof(SmsContent), nameof(EmailSubject), nameof(EmailContent), nameof(LandingPageContent) },
+                ConditionalFields = new List<string>() { nameof(SmsContent), nameof(EmailSubject), nameof(EmailContent), nameof(LandingPageContent), nameof(ForwardToParentDeviceBody) },
                 Conditionals = new List<FormConditional>()
                  {
                      new FormConditional()
@@ -83,6 +92,13 @@ namespace LagoVista.IoT.Deployment.Models
                          Value = "true",
                          RequiredFields = new List<string>() { nameof(SmsContent)},
                          VisibleFields = new List<string>() { nameof(SmsContent)}
+                     },
+                     new FormConditional()
+                     {
+                         Field = nameof(ForwardToParentDevice),
+                         Value = "true",
+                         RequiredFields = new List<string>() { nameof(ForwardToParentDeviceBody)},
+                         VisibleFields = new List<string>() { nameof(ForwardToParentDeviceBody) }
                      },
                      new FormConditional()
                      {
@@ -138,6 +154,8 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(SendEmail),
                 nameof(EmailSubject),
                 nameof(EmailContent),
+                nameof(ForwardToParentDevice),
+                nameof(ForwardToParentDeviceBody),
                 nameof(IncludeLandingPage),
                 nameof(LandingPageContent)
             };

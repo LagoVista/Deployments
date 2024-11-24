@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 var geoAddress = $"{location.Addr1} {location.City}, {location.StateProvince} {location.PostalCode}";
 
                 template = template.Replace("[DeviceStreetAddress]", geoAddress);
-
+                template = template.Replace("[PhoneNumber]", location.PhoneNumber);
                 template = template.Replace("[DeviceLocationName]", location.Name);
                 template = template.Replace("[DeviceLocation]", location.ToHTML(_appConfig.WebAddress));
                 if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))

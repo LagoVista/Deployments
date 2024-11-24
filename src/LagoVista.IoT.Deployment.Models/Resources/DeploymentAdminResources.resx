@@ -1966,4 +1966,10 @@
   <data name="CotNotification_CustomCertExpires" xml:space="preserve">
     <value>Custom Certificate Expires</value>
   </data>
+  <data name="DeviceNotifications_ForwardToParent" xml:space="preserve">
+    <value>Forward notification to parent</value>
+  </data>
+  <data name="DeviceNotifications_ForwardToParentBody" xml:space="preserve">
+    <value>Forwarded Content</value>
+  </data>
 </root>

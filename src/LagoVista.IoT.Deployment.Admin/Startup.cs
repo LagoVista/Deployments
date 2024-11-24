@@ -61,6 +61,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<ISMSSender, SMSSender>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<INotificationLandingPage, NotificationLandingPage>();
+            services.AddTransient<IDeviceCommandSender, DeviceCommandSender>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

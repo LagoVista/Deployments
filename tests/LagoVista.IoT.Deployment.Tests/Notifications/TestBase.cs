@@ -63,6 +63,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         protected Mock<ITimeZoneServices> TimeZoneService = new Mock<ITimeZoneServices>();
         protected Mock<IRaisedNotificationHistoryRepo> RasiedDeviceNotificationRepo = new Mock<IRaisedNotificationHistoryRepo>();
         protected Mock<IBackgroundServiceTaskQueue> BackgroundTaskQueue = new Mock<IBackgroundServiceTaskQueue>();
+        protected Mock<IDeviceCommandSender> DeviceCommandSender = new Mock<IDeviceCommandSender>();
 
         protected const string ROOT_CERT_ID = "ROOTABC1235";
         protected const string CERT_SECRET_ID = "CERTSECRETID";
