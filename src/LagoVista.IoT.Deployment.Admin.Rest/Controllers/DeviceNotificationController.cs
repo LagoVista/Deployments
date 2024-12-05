@@ -165,6 +165,17 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _notificationManager.GetNotificationsForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
         }
 
+
+        /// <summary>
+        /// Device Error Code - Get For Organization
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/notifications/customer/{customerid}")]
+        public Task<ListResponse<DeviceNotificationSummary>> GetnotificationsForCustomer(string customerid)
+        {
+            return _notificationManager.GetNotificationsForCustomerAsync(OrgEntityHeader.Id, customerid, UserEntityHeader, GetListRequestFromHeader());
+        }
+
         /// <summary>
         /// Device Error Code - Delete Device Error Code
         /// </summary>

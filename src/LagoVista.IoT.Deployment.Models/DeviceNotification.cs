@@ -64,6 +64,11 @@ namespace LagoVista.IoT.Deployment.Models
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
         public string LandingPageContent { get; set; }
 
+        public EntityHeader Customer { get; set; }
+
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SharedTemplate, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public bool SharedTemplate { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
@@ -138,6 +143,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Name),
                 nameof(Key),
                 nameof(Icon),
+                nameof(SharedTemplate),
                 nameof(Category),
                 nameof(RestNotifications),
                 nameof(MqttNotifications),

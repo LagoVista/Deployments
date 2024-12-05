@@ -11,6 +11,7 @@ namespace LagoVista.IoT.Deployment.Admin
         Task<DeviceNotification> GetNotificationAsync(string id);
         Task<DeviceNotification> GetNotificationByKeyAsync(string orgId, string key);
         Task<ListResponse<DeviceNotificationSummary>> GetNotificationForOrgAsync(string orgId, ListRequest listRequest);
+        Task<ListResponse<DeviceNotificationSummary>> GetNotificationForCustomerAsync(string orgId, string customerId, ListRequest listRequest);
         Task UpdateNotificationAsync(DeviceNotification notificationCode);
     }
 }

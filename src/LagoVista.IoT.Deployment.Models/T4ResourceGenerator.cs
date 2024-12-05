@@ -1,4 +1,4 @@
-﻿/*11/24/2024 5:46:25 AM*/
+﻿/*12/5/2024 7:57:35 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -724,6 +724,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotifications_SendSMS
 
 		public static string DeviceNotifications_SendSMS { get { return GetResourceString("DeviceNotifications_SendSMS"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_SharedTemplate
+
+		public static string DeviceNotifications_SharedTemplate { get { return GetResourceString("DeviceNotifications_SharedTemplate"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_SMSContent
 
 		public static string DeviceNotifications_SMSContent { get { return GetResourceString("DeviceNotifications_SMSContent"); } }
@@ -2137,6 +2140,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotifications_RestNotifications = "DeviceNotifications_RestNotifications";
 			public const string DeviceNotifications_SendEmail = "DeviceNotifications_SendEmail";
 			public const string DeviceNotifications_SendSMS = "DeviceNotifications_SendSMS";
+			public const string DeviceNotifications_SharedTemplate = "DeviceNotifications_SharedTemplate";
 			public const string DeviceNotifications_SMSContent = "DeviceNotifications_SMSContent";
 			public const string DeviceNotifications_Title = "DeviceNotifications_Title";
 			public const string Err_CantPublishNotRunning = "Err_CantPublishNotRunning";

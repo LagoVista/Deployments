@@ -1972,4 +1972,7 @@
   <data name="DeviceNotifications_ForwardToParentBody" xml:space="preserve">
     <value>Forwarded Content</value>
   </data>
+  <data name="DeviceNotifications_SharedTemplate" xml:space="preserve">
+    <value>Shared Template</value>
+  </data>
 </root>
