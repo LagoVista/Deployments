@@ -70,6 +70,9 @@ namespace LagoVista.IoT.Deployment.Models
         public EntityHeader AbortedBy { get; set; }
 
 
+        public EntityHeader Customer { get; set; }
+
+
         public SystemTestExecutionSummary CreateSummary()
         {
             return new SystemTestExecutionSummary()

@@ -274,7 +274,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_WiFiConnectionProfiles, FieldType: FieldTypes.ChildListInline,
-           FactoryUrl: "/api/wificonnectionprofile/factory", ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+           FactoryUrl: "/api/wificonnectionprofile/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<WiFiConnectionProfile> WiFiConnectionProfiles { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_TestMode, FieldType: FieldTypes.CheckBox, 

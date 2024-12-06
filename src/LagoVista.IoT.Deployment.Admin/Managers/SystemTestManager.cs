@@ -175,6 +175,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _systemTestExecutionRepo.GetSystemTestExecutionsAsync(org.Id, listRequest);
         }
 
+
+        public Task<ListResponse<SystemTestExecutionSummary>> GetTestResultsForCustomerAsync(string customerId, ListRequest listRequest, EntityHeader org, EntityHeader user)
+        {
+            return _systemTestExecutionRepo.GetSystemTestExecutionsForCustomerAsync(customerId, org.Id, listRequest);
+        }
+
         public async Task<InvokeResult<SystemTestExecution>> GetTestResultAsync(string systemTestExecutionId, EntityHeader org, EntityHeader user)
         {
             var result = await _systemTestExecutionRepo.GetSystemTestExecutionAsync(systemTestExecutionId);

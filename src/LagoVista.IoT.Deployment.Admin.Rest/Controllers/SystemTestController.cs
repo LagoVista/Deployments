@@ -140,6 +140,16 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// System Test Execution - Start a system test
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/systemtest/execution/customer/{customerid}/results")]
+        public Task<ListResponse<SystemTestExecutionSummary>> GetSystemTestExecutionResults(string customerid)
+        {
+            return _systemTestManager.GetTestResultsForCustomerAsync(customerid, GetListRequestFromHeader(), OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
         /// System Test Execution - Complete Step
         /// </summary>
         /// <returns></returns>

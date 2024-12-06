@@ -40,6 +40,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return QuerySummaryAsync<SystemTestExecutionSummary, SystemTestExecution>(ec => ec.OwnerOrganization.Id == orgId, ec => ec.Name, listRequest);
         }
 
+        public Task<ListResponse<SystemTestExecutionSummary>> GetSystemTestExecutionsForCustomerAsync(string customerId, string orgId, ListRequest listRequest)
+        {
+            return QuerySummaryAsync<SystemTestExecutionSummary, SystemTestExecution>(ec => ec.OwnerOrganization.Id == orgId && ec.Customer.Id == customerId, ec => ec.Name, listRequest);
+        }
+
         public Task UpdateSystemTestExecutionAsync(SystemTestExecution testExecution)
         {
             return UpsertDocumentAsync(testExecution);
