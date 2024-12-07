@@ -2,10 +2,12 @@
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.UserAdmin.Interfaces.Managers;
 using LagoVista.UserAdmin.Interfaces.Repos.Users;
 using LagoVista.UserAdmin.Models.Orgs;
 using RingCentral;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +17,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
     {
         private readonly IAppUserRepo _appUserRepo;
         private readonly IAppConfig _appConfig;
+        private readonly ISecureLinkManager _secureLinkManager;
 
-        public TagReplacementService(IAppUserRepo appUserRepo, IAppConfig appConfig)
+        public TagReplacementService(IAppUserRepo appUserRepo,ISecureLinkManager secureLinkManager, IAppConfig appConfig)
         {
             _appUserRepo = appUserRepo ?? throw new ArgumentNullException(nameof(appUserRepo));
             _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
+            _secureLinkManager = secureLinkManager ?? throw new ArgumentNullException(nameof(secureLinkManager));
         }
 
         public async Task<string> ReplaceTagsAsync(string template, bool isHtmlContent, Device device, OrgLocation location)
@@ -35,7 +39,28 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 template = template.Replace("[DeviceStreetAddress]", geoAddress);
                 template = template.Replace("[PhoneNumber]", location.PhoneNumber);
                 template = template.Replace("[DeviceLocationName]", location.Name);
-                template = template.Replace("[DeviceLocation]", location.ToHTML(_appConfig.WebAddress));
+
+                var locationHtml = location.ToHTML(_appConfig.WebAddress);
+                if (location.DiagramReferences.Any())
+                {
+                    locationHtml += $"<h3>Diagrams</h3>";
+                    foreach (var diagram in location.DiagramReferences)
+                    {
+                        var link = (!EntityHeader.IsNullOrEmpty(location.DeviceRepository)) ?
+                           $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}/{location.OwnerOrganization.Id}/{location.DeviceRepository.Id}"
+                        :
+                            $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}";
+
+                        //var secureLink = await _secureLinkManager.GenerateSecureLinkAsync(link, location.CreatedBy, TimeSpan.FromHours(2), location.Organization, location.CreatedBy);
+                        // var url = secureLink.result;
+                        var url = "https://www.nuviot.com";
+                        locationHtml += $"<div><a href='{url}'>{diagram.LocationDiagram.Text}/{diagram.LocationDiagramShape.Text}</a></div>";
+                    }
+                }
+
+                template = template.Replace("[DeviceLocation]", locationHtml);
+
+
                 if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
                 {
                     var adminContact = await _appUserRepo.GetCachedAppUserAsync(location.AdminContact.Id);

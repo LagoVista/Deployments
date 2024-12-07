@@ -17,7 +17,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestInitialize]
         public void Init()
         {
-            _tagReplacer = new TagReplacementService(AppUserRepo.Object, AppConfig.Object);
+            _tagReplacer = new TagReplacementService(AppUserRepo.Object,SecureLinkManager.Object, AppConfig.Object);
         }
 
         [TestMethod]
