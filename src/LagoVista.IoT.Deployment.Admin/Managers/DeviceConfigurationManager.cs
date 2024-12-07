@@ -493,13 +493,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Loaded attributes and state machines to device configurations.");
 
             if (instanceEH.Id != Guid.Empty.ToId())
-            {
+            {             
                 var instanceResult = await _deploymentInstanceManager.GetInstanceAsync(instanceEH.Id, org, user);
+                if (!instanceResult.Successful)
+                    throw new Exception(instanceResult.ErrorMessage);
+                
                 result.Timings.AddRange(instanceResult.Timings);
                 instance = instanceResult.Result;
 
                 result.Timings.Add(new ResultTiming() { Key = "GetInstanceAsync", Ms = sw.Elapsed.TotalMilliseconds });
-
 
                 if (instance != null && instance.Status.Value == DeploymentInstanceStates.Running)
                 {
@@ -520,6 +522,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                             if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                             {
                                 sw.Restart();
+                                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here PMS.");
 
                                 var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
                                 result.Timings.AddRange(wfLoadResult.Timings);
@@ -560,6 +563,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                             }
                                         }
                                     }
+
+                                    Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here PMS done.");
+
                                 }
                                 else
                                 {
@@ -570,6 +576,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     }
                     device.InputCommandEndPoints = endpoints;
                 }
+                else
+                {
+                    device.InputCommandEndPoints = new List<InputCommandEndPoint>();
+                }
+
+                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 2.5.");
 
                 foreach (var ep in device.InputCommandEndPoints)
                 {
@@ -583,6 +595,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
             }
 
+            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 2.");
+
             var metaDataCache = new MetaDataCache()
             {
                 DeviceType = device.DeviceType.Value,
@@ -592,6 +606,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 StateMachineMetaData = device.StateMachineMetaData,
                 PropertiesMetaData = device.PropertiesMetaData,
             };
+
+            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 3.");
+
 
             if (instance != null)
             {
