@@ -13,19 +13,21 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeploymentInstanceRepo : DocumentDBRepoBase<DeploymentInstance>, IDeploymentInstanceRepo
     {
-
         private readonly ICacheProvider _cacheProvider;
+        private readonly IAdminLogger _adminLogger;
 
         private bool _shouldConsolidateCollections;
         public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependencyMgr, ICacheProvider cacheProvider) : 
             base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger, dependencyManager: dependencyMgr)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
+            _adminLogger = logger;
             _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider)); // We don't natively cache this object since it can be updated by services that don't have access to the cache, we do provide a readonly version of this object that is cached.
         }
 
@@ -46,12 +48,22 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<DeploymentInstance> GetReadOnlyInstanceAsync(string id)
         {
+            var sw = Stopwatch.StartNew();
             var existing = await _cacheProvider.GetAsync($"{nameof(DeploymentInstance)}-{id}");
-            if(!String.IsNullOrEmpty(existing))
+            if (!String.IsNullOrEmpty(existing))
+            {
+                _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Found instance {id} in cache in {sw.Elapsed.TotalMilliseconds}.");
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<DeploymentInstance>(existing);
+            }
 
+            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Cache miss for instance {id} {sw.Elapsed.TotalMilliseconds}.");
+            sw.Restart();
             var instance = await GetInstanceAsync(id);
+            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Laoded {id} from storage in {sw.Elapsed.TotalMilliseconds}.");
+            sw.Restart();
             await _cacheProvider.AddAsync($"{nameof(DeploymentInstance)}-{id}", JsonConvert.SerializeObject(instance));
+            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - added {id} to cache in {sw.Elapsed.TotalMilliseconds}.");
+
             return instance;
         }
 

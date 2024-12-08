@@ -30,8 +30,8 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IUsageMetricsManager, UsageMetricsManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentHostManagerRemote, DeploymentHostManager>();
-            services.AddTransient<IDeploymentInstanceManager, DeploymentInstanceManager>();
-            services.AddTransient<IRemoteDeploymentManager, RemoteDeploymentManager>();
+            services.AddSingleton<IDeploymentInstanceManager, DeploymentInstanceManager>();
+            services.AddSingleton<IRemoteDeploymentManager, RemoteDeploymentManager>();
             services.AddTransient<IDeploymentInstanceManagerRemote, DeploymentInstanceManager>();
             services.AddTransient<IDeploymentActivityQueueManager, DeploymentActivityQueueManager>();            
             services.AddTransient<IInstanceValidator, InstanceValidator>();
@@ -53,15 +53,15 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IIncidentManager, IncidentManager>();
             services.AddTransient<IIncidentProtocolManager, IncidentProtocolManager>();
             services.AddTransient<ITakClient, TakClient>();
-            services.AddTransient<INotificationSender, NotificationSender>();
-            services.AddTransient<ITagReplacementService, TagReplacementService>();
-            services.AddTransient<IRestSender, RESTSender>();
-            services.AddTransient<IMqttSender, MQTTSender>();
-            services.AddTransient<ICOTSender, COTSender>();
-            services.AddTransient<ISMSSender, SMSSender>();
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<INotificationLandingPage, NotificationLandingPage>();
-            services.AddTransient<IDeviceCommandSender, DeviceCommandSender>();
+            services.AddSingleton<INotificationSender, NotificationSender>();
+            services.AddSingleton<ITagReplacementService, TagReplacementService>();
+            services.AddSingleton<IRestSender, RESTSender>();
+            services.AddSingleton<IMqttSender, MQTTSender>();
+            services.AddScoped<ICOTSender, COTSender>();
+            services.AddScoped<ISMSSender, SMSSender>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddSingleton<INotificationLandingPage, NotificationLandingPage>();
+            services.AddSingleton<IDeviceCommandSender, DeviceCommandSender>();
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }

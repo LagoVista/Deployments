@@ -51,9 +51,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                         :
                             $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}";
 
-                        //var secureLink = await _secureLinkManager.GenerateSecureLinkAsync(link, location.CreatedBy, TimeSpan.FromHours(2), location.Organization, location.CreatedBy);
-                        // var url = secureLink.result;
-                        var url = "https://www.nuviot.com";
+                        var secureLink = await _secureLinkManager.GenerateSecureLinkAsync(link, location.CreatedBy, TimeSpan.FromHours(2), location.Organization, location.CreatedBy);
+                        var url = secureLink.Result;
                         locationHtml += $"<div><a href='{url}'>{diagram.LocationDiagram.Text}/{diagram.LocationDiagramShape.Text}</a></div>";
                     }
                 }

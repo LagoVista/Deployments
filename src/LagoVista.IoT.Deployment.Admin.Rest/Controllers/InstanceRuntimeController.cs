@@ -170,7 +170,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             UserEntityHeader = EntityHeader.Create(userId, user);
             InstanceEntityHeader = EntityHeader.Create(instanceId, instanceName);
 
-            var instance = await _instanceRepo.GetInstanceAsync(instanceId);
+            var instance = await _instanceRepo.GetReadOnlyInstanceAsync(instanceId);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
             if (!key1.Successful)
             {
