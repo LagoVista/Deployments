@@ -412,17 +412,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 var watchDogNotifUser = await _appUserRepo.FindByIdAsync(repo.WatchdogNotificationUser.Id);
                 contacts.Add(NotificationRecipient.FromAppUser(watchDogNotifUser));
-            }
-
-           
-            OrgLocation location = null;
-            if (!EntityHeader.IsNullOrEmpty(device.Location))
-            {
-                location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
-                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, loaded location and will append.", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
-            }
-            else
-                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+            }           
 
             if (!EntityHeader.IsNullOrEmpty(repo.OfflineDistributionList))
             {
@@ -445,6 +435,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 _logger.Trace($"[NotificationSender__SendNotification] - Found {contacts.Count}, will continue to send notification - {notification.Name} for device {device.Name} in {repo.Name} repository", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
             }
+
+            OrgLocation location = null;
+            if (!EntityHeader.IsNullOrEmpty(device.Location))
+            {
+                location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
+                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, loaded location and will append.", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+            }
+            else
+                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+
 
             var tz = TimeZoneInfo.Local;
             if (device.TimeZone.Id != "UTC")

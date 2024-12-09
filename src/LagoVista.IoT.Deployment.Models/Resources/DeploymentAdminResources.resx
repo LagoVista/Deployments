@@ -1975,4 +1975,7 @@
   <data name="DeviceNotifications_SharedTemplate" xml:space="preserve">
     <value>Shared Template</value>
   </data>
+  <data name="Common_Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
 </root>

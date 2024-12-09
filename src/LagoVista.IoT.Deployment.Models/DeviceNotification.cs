@@ -64,6 +64,7 @@ namespace LagoVista.IoT.Deployment.Models
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
         public string LandingPageContent { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Customer, FieldType: FieldTypes.CustomerPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader Customer { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SharedTemplate, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
@@ -132,7 +133,10 @@ namespace LagoVista.IoT.Deployment.Models
                 Name = Name,
                 Description = Description,
                 Key = Key,
-                IsPublic = IsPublic
+                IsPublic = IsPublic,
+                SharedTemplate = SharedTemplate,
+                Custmer = Customer?.Text,
+                CustomerId = Customer?.Id
             };
         }
 
@@ -144,6 +148,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(Key),
                 nameof(Icon),
                 nameof(SharedTemplate),
+                nameof(Customer),
                 nameof(Category),
                 nameof(RestNotifications),
                 nameof(MqttNotifications),
@@ -179,7 +184,9 @@ namespace LagoVista.IoT.Deployment.Models
         GetListUrl: "/api/notifications", SaveUrl: "/api/notification", GetUrl: "/api/notification/{id}", DeleteUrl: "/api/notification/{id}", FactoryUrl: "/api/notification/factory")]
     public class DeviceNotificationSummary : SummaryData
     {
-
+        public bool SharedTemplate { get; set; }
+        public string CustomerId { get; set; }
+        public string Custmer { get; set; }
     }
 
     public class RaisedDeviceNotification
