@@ -39,17 +39,17 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 template = template.Replace("[DeviceStreetAddress]", geoAddress);
                 template = template.Replace("[PhoneNumber]", location.PhoneNumber);
                 template = template.Replace("[DeviceLocationName]", location.Name);
-
+                    
                 var locationHtml = location.ToHTML(_appConfig.WebAddress);
                 if (location.DiagramReferences.Any())
                 {
                     locationHtml += $"<h3>Diagrams</h3>";
                     foreach (var diagram in location.DiagramReferences)
                     {
-                        var link = (!EntityHeader.IsNullOrEmpty(location.DeviceRepository)) ?
-                           $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}/{location.OwnerOrganization.Id}/{location.DeviceRepository.Id}"
-                        :
-                           $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}";
+                        var link = $"{_appConfig.WebAddress}/public/diagram/{diagram.LocationDiagram.Id}/{diagram.LocationDiagramLayer.Id}/{diagram.LocationDiagramShape.Id}/{device.OwnerOrganization.Id}/{device.DeviceRepository.Id}";
+
+                        if (!EntityHeader.IsNullOrEmpty(device.Customer))
+                            link += $"/{device.Customer.Id}";
 
                         var secureLink = await _secureLinkManager.GenerateSecureLinkAsync(link, location.CreatedBy, TimeSpan.FromHours(2), location.Organization, location.CreatedBy);
                         var url = secureLink.Result;
