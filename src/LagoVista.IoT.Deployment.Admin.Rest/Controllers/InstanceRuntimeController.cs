@@ -744,7 +744,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
 
-            await _notificationSender.SendDeviceOnlineNotificationAsync(device, lastContact, false, OrgEntityHeader, UserEntityHeader);
+            if (!device.DisableWatchdog)
+                await _notificationSender.SendDeviceOnlineNotificationAsync(device, lastContact, false, OrgEntityHeader, UserEntityHeader);
 
             return await _deviceManager.HandleDeviceOnlineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
@@ -754,7 +755,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
 
-            await _notificationSender.SendDeviceOfflineNotificationAsync(device, lastcontact, false, OrgEntityHeader, UserEntityHeader);
+            if(!device.DisableWatchdog)
+                await _notificationSender.SendDeviceOfflineNotificationAsync(device, lastcontact, false, OrgEntityHeader, UserEntityHeader);
 
             return await _deviceManager.HandleDeviceOfflineAsync(device, OrgEntityHeader, UserEntityHeader);
         }
