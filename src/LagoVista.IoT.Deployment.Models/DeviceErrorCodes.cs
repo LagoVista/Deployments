@@ -10,6 +10,7 @@ using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.IoT.Logging;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace LagoVista.IoT.Deployment.Models
 {
@@ -107,6 +108,10 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationInterval, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_NotificationInterval_Help, WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_SelectTimespan, FieldType: FieldTypes.Picker, EnumType: typeof(TimeSpanIntervals), ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<TimeSpanIntervals> NotificationIntervalTimeSpan { get; set; }
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_EscalateAfterAttemptCount, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_EscalateAfterAttemptCount_Help, 
+            FieldType: FieldTypes.Integer, ResourceType: typeof(DeploymentAdminResources))]
+        public int EscalateAfterAttemptCount { get; set; }
+
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_AutoExpiresTimespanQuantity, FieldType: FieldTypes.Decimal, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public double? AutoexpireTimespanQuantity { get; set; }
@@ -196,6 +201,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(AutoexpireTimespanQuantity),
                 nameof(NotificationIntervalTimeSpan),
                 nameof(NotificationIntervalQuantity),
+                nameof(EscalateAfterAttemptCount),
                 nameof(Description),
             };
         }

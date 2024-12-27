@@ -1978,4 +1978,16 @@
   <data name="Common_Customer" xml:space="preserve">
     <value>Customer</value>
   </data>
+  <data name="DeviceErrorCode_EscalateAfterAttemptCount" xml:space="preserve">
+    <value>Escalate After Attempt Count</value>
+  </data>
+  <data name="DeviceErrorCode_EscalateAfterAttemptCount_Help" xml:space="preserve">
+    <value>Provide the number of retry attempts that will take place before escalating this error.  Upon escalation the escalation notification will be sent as well as notifying the parent distrubtion list of any distribution lists associated the device or error code.</value>
+  </data>
+  <data name="DeviceNotifications_Escalation_Notification" xml:space="preserve">
+    <value>Escalation Notification</value>
+  </data>
+  <data name="DeviceNotifications_Escalation_Notification_Help" xml:space="preserve">
+    <value>The notification that should be sent out if this notification was not acknoweledged and was escalated.</value>
+  </data>
 </root>

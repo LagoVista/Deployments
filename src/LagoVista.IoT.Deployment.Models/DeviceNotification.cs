@@ -71,6 +71,10 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SharedTemplate { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification, HelpResource:DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader EscalationNotification { get; set; }
+
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
         public string EmailContent { get; set; }
@@ -168,7 +172,8 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(ForwardToParentDevice),
                 nameof(ForwardToParentDeviceBody),
                 nameof(IncludeLandingPage),
-                nameof(LandingPageContent)
+                nameof(LandingPageContent),
+                nameof(EscalationNotification)
             };
         }
 

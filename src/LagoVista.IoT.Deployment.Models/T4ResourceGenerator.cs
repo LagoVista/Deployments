@@ -1,4 +1,4 @@
-﻿/*12/8/2024 4:39:01 PM*/
+﻿/*12/27/2024 5:28:19 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -604,6 +604,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceErrorCode_ErrorCode
 
 		public static string DeviceErrorCode_ErrorCode { get { return GetResourceString("DeviceErrorCode_ErrorCode"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_EscalateAfterAttemptCount
+
+		public static string DeviceErrorCode_EscalateAfterAttemptCount { get { return GetResourceString("DeviceErrorCode_EscalateAfterAttemptCount"); } }
+//Resources:DeploymentAdminResources:DeviceErrorCode_EscalateAfterAttemptCount_Help
+
+		public static string DeviceErrorCode_EscalateAfterAttemptCount_Help { get { return GetResourceString("DeviceErrorCode_EscalateAfterAttemptCount_Help"); } }
 //Resources:DeploymentAdminResources:DeviceErrorCode_Help
 
 		public static string DeviceErrorCode_Help { get { return GetResourceString("DeviceErrorCode_Help"); } }
@@ -703,6 +709,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotifications_EmailSubject
 
 		public static string DeviceNotifications_EmailSubject { get { return GetResourceString("DeviceNotifications_EmailSubject"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_Escalation_Notification
+
+		public static string DeviceNotifications_Escalation_Notification { get { return GetResourceString("DeviceNotifications_Escalation_Notification"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_Escalation_Notification_Help
+
+		public static string DeviceNotifications_Escalation_Notification_Help { get { return GetResourceString("DeviceNotifications_Escalation_Notification_Help"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_ForwardToParent
 
 		public static string DeviceNotifications_ForwardToParent { get { return GetResourceString("DeviceNotifications_ForwardToParent"); } }
@@ -2103,6 +2115,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCode_EmailSubject = "DeviceErrorCode_EmailSubject";
 			public const string DeviceErrorCode_EmailSubject_Help = "DeviceErrorCode_EmailSubject_Help";
 			public const string DeviceErrorCode_ErrorCode = "DeviceErrorCode_ErrorCode";
+			public const string DeviceErrorCode_EscalateAfterAttemptCount = "DeviceErrorCode_EscalateAfterAttemptCount";
+			public const string DeviceErrorCode_EscalateAfterAttemptCount_Help = "DeviceErrorCode_EscalateAfterAttemptCount_Help";
 			public const string DeviceErrorCode_Help = "DeviceErrorCode_Help";
 			public const string DeviceErrorCode_Hours = "DeviceErrorCode_Hours";
 			public const string DeviceErrorCode_IncidentProtocol = "DeviceErrorCode_IncidentProtocol";
@@ -2136,6 +2150,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotifications_Description = "DeviceNotifications_Description";
 			public const string DeviceNotifications_EmailContent = "DeviceNotifications_EmailContent";
 			public const string DeviceNotifications_EmailSubject = "DeviceNotifications_EmailSubject";
+			public const string DeviceNotifications_Escalation_Notification = "DeviceNotifications_Escalation_Notification";
+			public const string DeviceNotifications_Escalation_Notification_Help = "DeviceNotifications_Escalation_Notification_Help";
 			public const string DeviceNotifications_ForwardToParent = "DeviceNotifications_ForwardToParent";
 			public const string DeviceNotifications_ForwardToParentBody = "DeviceNotifications_ForwardToParentBody";
 			public const string DeviceNotifications_IncludeLandingPageContent = "DeviceNotifications_IncludeLandingPageContent";
