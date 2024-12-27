@@ -71,7 +71,7 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SharedTemplate { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification, HelpResource:DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification, HelpResource:DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification_Help, WaterMark:DeploymentAdminResources.Names.DeviceNotification_EscalationNotification_Select, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/notifications", ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader EscalationNotification { get; set; }
 
 

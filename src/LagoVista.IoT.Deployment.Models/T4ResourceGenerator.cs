@@ -1,4 +1,4 @@
-﻿/*12/27/2024 5:28:19 AM*/
+﻿/*12/27/2024 8:27:28 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -682,6 +682,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotification_EmailSubject_Help
 
 		public static string DeviceNotification_EmailSubject_Help { get { return GetResourceString("DeviceNotification_EmailSubject_Help"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_EscalationNotification_Select
+
+		public static string DeviceNotification_EscalationNotification_Select { get { return GetResourceString("DeviceNotification_EscalationNotification_Select"); } }
 //Resources:DeploymentAdminResources:DeviceNotification_SMS_Help
 
 		public static string DeviceNotification_SMS_Help { get { return GetResourceString("DeviceNotification_SMS_Help"); } }
@@ -2141,6 +2144,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceErrorCodes_Title = "DeviceErrorCodes_Title";
 			public const string DeviceNotification_EmailSubject = "DeviceNotification_EmailSubject";
 			public const string DeviceNotification_EmailSubject_Help = "DeviceNotification_EmailSubject_Help";
+			public const string DeviceNotification_EscalationNotification_Select = "DeviceNotification_EscalationNotification_Select";
 			public const string DeviceNotification_SMS_Help = "DeviceNotification_SMS_Help";
 			public const string DeviceNotification_TagHelp = "DeviceNotification_TagHelp";
 			public const string DeviceNotification_Title = "DeviceNotification_Title";

@@ -1990,4 +1990,7 @@
   <data name="DeviceNotifications_Escalation_Notification_Help" xml:space="preserve">
     <value>The notification that should be sent out if this notification was not acknoweledged and was escalated.</value>
   </data>
+  <data name="DeviceNotification_EscalationNotification_Select" xml:space="preserve">
+    <value>-select escalation notification-</value>
+  </data>
 </root>
