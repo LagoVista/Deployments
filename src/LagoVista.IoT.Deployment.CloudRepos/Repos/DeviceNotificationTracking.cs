@@ -5,6 +5,7 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
@@ -22,9 +23,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return InsertAsync(history);
         }
 
-        public Task<ListResponse<DeviceNotificationHistory>> GetHistoryAsync(string deviceId, ListRequest listRequest)
+        public async Task<ListResponse<DeviceNotificationHistory>> GetHistoryAsync(string deviceId, ListRequest listRequest)
         {
-            return this.GetPagedResultsAsync(deviceId, listRequest);
+           var results = await this.GetPagedResultsAsync(deviceId, listRequest);
+            results.Model = results.Model.OrderByDescending(fld=>fld.SentTimeStamp).ToList();
+            return results;
         }
 
         public Task<DeviceNotificationHistory> GetHistoryAsync(string deviceId, string rowkey)

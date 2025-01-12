@@ -28,12 +28,16 @@ namespace LagoVista.IoT.Deployment.Models
         public string SentTimeStamp { get; set; }
         public bool Viewed { get; set; }
         public string ViewedTimeStamp { get; set; }
-    
+        public bool SendEmail { get; set; }
+        public bool SendSMS { get; set; }
+
         public bool SentEmail { get; set; }
         public bool SentSMS { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
     
         public bool TestMode { get; set; }
+
+        public string Errors { get; set; } = "";
     }
 }

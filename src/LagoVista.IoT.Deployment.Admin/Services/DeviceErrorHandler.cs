@@ -228,13 +228,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (exception == null) throw new ArgumentNullException(nameof(exception));
             if (org == null) throw new ArgumentNullException(nameof(org));
             if (user == null) throw new ArgumentNullException(nameof(user));
-           
+
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - starting error handler for error:: {exception.ErrorCode} on device {exception.DeviceId}, creating device error.", exception.DeviceId.ToKVP("deviceId"));
+
             var timeStamp = DateTime.UtcNow.ToJSONString();
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(exception.DeviceRepositoryId, org, user);
             if (repo == null)
             {
-                return InvokeResult.FromError($"FSLite - Handle Device Exception - Could not find repo for: {exception.DeviceUniqueId}");
+                return InvokeResult.FromError($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception - Could not find repo for: {exception.DeviceUniqueId}");
             }
 
             await _exceptionRepo.AddDeviceExceptionAsync(repo, exception);
@@ -244,7 +246,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var device = await _deviceManager.GetDeviceByIdAsync(repo, exception.DeviceUniqueId, org, user);
             if (device == null)
             {
-                return InvokeResult.FromError($"FSLite - Handle Device Exception - Could not find device for: {exception.DeviceUniqueId}");
+                return InvokeResult.FromError($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Could not find device for: {exception.DeviceUniqueId}");
             }
 
             _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device: {device.Result.Name} - {device.Result.OwnerOrganization.Text}", exception.DeviceId.ToKVP("deviceId"));
@@ -345,7 +347,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if(!deviceError.Silenced)
                 await NotifyAsync(deviceErrorCode, deviceError, device.Result, exception, org, user);
             else
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not genreate ticket .", exception.DeviceId.ToKVP("deviceId"));
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- Device Error was Silenced, will not send notification. .", exception.DeviceId.ToKVP("deviceId"));
 
             var errorCollection = device.Result.Errors;
             var sw = Stopwatch.StartNew();

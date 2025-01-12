@@ -85,6 +85,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 if (result.Successful)
                 {
+                    _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sent SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
+
                     TextMessagesSent++;
                     return InvokeResult.Success;
                 }

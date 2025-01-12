@@ -280,17 +280,39 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     StaticPageId = page.PageId,
                     TestMode = raisedNotification.TestMode,
                     SentTimeStamp = DateTime.UtcNow.ToJSONString(),
-                    SentEmail = notification.SendEmail && recipient.SendEmail,
-                    SentSMS = notification.SendSMS && recipient.SendSMS,
+                    SendEmail = notification.SendEmail && recipient.SendEmail,
+                    SendSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.Result.DeviceId,
                     DeviceRepoId = repo.Id,
                 };
+               
+                if (notificationHistory.SendSMS)
+                {
+                    notificationHistory.Phone = recipient.Phone;
 
-                if (recipient.SendSMS)
-                    await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), orgEntityHeader, userEntityHeader);
+                    var sendSmsResult = await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), orgEntityHeader, userEntityHeader);
+                    notificationHistory.SentSMS = sendSmsResult.Successful;
+                    if (!sendSmsResult.Successful)
+                    {
+                        notificationHistory.Errors += $"SMS Error: {sendSmsResult.ErrorMessage}; ";
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact]",
+                            $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact] - Error sending SMS to {recipient.FirstName} {recipient.LastName} {recipient.Phone} - {sendSmsResult.ErrorMessage}");
+                    }
+                }
 
-                if (recipient.SendEmail)
-                    await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
+                if (notificationHistory.SendEmail)
+                {
+                    notificationHistory.Email = recipient.Email;
+
+                    var sendEmailResult = await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
+                    notificationHistory.SentEmail = sendEmailResult.Successful;
+                    if (!sendEmailResult.Successful)
+                    {
+                        notificationHistory.Errors += $"Email Error: {sendEmailResult.ErrorMessage}; ";
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
+                            $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact] - Error sending email to {recipient.FirstName} {recipient.LastName} {recipient.Email} - {sendEmailResult.ErrorMessage}");
+                    }
+                }
 
                 await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
                 {
@@ -515,7 +537,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             await _deviceCommandSender.PrepareMessage(notification, testMode, device, location);
             contacts.EnsureUniqueNotifications();
 
-                await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.DeviceRepository.Id)
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.DeviceRepository.Id)
             {
                 OrgId = device.OwnerOrganization.Id,
                 DeviceId = device.DeviceId,
@@ -539,19 +561,37 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     StaticPageId = page.PageId,
                     TestMode = testMode,
                     SentTimeStamp = DateTime.UtcNow.ToJSONString(),
-                    SentEmail = notification.SendEmail && recipient.SendEmail,
-                    SentSMS = notification.SendSMS && recipient.SendSMS,
-                    Email = recipient.Email,
-                    Phone = recipient.Phone,
+                    SendEmail = notification.SendEmail && recipient.SendEmail,
+                    SendSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.DeviceId,
                     DeviceRepoId = repo.Id,
                 };
 
-                if (recipient.SendSMS)
-                    await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
+                if (notificationHistory.SendEmail)
+                {
+                    notificationHistory.Email = recipient.Email;
+                    var sendEmailResult = await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
+                    notificationHistory.SentEmail = sendEmailResult.Successful;
+                    if (!notificationHistory.SentEmail)
+                    {
+                        notificationHistory.Errors += $"Email Error: {sendEmailResult.ErrorMessage}; ";
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__SendNotification__SendEmail]", $"[NotificationSender__SendNotification__SendEmail] Error sending email to {recipient.Email} - {sendEmailResult.ErrorMessage}",
+                            org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"), recipient.Email.ToKVP("email"));
+                    }
+                }
 
-                if (recipient.SendEmail)
-                    await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, allowSilence, page, org, user);
+                if (notificationHistory.SendSMS)
+                {
+                    notificationHistory.Phone = recipient.Phone;
+                    var sendSmsResult = await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, allowSilence, org, user);
+                    notificationHistory.SentSMS = sendSmsResult.Successful;
+                    if(!notificationHistory.SentSMS)
+                    {
+                        notificationHistory.Errors += $"SMS Error: {sendSmsResult.ErrorMessage}; ";
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__SendNotification__SendSMS]", $"[NotificationSender__SendNotification__SendSMS] Error sending sms to {recipient.Phone} - {sendSmsResult.ErrorMessage}",
+                            org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"), recipient.Phone.ToKVP("phone"));
+                    }
+                }
 
                 await _notificationTracking.AddHistoryAsync(notificationHistory);
             }
