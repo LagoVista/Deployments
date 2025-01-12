@@ -70,7 +70,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 {
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
-                    smsContent += $" Acknowledge: {shortenedLink.Result}";
+                    smsContent += $" Acknowledge: {shortenedLink.Result} ";
                 }
 
                 if (allowSilence)
@@ -78,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     var silencedLink = links.SilenceLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
                     var shortenedSilenceLink = await _linkShortener.ShortenLinkAsync(silencedLink);
                     if (!shortenedSilenceLink.Successful) return shortenedSilenceLink.ToInvokeResult();
-                    smsContent += $"Silence notifiations: {shortenedSilenceLink.Result}";
+                    smsContent += $" Silence notifiations: {shortenedSilenceLink.Result} ";
                 }
 
                 var result = await _smsSender.SendInBackgroundAsync(recipient.Phone, smsContent);
