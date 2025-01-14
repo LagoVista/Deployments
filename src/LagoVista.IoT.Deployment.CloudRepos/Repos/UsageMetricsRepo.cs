@@ -15,6 +15,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         }
 
+        public override StoragePeriod GetStoragePeriod()
+        {
+            return StoragePeriod.Month;
+        }
+
         public Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request)
         {
             return GetPagedResultsAsync(hostId, request);
@@ -22,6 +27,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request)
         {
+            // TODO: This will only get the metrics for the current month.  At the transitoin between months we will not have this available.
             return GetPagedResultsAsync(dependencyId, request);
         }
 
