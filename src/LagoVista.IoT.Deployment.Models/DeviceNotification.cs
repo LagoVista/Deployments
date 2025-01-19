@@ -71,9 +71,14 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SharedTemplate { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help,
+            WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Select, FieldType: FieldTypes.EntityHeaderPicker,
+            EntityHeaderPickerUrl: "/api/distros",
+            ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: false)]
+        public EntityHeader DistroList { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification, HelpResource:DeploymentAdminResources.Names.DeviceNotifications_Escalation_Notification_Help, WaterMark:DeploymentAdminResources.Names.DeviceNotification_EscalationNotification_Select, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/notifications", ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader EscalationNotification { get; set; }
-
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_EmailContent, HelpResource: DeploymentAdminResources.Names.DeviceNotification_TagHelp, FieldType: FieldTypes.HtmlEditor, ResourceType: typeof(DeploymentAdminResources),
             ReplaceableTags: "Device Name-DeviceName;Device Id-DeviceId;Device Information Page-DeviceInfoPage;Device Location-DeviceLocation;Location Adminstrative Contact-Location_Admin_Contact;Device Technical Contact-Location_Technical_Contact;Device Summary-DeviceSummary;Street Address-DeviceStreetAddress;Location Name-DeviceLocationName;Notification Time Stamp-NotificationTimeStamp;Phone Number-PhoneNumber;Last Contact Time-LastContactTime;Time Since Last Contact-TimeSinceLastContact;Device Sensors-DeviceSensors")]
@@ -169,6 +174,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(SendEmail),
                 nameof(EmailSubject),
                 nameof(EmailContent),
+                nameof(DistroList),
                 nameof(ForwardToParentDevice),
                 nameof(ForwardToParentDeviceBody),
                 nameof(IncludeLandingPage),
@@ -205,6 +211,8 @@ namespace LagoVista.IoT.Deployment.Models
         public string DeviceRepositoryId { get; set; }
 
         public string DeviceErrorId { get; set; }
+
+        public bool Escalate { get; set; }
 
         public List<EntityHeader> AdditionalUsers { get; set; } = new List<EntityHeader>();
         public List<ExternalContact> AdditionalExternalContacts { get; set; } = new List<ExternalContact>();

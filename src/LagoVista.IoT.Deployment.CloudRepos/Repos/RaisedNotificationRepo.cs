@@ -33,5 +33,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         {
             return this.GetPagedResultsAsync(repoId, listRequest);
         }
+
+        public Task<RaisedNotificationHistory> GetRaisedNotificationHistoryAsync(string rowKey, string paritionKey)
+        {
+            return GetAsync(paritionKey, rowKey);
+        }
     }
 }

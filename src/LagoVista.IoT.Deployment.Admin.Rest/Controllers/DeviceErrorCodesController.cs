@@ -1,5 +1,6 @@
 ﻿using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Web.Common.Controllers;
@@ -7,6 +8,7 @@ using LagoVista.UserAdmin.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System;
 using System.Threading.Tasks;
 
@@ -15,11 +17,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     [Authorize]
     public class DeviceErrorCodesController : LagoVistaBaseController
     {
-        IDeviceErrorCodesManager _errorCodeManager;
+        private readonly IDeviceErrorCodesManager _errorCodeManager;
+        private readonly IDeviceErrorHandler _deviceErrorHandler;
 
-        public DeviceErrorCodesController(IDeviceErrorCodesManager errorCodeManager, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        public DeviceErrorCodesController(IDeviceErrorCodesManager errorCodeManager, IDeviceErrorHandler deviceErrorHandler, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _errorCodeManager = errorCodeManager ?? throw new ArgumentNullException(nameof(errorCodeManager));   
+            _deviceErrorHandler = deviceErrorHandler ?? throw new ArgumentNullException(nameof(deviceErrorHandler));
         }
 
         /// <summary>
@@ -89,6 +93,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public async Task<InvokeResult> DeleteErrorCodeAsync(string id)
         {
             return await _errorCodeManager.DeleteErrorCodeAsync(id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/device/{repoid}/{id}/error/{errorcode}/raise")]
+        public async Task<InvokeResult> RaiseError(string repoid, string id, string errorcode)
+        {
+            return await _deviceErrorHandler.HandleDeviceExceptionAsync(new DeviceManagement.Models.DeviceException()
+            {
+                 DeviceUniqueId = id,
+                 DeviceRepositoryId = repoid,
+                 ErrorCode = errorcode,
+                 DeviceId = "TBD",
+                 Timestamp = DateTime.UtcNow.ToJson(),
+
+            }, OrgEntityHeader, UserEntityHeader);
         }
     }
 }

@@ -62,7 +62,8 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddSingleton<INotificationLandingPage, NotificationLandingPage>();
             services.AddSingleton<IDeviceCommandSender, DeviceCommandSender>();
-
+            services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
+            services.AddTransient<IDeviceErrorScheduleCheckSender, DeviceErrorScheduleCheckSender>();
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
     }

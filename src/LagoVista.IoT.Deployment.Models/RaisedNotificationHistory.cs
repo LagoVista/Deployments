@@ -27,5 +27,24 @@ namespace LagoVista.IoT.Deployment.Models
         public string DeviceId { get; set; }
         public string OrgId { get; set; }    
         public bool TestMode { get; set; }
+
+        public bool Acknowledged { get; set; }
+        public string AcknowledgedByUserId { get; set; }
+        public string AcknowledgedByUser { get; set; }
+        public string AcknowledgedTimeStamp { get; set; }
+
+        public bool Cleared { get; set; }
+        public string ClearedByUserId { get; set; }
+        public string ClearedByUser { get; set; }
+        public string ClearedTimeStamp { get; set; }
+
+
+        public bool Escalated { get; set; }
+        public bool EscalatedNotificationId { get; set; }
+        public bool EscalatedBySystem { get; set; }
+        public string EscalatedByUserId { get; set; }
+        public string EscalatedByUser { get; set; }
+        public string EscalationTimeStamp { get; set; }
+
     }
 }

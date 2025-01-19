@@ -42,10 +42,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private readonly IIncidentProtocolManager _incidentProtocolManager;
         private readonly IDistributionListRepo _distroListRepo;
         private readonly INotificationSender _notificationSender;
+        private readonly IDeviceErrorScheduleCheckSender _deviceErrorScheduleCheckSender;
 
         public DeviceErrorHandler(IServiceTicketCreator ticketCreator, IDeviceConfigurationManager deviceConfigManager, IAdminLogger adminLogger, IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoManager, IDeviceExceptionRepo exceptionRepo,
-                                 IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, UserAdmin.Interfaces.Managers.IEmailSender emailSender, 
-                                 ISmsSender smsSender, INotificationSender notificationSender, IDeviceNotificationManager deviceNotificationManager)
+                                 IIncidentProtocolManager incidentProtocolManager, IIncidentManager incidentManager, IDeviceErrorCodesManager errorCodeManager, IDistributionListRepo distroListRepo, IDistributionManager distroManager, IUserManager userManager, UserAdmin.Interfaces.Managers.IEmailSender emailSender,
+                                 IDeviceErrorScheduleCheckSender deviceErrorScheduleCheckSender, ISmsSender smsSender, INotificationSender notificationSender, IDeviceNotificationManager deviceNotificationManager)
         {
             _notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));            
             _ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -62,6 +63,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _incidentManager = incidentManager ?? throw new ArgumentNullException(nameof(incidentManager));
             _incidentProtocolManager = incidentProtocolManager ?? throw new ArgumentNullException(nameof(incidentProtocolManager));
             _distroListRepo = distroListRepo ?? throw new ArgumentNullException(nameof(distroListRepo));
+            _deviceErrorScheduleCheckSender = deviceErrorScheduleCheckSender ?? throw new ArgumentNullException(nameof(deviceErrorScheduleCheckSender));
         }
 
 
@@ -154,6 +156,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                     DeviceUniqueId = exception.DeviceUniqueId,
                     DeviceRepositoryId = exception.DeviceRepositoryId,
                     DeviceErrorId = deviceError.Id,
+                    Escalate = deviceError.Count > deviceErrorCode.EscalateAfterAttemptCount,
                     NotificationKey = deviceErrorCode.DeviceNotification.Key,
                 };
 
@@ -249,6 +252,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 return InvokeResult.FromError($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Could not find device for: {exception.DeviceUniqueId}");
             }
 
+            exception.DeviceId = device.Result.DeviceId;
+
             _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Handle Device Exception, Device: {device.Result.Name} - {device.Result.OwnerOrganization.Text}", exception.DeviceId.ToKVP("deviceId"));
 
             var deviceConfig = await _deviceConfigManager.GetDeviceConfigurationAsync(device.Result.DeviceConfiguration.Id, org, user);
@@ -324,6 +329,32 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Has existing device error on device {deviceError.DeviceErrorCode}, incrementing count - {deviceError.Count}.", exception.DeviceId.ToKVP("deviceId"));
             }
 
+
+            if (deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable)
+            {
+                var scheduledNotification = new DeviceErrorScheduleCheck()
+                {
+                    DeviceException = exception,
+                    Org = org,
+                    User = user,
+                };
+
+                switch (deviceErrorCode.NotificationIntervalTimeSpan.Value)
+                {
+                    case TimeSpanIntervals.Hours: 
+                        scheduledNotification.DueTimeStamp = DateTime.UtcNow.AddHours(deviceErrorCode.NotificationIntervalQuantity.Value).ToJSONString();
+                        break;
+                    case TimeSpanIntervals.Minutes:
+                        scheduledNotification.DueTimeStamp = DateTime.UtcNow.AddMinutes(deviceErrorCode.NotificationIntervalQuantity.Value).ToJSONString();
+                        break;
+                    case TimeSpanIntervals.Days:
+                        scheduledNotification.DueTimeStamp = DateTime.UtcNow.AddDays(deviceErrorCode.NotificationIntervalQuantity.Value).ToJSONString();
+                        break;
+                }
+
+                await _deviceErrorScheduleCheckSender.ScheduleAsync(scheduledNotification);
+            }
+
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.ServiceTicketTemplate))
             {
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- Generating service ticket (every occurrence.");
@@ -341,13 +372,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
             else
             {
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not generate ticket .");
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- No Service Ticket Template - will not generate ticket.");
             }
 
             if(!deviceError.Silenced)
                 await NotifyAsync(deviceErrorCode, deviceError, device.Result, exception, org, user);
             else
-                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- Device Error was Silenced, will not send notification. .", exception.DeviceId.ToKVP("deviceId"));
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync]- Device Error was Silenced, will not send notification.", exception.DeviceId.ToKVP("deviceId"));
 
             var errorCollection = device.Result.Errors;
             var sw = Stopwatch.StartNew();

@@ -105,13 +105,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<ListResponse<DeviceNotificationSummary>> GetNotificationsForOrgAsync(string orgId, EntityHeader user, ListRequest listRequest)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceErrorCode));
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceNotificationSummary));
             return await _deviceNotificationRepo.GetNotificationForOrgAsync(orgId, listRequest);
         }
 
         public async Task<ListResponse<DeviceNotificationSummary>> GetNotificationsForCustomerAsync(string orgId, string customerId, EntityHeader user, ListRequest listRequest)
         {
-            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceErrorCode));
+            await AuthorizeOrgAccessAsync(user, orgId, typeof(DeviceNotificationSummary));
             return await _deviceNotificationRepo.GetNotificationForCustomerAsync(orgId, customerId, listRequest);
         }
 

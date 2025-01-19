@@ -14,5 +14,6 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 
         Task AddHistoryAsync(RaisedNotificationHistory history);
 
+        Task<RaisedNotificationHistory> GetRaisedNotificationHistoryAsync(string rowKey, string paritionKey);
     }
 }
