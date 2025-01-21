@@ -34,7 +34,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             template = template.Replace("[DeviceId]", device.DeviceId);
             if (location != null)
             {
-                var geoAddress = $"{location.Addr1} {location.City}, {location.StateProvince} {location.PostalCode}";
+                var geoAddress = String.Empty;
+                if(!String.IsNullOrEmpty(location.Addr1))
+                    geoAddress += $"{location.Addr1} {location.City}, {location.StateProvince} {location.PostalCode}";
+                else  if(!String.IsNullOrEmpty(location.City))
+                    geoAddress = $"{location.City}, {location.StateProvince} {location.PostalCode}";
+                else
+                    geoAddress = $"{location.StateProvince} {location.PostalCode}";
 
                 template = template.Replace("[DeviceStreetAddress]", geoAddress);
                 template = template.Replace("[PhoneNumber]", location.PhoneNumber);
@@ -71,6 +77,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     else
                         template = template.Replace("[Location_Admin_Contact]", String.Empty);
                 }
+                else
+                    template = template.Replace("[Location_Admin_Contact]", String.Empty);
 
                 if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
                 {
@@ -83,6 +91,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     else
                         template = template.Replace("[Location_Technical_Contact]", String.Empty);
                 }
+                else
+                    template = template.Replace("[Location_Technical_Contact]", String.Empty);
             }
             else
             {

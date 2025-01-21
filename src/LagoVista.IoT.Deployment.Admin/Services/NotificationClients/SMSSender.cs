@@ -54,8 +54,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             }
             else
             {
-
                 var smsContent = _smsContent;
+                smsContent += "\r\n";
 
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
                 
@@ -64,13 +64,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.FullLandingPageLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
 
-                   smsContent += $" view: {shortenedLink.Result}";
+                   smsContent += $"\r\nView: {shortenedLink.Result}\r\n";
                 }
                 else if (!String.IsNullOrEmpty(links.AcknowledgeLink))
                 {
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
-                    smsContent += $" Acknowledge: {shortenedLink.Result} ";
+                    smsContent += $"\r\nAcknowledge: {shortenedLink.Result}\r\n";
                 }
 
                 if (allowSilence)
@@ -78,7 +78,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     var silencedLink = links.SilenceLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
                     var shortenedSilenceLink = await _linkShortener.ShortenLinkAsync(silencedLink);
                     if (!shortenedSilenceLink.Successful) return shortenedSilenceLink.ToInvokeResult();
-                    smsContent += $" Silence notifiations: {shortenedSilenceLink.Result} ";
+                    smsContent += $"\r\nSilence notifiations: {shortenedSilenceLink.Result}\r\n";
+                }
+
+                if (!String.IsNullOrEmpty(links.ClearErrorLink))
+                {
+                    var clearLink = links.ClearErrorLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
+                    var shortenedClearLink = await _linkShortener.ShortenLinkAsync(clearLink);
+                    if (!shortenedClearLink.Successful) return shortenedClearLink.ToInvokeResult();
+                    smsContent += $"\r\nCancel/Clear: {shortenedClearLink.Result}\r\n";
                 }
 
                 var result = await _smsSender.SendInBackgroundAsync(recipient.Phone, smsContent);

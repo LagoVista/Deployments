@@ -57,11 +57,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No Landindg page, just acknowledge link - {links.AcknowledgeLink}");
             }
 
-            if(String.IsNullOrEmpty(errorId))
+            if (String.IsNullOrEmpty(errorId))
                 links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/silence";
             else
+            {
                 links.SilenceLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/errors/{errorId}/silence";
-
+                links.ClearErrorLink = $"{_appConfig.WebAddress}/devicemgmt/device/{device.Id}/[NotificationHistoryId]/errors/{errorId}/clear";
+            }
             return InvokeResult<NotificationLinks>.Create(links);
         }
 

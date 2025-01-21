@@ -522,8 +522,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                             if (module.ModuleType.Value == Pipeline.Admin.Models.PipelineModuleType.Workflow)
                             {
                                 sw.Restart();
-                                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here PMS.");
-
+                              
                                 var wfLoadResult = await _deviceAdminManager.LoadFullDeviceWorkflowAsync(module.Module.Id, org, user);
                                 result.Timings.AddRange(wfLoadResult.Timings);
                                 result.Timings.Add(new ResultTiming() { Key = $"LoadFullDeviceWorkflowAsync - {wfLoadResult.Result.Name}", Ms = sw.Elapsed.TotalMilliseconds });
@@ -563,9 +562,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                                             }
                                         }
                                     }
-
-                                    Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here PMS done.");
-
                                 }
                                 else
                                 {
@@ -581,21 +577,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     device.InputCommandEndPoints = new List<InputCommandEndPoint>();
                 }
 
-                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 2.5.");
-
                 foreach (var ep in device.InputCommandEndPoints)
                 {
                     ep.EndPoint = ep.EndPoint.Replace("[DEVICEID]", device.DeviceId);
                 }
-
             }
             else
             {
                 Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Instance not available, can't populate end points.");
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
             }
-
-            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 2.");
 
             var metaDataCache = new MetaDataCache()
             {
@@ -606,9 +597,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 StateMachineMetaData = device.StateMachineMetaData,
                 PropertiesMetaData = device.PropertiesMetaData,
             };
-
-            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Here 3.");
-
 
             if (instance != null)
             {

@@ -94,6 +94,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     contentToSend += $"<div><a href='{shortenedSilenceLink.Result}'>Silence Notifications</a></div>";
                 }
 
+                if (!String.IsNullOrEmpty(links.ClearErrorLink))
+                {
+                    var clearLink = links.ClearErrorLink.Replace("[NotificationHistoryId]", id.Replace(".", "%2e").Replace("-", "%2d"));
+                    var shortenedClearLink = await _linkShortener.ShortenLinkAsync(clearLink);
+                    if (!shortenedClearLink.Successful) return shortenedClearLink.ToInvokeResult();
+                    contentToSend += $"<div><a href='{shortenedClearLink.Result}'>Clear/Cancel</a></div>";
+                }
+
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending Email To {recipient.FirstName} {recipient.LastName} {recipient.Email} -  {shortenedLink.Result} ({actualInk})");
                 var result = await _emailSender.SendInBackgroundAsync(recipient.Email, _emailSubject, contentToSend, org, user);
                 if (result.Successful)

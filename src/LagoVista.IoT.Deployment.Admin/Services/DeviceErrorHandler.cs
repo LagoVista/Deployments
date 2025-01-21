@@ -180,7 +180,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         private async Task<InvokeResult> NotifyAsync(DeviceErrorCode deviceErrorCode, DeviceError deviceError, Device device, DeviceException exception, EntityHeader org, EntityHeader user)
         {
-            if(!String.IsNullOrEmpty(deviceError.NextNotification) && (deviceError.NextNotification.ToDateTime().ToUniversalTime() > DateTime.UtcNow))
+            // if Follup Attempt is > 0 that means this is coming from the scheduled notification system, so go ahead and send.
+            if(!String.IsNullOrEmpty(deviceError.NextNotification) && (deviceError.NextNotification.ToDateTime().ToUniversalTime() > DateTime.UtcNow) && exception.FollowUpAttempt == 0)
             {
                 _adminLogger.Trace($"[DeviceErrorHandler__NotifyAsync] - Not sending any notifications, will send notification at {deviceError.NextNotification.ToDateTime()}.", exception.DeviceId.ToKVP("deviceId"));
                 return InvokeResult.Success;
@@ -232,7 +233,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (org == null) throw new ArgumentNullException(nameof(org));
             if (user == null) throw new ArgumentNullException(nameof(user));
 
-            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - starting error handler for error:: {exception.ErrorCode} on device {exception.DeviceId}, creating device error.", exception.DeviceId.ToKVP("deviceId"));
+            _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - starting error handler for error: {exception.ErrorCode} on device {exception.DeviceId}, creating device error.", exception.DeviceId.ToKVP("deviceId"), exception.FollowUpAttempt.ToString().ToKVP("followupCount"));
 
             var timeStamp = DateTime.UtcNow.ToJSONString();
 
@@ -295,6 +296,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             if (deviceError == null)
             {
+                // Follup Attempt gets incremented each time the timer fires and a scheduled notification happens.
+                // if it's greather than 0 it means it came from the followup timer.
+                // if there are no errors of this type on the device it means it was cleared.
+                if(exception.FollowUpAttempt > 0)
+                {
+                    _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Device error was cleared, will cancel followups");
+                    return InvokeResult.Success;
+                }
+
                 deviceError = new DeviceError()
                 {
                     Count = 1,                   
@@ -330,7 +340,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
 
 
-            if (deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable)
+            if (deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable && !deviceError.Silenced)
             {
                 var scheduledNotification = new DeviceErrorScheduleCheck()
                 {
@@ -352,8 +362,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                         break;
                 }
 
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Scheduling message for delivery at {scheduledNotification.DueTimeStamp}");
+
                 await _deviceErrorScheduleCheckSender.ScheduleAsync(scheduledNotification);
             }
+            else
+                _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Notification Interval Set to Not Applicable, not queing notification.");
 
             if (!EntityHeader.IsNullOrEmpty(deviceErrorCode.ServiceTicketTemplate))
             {

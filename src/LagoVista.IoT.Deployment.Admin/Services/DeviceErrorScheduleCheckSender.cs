@@ -43,7 +43,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
         }
 
-
         public async Task<InvokeResult> ScheduleAsync(DeviceErrorScheduleCheck errorCheck)
         {
             var entityPath = "deviceerrorescalationqueue";

@@ -66,9 +66,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             var json = arg.Message.Body.ToString();
 
             var exception = JsonConvert.DeserializeObject<DeviceErrorScheduleCheck>(json);
+            exception.DeviceException.FollowUpAttempt++;
             await _errorHandler.HandleDeviceExceptionAsync(exception.DeviceException, exception.Org, exception.User);
-
-            Console.WriteLine($"HERE GOES: {exception.DeviceException.ErrorCode}");
         }
 
         private Task _processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
