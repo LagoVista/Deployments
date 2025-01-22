@@ -253,22 +253,7 @@ payload +
             }
             else
                 return NotFound();
-        }
-
-        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
-        public async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
-        {
-            var result = await _notificationManager.HandleNotificationAsync(notifid, orgid, recipientid, pageid);
-            if (result.Successful)
-            {
-                var content = Content(GetMessage(result.Result));
-                content.ContentType = "text/html";
-                return content;
-            }
-            else
-                return NotFound();
-        }
-
+        }       
 
         [HttpGet("/device/notifications/diagram/{diagramid}")]
         public async Task<LocationDiagram> GetLocationDiagram(string diagramid)
@@ -283,13 +268,47 @@ payload +
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IDeviceRepositoryManager _repoManager;
         private readonly IDeviceManager _deviceManager;
+        private readonly IDeviceNotificationManager _notificationManager;
 
-        public PublicNotifications(IDeviceRepositoryManager repoManager, SignInManager<AppUser> signInManager, IDeviceNotificationTracking notificationTracking, IDeviceManager deviceManager)
+        public PublicNotifications(IDeviceRepositoryManager repoManager, SignInManager<AppUser> signInManager, IDeviceNotificationManager notificationManager, IDeviceNotificationTracking notificationTracking, IDeviceManager deviceManager)
         {
+            _notificationManager = notificationManager ?? throw new ArgumentNullException(nameof(notificationManager));
+
             _notificationTracking = notificationTracking ?? throw new ArgumentNullException(nameof(notificationTracking));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
+        }
+
+        private string GetMessage(string payload)
+        {
+            var html = @"<html>
+<head>
+  <link rel=""icon"" type=""image/png"" href=""https://nuviot.blob.core.windows.net/cdn/sa/favicon.png"">
+  <link href=""https://nuviot.blob.core.windows.net/cdn/sa/style.css"" rel=""stylesheet"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+</head>
+<body>
+<div class=""header""></div>" +
+payload +
+@"</body>
+</html>";
+
+            return html;
+        }
+
+        [HttpGet("/device/notifications/{notifid}/{orgid}/{recipientid}/{pageid}")]
+        public async Task<ActionResult> GetNotificationPage(string notifid, string orgid, string recipientid, string pageid)
+        {
+            var result = await _notificationManager.HandleNotificationAsync(notifid, orgid, recipientid, pageid);
+            if (result.Successful)
+            {
+                var content = Content(GetMessage(result.Result));
+                content.ContentType = "text/html";
+                return content;
+            }
+            else
+                return NotFound();
         }
 
         [HttpGet("/device/notififcation/{deviceuniqueid}/{historyid}/{pin}/signin")]

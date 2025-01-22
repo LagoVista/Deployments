@@ -74,7 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var shortenedLink = await _linkShortener.ShortenLinkAsync(actualInk);
             if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
 
-            var linkLabel = String.IsNullOrEmpty(links.FullLandingPageLink) ? "Details" : "Acknowledge";           
+            var linkLabel = String.IsNullOrEmpty(links.FullLandingPageLink) ? "Acknowledge" : "Details";           
             if (String.IsNullOrEmpty(recipient.Email))
             {
                 _logger.AddCustomEvent(LogLevel.Warning, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
