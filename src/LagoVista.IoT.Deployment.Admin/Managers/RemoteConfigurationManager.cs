@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
@@ -159,6 +160,23 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             });
 
             return await propertyManager.SendCommandAsync(deviceUniqueId, commandId, parameters);
+        }
+
+        public async Task<InvokeResult> SetDesiredConfigurationRevisionAsync(string deviceRepoId, string deviceUniqueId, int configurationRevision, EntityHeader org, EntityHeader user)
+        {
+            var repo = await _repoManager.GetDeviceRepositoryAsync(deviceRepoId, org, user);
+            if (EntityHeader.IsNullOrEmpty(repo.Instance))
+            {
+                return InvokeResult.FromError("Instance not deployed, can not set property.");
+            }
+
+            var propertyManager = _proxyFactory.Create<IRemotePropertyNamanager>(new ProxySettings()
+            {
+                InstanceId = repo.Instance.Id,
+                OrganizationId = repo.OwnerOrganization.Id
+            });
+
+            return await propertyManager.SetDesiredConfigurationRevisionAsync(deviceUniqueId, configurationRevision);
         }
     }
 }
