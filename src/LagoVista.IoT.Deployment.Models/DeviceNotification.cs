@@ -18,7 +18,7 @@ namespace LagoVista.IoT.Deployment.Models
             DeploymentAdminResources.Names.DeviceNotifications_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1", Cloneable: true,
             ListUIUrl: "/iotstudio/device/notifications", EditUIUrl: "/iotstudio/device/notification/{id}", CreateUIUrl: "/iotstudio/device/notification/add",
             GetListUrl: "/api/notifications", SaveUrl: "/api/notification", GetUrl: "/api/notification/{id}", DeleteUrl: "/api/notification/{id}", FactoryUrl: "/api/notification/factory")]
-    public class DeviceNotification : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, ICategorized, IFormConditionalFields, ISummaryFactory
+    public class DeviceNotification : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorCol2, ICategorized, IFormConditionalFields, ISummaryFactory, ICustomerOwnedEntity
     {
 
         public DeviceNotification()
