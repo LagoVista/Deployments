@@ -1465,7 +1465,7 @@
     <value>Credentials</value>
   </data>
   <data name="Instance_Credentials_Help" xml:space="preserve">
-    <value>Credentials can be used at the instance level to authorize access to instnace data by services.</value>
+    <value>Credentials can be used at the instance level to authorize access to instance data by services.</value>
   </data>
   <data name="Instance_Solution_Help" xml:space="preserve">
     <value>The solution is the definition of how the messages sent from your devices should be procseed.  Please select a solution, if none are available, you will need to create one.  A solution can be used by multiple instances.</value>
