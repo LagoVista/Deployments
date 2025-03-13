@@ -1993,4 +1993,7 @@
   <data name="DeviceNotification_EscalationNotification_Select" xml:space="preserve">
     <value>-select escalation notification-</value>
   </data>
+  <data name="DeviceNotifications_Contacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
 </root>
