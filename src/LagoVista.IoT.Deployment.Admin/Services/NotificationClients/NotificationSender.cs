@@ -195,13 +195,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "validated", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, raisedNotification.NotificationKey);
 
-            if (raisedNotification.Escalate && !EntityHeader.IsNullOrEmpty(notification.EscalationNotification))
-            {
-                _logger.Trace("[NotificationSender__RaiseNotificationAsync] - Will escaltate with notification:");
-                notification = await _deviceNotificationRepo.GetNotificationAsync(notification.EscalationNotification.Id);
-            }
+       
 
             result.Timings.Add(new ResultTiming() { Key = "loadnotification", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
@@ -216,10 +211,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);
             if (!device.Successful) return InvokeResult.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {raisedNotification.NotificationKey} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
             result.Timings.AddRange(device.Timings);
             result.Timings.Add(new ResultTiming() { Key = "getdevice", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
+
+            var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, device.Result.Customer?.Id, raisedNotification.NotificationKey);
+
+            if (raisedNotification.Escalate && !EntityHeader.IsNullOrEmpty(notification.EscalationNotification))
+            {
+                _logger.Trace("[NotificationSender__RaiseNotificationAsync] - Will escaltate with notification:");
+                notification = await _deviceNotificationRepo.GetNotificationAsync(notification.EscalationNotification.Id);
+            }
 
             var recipientsResult = await GetRecipientsAsync(raisedNotification, device.Result, orgEntityHeader, userEntityHeader, notification.DistroList);
 

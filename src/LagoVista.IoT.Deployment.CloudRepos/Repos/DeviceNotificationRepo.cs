@@ -35,9 +35,9 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return DeleteDocumentAsync(id);
         }
 
-        private string GetCacheKey(string orgId, string notificationKey)
+        private string GetCacheKey(string orgId, string customerId, string notificationKey)
         {
-            return $"notification-{orgId}-{notificationKey}";
+            return string.IsNullOrEmpty(customerId) ?  $"notification-{orgId}-{notificationKey}" : $"notification-{orgId}-{customerId}-{notificationKey}";
         }
 
         public Task<DeviceNotification> GetNotificationAsync(string id)
@@ -45,21 +45,21 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(id);
         }
 
-        public async Task<DeviceNotification> GetNotificationByKeyAsync(string orgId, string key)
+        public async Task<DeviceNotification> GetNotificationByKeyAsync(string orgId, string customerId, string key)
         {
-            var existing = await _cacheProvider.GetAsync(GetCacheKey(orgId, key));
+            var existing = await _cacheProvider.GetAsync(GetCacheKey(orgId, customerId, key));
             if (existing != null)
             {
                 return JsonConvert.DeserializeObject<DeviceNotification>(existing);
             }
             else
             {
-                var result = await QueryAsync(dn => dn.OwnerOrganization.Id == orgId && dn.Key == key);
+                var result = await QueryAsync(dn => dn.OwnerOrganization.Id == orgId && dn.Key == key && (string.IsNullOrEmpty(customerId) || dn.Customer.Id == customerId));
                 if (result == null || !result.Any())
                     throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key}");
 
                 var notiifcation = result.First();
-                await _cacheProvider.AddAsync(GetCacheKey(orgId, key), JsonConvert.SerializeObject(notiifcation));
+                await _cacheProvider.AddAsync(GetCacheKey(orgId, customerId, key), JsonConvert.SerializeObject(notiifcation));
                 return notiifcation;
             }        
         }
@@ -76,7 +76,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task UpdateNotificationAsync(DeviceNotification notification)
         {
-            await _cacheProvider.RemoveAsync(GetCacheKey(notification.OwnerOrganization.Id, notification.Key));
+            await _cacheProvider.RemoveAsync(GetCacheKey(notification.OwnerOrganization.Id, notification.Customer?.Id, notification.Key));
             await UpsertDocumentAsync(notification);
         }
     }
