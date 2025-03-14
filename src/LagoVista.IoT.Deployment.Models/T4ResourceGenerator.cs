@@ -1,4 +1,4 @@
-﻿/*12/27/2024 8:27:28 AM*/
+﻿/*3/12/2025 7:22:00 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -700,6 +700,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotificationHistory_Title
 
 		public static string DeviceNotificationHistory_Title { get { return GetResourceString("DeviceNotificationHistory_Title"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_Contacts
+
+		public static string DeviceNotifications_Contacts { get { return GetResourceString("DeviceNotifications_Contacts"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_CotNotifications
 
 		public static string DeviceNotifications_CotNotifications { get { return GetResourceString("DeviceNotifications_CotNotifications"); } }
@@ -2150,6 +2153,7 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotification_Title = "DeviceNotification_Title";
 			public const string DeviceNotificationHistory_Description = "DeviceNotificationHistory_Description";
 			public const string DeviceNotificationHistory_Title = "DeviceNotificationHistory_Title";
+			public const string DeviceNotifications_Contacts = "DeviceNotifications_Contacts";
 			public const string DeviceNotifications_CotNotifications = "DeviceNotifications_CotNotifications";
 			public const string DeviceNotifications_Description = "DeviceNotifications_Description";
 			public const string DeviceNotifications_EmailContent = "DeviceNotifications_EmailContent";

@@ -8,6 +8,7 @@ using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.DeviceNotifications;
 using LagoVista.IoT.Deployment.Models.Resources;
 using LagoVista.UserAdmin.Models.Orgs;
+using LagoVista.UserAdmin.Models.Resources;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -94,6 +95,10 @@ namespace LagoVista.IoT.Deployment.Models
 
         public List<Mqtt> MqttNotifications { get; set; } = new List<Mqtt>();
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Contacts, IsRequired: false, ChildListDisplayMembers: "FirstName,LastName", FieldType: FieldTypes.ChildListInline, EntityHeaderPickerUrl: "/api/distro/externalcontact/factory", ResourceType: typeof(UserAdminResources))]
+        public List<ExternalContact> Contacts { get; set; } = new List<ExternalContact>();
+
+
         public FormConditionals GetConditionalFields()
         {
             return new FormConditionals()
@@ -179,7 +184,8 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(ForwardToParentDeviceBody),
                 nameof(IncludeLandingPage),
                 nameof(LandingPageContent),
-                nameof(EscalationNotification)
+                nameof(EscalationNotification),
+                nameof(Contacts)
             };
         }
 
