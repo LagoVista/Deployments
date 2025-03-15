@@ -95,7 +95,7 @@ namespace LagoVista.IoT.Deployment.Models
 
         public List<Mqtt> MqttNotifications { get; set; } = new List<Mqtt>();
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Contacts, IsRequired: false, ChildListDisplayMembers: "FirstName,LastName", FieldType: FieldTypes.ChildListInline, EntityHeaderPickerUrl: "/api/distro/externalcontact/factory", ResourceType: typeof(UserAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_Contacts,  ChildListDisplayMembers: "FirstName,LastName", FieldType: FieldTypes.ChildListInline, EntityHeaderPickerUrl: "/api/distro/externalcontact/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<ExternalContact> Contacts { get; set; } = new List<ExternalContact>();
 
 

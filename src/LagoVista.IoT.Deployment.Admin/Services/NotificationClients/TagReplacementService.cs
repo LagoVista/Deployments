@@ -100,6 +100,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 template = template.Replace("[Location_Admin_Contact]", String.Empty);
                 template = template.Replace("[Location_Technical_Contact]", String.Empty);
                 template = template.Replace("[DeviceLocation]", string.Empty);
+                template = template.Replace("[DeviceLocationName]", "No Location Provided");
             }
 
             var sensorHtml = new StringBuilder("<h4>Sensors</h4>");

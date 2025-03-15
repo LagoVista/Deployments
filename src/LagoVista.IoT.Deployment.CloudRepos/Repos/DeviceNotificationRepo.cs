@@ -7,6 +7,7 @@ using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,9 +55,25 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             }
             else
             {
-                var result = await QueryAsync(dn => dn.OwnerOrganization.Id == orgId && dn.Key == key && (string.IsNullOrEmpty(customerId) || dn.Customer.Id == customerId));
+                var result = await QueryAsync(dn => dn.OwnerOrganization.Id == orgId && dn.Key == key && (string.IsNullOrEmpty(customerId) || (dn.Customer.Id == customerId || dn.SharedTemplate)));
                 if (result == null || !result.Any())
-                    throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key}");
+                    throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key},CustomerId={(String.IsNullOrEmpty(customerId) ? "none" : customerId)}");
+
+                DeviceNotification notification;
+
+                if (!string.IsNullOrEmpty(customerId))
+                {
+                    notification = result.SingleOrDefault(not => not.Customer?.Id == customerId);
+                    if (notification == null)
+                        notification = result.SingleOrDefault(not => not.SharedTemplate);
+                }
+                else
+                {
+                    notification = result.SingleOrDefault(not => string.IsNullOrEmpty(customerId));
+                }
+
+                if(notification == null)
+                    throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key},CustomerId={(String.IsNullOrEmpty(customerId) ? "none" : customerId)}");
 
                 var notiifcation = result.First();
                 await _cacheProvider.AddAsync(GetCacheKey(orgId, customerId, key), JsonConvert.SerializeObject(notiifcation));
