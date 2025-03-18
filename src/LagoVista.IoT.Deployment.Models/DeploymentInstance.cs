@@ -329,7 +329,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 DeviceRepoName = DeviceRepository?.Text,
                 Solution = Solution.Text,
                 SolutionId = Solution.Id,
-                Category = Category
+                Category = Category?.Text,
+                CategoryId = Category?.Id,
+                CategoryKey = Category?.Key,
             };
 
             if (EntityHeader.IsNullOrEmpty(DeviceRepository))
@@ -475,7 +477,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instances_Title, DeploymentAdminResources.Names.Instance_Help,
      DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-deployment-instance",
      SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}", GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}")]
-    public class DeploymentInstanceSummary : CategorizedSummaryData
+    public class DeploymentInstanceSummary : SummaryData
     {
         public EntityHeader<DeploymentInstanceStates> Status { get; set; }
         public string Solution { get; set; }

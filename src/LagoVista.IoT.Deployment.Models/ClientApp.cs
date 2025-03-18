@@ -74,7 +74,9 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 Name = Name,
                 InstanceId = DeploymentInstance?.Id,
                 InstanceName = DeploymentInstance?.Text,
-                Category = Category
+                Category = Category?.Text,
+                CategoryId = Category?.Id,
+                CategoryKey = Category?.Key,
             };
         }
 
@@ -143,7 +145,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ClientApps_Title, DeploymentAdminResources.Names.ClientApp_Help, DeploymentAdminResources.Names.ClientApp_Description,
       EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-ae-apps",
       SaveUrl: "/api/kioskclientapp/{id}", GetUrl: "/api/clientapp/{id}", GetListUrl: "/api/clientapps", FactoryUrl: "/api/clientapp/factory", DeleteUrl: "/api/clientapp/{id}")]
-    public class ClientAppSummary : CategorizedSummaryData
+    public class ClientAppSummary : SummaryData
     {
         public string InstanceId { get; set; }
         public string InstanceName { get; set; }

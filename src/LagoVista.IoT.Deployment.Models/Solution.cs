@@ -85,7 +85,9 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
                 IsPublic = IsPublic,
                 Description = Description,
                 Icon = Icon,
-                Category = Category
+                Category = Category?.Text,
+                CategoryId = Category?.Id,
+                CategoryKey = Category?.Key,
             };
         }
 
@@ -117,7 +119,7 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Solutions_Title, DeploymentAdminResources.Names.Solution_Help, DeploymentAdminResources.Names.Solution_Description,
      EntityDescriptionAttribute.EntityTypes.Summary, typeof(DeploymentAdminResources), Icon: "icon-pz-solution", Cloneable: true,
      GetUrl: "/api/deployment/solution/{id}", GetListUrl: "/api/deployment/solutions", SaveUrl: "/api/deployment/solution", FactoryUrl: "/api/deployment/solution/factory", DeleteUrl: "/api/deployment/solution/{id}")]
-    public class SolutionSummary : LagoVista.Core.Models.CategorizedSummaryData
+    public class SolutionSummary : SummaryData
     { 
     }
 }
