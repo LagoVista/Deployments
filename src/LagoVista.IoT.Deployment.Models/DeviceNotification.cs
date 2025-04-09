@@ -27,11 +27,6 @@ namespace LagoVista.IoT.Deployment.Models
             Icon = "icon-fo-notification-1";
         }
 
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
-
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotification_EmailSubject, HelpResource: DeploymentAdminResources.Names.DeviceNotification_EmailSubject_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public string EmailSubject { get; set; }
 
@@ -49,7 +44,7 @@ namespace LagoVista.IoT.Deployment.Models
         public string SmsContent { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_ForwardToParent, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_ForwardToParentDevice, HelpResource:DeploymentAdminResources.Names.DeviceNotifications_ForwardToParentDevice_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool ForwardToParentDevice { get; set; }
 
 

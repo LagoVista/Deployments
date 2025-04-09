@@ -1966,8 +1966,8 @@
   <data name="CotNotification_CustomCertExpires" xml:space="preserve">
     <value>Custom Certificate Expires</value>
   </data>
-  <data name="DeviceNotifications_ForwardToParent" xml:space="preserve">
-    <value>Forward notification to parent</value>
+  <data name="DeviceNotifications_ForwardToParentDevice" xml:space="preserve">
+    <value>Forward notification to parent device</value>
   </data>
   <data name="DeviceNotifications_ForwardToParentBody" xml:space="preserve">
     <value>Forwarded Content</value>
@@ -1995,5 +1995,8 @@
   </data>
   <data name="DeviceNotifications_Contacts" xml:space="preserve">
     <value>Contacts</value>
+  </data>
+  <data name="DeviceNotifications_ForwardToParentDevice_Help" xml:space="preserve">
+    <value>If this option is selected, the parent of the device that receives this notificiation will also be notified.</value>
   </data>
 </root>

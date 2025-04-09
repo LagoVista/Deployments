@@ -1,4 +1,4 @@
-﻿/*3/12/2025 7:22:00 AM*/
+﻿/*4/9/2025 6:26:21 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -721,12 +721,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotifications_Escalation_Notification_Help
 
 		public static string DeviceNotifications_Escalation_Notification_Help { get { return GetResourceString("DeviceNotifications_Escalation_Notification_Help"); } }
-//Resources:DeploymentAdminResources:DeviceNotifications_ForwardToParent
-
-		public static string DeviceNotifications_ForwardToParent { get { return GetResourceString("DeviceNotifications_ForwardToParent"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_ForwardToParentBody
 
 		public static string DeviceNotifications_ForwardToParentBody { get { return GetResourceString("DeviceNotifications_ForwardToParentBody"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_ForwardToParentDevice
+
+		public static string DeviceNotifications_ForwardToParentDevice { get { return GetResourceString("DeviceNotifications_ForwardToParentDevice"); } }
+//Resources:DeploymentAdminResources:DeviceNotifications_ForwardToParentDevice_Help
+
+		public static string DeviceNotifications_ForwardToParentDevice_Help { get { return GetResourceString("DeviceNotifications_ForwardToParentDevice_Help"); } }
 //Resources:DeploymentAdminResources:DeviceNotifications_IncludeLandingPageContent
 
 		public static string DeviceNotifications_IncludeLandingPageContent { get { return GetResourceString("DeviceNotifications_IncludeLandingPageContent"); } }
@@ -2160,8 +2163,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotifications_EmailSubject = "DeviceNotifications_EmailSubject";
 			public const string DeviceNotifications_Escalation_Notification = "DeviceNotifications_Escalation_Notification";
 			public const string DeviceNotifications_Escalation_Notification_Help = "DeviceNotifications_Escalation_Notification_Help";
-			public const string DeviceNotifications_ForwardToParent = "DeviceNotifications_ForwardToParent";
 			public const string DeviceNotifications_ForwardToParentBody = "DeviceNotifications_ForwardToParentBody";
+			public const string DeviceNotifications_ForwardToParentDevice = "DeviceNotifications_ForwardToParentDevice";
+			public const string DeviceNotifications_ForwardToParentDevice_Help = "DeviceNotifications_ForwardToParentDevice_Help";
 			public const string DeviceNotifications_IncludeLandingPageContent = "DeviceNotifications_IncludeLandingPageContent";
 			public const string DeviceNotifications_LandingPageContent = "DeviceNotifications_LandingPageContent";
 			public const string DeviceNotifications_MqttNotifications = "DeviceNotifications_MqttNotifications";
