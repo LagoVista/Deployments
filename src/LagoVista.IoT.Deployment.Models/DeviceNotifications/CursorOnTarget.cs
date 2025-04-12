@@ -122,7 +122,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                 nameof(CustomCertExpires),
                 nameof(Remarks),
                 nameof(IncludeDeviceLocation),
-                nameof(IncludeLocationPoloygon),
+                nameof(IncludeLocationPolygon),
                 nameof(FillColor),
             };
         }
