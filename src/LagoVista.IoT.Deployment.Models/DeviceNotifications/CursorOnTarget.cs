@@ -73,7 +73,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_IncludeLocationPolygon, HelpResource:DeploymentAdminResources.Names.CotNotification_IncludeLocationPolygon_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
-        public bool IncludeLocationPoloygon { get; set; }
+        public bool IncludeLocationPolygon { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.CotNotification_FillColor, FieldType: FieldTypes.Color, ResourceType: typeof(DeploymentAdminResources))]
         public string FillColor { get; set; }
@@ -90,7 +90,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
                   {
                        new FormConditional()
                        {
-                            Field = nameof(IncludeLocationPoloygon),
+                            Field = nameof(IncludeLocationPolygon),
                             Value = "true",
                             VisibleFields = new List<string>() { nameof(FillColor)}
                        },
