@@ -67,6 +67,10 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SharedTemplate { get; set; }
 
 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice, HelpResource:DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Help, WaterMark: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Select, 
+            FieldType: FieldTypes.DevicePicker, ResourceType: typeof(DeploymentAdminResources))]
+        public EntityHeader ForwardDevice { get; set; }
+
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList, HelpResource: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Help,
             WaterMark: DeploymentAdminResources.Names.DeviceErrorCode_DistributionList_Select, FieldType: FieldTypes.EntityHeaderPicker,
             EntityHeaderPickerUrl: "/api/distros",
@@ -175,6 +179,7 @@ namespace LagoVista.IoT.Deployment.Models
                 nameof(EmailSubject),
                 nameof(EmailContent),
                 nameof(DistroList),
+                nameof(ForwardDevice),
                 nameof(ForwardToParentDevice),
                 nameof(ForwardToParentDeviceBody),
                 nameof(IncludeLandingPage),

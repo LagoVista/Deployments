@@ -1967,7 +1967,7 @@
     <value>Custom Certificate Expires</value>
   </data>
   <data name="DeviceNotifications_ForwardToParentDevice" xml:space="preserve">
-    <value>Forward notification to parent device</value>
+    <value>Forward notification to parent device of the device that generated the notification.</value>
   </data>
   <data name="DeviceNotifications_ForwardToParentBody" xml:space="preserve">
     <value>Forwarded Content</value>
@@ -1997,6 +1997,15 @@
     <value>Contacts</value>
   </data>
   <data name="DeviceNotifications_ForwardToParentDevice_Help" xml:space="preserve">
-    <value>If this option is selected, the parent of the device that receives this notificiation will also be notified.</value>
+    <value>If this option is selected, the parent of the device that receives this notification will also be notified.</value>
+  </data>
+  <data name="DeviceNotification_ForwardDevice" xml:space="preserve">
+    <value>Forward Device</value>
+  </data>
+  <data name="DeviceNotification_ForwardDevice_Help" xml:space="preserve">
+    <value>Forward the notification to this device.</value>
+  </data>
+  <data name="DeviceNotification_ForwardDevice_Select" xml:space="preserve">
+    <value>-select forward device-</value>
   </data>
 </root>

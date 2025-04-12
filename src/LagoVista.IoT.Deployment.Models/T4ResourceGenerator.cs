@@ -1,4 +1,4 @@
-﻿/*4/9/2025 6:26:21 AM*/
+﻿/*4/12/2025 7:57:42 AM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -685,6 +685,15 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:DeviceNotification_EscalationNotification_Select
 
 		public static string DeviceNotification_EscalationNotification_Select { get { return GetResourceString("DeviceNotification_EscalationNotification_Select"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_ForwardDevice
+
+		public static string DeviceNotification_ForwardDevice { get { return GetResourceString("DeviceNotification_ForwardDevice"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_ForwardDevice_Help
+
+		public static string DeviceNotification_ForwardDevice_Help { get { return GetResourceString("DeviceNotification_ForwardDevice_Help"); } }
+//Resources:DeploymentAdminResources:DeviceNotification_ForwardDevice_Select
+
+		public static string DeviceNotification_ForwardDevice_Select { get { return GetResourceString("DeviceNotification_ForwardDevice_Select"); } }
 //Resources:DeploymentAdminResources:DeviceNotification_SMS_Help
 
 		public static string DeviceNotification_SMS_Help { get { return GetResourceString("DeviceNotification_SMS_Help"); } }
@@ -2151,6 +2160,9 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string DeviceNotification_EmailSubject = "DeviceNotification_EmailSubject";
 			public const string DeviceNotification_EmailSubject_Help = "DeviceNotification_EmailSubject_Help";
 			public const string DeviceNotification_EscalationNotification_Select = "DeviceNotification_EscalationNotification_Select";
+			public const string DeviceNotification_ForwardDevice = "DeviceNotification_ForwardDevice";
+			public const string DeviceNotification_ForwardDevice_Help = "DeviceNotification_ForwardDevice_Help";
+			public const string DeviceNotification_ForwardDevice_Select = "DeviceNotification_ForwardDevice_Select";
 			public const string DeviceNotification_SMS_Help = "DeviceNotification_SMS_Help";
 			public const string DeviceNotification_TagHelp = "DeviceNotification_TagHelp";
 			public const string DeviceNotification_Title = "DeviceNotification_Title";

@@ -347,20 +347,26 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 {
                     await _notificationTracking.AddHistoryAsync(notificationHistory);
                 });
-                
             }
 
             result.Timings.Add(new ResultTiming() { Key = "sendemailandsms", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-
             if (notification.ForwardToParentDevice && !EntityHeader.IsNullOrEmpty(device.Result.ParentDevice))
             {
                 await _deviceCommandSender.SendAsync(repo.Instance.Id, device.Result.ParentDevice.Id, orgEntityHeader, userEntityHeader);
+
+                result.Timings.Add(new ResultTiming() { Key = "queuedevicecommand", Ms = sw.Elapsed.TotalMilliseconds });
+                sw.Restart();
             }
 
-            result.Timings.Add(new ResultTiming() { Key = "queuedevicecommand", Ms = sw.Elapsed.TotalMilliseconds });
-            sw.Restart();
+            if (!EntityHeader.IsNullOrEmpty(notification.ForwardDevice))
+            {
+                await _deviceCommandSender.SendAsync(repo.Instance.Id, notification.ForwardDevice.Id, orgEntityHeader, userEntityHeader);
+
+                result.Timings.Add(new ResultTiming() { Key = "forwarddevice", Ms = sw.Elapsed.TotalMilliseconds });
+                sw.Restart();
+            }
 
             // these could fail but the individual sender will track that.  Also don't want to abort if one of these fails.
             foreach (var cot in notification.CotNotifications)
