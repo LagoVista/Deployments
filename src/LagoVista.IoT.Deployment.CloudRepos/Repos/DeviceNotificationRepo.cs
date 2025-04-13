@@ -86,6 +86,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return QuerySummaryAsync<DeviceNotificationSummary, DeviceNotification>(ec => ec.OwnerOrganization.Id == orgId, ec => ec.Name, listRequest);
         }
 
+        public Task<ListResponse<DeviceNotificationSummary>> GetNotificationTemplatesForOrgAsync(string orgId, ListRequest listRequest)
+        {
+            return QuerySummaryAsync<DeviceNotificationSummary, DeviceNotification>(ec => ec.OwnerOrganization.Id == orgId && ec.SharedTemplate, ec => ec.Name, listRequest);
+        }
+
         public Task<ListResponse<DeviceNotificationSummary>> GetNotificationForCustomerAsync(string orgId, string customerId, ListRequest listRequest)
         {
             return QuerySummaryAsync<DeviceNotificationSummary, DeviceNotification>(ec => (ec.SharedTemplate || ec.Customer.Id == customerId) && ec.OwnerOrganization.Id == orgId, ec => ec.Name, listRequest);

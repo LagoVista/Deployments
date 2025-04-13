@@ -149,7 +149,10 @@ namespace LagoVista.IoT.Deployment.Models
                 IsPublic = IsPublic,
                 SharedTemplate = SharedTemplate,
                 Custmer = Customer?.Text,
-                CustomerId = Customer?.Id
+                CustomerId = Customer?.Id,
+                Category = Category?.Text,
+                CategoryId = Category?.Id,
+                CategoryKey = Category?.Key,
             };
         }
 
