@@ -142,11 +142,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/notifications/{repoid}/{deviceuniqueid}/{notificationkey}")]
-        public async Task<InvokeResult> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false")
+        public async Task<InvokeResult<string>> TestSendAsync(string repoid, string deviceuniqueid, string notificationkey, string testing = "false", string dryrun = "false")
         {
             return await _notificationSender.RaiseNotificationAsync(new RaisedDeviceNotification()
             {
                 TestMode = testing == "true",
+                DryRun = dryrun == "true",
                 DeviceUniqueId = deviceuniqueid,
                 DeviceRepositoryId = repoid,
                 NotificationKey = notificationkey
@@ -170,7 +171,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/notifications/templates")]
         public Task<ListResponse<DeviceNotificationSummary>> GetnotificationTemplatessForOrg()
         {
-            return _notificationManager.GetNotificationTempmlatesForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
+            return _notificationManager.GetNotificationTemplatesForOrgAsync(OrgEntityHeader.Id, UserEntityHeader, GetListRequestFromHeader());
         }
 
 

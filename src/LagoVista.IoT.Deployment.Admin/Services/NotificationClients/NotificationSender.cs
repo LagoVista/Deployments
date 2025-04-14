@@ -22,6 +22,7 @@ using System.Diagnostics.Metrics;
 using Prometheus;
 using RingCentral;
 using ProtoBuf.WellKnownTypes;
+using Org.BouncyCastle.Cms;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -177,9 +178,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         
         }
 
-        public async Task<InvokeResult> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
+        public async Task<InvokeResult<string>> RaiseNotificationAsync(RaisedDeviceNotification raisedNotification, EntityHeader orgEntityHeader, EntityHeader userEntityHeader)
         {
-            var result = InvokeResult.Success;
+            var result = InvokeResult<string>.Create(String.Empty);
             var sw = Stopwatch.StartNew();
             var fullSw = Stopwatch.StartNew();
             _logger.Trace($"[NotificationSender__RaiseNotificationAsync] Starting - Key: {raisedNotification.NotificationKey}. Test Mode {raisedNotification.TestMode}, Org: {orgEntityHeader.Text}, Repo: {raisedNotification.DeviceRepositoryId}, Device: {raisedNotification.DeviceId}", orgEntityHeader.Text.ToKVP("org"), 
@@ -189,28 +190,25 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!validationResult.Successful)
             {
                 _logger.AddException($"[NotificationSender__RaiseNotificationAsync]", new Exception($"Validation Error on RaiseDeviceNotification {validationResult.ErrorMessage}"));
-                return result;
+                return InvokeResult<string>.FromError(validationResult.ErrorMessage);
             }
 
             result.Timings.Add(new ResultTiming() { Key = "validated", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
-
-
-       
 
             result.Timings.Add(new ResultTiming() { Key = "loadnotification", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(raisedNotification.DeviceRepositoryId, orgEntityHeader, userEntityHeader);
             if (repo.OwnerOrganization.Id != orgEntityHeader.Id) throw new NotAuthorizedException("Org missmatch.");
-            if (repo == null) return InvokeResult.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");            
+            if (repo == null) return InvokeResult<string>.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");            
             result.Timings.Add(new ResultTiming() { Key = "loadrepo", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            if (EntityHeader.IsNullOrEmpty(repo.Instance)) return InvokeResult.FromError($"Device does not have a deployment instance for device repository: ${repo.Name}");
+            if (EntityHeader.IsNullOrEmpty(repo.Instance)) return InvokeResult<string>.FromError($"Device does not have a deployment instance for device repository: ${repo.Name}");
 
             var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);
-            if (!device.Successful) return InvokeResult.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
+            if (!device.Successful) return InvokeResult<string>.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
             _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {raisedNotification.NotificationKey} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
             result.Timings.AddRange(device.Timings);
             result.Timings.Add(new ResultTiming() { Key = "getdevice", Ms = sw.Elapsed.TotalMilliseconds });
@@ -227,18 +225,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var recipientsResult = await GetRecipientsAsync(raisedNotification, device.Result, orgEntityHeader, userEntityHeader, notification.DistroList);
 
             if (!recipientsResult.Successful)
-                return result.ToInvokeResult();
+                return InvokeResult<String>.FromInvokeResult(result.ToInvokeResult());
 
             if (!recipientsResult.Result.Any())
             {
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
-                return InvokeResult.Success;
+                return InvokeResult<string>.Create(Guid.Empty.ToId());
             }
 
             _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var deployment = await _deploymentRepo.GetReadOnlyInstanceAsync(repo.Instance.Id);
-            if (deployment == null) return InvokeResult.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
+            if (deployment == null) return InvokeResult<string>.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
             result.Timings.Add(new ResultTiming() { Key = "getinstance", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
@@ -280,7 +278,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "getrecipients", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            await _raisedNotificationHistoryRepo.AddHistoryAsync(new RaisedNotificationHistory(device.Result.DeviceRepository.Id)
+            var hist = new RaisedNotificationHistory(device.Result.DeviceRepository.Id)
             {
                 OrgId = device.Result.OwnerOrganization.Id,
                 DeviceId = device.Result.DeviceId,
@@ -289,8 +287,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 Notification = notification.Name,
                 NotificationId = notification.Id,
                 TestMode = deployment.TestMode,
-                TimeStamp = DateTime.UtcNow.ToJSONString()
-            });
+                DryRun = raisedNotification.DryRun,
+                TimeStamp = DateTime.UtcNow.ToJSONString(),
+                Customer = device.Result.Customer?.Text,
+                CustomerId = device.Result.Customer?.Id,
+                SmsText = notification.SmsContent,
+                EmailText = notification.EmailContent,
+            };
+
+            await _raisedNotificationHistoryRepo.AddHistoryAsync(hist);
+            result.Result = hist.RowKey;
 
             result.Timings.Add(new ResultTiming() { Key = "addnotifications", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
@@ -301,6 +307,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             {
                 var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{recipient.Id}")
                 {
+                    RaisedNotificationId = raisedNotification.Id,
                     UserId = recipient.Id,
                     UserName = $"{recipient.FirstName} {recipient.LastName}",
                     OrgId = orgEntityHeader.Id,
@@ -308,24 +315,30 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     NotificationId = notification.Id,
                     StaticPageId = page.PageId,
                     TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
                     SentTimeStamp = DateTime.UtcNow.ToJSONString(),
                     SendEmail = notification.SendEmail && recipient.SendEmail,
                     SendSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.Result.DeviceId,
                     DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
                 };
                
                 if (notificationHistory.SendSMS)
                 {
                     notificationHistory.Phone = recipient.Phone;
 
-                    var sendSmsResult = await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), orgEntityHeader, userEntityHeader);
-                    notificationHistory.SentSMS = sendSmsResult.Successful;
-                    if (!sendSmsResult.Successful)
+                    if (!raisedNotification.DryRun)
                     {
-                        notificationHistory.Errors += $"SMS Error: {sendSmsResult.ErrorMessage}; ";
-                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact]",
-                            $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact] - Error sending SMS to {recipient.FirstName} {recipient.LastName} {recipient.Phone} - {sendSmsResult.ErrorMessage}");
+                        var sendSmsResult = await _smsSender.SendAsync(notificationHistory.RowKey, recipient, page, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), orgEntityHeader, userEntityHeader);
+                        notificationHistory.SentSMS = sendSmsResult.Successful;
+                        if (!sendSmsResult.Successful)
+                        {
+                            notificationHistory.Errors += $"SMS Error: {sendSmsResult.ErrorMessage}; ";
+                            _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact]",
+                                $"[NotificationSender__RaiseNotificationAsync__SendSms__ExternalContact] - Error sending SMS to {recipient.FirstName} {recipient.LastName} {recipient.Phone} - {sendSmsResult.ErrorMessage}");
+                        }
                     }
                 }
 
@@ -333,13 +346,16 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 {
                     notificationHistory.Email = recipient.Email;
 
-                    var sendEmailResult = await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
-                    notificationHistory.SentEmail = sendEmailResult.Successful;
-                    if (!sendEmailResult.Successful)
+                    if (!raisedNotification.DryRun)
                     {
-                        notificationHistory.Errors += $"Email Error: {sendEmailResult.ErrorMessage}; ";
-                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
-                            $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact] - Error sending email to {recipient.FirstName} {recipient.LastName} {recipient.Email} - {sendEmailResult.ErrorMessage}");
+                        var sendEmailResult = await _emailSender.SendAsync(notificationHistory.RowKey, notification, recipient, !String.IsNullOrEmpty(raisedNotification.DeviceErrorId), page, orgEntityHeader, userEntityHeader);
+                        notificationHistory.SentEmail = sendEmailResult.Successful;
+                        if (!sendEmailResult.Successful)
+                        {
+                            notificationHistory.Errors += $"Email Error: {sendEmailResult.ErrorMessage}; ";
+                            _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
+                                $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact] - Error sending email to {recipient.FirstName} {recipient.LastName} {recipient.Email} - {sendEmailResult.ErrorMessage}");
+                        }
                     }
                 }
 
@@ -354,10 +370,36 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (notification.ForwardToParentDevice && !EntityHeader.IsNullOrEmpty(device.Result.ParentDevice))
             {
-                await _deviceCommandSender.SendAsync(repo.Instance.Id, device.Result.ParentDevice.Id, orgEntityHeader, userEntityHeader);
+                if (!raisedNotification.DryRun)
+                {
+                    await _deviceCommandSender.SendAsync(repo.Instance.Id, device.Result.ParentDevice.Id, orgEntityHeader, userEntityHeader);
 
-                result.Timings.Add(new ResultTiming() { Key = "queuedevicecommand", Ms = sw.Elapsed.TotalMilliseconds });
-                sw.Restart();
+                    result.Timings.Add(new ResultTiming() { Key = "queuedevicecommand", Ms = sw.Elapsed.TotalMilliseconds });
+                    sw.Restart();
+                }
+
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-forward-parent")
+                {
+                    RaisedNotificationId = raisedNotification.Id,
+                    OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
+                    StaticPageId = page.PageId,
+                    TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
+                    SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
+                    ForwardDevice = device.Result.ParentDevice.Text,
+                    ForwardDeviceUniqueId = device.Result.ParentDevice.Id,
+                };
+
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
             }
 
             if (!EntityHeader.IsNullOrEmpty(notification.ForwardDevice))
@@ -366,22 +408,119 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 result.Timings.Add(new ResultTiming() { Key = "forwarddevice", Ms = sw.Elapsed.TotalMilliseconds });
                 sw.Restart();
+
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-forward-parent")
+                {
+                    RaisedNotificationId = raisedNotification.Id,
+                    OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
+                    StaticPageId = page.PageId,
+                    TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
+                    SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
+                    ForwardDevice = notification.ForwardDevice.Text,
+                    ForwardDeviceUniqueId = notification.ForwardDevice.Id,
+                };
+
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
             }
+
 
             // these could fail but the individual sender will track that.  Also don't want to abort if one of these fails.
             foreach (var cot in notification.CotNotifications)
             {
-                await _cotSender.SendAsync(cot, device.Result, location, orgEntityHeader, userEntityHeader);
+                if(!raisedNotification.DryRun)
+                    await _cotSender.SendAsync(cot, device.Result, location, orgEntityHeader, userEntityHeader);
+
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-forward-parent")
+                {
+                    RaisedNotificationId = raisedNotification.Id,
+                    OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
+                    StaticPageId = page.PageId,
+                    TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
+                    SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
+                    ForwardToServer = cot.Name,
+                    ForwardToServerType = "COT Server"
+                };
+
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
             }
 
             foreach (var mqtt in notification.MqttNotifications)
             {
-                await _mqttSender.SendAsync(mqtt, device.Result, location, orgEntityHeader, userEntityHeader);
+                if (!raisedNotification.DryRun)
+                    await _mqttSender.SendAsync(mqtt, device.Result, location, orgEntityHeader, userEntityHeader);
+
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-forward-parent")
+                {
+                    RaisedNotificationId = raisedNotification.Id,
+                    OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
+                    StaticPageId = page.PageId,
+                    TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
+                    SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
+                    ForwardToServer = mqtt.Name,
+                    ForwardToServerType = "MQTT Server"
+                };
+
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
             }
 
             foreach (var rest in notification.RestNotifications)
             {
-                await _restSender.SendAsync(rest, device.Result, location, orgEntityHeader, userEntityHeader);
+                if (!raisedNotification.DryRun)
+                    await _restSender.SendAsync(rest, device.Result, location, orgEntityHeader, userEntityHeader);
+
+                var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-forward-parent")
+                {
+                    RaisedNotificationId = raisedNotification.Id,
+                    OrgId = orgEntityHeader.Id,
+                    Notification = notification.Name,
+                    NotificationId = notification.Id,
+                    StaticPageId = page.PageId,
+                    TestMode = raisedNotification.TestMode,
+                    DryRun = raisedNotification.DryRun,
+                    SentTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    DeviceId = device.Result.DeviceId,
+                    DeviceRepoId = repo.Id,
+                    Customer = device.Result.Customer?.Text,
+                    CustomerId = device.Result.Customer?.Id,
+                    ForwardToServer = rest.Name,
+                    ForwardToServerType = "REST Server"
+                };
+
+                await _taskQueue.QueueBackgroundWorkItemAsync(async (token) =>
+                {
+                    await _notificationTracking.AddHistoryAsync(notificationHistory);
+                });
+
             }
 
             sw = Stopwatch.StartNew();
@@ -600,6 +739,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     SendSMS = notification.SendSMS && recipient.SendSMS,
                     DeviceId = device.DeviceId,
                     DeviceRepoId = repo.Id,
+                    Customer = device.Customer?.Text,
+                    CustomerId = device.Customer?.Id,
                 };
 
                 if (notificationHistory.SendEmail)

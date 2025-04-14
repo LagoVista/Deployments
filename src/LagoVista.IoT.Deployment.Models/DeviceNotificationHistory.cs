@@ -18,11 +18,15 @@ namespace LagoVista.IoT.Deployment.Models
         public string Notification { get; set; }
         public string NotificationId { get; set; }
 
+        public string RaisedNotificationId { get; set; }
+
         public string StaticPageId { get; set; }
         public string DeviceUniqueId { get => PartitionKey; }
         public string DeviceRepoId { get; set; }
         public string DeviceId { get; set; }
         public string OrgId { get; set; }
+        public string Customer { get; set; }
+        public string CustomerId { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string SentTimeStamp { get; set; }
@@ -37,7 +41,12 @@ namespace LagoVista.IoT.Deployment.Models
         public string Email { get; set; }
     
         public bool TestMode { get; set; }
-
+        public bool DryRun { get; set; }
         public string Errors { get; set; } = "";
+
+        public string ForwardDevice { get; set; }
+        public string ForwardDeviceUniqueId { get; set; }
+        public string ForwardToServerType { get; set; }
+        public string ForwardToServer { get; set; }
     }
 }

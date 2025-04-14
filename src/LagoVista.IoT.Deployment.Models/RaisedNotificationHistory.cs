@@ -3,6 +3,7 @@ using LagoVista.Core.Attributes;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
+using RingCentral;
 using System;
 
 namespace LagoVista.IoT.Deployment.Models
@@ -27,6 +28,14 @@ namespace LagoVista.IoT.Deployment.Models
         public string DeviceId { get; set; }
         public string OrgId { get; set; }    
         public bool TestMode { get; set; }
+        public bool DryRun { get; set; }
+
+        public string CustomerId { get; set; }
+        public string Customer { get; set; }
+
+        public string SmsText { get; set; }
+
+        public string EmailText { get; set; }
 
         public bool Acknowledged { get; set; }
         public string AcknowledgedByUserId { get; set; }

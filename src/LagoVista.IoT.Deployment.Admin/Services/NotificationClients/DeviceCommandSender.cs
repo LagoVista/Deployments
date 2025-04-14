@@ -39,6 +39,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (!String.IsNullOrEmpty(notification.ForwardToParentDeviceBody))
                 _body = await _tagReplacer.ReplaceTagsAsync(notification.ForwardToParentDeviceBody, false, device, location);
+            else if(!String.IsNullOrEmpty(notification.SmsContent))
+                _body = await _tagReplacer.ReplaceTagsAsync(notification.ForwardToParentDeviceBody, false, device, location);
             else
                 _body = "[no content]";
 

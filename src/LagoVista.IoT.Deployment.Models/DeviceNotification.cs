@@ -211,7 +211,15 @@ namespace LagoVista.IoT.Deployment.Models
 
     public class RaisedDeviceNotification
     {
+        /// <summary>
+        /// Send the notifications, but include a banner that declares we are in test mode.
+        /// </summary>
         public bool TestMode { get; set; }
+
+        /// <summary>
+        /// Process the notification, however to not send to any recipients
+        /// </summary>
+        public bool DryRun { get; set; }
 
         public string Id { get; set; } = Guid.NewGuid().ToId();
         public string NotificationKey { get; set; }
