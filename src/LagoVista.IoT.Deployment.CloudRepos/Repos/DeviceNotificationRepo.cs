@@ -15,15 +15,18 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeviceNotificationRepo : DocumentDBRepoBase<DeviceNotification>, IDeviceNotificationRepo
     {
-        private bool _shouldConsolidateCollections;
-        private ICacheProvider _cacheProvider;
+        private readonly bool _shouldConsolidateCollections;
+        private readonly ICacheProvider _cacheProvider;
+        private readonly IAdminLogger _logger;
 
         public DeviceNotificationRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
-            _cacheProvider = cacheProvider;
+            _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public Task AddNotificationAsync(DeviceNotification errorCode)
@@ -48,10 +51,14 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<DeviceNotification> GetNotificationByKeyAsync(string orgId, string customerId, string key)
         {
-            var existing = await _cacheProvider.GetAsync(GetCacheKey(orgId, customerId, key));
+            var cacheKey = GetCacheKey(orgId, customerId, key);
+
+            var existing = await _cacheProvider.GetAsync(cacheKey);
             if (existing != null)
             {
-                return JsonConvert.DeserializeObject<DeviceNotification>(existing);
+                var notification = JsonConvert.DeserializeObject<DeviceNotification>(existing);
+                _logger.AddCustomEvent(Core.PlatformSupport.LogLevel.Message, "[DeviceNotificationRepo__GetNotificationByKeyAsync]", $"[DeviceNotificationRepo__GetNotificationByKeyAsync] cache hit {cacheKey} - found notification {notification.Name} ");
+                return notification;
             }
             else
             {
@@ -75,9 +82,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 if(notification == null)
                     throw new RecordNotFoundException(nameof(DeviceNotification), $"Key={key},CustomerId={(String.IsNullOrEmpty(customerId) ? "none" : customerId)}");
 
-                var notiifcation = result.First();
-                await _cacheProvider.AddAsync(GetCacheKey(orgId, customerId, key), JsonConvert.SerializeObject(notiifcation));
-                return notiifcation;
+                await _cacheProvider.AddAsync(cacheKey, JsonConvert.SerializeObject(notification));
+
+                _logger.AddCustomEvent(Core.PlatformSupport.LogLevel.Message, "[DeviceNotificationRepo__GetNotificationByKeyAsync]", $"[DeviceNotificationRepo__GetNotificationByKeyAsync] cache miss {cacheKey} - added notification {notification.Name} ");
+
+                return notification;
             }        
         }
 

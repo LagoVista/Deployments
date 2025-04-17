@@ -101,7 +101,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 if (distro != null)
                 {
                     var dsw = Stopwatch.StartNew();
-                    var distroList = await _distroListRepo.GetDistroListAsync(distro.Id);
+                    var distroList = await _distroListRepo.GetDistroListAsync(distro.Id, true);
 
                     _logger.Trace($"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
@@ -115,7 +115,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!EntityHeader.IsNullOrEmpty(device.DistributionList))
             {
                 var dsw = Stopwatch.StartNew();
-                var distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id);
+                var distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id, true);
                
                 _logger.Trace($"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
@@ -196,9 +196,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "validated", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            result.Timings.Add(new ResultTiming() { Key = "loadnotification", Ms = sw.Elapsed.TotalMilliseconds });
-            sw.Restart();
-
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(raisedNotification.DeviceRepositoryId, orgEntityHeader, userEntityHeader);
             if (repo.OwnerOrganization.Id != orgEntityHeader.Id) throw new NotAuthorizedException("Org missmatch.");
             if (repo == null) return InvokeResult<string>.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");            
@@ -215,6 +212,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             sw.Restart();
 
             var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, device.Result.Customer?.Id, raisedNotification.NotificationKey);
+            result.Timings.Add(new ResultTiming() { Key = "loadnotification", Ms = sw.Elapsed.TotalMilliseconds });
+            sw.Restart();
 
             if (raisedNotification.Escalate && !EntityHeader.IsNullOrEmpty(notification.EscalationNotification))
             {
@@ -230,7 +229,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!recipientsResult.Result.Any())
             {
                 _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
-                return InvokeResult<string>.Create(Guid.Empty.ToId());
+                var noRecipsResult =  InvokeResult<string>.Create(Guid.Empty.ToId());
+                noRecipsResult.Timings.AddRange(result.Timings);
+                noRecipsResult.Timings.AddRange(recipientsResult.Timings);
+                noRecipsResult.Warnings.Add(new ErrorMessage($"No recipients, will not send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository"));
+                return noRecipsResult;
             }
 
             _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
@@ -619,7 +622,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (!EntityHeader.IsNullOrEmpty(repo.OfflineDistributionList))
             {
-                var distroList = await _distroListRepo.GetDistroListAsync(repo.OfflineDistributionList.Id);
+                var distroList = await _distroListRepo.GetDistroListAsync(repo.OfflineDistributionList.Id, true);
                 contacts.AddRange(distroList.ExternalContacts.Select(cnt => NotificationRecipient.FromExternalContext(cnt)));
 
                 foreach (var userEh in distroList.AppUsers)
