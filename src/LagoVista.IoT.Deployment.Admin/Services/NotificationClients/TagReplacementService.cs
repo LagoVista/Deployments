@@ -30,8 +30,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             //The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
 
+            return template;
+
             template = template.Replace("[DeviceName]", device.Name);
             template = template.Replace("[DeviceId]", device.DeviceId);
+
+            return template;
             if (location != null)
             {
                 var geoAddress = String.Empty;

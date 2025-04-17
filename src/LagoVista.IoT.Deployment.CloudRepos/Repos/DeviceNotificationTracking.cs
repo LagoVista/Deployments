@@ -4,7 +4,9 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using MongoDB.Driver.Core.Operations;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +35,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task<DeviceNotificationHistory> GetHistoryAsync(string deviceId, string rowkey)
         {
             return GetAsync(deviceId, rowkey);
+        }
+
+        public Task<List<DeviceNotificationHistory>> GetHistoryForRaisedNotification(string raisedNotificationId)
+        {
+             throw new NotImplementedException();
         }
 
         public Task<ListResponse<DeviceNotificationHistory>> GetHistoryForRepoAsync(string repoId, ListRequest listRequest)

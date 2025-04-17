@@ -99,7 +99,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
 
             TagReplacer.Setup(trs => trs.ReplaceTagsAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>())).ReturnsAsync("JUST SOME CONTENT");
 
-            LinkShortener.Setup(lnks => lnks.ShortenLinkAsync(It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("https://alert.com/abcd"));
+            LinkShortener.Setup(lnks => lnks.ShortenLinkAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(InvokeResult<string>.Create("https://alert.com/abcd"));
 
             LandingPageBuilder.Setup(lpg => lpg.PreparePage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DeviceNotification>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).
                 ReturnsAsync(Core.Validation.InvokeResult<NotificationLinks>.Create(GetLinks()));

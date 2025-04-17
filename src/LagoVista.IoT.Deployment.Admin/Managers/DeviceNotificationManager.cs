@@ -82,7 +82,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             return InvokeResult.Success;
         }
-
+        
         public async Task<InvokeResult> DeleteNotificationAsync(string id, EntityHeader org, EntityHeader user)
         {
             var notification = await _deviceNotificationRepo.GetNotificationAsync(id);
@@ -230,5 +230,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _raisedNotificationHistoryRepo.GetHistoryForRepoAsync(repoId, listRequest);
         }
 
+        public async Task<InvokeResult<RaiseNotificationSummary>> GetRasiedNotificationSummaryAsync(string repoId, string rowKey, EntityHeader org, EntityHeader user)
+        {
+            var history = await _raisedNotificationHistoryRepo.GetRaisedNotificationHistoryAsync(rowKey, repoId);
+
+            var summary = RaiseNotificationSummary.Create(history);
+            var results = await _notificationTracking.GetHistoryForRaisedNotification(history.RowKey);
+
+            return InvokeResult<RaiseNotificationSummary>.Create(summary);
+         }
     }
 }
