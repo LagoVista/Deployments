@@ -5,6 +5,7 @@ using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Models.Resources;
 using RingCentral;
 using System;
+using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Models
 {
@@ -22,6 +23,8 @@ namespace LagoVista.IoT.Deployment.Models
 
         public string Notification { get; set; }
         public string NotificationId { get; set; }
+
+        public string RaisedNotificationId { get; set; }
 
         public string DeviceUniqueId { get; set; }
         public string DeviceRepoId { get; set; }
@@ -74,6 +77,8 @@ namespace LagoVista.IoT.Deployment.Models
         public bool DryRun { get; set; }
         public string EmailContent { get; set; }
         public string SmsContent { get; set; }
+
+        public List<SentNotification> SentNotifications { get; } = new List<SentNotification>();
 
         public static RaiseNotificationSummary Create(RaisedNotificationHistory notification)
         {

@@ -122,11 +122,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 appUsers.AddRange(distroList.AppUsers);
                 externalContacts.AddRange(distroList.ExternalContacts);
 
-                timings.Add(new ResultTiming() { Key = "add distro list", Ms = dsw.Elapsed.TotalMilliseconds });
+                timings.Add(new ResultTiming() { Key = "adddistrofromdevice", Ms = dsw.Elapsed.TotalMilliseconds });
             }
             else
             {
-                timings.Add(new ResultTiming() { Key = "no distro list", Ms = 0 });
+                timings.Add(new ResultTiming() { Key = "nodistroondevice", Ms = 0 });
             }
 
             foreach (var appUser in appUsers)
@@ -284,6 +284,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var hist = new RaisedNotificationHistory(device.Result.DeviceRepository.Id)
             {
                 OrgId = device.Result.OwnerOrganization.Id,
+                RaisedNotificationId = raisedNotification.Id,
                 DeviceId = device.Result.DeviceId,
                 DeviceUniqueId = device.Result.Id,
                 DeviceRepoId = device.Result.DeviceRepository.Id,

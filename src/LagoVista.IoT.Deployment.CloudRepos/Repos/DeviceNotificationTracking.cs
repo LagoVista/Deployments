@@ -37,9 +37,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetAsync(deviceId, rowkey);
         }
 
-        public Task<List<DeviceNotificationHistory>> GetHistoryForRaisedNotification(string raisedNotificationId)
+        public async Task<List<DeviceNotificationHistory>> GetHistoryForRaisedNotification(string raisedNotificationId, string deviceId)
         {
-             throw new NotImplementedException();
+            var result = await this.GetPagedResultsAsync(deviceId, ListRequest.CreateForAll(), FilterOptions.Create(nameof(DeviceNotificationHistory.RaisedNotificationId), FilterOptions.Operators.Equals, raisedNotificationId));
+            return result.Model.ToList();
         }
 
         public Task<ListResponse<DeviceNotificationHistory>> GetHistoryForRepoAsync(string repoId, ListRequest listRequest)

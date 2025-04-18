@@ -8,6 +8,7 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
@@ -230,13 +231,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             return _raisedNotificationHistoryRepo.GetHistoryForRepoAsync(repoId, listRequest);
         }
 
-        public async Task<InvokeResult<RaiseNotificationSummary>> GetRasiedNotificationSummaryAsync(string repoId, string rowKey, EntityHeader org, EntityHeader user)
+        public async Task<InvokeResult<RaiseNotificationSummary>> GetRasiedNotificationSummaryAsync(string repoId, string raisedNotificationId, EntityHeader org, EntityHeader user)
         {
-            var history = await _raisedNotificationHistoryRepo.GetRaisedNotificationHistoryAsync(rowKey, repoId);
+            var history = await _raisedNotificationHistoryRepo.GetRaisedNotificationHistoryAsync(raisedNotificationId, repoId);
 
             var summary = RaiseNotificationSummary.Create(history);
-            var results = await _notificationTracking.GetHistoryForRaisedNotification(history.RowKey);
-
+            var results = await _notificationTracking.GetHistoryForRaisedNotification(history.RaisedNotificationId, history.DeviceUniqueId);
+            summary.SentNotifications.AddRange(results.Select(n => SentNotification.Create(n)));
             return InvokeResult<RaiseNotificationSummary>.Create(summary);
          }
     }

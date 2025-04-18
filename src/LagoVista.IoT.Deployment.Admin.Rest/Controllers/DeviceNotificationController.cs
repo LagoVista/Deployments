@@ -197,6 +197,12 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
 
+        [HttpGet("/api/device/notification/raised/{repoid}/{raisedid}/summary")]
+        public Task<InvokeResult<RaiseNotificationSummary>> GetSummaryAsync(string repoid, string raisedid)
+        {
+            return _notificationManager.GetRasiedNotificationSummaryAsync(repoid, raisedid, OrgEntityHeader, UserEntityHeader);
+        }
+
         [HttpGet("/api/device/notification/{deviceid}/history")]
         public async Task<ListResponse<DeviceNotificationHistory>> GetNotificationHistory(string deviceid)
         {

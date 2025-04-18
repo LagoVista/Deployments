@@ -9,7 +9,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
     {
         Task<ListResponse<DeviceNotificationHistory>> GetHistoryAsync(string deviceId, ListRequest listRequest);
         Task<ListResponse<DeviceNotificationHistory>> GetHistoryForRepoAsync(string repoId, ListRequest listRequest);
-        Task<List<DeviceNotificationHistory>> GetHistoryForRaisedNotification(string raisedNotificationId);
+        Task<List<DeviceNotificationHistory>> GetHistoryForRaisedNotification(string raisedNotificationId, string deviceId);
 
         Task<DeviceNotificationHistory> GetHistoryAsync(string deviceId, string rowkey);
 
