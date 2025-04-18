@@ -7,6 +7,9 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
+using NLog.LayoutRenderers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +22,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IDeviceNotificationTracking _notificationTracking;
         private readonly ISecureStorage _secureStorage;
         private readonly IStaticPageStorage _staticPageStorage;
+        private readonly DeviceManagement.Core.IDeviceManager _deviceManager;
+        private readonly IDeviceRepositoryManager _deviceRepoManager;
         private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
 
-        public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceNotificationTracking notificationTracking,
+        public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceNotificationTracking notificationTracking, DeviceManagement.Core.IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoNanager,
                 ILogger logger,  ISecureStorage secureStorage, IStaticPageStorage staticPageStorage, IRaisedNotificationHistoryRepo raisedNotificationHistoryRepo, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
             base(logger, appConfig, dependencyManager, security)
         {
@@ -30,6 +35,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
             _raisedNotificationHistoryRepo = raisedNotificationHistoryRepo ?? throw new ArgumentNullException(nameof(raisedNotificationHistoryRepo));
             _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
+            _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
+            _deviceRepoManager = deviceRepoNanager ?? throw new ArgumentNullException(nameof(deviceRepoNanager));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
@@ -236,8 +243,21 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var history = await _raisedNotificationHistoryRepo.GetRaisedNotificationHistoryAsync(raisedNotificationId, repoId);
 
             var summary = RaiseNotificationSummary.Create(history);
+            var repo = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(repoId, org, user);
+            var device = await _deviceManager.GetDeviceByIdAsync(repo, history.DeviceId, org, user);
+            summary.Device = EntityHeader.Create(device.Result.Id, device.Result.DeviceId, device.Result.Name);
             var results = await _notificationTracking.GetHistoryForRaisedNotification(history.RaisedNotificationId, history.DeviceUniqueId);
             summary.SentNotifications.AddRange(results.Select(n => SentNotification.Create(n)));
+            foreach(var sent in summary.SentNotifications)
+            {
+                if(!EntityHeader.IsNullOrEmpty(sent.ForwardDevice))
+                {
+                    device = await _deviceManager.GetDeviceByIdAsync(repo, sent.ForwardDevice.Id, org, user);
+                    sent.ForwardDevice.Key = device.Result.DeviceId;
+                    sent.ForwardDevice.Text = device.Result.Name;
+                }
+            }
+           
             return InvokeResult<RaiseNotificationSummary>.Create(summary);
          }
     }

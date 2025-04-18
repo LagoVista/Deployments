@@ -125,7 +125,7 @@ namespace LagoVista.IoT.Deployment.Models
 
         public static SentNotification Create(DeviceNotificationHistory history)
         {
-            return new SentNotification()
+            var sent = new SentNotification()
             {
                 Email = history.Email,
                 Phone = history.Phone,
@@ -135,6 +135,13 @@ namespace LagoVista.IoT.Deployment.Models
                 Viewed = history.Viewed,
                 ViewedTimeStamp = history.ViewedTimeStamp,
             };
+
+            if(!String.IsNullOrWhiteSpace(history.DeviceUniqueId))
+            {
+                sent.ForwardDevice = EntityHeader.Create(history.DeviceUniqueId, "tbd", "tbd");
+            }
+
+            return sent;
         }
     }
 }
