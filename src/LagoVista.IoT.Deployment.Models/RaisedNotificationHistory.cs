@@ -88,6 +88,9 @@ namespace LagoVista.IoT.Deployment.Models
                 Notification = EntityHeader.Create(notification.NotificationId, notification.Notification),
                 SmsContent = notification.SmsText,
                 EmailContent = notification.EmailText,                 
+                DryRun = notification.DryRun,
+                TestMode = notification.TestMode,
+                Device = EntityHeader.Create(notification.DeviceUniqueId, notification.DeviceId, "tbd"),
             };
 
             if(!String.IsNullOrEmpty(notification.Customer) && !String.IsNullOrEmpty(notification.CustomerId))
@@ -113,7 +116,7 @@ namespace LagoVista.IoT.Deployment.Models
 
     public class SentNotification
     {
-
+        public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public bool SentEmail { get; set; }
@@ -127,6 +130,7 @@ namespace LagoVista.IoT.Deployment.Models
         {
             var sent = new SentNotification()
             {
+                Name = history.UserName,
                 Email = history.Email,
                 Phone = history.Phone,
                 SentEmail = history.SentEmail,
@@ -136,9 +140,9 @@ namespace LagoVista.IoT.Deployment.Models
                 ViewedTimeStamp = history.ViewedTimeStamp,
             };
 
-            if(!String.IsNullOrWhiteSpace(history.DeviceUniqueId))
+            if(!String.IsNullOrWhiteSpace(history.ForwardDeviceUniqueId))
             {
-                sent.ForwardDevice = EntityHeader.Create(history.DeviceUniqueId, "tbd", "tbd");
+                sent.ForwardDevice = EntityHeader.Create(history.ForwardDeviceUniqueId, "tbd", "tbd");
             }
 
             return sent;

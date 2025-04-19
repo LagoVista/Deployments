@@ -244,7 +244,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             var summary = RaiseNotificationSummary.Create(history);
             var repo = await _deviceRepoManager.GetDeviceRepositoryWithSecretsAsync(repoId, org, user);
-            var device = await _deviceManager.GetDeviceByIdAsync(repo, history.DeviceId, org, user);
+            var device = await _deviceManager.GetDeviceByIdAsync(repo, history.DeviceUniqueId, org, user);
             summary.Device = EntityHeader.Create(device.Result.Id, device.Result.DeviceId, device.Result.Name);
             var results = await _notificationTracking.GetHistoryForRaisedNotification(history.RaisedNotificationId, history.DeviceUniqueId);
             summary.SentNotifications.AddRange(results.Select(n => SentNotification.Create(n)));

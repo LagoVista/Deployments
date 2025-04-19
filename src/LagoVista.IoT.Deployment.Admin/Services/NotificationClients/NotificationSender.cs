@@ -305,8 +305,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "addnotifications", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            Console.WriteLine("------------------> 1");
-
             foreach (var recipient in recipients)
             {
                 var notificationHistory = new DeviceNotificationHistory(device.Result.Id, $"{raisedNotification.Id}-{recipient.Id}")
@@ -408,8 +406,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (!EntityHeader.IsNullOrEmpty(notification.ForwardDevice))
             {
-                await _deviceCommandSender.SendAsync(repo.Instance.Id, notification.ForwardDevice.Id, orgEntityHeader, userEntityHeader);
+                if(!raisedNotification.DryRun)
+                {
+                    var forwardResult = await _deviceCommandSender.SendAsync(repo.Instance.Id, notification.ForwardDevice.Id, orgEntityHeader, userEntityHeader);
 
+                    if (!forwardResult.Successful)
+                    {
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
+                            $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact] - Error sending email to {notification.ForwardDevice.Text} {notification.ForwardDevice.Id} - {forwardResult.ErrorMessage}");
+                        return InvokeResult<string>.FromError($"Could not locate device {notification.ForwardDevice.Text} in device repository {raisedNotification.DeviceRepositoryId}");
+                    }
+                }
+              
                 result.Timings.Add(new ResultTiming() { Key = "forwarddevice", Ms = sw.Elapsed.TotalMilliseconds });
                 sw.Restart();
 
