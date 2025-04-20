@@ -211,6 +211,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "getdevice", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
+            if(device.Result.TestingMode)
+            {
+                raisedNotification.TestMode = true;
+            }
+
             var notification = await _deviceNotificationRepo.GetNotificationByKeyAsync(orgEntityHeader.Id, device.Result.Customer?.Id, raisedNotification.NotificationKey);
             result.Timings.Add(new ResultTiming() { Key = "loadnotification", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
@@ -226,17 +231,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!recipientsResult.Successful)
                 return InvokeResult<String>.FromInvokeResult(result.ToInvokeResult());
 
+            result.Timings.AddRange(recipientsResult.Timings);
+            
             if (!recipientsResult.Result.Any())
             {
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
-                var noRecipsResult =  InvokeResult<string>.Create(Guid.Empty.ToId());
-                noRecipsResult.Timings.AddRange(result.Timings);
-                noRecipsResult.Timings.AddRange(recipientsResult.Timings);
-                noRecipsResult.Warnings.Add(new ErrorMessage($"No recipients, will not send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository"));
-                return noRecipsResult;
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification, but may forward to other devices - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+                result.Warnings.Add(new ErrorMessage($"No recipients, will not send notification, but may forward to other devices - {notification.Name} for device {device.Result.Name} in {repo.Name} repository"));
             }
-
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+            else
+                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var deployment = await _deploymentRepo.GetReadOnlyInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult<string>.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");

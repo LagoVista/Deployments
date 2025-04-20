@@ -67,7 +67,8 @@ namespace LagoVista.IoT.Deployment.Models
         public bool SharedTemplate { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice, HelpResource:DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Help, WaterMark: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Select, 
+        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice, HelpResource:DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Help, 
+            WaterMark: DeploymentAdminResources.Names.DeviceNotification_ForwardDevice_Select, 
             FieldType: FieldTypes.DevicePicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader ForwardDevice { get; set; }
 
