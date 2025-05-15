@@ -29,13 +29,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         public async Task<string> ReplaceTagsAsync(string template, bool isHtmlContent, Device device, OrgLocation location)
         {
             //The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
-
-            return template;
+            if (device == null)
+                return template;
 
             template = template.Replace("[DeviceName]", device.Name);
             template = template.Replace("[DeviceId]", device.DeviceId);
 
-            return template;
             if (location != null)
             {
                 var geoAddress = String.Empty;
@@ -115,8 +114,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 {
                     sensorHtml.AppendLine($"<div>{sensor.Name}: {sensor.Value}</div>");
                 }
+                template = template.Replace("[DeviceSensors]", sensorHtml.ToString());
             }
-            template = template.Replace("[DeviceSensors]", sensorHtml.ToString());
+            else
+                template = template.Replace("[DeviceSensors]", string.Empty);
+
             template = template.Replace("[DeviceSummary]", device.Summary);
             template = template.Replace("[NotificationTimeStamp]", DateTime.Now.ToString());
 
