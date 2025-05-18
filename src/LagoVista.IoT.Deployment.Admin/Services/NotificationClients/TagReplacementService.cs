@@ -33,6 +33,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             var checkPoint = "Starting";
 
+            if (String.IsNullOrEmpty(template))
+            {
+                _adminLogger.AddError("[TagReplacementService__ReplaceTagsAsync]", $"Null Template");
+                return string.Empty;
+            }
+
             try
             {
                 //The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
