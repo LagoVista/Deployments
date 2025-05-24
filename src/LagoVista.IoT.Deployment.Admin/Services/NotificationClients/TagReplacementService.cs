@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.DeviceManagement.Core.Models;
@@ -35,7 +36,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (String.IsNullOrEmpty(template))
             {
-                _adminLogger.AddError("[TagReplacementService__ReplaceTagsAsync]", $"Null Template");
+                _adminLogger.AddError("[TagReplacementService__ReplaceTagsAsync]", $"Null Template", device.DeviceId.ToKVP("deviceId"), device.OwnerOrganization.Text.ToKVP("orgId"));
                 return string.Empty;
             }
 
