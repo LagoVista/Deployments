@@ -23,6 +23,8 @@ using Prometheus;
 using RingCentral;
 using ProtoBuf.WellKnownTypes;
 using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Ocsp;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -412,15 +414,25 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 if(!raisedNotification.DryRun)
                 {
                     var forwardResult = await _deviceCommandSender.SendAsync(repo.Instance.Id, notification.ForwardDevice.Id, orgEntityHeader, userEntityHeader);
-
                     if (!forwardResult.Successful)
                     {
-                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact]",
+                        _logger.AddCustomEvent(LogLevel.Error, $"[NotificationSender__RaiseNotificationAsync__ForwardContact]",
                             $"[NotificationSender__RaiseNotificationAsync__SendEmail__ExternalContact] - Error sending email to {notification.ForwardDevice.Text} {notification.ForwardDevice.Id} - {forwardResult.ErrorMessage}");
+
                         return InvokeResult<string>.FromError($"Could not locate device {notification.ForwardDevice.Text} in device repository {raisedNotification.DeviceRepositoryId}");
                     }
+                    else
+                    {
+                        _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync__ForwardContact]",
+                          $"[NotificationSender__RaiseNotificationAsync__ForwardContact] - Forwarded message to {notification.ForwardDevice.Text} {notification.ForwardDevice.Id} - {forwardResult.ErrorMessage}");
+                    }
                 }
-              
+                else
+                {
+                    _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync__ForwardContact]",
+                      $"[NotificationSender__RaiseNotificationAsync__ForwardContact] - Dry Run not sending {notification.ForwardDevice.Text} {notification.ForwardDevice.Id}");
+                }
+
                 result.Timings.Add(new ResultTiming() { Key = "forwarddevice", Ms = sw.Elapsed.TotalMilliseconds });
                 sw.Restart();
 

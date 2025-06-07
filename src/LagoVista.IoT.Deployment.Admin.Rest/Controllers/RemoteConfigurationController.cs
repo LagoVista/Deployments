@@ -87,8 +87,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpPost("/api/device/remoteconfig/{repoid}/{id}/command/{cmdid}")]
-            public Task<InvokeResult> SendRemoteCommand(string repoid, string id, string cmdid, [FromBody] List<KeyValuePair<string, string>> parameters)
-            {
+        public Task<InvokeResult> SendRemoteCommand(string repoid, string id, string cmdid, [FromBody] List<KeyValuePair<string, string>> parameters)
+        {
             return _remoteConfigMgr.SendCommandAsync(repoid, id, cmdid, parameters, OrgEntityHeader, UserEntityHeader);
         }
 

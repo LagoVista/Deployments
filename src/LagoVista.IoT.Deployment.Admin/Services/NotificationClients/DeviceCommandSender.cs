@@ -1,4 +1,5 @@
-﻿using LagoVista.Core.Interfaces;
+﻿using LagoVista.Core;
+using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Rpc.Client;
 using LagoVista.Core.Validation;
@@ -40,7 +41,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!String.IsNullOrEmpty(notification.ForwardToParentDeviceBody))
                 _body = await _tagReplacer.ReplaceTagsAsync(notification.ForwardToParentDeviceBody, false, device, location);
             else if(!String.IsNullOrEmpty(notification.SmsContent))
-                _body = await _tagReplacer.ReplaceTagsAsync(notification.ForwardToParentDeviceBody, false, device, location);
+                _body = await _tagReplacer.ReplaceTagsAsync(notification.SmsContent, false, device, location);
             else
                 _body = "[no content]";
 
@@ -61,7 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                         { new System.Collections.Generic.KeyValuePair<string, string>("body", _body) });
 
                 if (result.Successful)
-                    _adminLogger.Trace("[DeviceCommandSender__SendAsync] Success Send Command");
+                    _adminLogger.Trace("[DeviceCommandSender__SendAsync] Success Send Command", id.ToKVP("deviceUniqueId"), instanceId.ToKVP("instanceId"), org.Id.ToKVP("orgId"), _command.ToKVP("command"), _body.ToKVP("body"));
                 else
                 {
                     _adminLogger.Trace("[DeviceCommandSender__SendAsync] Failed Send Command");

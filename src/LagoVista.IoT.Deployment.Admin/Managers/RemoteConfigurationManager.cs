@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
+using LagoVista.Core;
 using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
@@ -22,11 +23,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IProxyFactory _proxyFactory;
         private readonly IFirmwareManager _firmwareManager;
         private readonly IDeviceRepositoryManager _repoManager;
+        private readonly IAdminLogger _adminLogger;
 
         public RemoteConfigurationManager(IAdminLogger logger, IAppConfig appConfig,
             IFirmwareManager firmwareManager, IDependencyManager depmanager, IDeviceRepositoryManager repoManager, ISecurity security,
             IProxyFactory proxyFactory) : base(logger, appConfig, depmanager, security)
         {
+
+            _adminLogger = logger ?? throw new ArgumentNullException(nameof(logger));
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
             _repoManager = repoManager ?? throw new ArgumentNullException(nameof(repoManager));
             _firmwareManager = firmwareManager ?? throw new ArgumentNullException(nameof(firmwareManager));
@@ -159,7 +163,27 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 OrganizationId = repo.OwnerOrganization.Id
             });
 
-            return await propertyManager.SendCommandAsync(deviceUniqueId, commandId, parameters);
+            var extras = new List<KeyValuePair<string, string>>
+                {
+                    deviceUniqueId.ToKVP("deviceUniqueId"),
+                    repo.Instance.Id.ToKVP("instanceId"),
+                    repo.OwnerOrganization.Id.ToKVP("orgId"),
+                    commandId.ToKVP("command")
+                };
+
+            foreach (var prm in parameters)
+                extras.Add(prm);
+
+            var result =  await propertyManager.SendCommandAsync(deviceUniqueId, commandId, parameters);
+            if(result.Successful)
+            {
+                _adminLogger.Trace("[RemoteConfigurationManager__SendCommandAsync] Success Send Command:", extras.ToArray());
+            }
+            else
+            {
+                _adminLogger.AddError("[RemoteConfigurationManager__SendCommandAsync]","[RemoteConfigurationManager__SendCommandAsync] Success Send Command:", extras.ToArray());
+            }
+            return result;
         }
 
         public async Task<InvokeResult> SetDesiredConfigurationRevisionAsync(string deviceRepoId, string deviceUniqueId, int configurationRevision, EntityHeader org, EntityHeader user)
