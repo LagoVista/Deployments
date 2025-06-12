@@ -45,6 +45,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             else
                 _body = "[no content]";
 
+            if (testMode)
+                _body = $"TESETING PLEASE IGNORE - {_body}";
+
             return InvokeResult.Success;
         }
 
