@@ -248,6 +248,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             result.Timings.Add(new ResultTiming() { Key = "getinstance", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
+            if(deployment.TestMode)
+            {
+                raisedNotification.TestMode = false;
+            }
+
             OrgLocation location = null;
             if (!EntityHeader.IsNullOrEmpty(device.Result.Location))
             {
@@ -269,15 +274,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var page = pageResult.Result;
 
-            await _smsSender.PrepareMessage(notification, deployment.TestMode, device.Result, location);
+            await _smsSender.PrepareMessage(notification, raisedNotification.TestMode, device.Result, location);
             result.Timings.Add(new ResultTiming() { Key = "preparesms", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            await _emailSender.PrepareMessage(notification, deployment.TestMode, device.Result, location);
+            await _emailSender.PrepareMessage(notification, raisedNotification.TestMode, device.Result, location);
             result.Timings.Add(new ResultTiming() { Key = "prepareemail", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
-            await _deviceCommandSender.PrepareMessage(notification, deployment.TestMode, device.Result, location);
+            await _deviceCommandSender.PrepareMessage(notification, raisedNotification.TestMode, device.Result, location);
             result.Timings.Add(new ResultTiming() { Key = "preparedevicecommand", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 
@@ -295,7 +300,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 DeviceRepoId = device.Result.DeviceRepository.Id,
                 Notification = notification.Name,
                 NotificationId = notification.Id,
-                TestMode = deployment.TestMode,
+                TestMode = raisedNotification.TestMode,
                 DryRun = raisedNotification.DryRun,
                 TimeStamp = DateTime.UtcNow.ToJSONString(),
                 Customer = device.Result.Customer?.Text,
