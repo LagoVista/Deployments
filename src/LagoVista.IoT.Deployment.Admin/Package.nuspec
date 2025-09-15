@@ -2,33 +2,34 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Admin</id>
-    <version>3.0.2692.0652</version>
+    <version>3.0.3043.1850</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://www.nuviot.com</projectUrl>
     <iconUrl>http://bytemaster.blob.core.windows.net/icons/LagoVistaIcon.png</iconUrl>
     <description>Provides Managers, Interfaces, Models and Repositories for Managing Deployments with the LagoVista Devices, IoT and Home Automation Frameworks.</description>
-    <copyright>Copyright Software Logistics - 2024</copyright>
+    <copyright>Copyright Software Logistics - 2025</copyright>
     <tags>HomeAutomation IoT</tags>
     <icon>LagoVistaIcon.png</icon>
-    <releaseNotes>Build Date: 9/29/2024 10:52:06 AM UTC</releaseNotes>
+    <releaseNotes>Build Date: 9/15/2025 10:50:39 PM UTC</releaseNotes>
     <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
       <group targetFramework="netstandard2.1">
-        <dependency id="Azure.Messaging.EventHubs" version="5.7.2" />
-        <dependency id="LagoVista.Core.Authentication" version="3.0.2692.0652" />
-        <dependency id="LagoVista.Core.Rpc" version="3.0.2692.0652" />
-        <dependency id="LagoVista.Core.Rpc.Client" version="3.0.2692.0652" />
-        <dependency id="LagoVista.Core.Rpc.Client.ServiceBus" version="3.0.2692.0652" />
-        <dependency id="LagoVista.IoT.DeviceAdmin" version="3.0.2692.0652" />
-        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="3.0.2692.0652" />
-        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="3.0.2692.0652" />
-        <dependency id="LagoVista.IoT.Pipeline.Admin" version="3.0.2692.0652" />
-        <dependency id="LagoVista.UserAdmin" version="3.0.2692.0652" />
+        <dependency id="Azure.Messaging.EventHubs" version="5.12.2" />
+        <dependency id="LagoVista.Core.Authentication" version="3.0.3043.1850" />
+        <dependency id="LagoVista.Core.Rpc" version="3.0.3043.1850" />
+        <dependency id="LagoVista.Core.Rpc.Client" version="3.0.3043.1850" />
+        <dependency id="LagoVista.Core.Rpc.Client.ServiceBus" version="3.0.3043.1850" />
+        <dependency id="LagoVista.IoT.DeviceAdmin" version="3.0.3043.1850" />
+        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="3.0.3043.1850" />
+        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="3.0.3043.1850" />
+        <dependency id="LagoVista.IoT.Pipeline.Admin" version="3.0.3043.1850" />
+        <dependency id="prometheus-net" version="6.0.0" />
+        <dependency id="LagoVista.UserAdmin" version="3.0.3043.1850" />
         <dependency id="Portable.BouncyCastle" version="1.9.0" />
-        <dependency id="MQTTnet" version="4.3.6.1152" />
-        <dependency id="LagoVista.IoT.Deployment.Models" version="3.0.2692.0652" />
+        <dependency id="MQTTnet" version="4.3.7.1207" />
+        <dependency id="LagoVista.IoT.Deployment.Models" version="3.0.3043.1850" />
       </group>
     </dependencies>
   </metadata>

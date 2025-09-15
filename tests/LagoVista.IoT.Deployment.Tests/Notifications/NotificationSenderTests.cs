@@ -28,7 +28,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         public async Task SendNotificationAsync()
         {
             var result =  await _sender.RaiseNotificationAsync(GetRaisedNotification(), OrgEH, UserEH);
-            Assert.AreEqual(result.Successful, result.ErrorMessage);
+            Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
 
         [TestMethod]
