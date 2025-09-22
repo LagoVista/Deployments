@@ -30,7 +30,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
     public class NotificationSender : INotificationSender
     {
-        protected static readonly Counter SentNotifications = Metrics.CreateCounter("nuviot_send_notification", "Raise notification to be sent..", "entity");
+        protected static readonly Counter SentNotifications = Metrics.CreateCounter("nuviot_send_notification", "Raise notification to be sent.", "entity");
 
         private readonly ILogger _logger;
         private readonly Interfaces.IEmailSender _emailSender;
@@ -53,10 +53,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IBackgroundServiceTaskQueue _taskQueue;
         private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
         private readonly IDeviceCommandSender _deviceCommandSender;
+        private readonly ITagReplacementService _tagReplacementService;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IBackgroundServiceTaskQueue taskQueue, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
+                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
                                   ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, IDeviceCommandSender deviceCommandSender, IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -80,6 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _taskQueue = taskQueue ?? throw new ArgumentNullException(nameof(raisedNotificationHistory));
             _deviceConfigHelper = deviceConfigHelper ?? throw new ArgumentNullException(nameof(deviceConfigHelper));
             _deviceCommandSender = deviceCommandSender ?? throw new ArgumentNullException(nameof(deviceCommandSender));
+            _tagReplacementService = tagReplacementService ?? throw new ArgumentNullException(nameof(tagReplacementService));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader, params EntityHeader[] additionalDistroLists)
@@ -305,8 +307,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 TimeStamp = DateTime.UtcNow.ToJSONString(),
                 Customer = device.Result.Customer?.Text,
                 CustomerId = device.Result.Customer?.Id,
-                SmsText = notification.SmsContent,
-                EmailText = notification.EmailContent,
+                SmsText = await _tagReplacementService.ReplaceTagsAsync(notification.SmsContent, false, device.Result, location),
+                EmailText = await _tagReplacementService.ReplaceTagsAsync(notification.EmailContent, false, device.Result, location),
             };
 
             await _raisedNotificationHistoryRepo.AddHistoryAsync(hist);
