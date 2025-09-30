@@ -60,6 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddScoped<ICOTSender, COTSender>();
             services.AddScoped<ISMSSender, SMSSender>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddSingleton<ILocalizationService, LocalizationService>();
             services.AddSingleton<INotificationLandingPage, NotificationLandingPage>();
             services.AddSingleton<IDeviceCommandSender, DeviceCommandSender>();
             services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
