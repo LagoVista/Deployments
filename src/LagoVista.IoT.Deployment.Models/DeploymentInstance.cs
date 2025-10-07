@@ -118,10 +118,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             }
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
-
         [FormField(LabelResource: DeploymentAdminResources.Names.DeploymentInstance_TimeZone, IsRequired: true, FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public EntityHeader TimeZone { get; set; }
 
@@ -311,11 +307,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             var summary = new DeploymentInstanceSummary()
             {
                 Description = Description,
-                Name = Name,
-                Key = Key,
-                Id = Id,
-                Icon = Icon,
-                IsPublic = IsPublic,
                 IsDeployed = IsDeployed,
                 Status = Status,
                 NuvIoTEdition = EntityHeader.IsNullOrEmpty(NuvIoTEdition) ? "???" : NuvIoTEdition.Text,
@@ -326,18 +317,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
                 OrgName = OwnerOrganization.Text,
                 DeviceRepoId = DeviceRepository?.Id,
                 DeviceRepoName = DeviceRepository?.Text,
-                Solution = Solution.Text,
-                SolutionId = Solution.Id,
+                Solution = Solution?.Text,
+                SolutionId = Solution?.Id,
                 Category = Category?.Text,
                 CategoryId = Category?.Id,
                 CategoryKey = Category?.Key,
             };
 
-            if (EntityHeader.IsNullOrEmpty(DeviceRepository))
-            {
-                summary.DeviceRepoId = DeviceRepository.Id;
-                summary.DeviceRepoName = DeviceRepository.Text;
-            };
+            summary.Populate(this);
 
             return summary;
         }

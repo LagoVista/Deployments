@@ -448,7 +448,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var existingInstance = await _instanceRepo.GetInstanceAsync(instance.Id);
             if (existingInstance == null) throw new RecordNotFoundException(typeof(DeploymentInstance).Name, instance.Id);
 
-            if (existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
+            if (!EntityHeader.IsNullOrEmpty(existingInstance.DeviceRepository) && existingInstance.DeviceRepository.Id != instance.DeviceRepository.Id)
             {
                 var newlyAssginedRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
                 if (!EntityHeader.IsNullOrEmpty(newlyAssginedRepo.Instance))
@@ -519,26 +519,29 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
-            var solution = instance.Solution.Value;
-            instance.Solution.Value = null;
-            await _instanceRepo.UpdateInstanceAsync(instance);
-            instance.Solution.Value = solution;
-
-            if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
+            if (!instance.IsDraft)
             {
-                var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
-                if (host.Size?.Id != instance.Size?.Id ||
-                   host.CloudProvider.Id != instance.CloudProvider.Id ||
-                   host.Subscription.Id != instance.Subscription.Id ||
-                   host.ContainerRepository?.Id != instance.ContainerRepository?.Id ||
-                   host.ContainerTag?.Id != instance.ContainerTag?.Id)
+                var solution = instance.Solution.Value;
+                instance.Solution.Value = null;
+                await _instanceRepo.UpdateInstanceAsync(instance);
+                instance.Solution.Value = solution;
+
+                if (!EntityHeader.IsNullOrEmpty(instance.PrimaryHost))
                 {
-                    host.Size = instance.Size;
-                    host.Subscription = instance.Subscription;
-                    host.CloudProvider = instance.CloudProvider;
-                    host.ContainerRepository = instance.ContainerRepository;
-                    host.ContainerTag = instance.ContainerTag;
-                    await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
+                    var host = await _deploymentHostManager.GetDeploymentHostAsync(instance.PrimaryHost.Id, org, user);
+                    if (host.Size?.Id != instance.Size?.Id ||
+                       host.CloudProvider.Id != instance.CloudProvider.Id ||
+                       host.Subscription.Id != instance.Subscription.Id ||
+                       host.ContainerRepository?.Id != instance.ContainerRepository?.Id ||
+                       host.ContainerTag?.Id != instance.ContainerTag?.Id)
+                    {
+                        host.Size = instance.Size;
+                        host.Subscription = instance.Subscription;
+                        host.CloudProvider = instance.CloudProvider;
+                        host.ContainerRepository = instance.ContainerRepository;
+                        host.ContainerTag = instance.ContainerTag;
+                        await _deploymentHostManager.UpdateDeploymentHostAsync(host, org, user);
+                    }
                 }
             }
 
