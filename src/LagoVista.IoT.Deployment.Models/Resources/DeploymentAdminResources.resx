@@ -2008,4 +2008,10 @@
   <data name="DeviceNotification_ForwardDevice_Select" xml:space="preserve">
     <value>-select forward device-</value>
   </data>
+  <data name="Common_SelectTimeZone" xml:space="preserve">
+    <value>-select time zone-</value>
+  </data>
+  <data name="Common_SelectCulture" xml:space="preserve">
+    <value>-select language-</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-﻿/*4/12/2025 7:57:42 AM*/
+﻿/*10/7/2025 6:53:59 PM*/
 using System.Globalization;
 using System.Reflection;
 
@@ -138,6 +138,12 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 //Resources:DeploymentAdminResources:Common_Resources
 
 		public static string Common_Resources { get { return GetResourceString("Common_Resources"); } }
+//Resources:DeploymentAdminResources:Common_SelectCulture
+
+		public static string Common_SelectCulture { get { return GetResourceString("Common_SelectCulture"); } }
+//Resources:DeploymentAdminResources:Common_SelectTimeZone
+
+		public static string Common_SelectTimeZone { get { return GetResourceString("Common_SelectTimeZone"); } }
 //Resources:DeploymentAdminResources:Common_Summary
 
 		public static string Common_Summary { get { return GetResourceString("Common_Summary"); } }
@@ -1979,6 +1985,8 @@ namespace LagoVista.IoT.Deployment.Models.Resources
 			public const string Common_Name = "Common_Name";
 			public const string Common_Notes = "Common_Notes";
 			public const string Common_Resources = "Common_Resources";
+			public const string Common_SelectCulture = "Common_SelectCulture";
+			public const string Common_SelectTimeZone = "Common_SelectTimeZone";
 			public const string Common_Summary = "Common_Summary";
 			public const string ContainerRepositories_Title = "ContainerRepositories_Title";
 			public const string ContainerRepository_Description = "ContainerRepository_Description";

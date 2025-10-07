@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models.UIMetaData;
+using System.Linq;
+using LagoVista.IoT.Deployment.Admin.Resources;
+using LagoVista.IoT.Deployment.Models.Resources;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
@@ -28,5 +31,18 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             throw new NotImplementedException();
         }
 
+        public List<EnumDescription> GetCultureEnumOptions()
+        {
+            var options = GetSupportedCultures().Select(tz => new EnumDescription() { Id = tz.Id, Key = tz.Id, Label = tz.Text, Name = tz.Text }).ToList();
+            options.Insert(0, new EnumDescription()
+            {
+                Id = "-1",
+                Key = "-1",
+                Label = DeploymentAdminResources.Common_SelectCulture,
+                Name = DeploymentAdminResources.Common_SelectCulture,
+            });
+
+            return options;
+        }
     }
 }

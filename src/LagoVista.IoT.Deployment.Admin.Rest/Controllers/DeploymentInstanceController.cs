@@ -212,8 +212,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var deviceInstance = await _instanceManager.GetInstanceAsync(id, OrgEntityHeader, UserEntityHeader);
 
             var response = DetailResponse<DeploymentInstance>.Create(deviceInstance.Result);
-            response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
-
+            response.View[nameof(DeploymentInstance.TimeZone).CamelCase()].Options = _timeZoneServices.GetTimeZoneEnumOptions();
             return response;
         }
 
@@ -393,7 +392,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             response.Model.PrimaryCacheType = EntityHeader<CacheTypes>.Create(CacheTypes.LocalInMemory);
             response.Model.SharedAccessKey1 = _instanceManager.GenerateAccessKey();
             response.Model.SharedAccessKey2 = _instanceManager.GenerateAccessKey();
-            response.View["timeZone"].Options = _timeZoneServices.GetTimeZones().Select(tz => new EnumDescription() { Key = tz.Id, Label = tz.DisplayName, Name = tz.DisplayName }).ToList();
+            response.View[nameof(DeploymentInstance.TimeZone).CamelCase()].Options = _timeZoneServices.GetTimeZoneEnumOptions();
 
             SetAuditProperties(response.Model);
             SetOwnedProperties(response.Model);
