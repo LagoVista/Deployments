@@ -463,7 +463,15 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 oldRepo.Instance = null;
                 await _deviceManagerRepo.UpdateDeviceRepositoryAsync(oldRepo, org, user);
             }
-
+            else
+            {
+                var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
+                if(EntityHeader.IsNullOrEmpty(repo.Instance))
+                {
+                    repo.Instance = instance.ToEntityHeader();
+                    await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
+                }
+            }
 
             if (!String.IsNullOrEmpty(instance.SharedAccessKey1))
             {

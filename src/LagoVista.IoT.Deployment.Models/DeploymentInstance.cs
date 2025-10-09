@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.Instance_Title, DeploymentAdminResources.Names.Instance_Help,
-        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources),
+        DeploymentAdminResources.Names.Instance_Description, EntityDescriptionAttribute.EntityTypes.CoreIoTModel, typeof(DeploymentAdminResources), SaveDraft:false,
         SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}",
         ListUIUrl: "/iotstudio/manage/instances", EditUIUrl: "/iotstudio/manage/instance/{id}", CreateUIUrl: "/iotstudio/manage/instance/add",
         GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}", Icon: "icon-ae-deployment-instance")]

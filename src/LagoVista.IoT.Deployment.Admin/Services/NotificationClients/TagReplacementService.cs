@@ -21,13 +21,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IAppConfig _appConfig;
         private readonly ISecureLinkManager _secureLinkManager;
         private readonly IAdminLogger _adminLogger;
+        private readonly ICustomerTagReplacementService _customerTagReplacementService;
 
-        public TagReplacementService(IAppUserRepo appUserRepo, ISecureLinkManager secureLinkManager, IAppConfig appConfig, IAdminLogger adminLogger)
+        public TagReplacementService(IAppUserRepo appUserRepo, ISecureLinkManager secureLinkManager, ICustomerTagReplacementService customerTagReplacementService, IAppConfig appConfig, IAdminLogger adminLogger)
         {
             _appUserRepo = appUserRepo ?? throw new ArgumentNullException(nameof(appUserRepo));
             _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
             _secureLinkManager = secureLinkManager ?? throw new ArgumentNullException(nameof(secureLinkManager));
             _adminLogger = adminLogger ?? throw new ArgumentNullException(nameof(adminLogger));
+            _customerTagReplacementService = customerTagReplacementService ?? throw new ArgumentNullException(nameof(customerTagReplacementService));
         }
 
         public async Task<string> ReplaceTagsAsync(string template, bool isHtmlContent, Device device, OrgLocation location)
@@ -39,6 +41,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 _adminLogger.AddError("[TagReplacementService__ReplaceTagsAsync]", $"Null Template", device.DeviceId.ToKVP("deviceId"), device.OwnerOrganization.Text.ToKVP("orgId"));
                 return string.Empty;
             }
+
+            if(!EntityHeader.IsNullOrEmpty(device.Customer))
+                template = await _customerTagReplacementService.ReplaceTagsAsync(template, isHtmlContent, device);
 
             try
             {
@@ -102,47 +107,47 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                     checkPoint = "Location Completed";
 
-                    if (template.Contains("[Location_Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
+                    if (template.Contains("[Admin_Contact]") && !EntityHeader.IsNullOrEmpty(location.AdminContact))
                     {
                         var adminContact = await _appUserRepo.GetCachedAppUserAsync(location.AdminContact.Id);
                         if (adminContact != null)
                         {
                             var phoneHtml = String.IsNullOrEmpty(adminContact.PhoneNumber) ? String.Empty : $"<a href='tel:{adminContact.PhoneNumber}> ({adminContact.PhoneNumber})</a>";
-                            template = template.Replace("[Location_Admin_Contact]", $"<div>{adminContact.Name} {phoneHtml}</div>");
+                            template = template.Replace("[Admin_Contact]", $"<div>{adminContact.Name} {phoneHtml}</div>");
                         }
                         else
-                            template = template.Replace("[Location_Admin_Contact]", String.Empty);
+                            template = template.Replace("[Admin_Contact]", String.Empty);
 
                         checkPoint = "Location Admin Contact Not Null";
                     }
                     else
-                        template = template.Replace("[Location_Admin_Contact]", String.Empty);
+                        template = template.Replace("[Admin_Contact]", String.Empty);
 
                     checkPoint = "Location Admin Contact Complete";
 
-                    if (template.Contains("[Location_Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
+                    if (template.Contains("[Technical_Contact]") && !EntityHeader.IsNullOrEmpty(location.TechnicalContact))
                     {
                         var technicalContact = await _appUserRepo.GetCachedAppUserAsync(location.TechnicalContact.Id);
                         if (technicalContact != null)
                         {
                             var phoneHtml = String.IsNullOrEmpty(technicalContact.PhoneNumber) ? String.Empty : $"<a href='tel:{technicalContact.PhoneNumber}> ({technicalContact.PhoneNumber})</a>";
-                            template = template.Replace("[Location_Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
+                            template = template.Replace("[Technical_Contact]", $"<div>{technicalContact.Name} {phoneHtml}</div>");
                         }
                         else
-                            template = template.Replace("[Location_Technical_Contact]", String.Empty);
+                            template = template.Replace("[Technical_Contact]", String.Empty);
 
                         checkPoint = "Location Technical Contact Not Null";
                     }
                     else
-                        template = template.Replace("[Location_Technical_Contact]", String.Empty);
+                        template = template.Replace("[Technical_Contact]", String.Empty);
 
-                    checkPoint = "Location Technical Contact Complete";
+                    checkPoint = "Technical Contact Complete";
                 }
                 else
                 {
                     template = template.Replace("[DeviceStreetAddress]", String.Empty);
-                    template = template.Replace("[Location_Admin_Contact]", String.Empty);
-                    template = template.Replace("[Location_Technical_Contact]", String.Empty);
+                    template = template.Replace("[Admin_Contact]", String.Empty);
+                    template = template.Replace("[Technical_Contact]", String.Empty);
                     template = template.Replace("[DeviceLocation]", string.Empty);
                     template = template.Replace("[DeviceLocationName]", "No Location Provided");
 

@@ -8,4 +8,9 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
     {
         Task<string> ReplaceTagsAsync(string template, bool isHtmlContent, Device device, OrgLocation location);
     }
+
+    public interface ICustomerTagReplacementService
+    {
+        Task<string> ReplaceTagsAsync(string template, bool isHtmlContent, Device device);
+    }
 }
