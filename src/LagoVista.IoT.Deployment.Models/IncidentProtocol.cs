@@ -24,10 +24,6 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeviceLibraryResources))]
         public string Description { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
-
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources))]
         public List<MediaResourceSummary> Resources { get; set; } = new List<MediaResourceSummary>();
 

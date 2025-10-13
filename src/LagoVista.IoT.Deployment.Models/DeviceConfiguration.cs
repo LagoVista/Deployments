@@ -47,10 +47,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Help, WaterMark: DeploymentAdminResources.Names.DeviceConfiguration_CustomStatusType_Watermark, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
         public EntityHeader<StateSet> CustomStatusType { get; set; }
 
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel, HelpResource: DeploymentAdminResources.Names.DeviceConfiguration_DeviceLabel_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public String DeviceLabel { get; set; }
 

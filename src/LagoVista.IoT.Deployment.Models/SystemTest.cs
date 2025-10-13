@@ -21,9 +21,6 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeviceLibraryResources))]
         public string Description { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
         
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Steps, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<SystemTestStep> Steps { get; set; } = new List<SystemTestStep>();

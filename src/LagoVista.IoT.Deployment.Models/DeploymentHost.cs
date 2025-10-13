@@ -154,9 +154,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public const string HostStatus_FailedDeployment = "faileddeployment";
         public const string HostStatus_HealthCheckFailed = "healthcheckfailed";
-       
-        
-
+      
         public const string HostCapacity_underutilized = "underutilized";
         public const string HostCapacity_Ok = "ok";
         public const string HostCapacity_75Percent = "75percent";
@@ -181,10 +179,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             HostAccessKey1 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
             HostAccessKey2 = Guid.NewGuid().ToId() + Guid.NewGuid().ToId();
         }
-
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_Type, EnumType: (typeof(HostTypes)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: true, IsUserEditable: true)]
         public EntityHeader<HostTypes> HostType { get; set; }

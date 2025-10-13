@@ -40,9 +40,6 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
             set;
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
-        public EntityHeader Category { get; set; }
-
 
         [FKeyProperty(nameof(ListenerConfiguration),typeof(ListenerConfiguration), nameof(DefaultListener) + ".Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DefaultListener, HelpResource: DeploymentAdminResources.Names.Solution_DefaultListener_Help,  WaterMark: DeploymentAdminResources.Names.Solution_DefaultListener_Select, IsRequired:false, FieldType: FieldTypes.EntityHeaderPicker, ResourceType: typeof(DeploymentAdminResources))]
