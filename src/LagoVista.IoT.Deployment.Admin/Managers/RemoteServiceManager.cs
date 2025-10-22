@@ -1,4 +1,8 @@
-﻿using LagoVista.Core.Rpc.Client;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: 471c2008308c610664f2b868c5e95316fb09cbd4ac9972983663b510f08f71c6
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using LagoVista.Core.Rpc.Client;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.Deployment.Models;

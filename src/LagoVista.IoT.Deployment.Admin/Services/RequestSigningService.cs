@@ -1,4 +1,8 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: dc1ce4bb818f38006914f76d034f048508c47cc13a9b86b09575b5d5972c1a9f
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using LagoVista.IoT.Deployment.Admin.Models;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;

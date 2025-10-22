@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: b914e93798e7e0d85c6d5a55acb1f1eebeabb066a197bea262f6eb2b612a28b0
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using System.Threading.Tasks;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Models;

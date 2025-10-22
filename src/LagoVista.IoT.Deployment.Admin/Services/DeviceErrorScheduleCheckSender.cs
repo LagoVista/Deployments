@@ -1,4 +1,8 @@
-﻿using Azure.Messaging.ServiceBus;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: 73a51bcd3130d48720b5978a85ba4dcba7e51ce87da03fa30de3cabfa3d70a59
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using Azure.Messaging.ServiceBus;
 using LagoVista.Core;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;

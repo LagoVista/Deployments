@@ -1,4 +1,8 @@
-﻿using LagoVista.IoT.Deployment.Admin.Interfaces;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: 2e7b9c1dd41c1c404ffd5f76da7a6f2f3c9596c29f1f94f595f40aeec294eb50
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;

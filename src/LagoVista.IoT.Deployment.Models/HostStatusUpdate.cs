@@ -1,4 +1,8 @@
-﻿using LagoVista.IoT.Deployment.Admin.Models;
+// --- BEGIN CODE INDEX META (do not edit) ---
+// ContentHash: 0782c9d8a726eb823c2bd33a8b7bc5b7ad5fa564f07deabb5bf35bc07d5a293e
+// IndexVersion: 0
+// --- END CODE INDEX META ---
+using LagoVista.IoT.Deployment.Admin.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
