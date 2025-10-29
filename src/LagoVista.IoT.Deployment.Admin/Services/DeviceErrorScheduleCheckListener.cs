@@ -4,16 +4,11 @@
 // --- END CODE INDEX META ---
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
-using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Mozilla;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
@@ -49,7 +44,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         {
             var queuePath = _errorConnectionSettings.DeviceErrorScheduleQueueSettings.ResourceName;
       
-            _adminLogger.Trace($"$DeviceErrorScheduleCheckListener__StartAsync] Starting Listener: {queuePath}");
+            _adminLogger.Trace($"[DeviceErrorScheduleCheckListener__StartAsync] Starting Listener: {queuePath}");
 
             await CreateQueue(queuePath);
             var connstr = $"Endpoint=sb://{_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccountId}.servicebus.windows.net/;SharedAccessKeyName={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.UserName};SharedAccessKey={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccessKey};";
@@ -62,7 +57,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _processor.ProcessErrorAsync += _processor_ProcessErrorAsync; ;
 
             await _processor.StartProcessingAsync();
-            _adminLogger.Trace($"$DeviceErrorScheduleCheckListener__StartAsync] Started Listener: {queuePath}");
+            _adminLogger.Trace($"[DeviceErrorScheduleCheckListener__StartAsync] Started Listener: {queuePath}");
         }
 
         private async Task _processor_ProcessMessageAsync(ProcessMessageEventArgs arg)
