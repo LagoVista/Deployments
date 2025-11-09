@@ -8,11 +8,11 @@
     <AssemblyOriginatorKeyFile>LagoVista.IoT.Deployment.Models.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin.Models" Version="3.0.3043.1850" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Models" Version="3.0.3043.1850" />
-    <PackageReference Include="LagoVista.UserAdmin.Models" Version="3.0.3043.1850" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Models" Version="3.0.3043.1850" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Models" Version="3.0.3043.1850" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin.Models" Version="3.0.3097.0925" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Models" Version="3.0.3097.0925" />
+    <PackageReference Include="LagoVista.UserAdmin.Models" Version="3.0.3097.0925" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Models" Version="3.0.3097.0925" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Models" Version="3.0.3097.0925" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="T4ResourceGenerator.cs">

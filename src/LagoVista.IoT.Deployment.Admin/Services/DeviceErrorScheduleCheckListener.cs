@@ -1,6 +1,6 @@
 // --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: d7efe5bcf6ebdd43d4d810a8c129c6e518d69b4dd89a12e87fb04891e2b36b64
-// IndexVersion: 0
+// ContentHash: ae271bf1434904d54a5bf670b161bfcae4284d55571d7c47675ebac07cb0c124
+// IndexVersion: 2
 // --- END CODE INDEX META ---
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;

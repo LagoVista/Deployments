@@ -1,6 +1,6 @@
 // --- BEGIN CODE INDEX META (do not edit) ---
 // ContentHash: 5c6339842e155b60dac03448f5115720e0e2f795c7858726e107fe64dcb47ba7
-// IndexVersion: 0
+// IndexVersion: 2
 // --- END CODE INDEX META ---
 using LagoVista.IoT.Web.Common.Controllers;
 using Microsoft.AspNetCore.Authorization;
