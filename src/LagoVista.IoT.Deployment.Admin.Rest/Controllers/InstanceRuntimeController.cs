@@ -551,6 +551,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
+        /// Runtime Controller - Get Device Sensor Data Archives
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/deployment/instance/sensorarchivedata/settings")]
+        public async Task<InvokeResult<ConnectionSettings>> GetSensorDataArchiveStorageConnectionAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await _runtimeTokenManager.GetSensorDataArchiveSettingsAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        /// <summary>
         /// Runtime Controller - Get Logging Settings
         /// </summary>
         /// <returns></returns>

@@ -14,6 +14,7 @@ namespace LagoVista.IoT.Deployment.Models.Settings
         public ConnectionSettings DeviceStatusHistoryTableStorage { get; set; }
         public ConnectionSettings DeviceMediaTableStorage { get; set; }
         public ConnectionSettings DeviceMediaBlobStorage { get; set; }
+        public ConnectionSettings SensorDataArchiveStorage { get; set; }
 
     }
 }

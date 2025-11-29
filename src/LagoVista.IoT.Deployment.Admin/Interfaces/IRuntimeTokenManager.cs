@@ -32,6 +32,7 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult<LoggingSettings>> GetLoggingSettingsAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetPEMStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
+        Task<InvokeResult<ConnectionSettings>> GetSensorDataArchiveSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetNuvIoTCacheSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<DeviceDataStorageSettings>> GetDataStorageSettingsAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetEHCheckPointStorageSttings(SettingType stetingType, String instanceId, EntityHeader org, EntityHeader user);
