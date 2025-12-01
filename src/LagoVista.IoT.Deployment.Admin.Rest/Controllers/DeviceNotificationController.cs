@@ -114,9 +114,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpGet("/api/notification/rest/header/factory")]
-        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Header> CreateNewRestHeader()
+        public DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.RestRequestHeader> CreateNewRestHeader()
         {
-            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.Header>.Create();
+            return DetailResponse<LagoVista.IoT.Deployment.Models.DeviceNotifications.RestRequestHeader>.Create();
         }
 
         [HttpGet("/api/notification/device/{repoid}/{id}/online/test")]

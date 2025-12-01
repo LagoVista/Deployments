@@ -89,7 +89,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_AdditionalHeaders, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/notification/rest/header/factory", ResourceType: typeof(DeploymentAdminResources))]
-        public List<Header> Headers { get; set; } = new List<Header>();
+        public List<RestRequestHeader> Headers { get; set; } = new List<RestRequestHeader>();
 
 
         public FormConditionals GetConditionalFields()
@@ -140,7 +140,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.RestNotificaiton_AdditionalHeader_Title, DeploymentAdminResources.Names.RestNotificaiton_AdditionalHeader_Help,
             DeploymentAdminResources.Names.RestNotificaiton_AdditionalHeader_Help, EntityDescriptionAttribute.EntityTypes.ChildObject, typeof(DeploymentAdminResources), Icon: "icon-fo-notification-1",
             FactoryUrl: "/api/notification/rest/header/factory")]
-    public class Header : IFormDescriptor
+    public class RestRequestHeader : IFormDescriptor
     {
         [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_HeaderName, IsRequired: true, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string HeaderName { get; set; }
