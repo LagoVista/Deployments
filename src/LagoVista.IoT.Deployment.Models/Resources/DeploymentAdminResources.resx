@@ -256,10 +256,10 @@
     <value>Online</value>
   </data>
   <data name="Host_Description" xml:space="preserve">
-    <value>The Deployment Host is information about the compute resource that is hosting the run time, this could be for any of the deployment options.  This is primarily used by a System Admin, but can be provisioned as a dedicated resource by a user</value>
+    <value>View and manage the compute resources that host the runtime for deployments. These hosts are usually managed by a system administrator, but users can provision dedicated hosts when needed.</value>
   </data>
   <data name="Host_Help" xml:space="preserve">
-    <value>The Deployment Host is information about the compute resource that is hosting the run time, this could be for any of the deployment options.  This is primarily used by a System Admin, but can be provisioned as a dedicated resource by a user</value>
+    <value>Details about the compute resources that host the runtime for any deployment option. These are typically managed by a system administrator, but can also be provisioned as dedicated resources by users.</value>
   </data>
   <data name="Host_ComputeResourceId" xml:space="preserve">
     <value>Compute Resource ID</value>
@@ -310,10 +310,10 @@
     <value>High Performance</value>
   </data>
   <data name="Instance_Description" xml:space="preserve">
-    <value>This is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
+    <value>Solution instances that process messages from your devices. Each instance includes the components you configured, such as the Listener, Planner, Device Configurations, and Workflow.</value>
   </data>
   <data name="Instance_Help" xml:space="preserve">
-    <value>This is an Instance of a Solution that will be used to process messages from your devices.  It consists components you have created and configured such as the Listener, Planner, Device Configurations and Workflow.</value>
+    <value>Solution instances that process messages from your devices. Each instance includes the components you configured, such as the Listener, Planner, Device Configurations, and Workflow.</value>
   </data>
   <data name="Instance_Host" xml:space="preserve">
     <value>Host</value>
@@ -343,10 +343,10 @@
     <value>Instance</value>
   </data>
   <data name="Route_Description" xml:space="preserve">
-    <value>A Route is a set of Pipeline modules that will be used to interpret and process data sent by messages from your devices.</value>
+    <value>A route is a collection of pipeline modules that interpret and process data sent from your devices.</value>
   </data>
   <data name="Route_Help" xml:space="preserve">
-    <value>A Route is a set of Pipeline modules that will be used to interpret and process data sent by messages from your devices.</value>
+    <value>Create and manage routes as collections of pipeline modules that interpret and process data sent from your devices’ messages.</value>
   </data>
   <data name="Route_InputTranslator" xml:space="preserve">
     <value>Input Translator</value>
@@ -391,7 +391,7 @@
     <value>Workflow</value>
   </data>
   <data name="Solution_Description" xml:space="preserve">
-    <value>A Solution is where you assemble all the components that will be used as an application to listen to and process data sent by messages from your devices.  Solutions are reusable components that can be published by dedicated instances.</value>
+    <value>Use a solution to assemble the components of an application that receives and processes message data from your devices. Solutions are reusable and can be published by dedicated instances.</value>
   </data>
   <data name="Solution_DeviceConfigurations" xml:space="preserve">
     <value>Device Configurations</value>
@@ -403,7 +403,7 @@
     <value>Environment</value>
   </data>
   <data name="Solution_Help" xml:space="preserve">
-    <value>A Solution is where you assemble all the components that will be used as an application to listen to and process data sent by messages from your devices.  Solutions are reusable components that can be published by dedicated instances.</value>
+    <value>A solution is where you assemble the components of an application that receives and processes message data from your devices. Solutions are reusable and can be published by dedicated instances.</value>
   </data>
   <data name="Solution_Title" xml:space="preserve">
     <value>Solution</value>
@@ -547,10 +547,10 @@
     <value>Small</value>
   </data>
   <data name="ContainerRepository_Description" xml:space="preserve">
-    <value>A Container Repository is a Location where containers can be downloaded and insatlled on Remote Compute Instances</value>
+    <value>Use container image repositories to store, manage, and retrieve container images for use on remote compute instances.</value>
   </data>
   <data name="ContainerRepository_Help" xml:space="preserve">
-    <value>A Container Repository is a Location where containers can be downloaded and insatlled on Remote Compute Instances</value>
+    <value>Stores container images that can be pulled and run on remote compute instances.</value>
   </data>
   <data name="ContainerRepository_Namespace" xml:space="preserve">
     <value>Namespace</value>
@@ -580,7 +580,7 @@
     <value>Tags</value>
   </data>
   <data name="ContainerRepository_Title" xml:space="preserve">
-    <value>Image Repository</value>
+    <value>Container Image Repository</value>
   </data>
   <data name="ContainerRepository_UserName" xml:space="preserve">
     <value>User Name</value>
@@ -595,10 +595,10 @@
     <value>Creation Date</value>
   </data>
   <data name="TaggedContainer_Description" xml:space="preserve">
-    <value>A Tagged Container is an Instance of a Container that can be Installed on a Remote Compute Instance</value>
+    <value>Use this to define and manage a specific tagged version of a container image that can be deployed to a remote compute instance.</value>
   </data>
   <data name="TaggedContainer_Help" xml:space="preserve">
-    <value>A Tagged Container is an Instance of a Container that can be Installed on a Remote Compute Instance</value>
+    <value>A specific tagged container image that can be deployed to a remote compute instance.</value>
   </data>
   <data name="TaggedContainer_ReleaseNotes" xml:space="preserve">
     <value>Release Notes</value>
@@ -628,7 +628,7 @@
     <value>Tag</value>
   </data>
   <data name="TaggedContainer_Title" xml:space="preserve">
-    <value>Image Tag</value>
+    <value>Tagged Container Image</value>
   </data>
   <data name="Host_CloudProvider_Help" xml:space="preserve">
     <value>Currently we only support Digital Ocean, Azure and AWS coming Second Half of 2017</value>
@@ -880,10 +880,10 @@
     <value>Remote MCP</value>
   </data>
   <data name="RemoteDeployment_Description" xml:space="preserve">
-    <value>A Remote Deployment is an On-Premisis version of the run time where all the intances have local storage</value>
+    <value>Select this for on-premises runtimes where every instance uses local storage.</value>
   </data>
   <data name="RemoteDeployment_Help" xml:space="preserve">
-    <value>A Remote Deployment is an On-Premisis version of the run time where all the intances have local storage</value>
+    <value>An on-premises runtime where all instances use local storage.</value>
   </data>
   <data name="RemoteDeployment_Instances" xml:space="preserve">
     <value>Instances</value>
@@ -904,10 +904,10 @@
     <value>App Auth Key - Secondary</value>
   </data>
   <data name="ClientApp_Description" xml:space="preserve">
-    <value>A client app is a thick/mobile/external application that will authenticate and access NuvIoT via REST</value>
+    <value>Manage client applications, including rich, mobile, or external apps that authenticate and access NuvIoT using REST APIs.</value>
   </data>
   <data name="ClientApp_Help" xml:space="preserve">
-    <value>A client app is a thick/mobile/external application that will authenticate and access NuvIoT via REST</value>
+    <value>Rich, mobile, or external applications that authenticate and access NuvIoT using REST APIs.</value>
   </data>
   <data name="ClientApp_Title" xml:space="preserve">
     <value>Client Application</value>
@@ -1084,13 +1084,13 @@
     <value>Twillio</value>
   </data>
   <data name="Integration_Description" xml:space="preserve">
-    <value>Provides a container to capture information about integration into other products</value>
+    <value>Use this section to capture key details needed to configure and manage this integration with other products or services.</value>
   </data>
   <data name="Integration_FromAddress" xml:space="preserve">
     <value>From Address</value>
   </data>
   <data name="Integration_Help" xml:space="preserve">
-    <value>Provides a container to capture information about integration into other products</value>
+    <value>Stores summary information about integrations with other products and services.</value>
   </data>
   <data name="Integration_SMS" xml:space="preserve">
     <value>SMS Number</value>
@@ -1174,13 +1174,13 @@
     <value>Error Codes</value>
   </data>
   <data name="DeviceErrorCode_Description" xml:space="preserve">
-    <value>A device error code is a string that can be invoked to generate an error or exception from a device.</value>
+    <value>A device error code is a device-specific string used to detect or identify an error or exception on a device.</value>
   </data>
   <data name="DeviceErrorCode_ErrorCode" xml:space="preserve">
     <value>Error Code</value>
   </data>
   <data name="DeviceErrorCode_Help" xml:space="preserve">
-    <value>A device error code is a string that can be invoked to generate an error or exception from a device.</value>
+    <value>Device-specific error codes used to detect or identify errors and exceptions on a device.</value>
   </data>
   <data name="DeviceErrorCode_TicketTemplate" xml:space="preserve">
     <value>Service Ticket Template</value>
@@ -1270,7 +1270,7 @@
     <value>Message Watch Dogs</value>
   </data>
   <data name="MessageWatchDog_Description" xml:space="preserve">
-    <value>A message watch dog will allow you to configure checks on messages sent from your devices, if a message is not received within configured watch dog periods, an error will be thrown.</value>
+    <value>Set up a message watchdog to monitor expected messages from your devices. The watchdog uses a configured timeout and interval to determine when a message is overdue. If no matching message is received before the watchdog expires, the defined error is triggered.</value>
   </data>
   <data name="MessageWatchDog_ErrorCode" xml:space="preserve">
     <value>Error</value>
@@ -1282,10 +1282,10 @@
     <value>Exclude Holidays</value>
   </data>
   <data name="MessageWatchDog_Exclusion_Title" xml:space="preserve">
-    <value>Exclusion</value>
+    <value>Watchdog Exclusion</value>
   </data>
   <data name="MessageWatchDog_Exclusion_Description" xml:space="preserve">
-    <value>Exclusion is a period of time when the watch dog should not be checked.</value>
+    <value>Configure a time window when the watchdog is temporarily disabled and will not perform checks. You can set exclusions for an entire day or for specific times within a day.</value>
   </data>
   <data name="MessageWatchDog_Exclusion_End" xml:space="preserve">
     <value>End Time</value>
@@ -1294,7 +1294,7 @@
     <value>End time for the exclusion period, must be number representing the time such as 1030 for 10:30 AM and 1415 for 2:15 PM</value>
   </data>
   <data name="MessageWatchDog_Exclusion_Help" xml:space="preserve">
-    <value>Exclusion is a period of time when the watch dog should not be checked.</value>
+    <value>Defines a time window during which the watchdog is temporarily disabled and not monitored.</value>
   </data>
   <data name="MessageWatchDog_Exclusion_Start" xml:space="preserve">
     <value>Start Time</value>
@@ -1303,7 +1303,7 @@
     <value>Start time for the exclusion period, must be number representing the time such as 1030 for 10:30 AM and 1415 for 2:15 PM</value>
   </data>
   <data name="MessageWatchDog_Help" xml:space="preserve">
-    <value>A message watch dog will allow you to configure checks on messages sent from your devices, if a message is not received within configured watch dog periods, an error will be thrown.</value>
+    <value>Define rules to monitor expected device messages. If a message is not received within the configured watchdog period, an error is generated.</value>
   </data>
   <data name="MessageWatchDog_Message" xml:space="preserve">
     <value>Device Message</value>
@@ -1315,7 +1315,7 @@
     <value>Saturday Exclusions</value>
   </data>
   <data name="MessageWatchDog_Title" xml:space="preserve">
-    <value>Message Watch Dog</value>
+    <value>Message Watchdog</value>
   </data>
   <data name="MessageWatchDog_WeekdayExclusions" xml:space="preserve">
     <value>Weekday Exclusions</value>
@@ -1384,10 +1384,10 @@
     <value>WiFi Connection Profiles</value>
   </data>
   <data name="WiFiConnectionProfile_Description" xml:space="preserve">
-    <value>Contains SSID and Password of connection profiles that can be used to provisoin a device.</value>
+    <value>Enter the SSID and password for the Wi‑Fi network to be used when provisioning the device.</value>
   </data>
   <data name="WiFiConnectionProfile_Help" xml:space="preserve">
-    <value>Contains SSID and Password of connection profiles that can be used to provisoin a device.</value>
+    <value>Stores Wi‑Fi network details, including SSID and password, for use during device provisioning.</value>
   </data>
   <data name="WiFiConnectionProfile_Name" xml:space="preserve">
     <value>Name</value>
@@ -1402,13 +1402,13 @@
     <value>SSID</value>
   </data>
   <data name="WiFiConnectionProfile_Title" xml:space="preserve">
-    <value>WiFi Connection Profile</value>
+    <value>Wi‑Fi Connection Profile</value>
   </data>
   <data name="DeploymentInstanceCredentials_Description" xml:space="preserve">
-    <value>Deployment instance credentials are used to authenticate services, devices, communications channels and users with a deployment instance.</value>
+    <value>Use these credentials to authenticate services, devices, communication channels, and users when accessing this deployment instance.</value>
   </data>
   <data name="DeploymentInstanceCredentials_Help" xml:space="preserve">
-    <value>Deployment instance credentials are used to authenticate services, devices, communications channels and users with a deployment instance.</value>
+    <value>Credentials used to authenticate services, devices, communication channels, and users for a specific deployment instance.</value>
   </data>
   <data name="DeploymentInstanceCredentials_Title" xml:space="preserve">
     <value>Deployment Instance Credentials</value>
@@ -1450,7 +1450,7 @@
     <value>Container Image Repositories</value>
   </data>
   <data name="RouteModuleConfig_Help" xml:space="preserve">
-    <value>A Route Module is a module configuration that is part of the processing route for a message.</value>
+    <value>Create or edit this module’s configuration within the message processing route. Each module must have a unique identifier so it can be referenced reliably in scripts.</value>
   </data>
   <data name="RouteModuleConfig_Title" xml:space="preserve">
     <value>Route Module</value>
@@ -1477,7 +1477,7 @@
     <value>Input Commands are REST end points that are defined as part of your Work Flow, setting Anonymous to true will not require any authentication for these end points to be called.  This is not recommended.S</value>
   </data>
   <data name="Hosts_Title" xml:space="preserve">
-    <value>Hosts</value>
+    <value>Deployment Hosts</value>
   </data>
   <data name="Instances_Title" xml:space="preserve">
     <value>Instances</value>
@@ -1489,19 +1489,19 @@
     <value>Solutions</value>
   </data>
   <data name="ClientApplications_Title" xml:space="preserve">
-    <value>Client Applications</value>
+    <value>Client applications</value>
   </data>
   <data name="DeviceErrorCodes_Title" xml:space="preserve">
     <value>Device Error Codes</value>
   </data>
   <data name="WatchdogConnectedDevice_Help" xml:space="preserve">
-    <value>Devices as being monitored by the run time.</value>
+    <value>View and manage devices that are monitored by the runtime.</value>
   </data>
   <data name="WatchdogConnectedDevice_Title" xml:space="preserve">
     <value>Connected Device</value>
   </data>
   <data name="WatchdogMessage_Help" xml:space="preserve">
-    <value>Messages as being tracked by the runtime engine </value>
+    <value>Shows messages that are currently being monitored and tracked by the runtime engine.</value>
   </data>
   <data name="WatchdogMessage_Title" xml:space="preserve">
     <value>Message Watchdog</value>
@@ -1516,7 +1516,7 @@
     <value>-select message-</value>
   </data>
   <data name="ClientApps_Title" xml:space="preserve">
-    <value>Client Apps</value>
+    <value>Client Applications</value>
   </data>
   <data name="Common_Category" xml:space="preserve">
     <value>Category</value>
@@ -1525,13 +1525,13 @@
     <value>-select category-</value>
   </data>
   <data name="DeploymentInstanceStatus_Description" xml:space="preserve">
-    <value>Status changes for a deployment</value>
+    <value>View and manage the status history for this deployment instance.</value>
   </data>
   <data name="DeploymentInstanceStatus_Title" xml:space="preserve">
-    <value>Deployment Status Updates</value>
+    <value>Deployment Status History</value>
   </data>
   <data name="Telemetry_Help" xml:space="preserve">
-    <value>Records generated by run time engine</value>
+    <value>View and analyze records generated by the runtime engine for monitoring and analysis.</value>
   </data>
   <data name="Telemetry_Title" xml:space="preserve">
     <value>Telemetry</value>
@@ -1543,7 +1543,7 @@
     <value>Deployment Activities</value>
   </data>
   <data name="DeviceNotifications_Description" xml:space="preserve">
-    <value>Definition of notifications that can be sent out to devices</value>
+    <value>View and manage notification types that can be sent to devices.</value>
   </data>
   <data name="DeviceNotifications_EmailContent" xml:space="preserve">
     <value>Email Content</value>
@@ -1594,19 +1594,19 @@
     <value>Send notification when raised</value>
   </data>
   <data name="DeviceNotificationHistory_Description" xml:space="preserve">
-    <value>List of notifications that have been sent to a device</value>
+    <value>View the history of notifications sent to this device, including details for each notification.</value>
   </data>
   <data name="DeviceNotificationHistory_Title" xml:space="preserve">
     <value>Device Notification History</value>
   </data>
   <data name="Incident_Description" xml:space="preserve">
-    <value>An incident is an unplanned event or occurrence that disrupts normal operations, potentially causing harm or loss. Incidents can range from minor issues, such as software glitches, to major events, like security breaches or natural disasters. They typically require a response to mitigate any negative impact and to restore normal functioning.</value>
+    <value>Review incident types and their response protocols to help reduce negative impact and restore normal operations after unplanned events or disruptions.</value>
   </data>
   <data name="Incident_Title" xml:space="preserve">
     <value>Incident</value>
   </data>
   <data name="SystemTestStep_Description" xml:space="preserve">
-    <value>A Test Step is a function that is performed as part of a System Test that ensure the system is functioning correctly.</value>
+    <value>Define a step to be executed as part of a system test, specifying the actions or checks needed to help verify that the system is functioning correctly.</value>
   </data>
   <data name="SystemTestStep_Title" xml:space="preserve">
     <value>System Test Step</value>
@@ -1615,7 +1615,7 @@
     <value>A System Test is a series of steps conducted at predetermined intervals to ensure the system is functioning correctly and that the personnel responsible for operating it are knowledgeable in its use.</value>
   </data>
   <data name="SystemTest_Title" xml:space="preserve">
-    <value>System Test</value>
+    <value>An individual action or check performed during a system test to verify that the system functions correctly.</value>
   </data>
   <data name="DeviceErrorCode_IncidentProtocol" xml:space="preserve">
     <value>Incident Protocol</value>
@@ -1630,7 +1630,7 @@
     <value>Incident Protocols</value>
   </data>
   <data name="IncidentProtocol_Description" xml:space="preserve">
-    <value>An Incident Protocol is a set of steps that define how an incident should be addressed</value>
+    <value>Create and maintain a standardized set of steps and resources to ensure incidents are handled consistently and effectively.</value>
   </data>
   <data name="IncidentProtocol_Title" xml:space="preserve">
     <value>Incident Protocol</value>
@@ -1645,7 +1645,7 @@
     <value>Summary</value>
   </data>
   <data name="DeviceCommand_Description" xml:space="preserve">
-    <value>The Device Command is a definition of a command that can be sent to a command.</value>
+    <value>Use this model to define and manage commands that can be sent to a device, including their parameters and unique identifying key. Commands configured here drive device workflows and must have a unique key for identification.</value>
   </data>
   <data name="DeviceCommand_TItle" xml:space="preserve">
     <value>Device Command</value>
@@ -1684,7 +1684,7 @@
     <value>Provide a link that will be used to create a custom page as a quick link to view information about this device.  This page is typically a mobile page that is protected by a PIN.  You can use the following fields as part of the URL such as \{orgid\} = Organization Id, \{repoid\} = RepositoryId, \{deviceid\} = DeviceId.  A typical url may look like /app/mycustompage/\{orgid\}/\{repoid\}/\{deviceid\} </value>
   </data>
   <data name="SystemTestExecutions_Description" xml:space="preserve">
-    <value>A system test is the definition of a test to be ran to ensure the system is working properly.  System Test Execution is the execution of the test.</value>
+    <value>Represents system tests and their executions used to verify that the system is functioning correctly.</value>
   </data>
   <data name="SystemTestExecutions_Title" xml:space="preserve">
     <value>System Test Executions</value>
@@ -1738,7 +1738,7 @@
     <value>Assigned To</value>
   </data>
   <data name="IncidentProtocolStep_Description" xml:space="preserve">
-    <value>A protocol step is an activity or instructions that need to be completed to help resolve an incident</value>
+    <value>Use protocol steps to break an incident resolution process into clear, actionable instructions. Create, update, and organize each step so responders know exactly what to do and in what order.</value>
   </data>
   <data name="IncidentProtocolStep_Title" xml:space="preserve">
     <value>Protocol Step</value>
@@ -1774,7 +1774,7 @@
     <value>Fill Color</value>
   </data>
   <data name="CotNotification_Help" xml:space="preserve">
-    <value>Notification to be sent to a Cursor on Target Server.</value>
+    <value>Sends alerts to a Cursor on Target (CoT) server.</value>
   </data>
   <data name="CotNotification_IncludeLocationPolygon" xml:space="preserve">
     <value>Include Location Polygon</value>
@@ -1789,7 +1789,7 @@
     <value>Number of seconds until this message is considered stale and should be removed from the map.</value>
   </data>
   <data name="CotNotification_Title" xml:space="preserve">
-    <value>Cursor on Target Notification</value>
+    <value>Cursor on Target (CoT) Notification</value>
   </data>
   <data name="CotNotification_Type_Help" xml:space="preserve">
     <value> u-d-r for drawing polygon.  https://github.com/Esri/defense-solutions-proofs-of-concept/blob/master/geoevent-components/solutions-geoevent/adapters/cot-adapter/src/main/resources/CoTTypes/CoTtypes.xml</value>
@@ -1807,7 +1807,7 @@
     <value>REST Notifications (Web Hooks)</value>
   </data>
   <data name="MqttNotifications_Help" xml:space="preserve">
-    <value>Publish an MQTT topic with or without a payload.</value>
+    <value>Configure this notification to call a REST endpoint using HTTP POST, PUT, or GET. You can include an optional payload, specify the content type, add basic authentication, and define additional headers.</value>
   </data>
   <data name="MqttNotifications_Title" xml:space="preserve">
     <value>MQTT Notifications</value>
@@ -1855,7 +1855,7 @@
     <value>User Name</value>
   </data>
   <data name="RestNotificaiton_AdditionalHeader_Help" xml:space="preserve">
-    <value>Additional headers that should be sent with the request.</value>
+    <value>Specify an extra HTTP header to include with this request by providing its name and value.</value>
   </data>
   <data name="RestNotificaiton_AdditionalHeader_Title" xml:space="preserve">
     <value>Additional Header</value>
@@ -1885,7 +1885,7 @@
     <value>Header Value</value>
   </data>
   <data name="RestNotification_Help" xml:space="preserve">
-    <value>Send a POST, PUT or GET HTTP Request for this notification.</value>
+    <value>Send an HTTP POST, PUT, or GET request to a REST endpoint when this notification is triggered.</value>
   </data>
   <data name="RestNotification_Method" xml:space="preserve">
     <value>REST Method</value>

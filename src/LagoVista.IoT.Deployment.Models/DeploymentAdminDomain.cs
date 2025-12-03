@@ -14,7 +14,6 @@ namespace LagoVista.IoT.Deployment.Admin
     public class DeploymentAdminDomain
     {
         public const string DeploymentAdmin = "Deployment Admin";
-
         [DomainDescription(DeploymentAdmin)]
         public static DomainDescription DeploymentAdminDescription
         {
@@ -22,7 +21,7 @@ namespace LagoVista.IoT.Deployment.Admin
             {
                 return new DomainDescription()
                 {
-                    Description = "A set of classes that contains meta data for managing IoT Deployments.",
+                    Description = "Metadata and tools for configuring and managing IoT deployments, runtime hosts, solutions, integrations, and related resources.",
                     DomainType = DomainDescription.DomainTypes.BusinessObject,
                     Name = "Deployment Admin",
                     CurrentVersion = new Core.Models.VersionInfo()
