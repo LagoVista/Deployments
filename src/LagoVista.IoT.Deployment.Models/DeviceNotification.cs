@@ -236,6 +236,8 @@ namespace LagoVista.IoT.Deployment.Models
 
         public bool Escalate { get; set; }
 
+        public bool FromWeb { get; set; }
+
         public List<EntityHeader> AdditionalUsers { get; set; } = new List<EntityHeader>();
         public List<ExternalContact> AdditionalExternalContacts { get; set; } = new List<ExternalContact>();
 

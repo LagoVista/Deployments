@@ -58,10 +58,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
         private readonly IDeviceCommandSender _deviceCommandSender;
         private readonly ITagReplacementService _tagReplacementService;
+        private readonly INotificationPublisher _notificationPublisher;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
+                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, INotificationPublisher notificationPublisher, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
                                   ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, IDeviceCommandSender deviceCommandSender, IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -85,6 +86,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _taskQueue = taskQueue ?? throw new ArgumentNullException(nameof(raisedNotificationHistory));
             _deviceConfigHelper = deviceConfigHelper ?? throw new ArgumentNullException(nameof(deviceConfigHelper));
             _deviceCommandSender = deviceCommandSender ?? throw new ArgumentNullException(nameof(deviceCommandSender));
+            _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
             _tagReplacementService = tagReplacementService ?? throw new ArgumentNullException(nameof(tagReplacementService));
         }
 
@@ -572,6 +574,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     await _deviceManager.UpdateDeviceAsync(repo, device.Result, orgEntityHeader, userEntityHeader);
                     result.Timings.Add(new ResultTiming() { Key = "updated custom status", Ms = sw.Elapsed.TotalMilliseconds });
                 }
+            }
+
+
+            var wssNotification = DeviceForNotification.FromDevice(device.Result);
+
+            if (raisedNotification.FromWeb)
+            {
+                await _notificationPublisher.PublishAsync<DeviceForNotification>(Targets.WebSocket, Channels.DeviceRepository, device.Result.DeviceRepository.Id, wssNotification, NotificationVerbosity.Normal);
+                await _notificationPublisher.PublishAsync<DeviceForNotification>(Targets.WebSocket, Channels.Device, device.Result.Id, wssNotification, NotificationVerbosity.Normal);
             }
 
             _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync]", $"[NotificationSender__RaiseNotificationAsync] - Completed in {fullSw.Elapsed.TotalMilliseconds}ms",

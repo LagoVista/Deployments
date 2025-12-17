@@ -152,6 +152,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             {
                 TestMode = testing == "true",
                 DryRun = dryrun == "true",
+                FromWeb = true,
                 DeviceUniqueId = deviceuniqueid,
                 DeviceRepositoryId = repoid,
                 NotificationKey = notificationkey
