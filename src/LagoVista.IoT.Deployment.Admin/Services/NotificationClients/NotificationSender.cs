@@ -563,6 +563,14 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             }
 
+            var needsUpdate = false;
+
+            if(device.Result.Icon != notification.Icon)
+            {
+                device.Result.Icon = notification.Icon;
+                needsUpdate = true;
+            }
+
             sw = Stopwatch.StartNew();
             var deviceStates = await _deviceConfigHelper.GetCustomDeviceStatesAsync(device.Result.DeviceConfiguration.Id, orgEntityHeader, userEntityHeader);
             if (deviceStates != null && deviceStates.HasValue)
@@ -571,11 +579,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 if (newDeviceState != null)
                 {
                     device.Result.CustomStatus = EntityHeader.Create(newDeviceState.Key, newDeviceState.Name);
-                    await _deviceManager.UpdateDeviceAsync(repo, device.Result, orgEntityHeader, userEntityHeader);
+                    needsUpdate = true;
                     result.Timings.Add(new ResultTiming() { Key = "updated custom status", Ms = sw.Elapsed.TotalMilliseconds });
                 }
             }
 
+            if(needsUpdate)
+                await _deviceManager.UpdateDeviceAsync(repo, device.Result, orgEntityHeader, userEntityHeader);
 
             var wssNotification = DeviceForNotification.FromDevice(device.Result);
 
