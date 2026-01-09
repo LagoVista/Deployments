@@ -18,6 +18,7 @@ using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using LagoVista.CloudStorage.Interfaces;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
@@ -27,12 +28,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         private readonly IAdminLogger _adminLogger;
 
         private bool _shouldConsolidateCollections;
-        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependencyMgr, ICacheProvider cacheProvider) : 
-            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger, dependencyManager: dependencyMgr)
+        public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
+            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
-            _adminLogger = logger;
-            _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider)); // We don't natively cache this object since it can be updated by services that don't have access to the cache, we do provide a readonly version of this object that is cached.
+            _adminLogger = services.AdminLogger;
+            _cacheProvider = services.CacheProvider;
         }
 
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;

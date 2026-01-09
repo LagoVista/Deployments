@@ -4,6 +4,7 @@
 // --- END CODE INDEX META ---
 using LagoVista.CloudStorage;
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.CloudStorage.Interfaces;
 using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
@@ -23,12 +24,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         private readonly ICacheProvider _cacheProvider;
         private readonly IAdminLogger _logger;
 
-        public DeviceNotificationRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider)
+        public DeviceNotificationRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
-            _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cacheProvider = services.CacheProvider;
+            _logger = services.AdminLogger;
         }
 
         protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;

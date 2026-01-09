@@ -12,14 +12,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using LagoVista.CloudStorage.Interfaces;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class RemoteDeploymentRepo : DocumentDBRepoBase<RemoteDeployment>, IRemoteDeploymentRepo
     {
         readonly bool _shouldConsolidateCollections;
-        public RemoteDeploymentRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger)
+        public RemoteDeploymentRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

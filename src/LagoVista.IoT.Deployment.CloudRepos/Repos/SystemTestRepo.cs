@@ -3,6 +3,7 @@
 // IndexVersion: 2
 // --- END CODE INDEX META ---
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.CloudStorage.Interfaces;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -20,8 +21,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     {
         private bool _shouldConsolidateCollections;
 
-        public SystemTestRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider)
+        public SystemTestRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

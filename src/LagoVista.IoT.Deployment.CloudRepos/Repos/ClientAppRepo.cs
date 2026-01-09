@@ -3,6 +3,7 @@
 // IndexVersion: 2
 // --- END CODE INDEX META ---
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.CloudStorage.Interfaces;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models;
@@ -16,8 +17,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos
     public class ClientAppRepo : DocumentDBRepoBase<ClientApp>, IClientAppRepo
     {
         private bool _shouldConsolidateCollections;
-        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependency, ICacheProvider cacheProvider)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider, dependencyManager:dependency)
+        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
+            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }

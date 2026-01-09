@@ -15,14 +15,15 @@ using LagoVista.Core.Exceptions;
 using LagoVista.CloudStorage;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.Interfaces;
+using LagoVista.CloudStorage.Interfaces;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeploymentHostRepo : DocumentDBRepoBase<DeploymentHost>, IDeploymentHostRepo
     {
         private readonly bool _shouldConsolidateCollections;
-        public DeploymentHostRepo(IDeploymentInstanceRepoSettings repoSettings, IAdminLogger logger, IDependencyManager dependencyMgr) : 
-            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, logger, dependencyManager: dependencyMgr)
+        public DeploymentHostRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
+            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
         {
             _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
