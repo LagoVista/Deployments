@@ -35,6 +35,7 @@ using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.MediaServices.Interfaces;
+using LagoVista.AI.Interfaces.Managers;
 
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
