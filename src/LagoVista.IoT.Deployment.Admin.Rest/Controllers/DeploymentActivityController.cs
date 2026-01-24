@@ -33,7 +33,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="take"></param>
         /// <param name="before"></param>
         /// <returns></returns>
-        [HttpGet("/api/deploymentactivity/active/{id}/{take}/{before?}")]
+        [HttpGet("/api/deploymentactivity/active/{id}/{take}")]
         public async Task<ListResponse<DeploymentActivitySummary>> GetActiveAsync(string id, int take, string before = MAX_DATE)
         {
             return ListResponse<DeploymentActivitySummary>.Create(await _activityManager.GetActiveActivitiesAsync(id, take, before, OrgEntityHeader, UserEntityHeader));
@@ -46,7 +46,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="take"></param>
         /// <param name="before"></param>
         /// <returns></returns>
-        [HttpGet("/api/deploymentactivity/failed/{id}/{take}/{before?}")]
+        [HttpGet("/api/deploymentactivity/failed/{id}/{take}")]
         public async Task<ListResponse<DeploymentActivitySummary>> GetFailedAsync(string id, int take, string before = MAX_DATE)
         {
             return ListResponse<DeploymentActivitySummary>.Create(await _activityManager.GetFailedActivitiesAsync(id, take, before, OrgEntityHeader, UserEntityHeader));
@@ -59,7 +59,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// <param name="take"></param>
         /// <param name="before"></param>
         /// <returns></returns>
-        [HttpGet("/api/deploymentactivity/completed/{id}/{take}/{before?}")]
+        [HttpGet("/api/deploymentactivity/completed/{id}/{take}")]
         public async Task<ListResponse<DeploymentActivitySummary>> GetCompletedAsync(string id, int take, string before = MAX_DATE)
         {
             return ListResponse<DeploymentActivitySummary>.Create(await _activityManager.GetCompletedActivitiesAsync(id, take, before, OrgEntityHeader, UserEntityHeader));
