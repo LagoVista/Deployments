@@ -42,7 +42,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         X509Certificate _customRootCert;
         X509CertificateCollection _certCollection;
-        Preferences _preferences;
         Manifest _manifest;
 
         private string _host;

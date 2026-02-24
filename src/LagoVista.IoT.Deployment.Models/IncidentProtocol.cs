@@ -25,8 +25,6 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
         public string Icon { get; set; } = "icon-ae-critical";
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Description, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeviceLibraryResources))]
-        public string Description { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources))]
         public List<MediaResourceSummary> Resources { get; set; } = new List<MediaResourceSummary>();

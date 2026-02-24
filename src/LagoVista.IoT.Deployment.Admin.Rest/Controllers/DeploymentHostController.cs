@@ -16,7 +16,7 @@ using LagoVista.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Models.Users;
 using LagoVista.IoT.Web.Common.Attributes;
-using LagoVista.IoT.ProductStore;
+using LagoVista.Core.Product;
 
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -30,9 +30,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
     public class DeploymentHostController : LagoVistaBaseController
     {
         private readonly IDeploymentHostManager _hostManager;
-        private readonly IProductStore _productStore;
+        private readonly IPublicProductStore _productStore;
 
-        public DeploymentHostController(IDeploymentHostManager hostManager, IProductStore productStore, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
+        public DeploymentHostController(IDeploymentHostManager hostManager, IPublicProductStore productStore, UserManager<AppUser> userManager, IAdminLogger logger) : base(userManager, logger)
         {
             _hostManager = hostManager;
             _productStore = productStore;
