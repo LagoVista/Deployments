@@ -258,8 +258,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             // hard coded but the SL organization will always have the products for the VMS that will be doing the hosting
             // perhaps we need a different approach here.  Most orgs won't buy VM's directly so I think this works
-            var vms = await _productStore.GetProductsAsync("softwarelogistics", "vms");
-            return ListResponse<ProductOffering>.Create(vms);
+            return await _productStore.GetProductsAsync("softwarelogistics", "vms", GetListRequestFromHeader());
         }
 
         [SystemAdmin]
