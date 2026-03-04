@@ -92,7 +92,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task<IEnumerable<SolutionVersion>> GetSolutionVersionsAsync(string solutionId)
         {
-            return GetByParitionIdAsync(solutionId);
+            return GetByPartitionIdAsync(solutionId);
         }
 
         private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings

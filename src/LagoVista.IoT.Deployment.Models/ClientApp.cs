@@ -31,10 +31,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public EntityHeader ClientAppUser { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, IsRequired: true, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-ae-apps";
-
-        
         [FormField(LabelResource: DeploymentAdminResources.Names.ClientApp_AppAuthKey1, FieldType: FieldTypes.Secret, SecureIdFieldName:nameof(AppAuthKeyPrimarySecureId), ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public String AppAuthKeyPrimary { get; set; }
 

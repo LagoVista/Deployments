@@ -50,7 +50,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<IEnumerable<DeploymentActivitySummary>> GetForResourceIdAsync(string resourceId)
         {
-            var records = await GetByParitionIdAsync(resourceId);
+            var records = await GetByPartitionIdAsync(resourceId);
             return from rec in records select rec.CreateSummary();
         }
 

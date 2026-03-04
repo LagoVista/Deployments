@@ -23,14 +23,14 @@ namespace LagoVista.IoT.Deployment.Models
             Id = Guid.NewGuid().ToId();
         }
 
-        public string Id { get; set; }
+        public NormalizedId32 Id { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_Name, FieldType: FieldTypes.Text, IsRequired: true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Name { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, FieldType: FieldTypes.Key, IsRequired: true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
-        public string Key { get; set; }
+        public LagoVistaKey Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.WiFiConnectionProfile_SSID, FieldType: FieldTypes.Text, IsRequired:true, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public string Ssid { get; set; }

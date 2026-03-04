@@ -53,9 +53,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             };
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, IsRequired:true, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         [FormField(LabelResource: DeploymentAdminResources.Names.IntegrationType, FieldType: FieldTypes.Picker, EnumType: typeof(IntegrationTypes), ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true, WaterMark: DeploymentAdminResources.Names.IntegrationType_Select_Watermark)]
         public EntityHeader IntegrationType
         {

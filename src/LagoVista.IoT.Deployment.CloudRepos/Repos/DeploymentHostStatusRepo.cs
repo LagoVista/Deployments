@@ -28,7 +28,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<ListResponse<DeploymentHostStatus>> GetStatusHistoryForHostAsync(string hostId, ListRequest listRequest)
         {
-            var response = await GetByParitionIdAsync(hostId);
+            var response = await GetByPartitionIdAsync(hostId);
             return ListResponse<DeploymentHostStatus>.Create(response);
         }
     }

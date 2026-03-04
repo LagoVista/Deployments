@@ -66,9 +66,6 @@ var result = c.ResourceGroups.CreateOrUpdateAsync("MyResourceGroup", new Microso
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Settings, ChildListDisplayMember:"name", FieldType: FieldTypes.ChildListInline, HelpResource: DeploymentAdminResources.Names.Solution_Settings_Help, ResourceType: typeof(DeploymentAdminResources))]
         public List<CustomField> Settings { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Solution_Icon, FieldType:FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         [FKeyProperty(nameof(DeviceConfiguration), typeof(DeviceConfiguration), nameof(DeviceConfigurations) + "[*].Id = {0}", "")]
         [FormField(LabelResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations, HelpResource: DeploymentAdminResources.Names.Solution_DeviceConfigurations_Help, 
             ChildListDisplayMember:nameof(EntityHeader.Text), FieldType: FieldTypes.ChildListInlinePicker, EntityHeaderPickerUrl: "/api/deviceconfigs", ResourceType: typeof(DeploymentAdminResources))]

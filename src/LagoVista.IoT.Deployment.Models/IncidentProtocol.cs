@@ -22,8 +22,10 @@ namespace LagoVista.IoT.Deployment.Models
         GetListUrl: "/api/incident/protocols", SaveUrl: "/api/incident/protocol", GetUrl: "/api/incident/protocol/{id}", DeleteUrl: "/api/incident/protocol/{id}", FactoryUrl: "/api/incident/protocol/factory")]
     public class IncidentProtocol : EntityBase, ISummaryFactory, IIconEntity, IDescriptionEntity, IValidateable, IFormDescriptor
     {
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-ae-critical";
+        public IncidentProtocol()
+        {
+            Icon = "icon-ae-critical";
+        }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources))]
@@ -79,16 +81,16 @@ namespace LagoVista.IoT.Deployment.Models
         FactoryUrl: "/api/incident/protocol/step/factory")]
     public class IncidentProtocolStep : IFormDescriptor, IIconEntity, IIDEntity
     {
-        public string Id { get; set; }
+        public NormalizedId32 Id { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
         public string Name { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, IsRequired:true, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-ae-device-config";
+        public LagoVistaIcon Icon { get; set; } = "icon-ae-device-config";
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, FieldType: FieldTypes.Key, IsRequired: true, ResourceType: typeof(DeploymentAdminResources))]
-        public string Key { get; set; }
+        public LagoVistaIcon Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.IncidentProtocolStep_AssignedTo, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources))]
         public string AssignedTo { get; set; }

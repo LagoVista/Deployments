@@ -26,17 +26,17 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
             Port = 1883;
         }
 
-        public string Id { get; set; }
+        public NormalizedId32 Id { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, IsRequired: true, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string Name { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, IsRequired:true,  FieldType: FieldTypes.Key, ResourceType: typeof(DeploymentAdminResources))]
-        public string Key { get; set; }
+        public LagoVistaKey Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-fo-notification-1";
+        public LagoVistaIcon Icon { get; set; } = "icon-fo-notification-1";
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Category, FieldType: FieldTypes.Category, WaterMark: DeploymentAdminResources.Names.Common_Category_Select,
             ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]

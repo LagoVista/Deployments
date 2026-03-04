@@ -34,9 +34,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             Icon = "icon-pz-server-cloud";
         }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, IsRequired: true, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         [FormField(LabelResource: DeploymentAdminResources.Names.RemoteDeployment_PrimaryMCP, FieldType: FieldTypes.ChildItem, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public DeploymentHost PrimaryMCP { get; set; }
 

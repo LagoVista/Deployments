@@ -47,13 +47,13 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         }
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public NormalizedId32 Id { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Name, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
         public string Name { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Key, HelpResource: DeploymentAdminResources.Names.Common_Key_Help, FieldType: FieldTypes.Key, RegExValidationMessageResource: DeploymentAdminResources.Names.Common_Key_Validation, ResourceType: typeof(DeploymentAdminResources), IsRequired: true)]
-        public string Key { get; set; }
+        public LagoVistaKey Key { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.TaggedContainer_Status, EnumType: (typeof(TagContainer_Status)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.TaggedContainer_Status_Select, IsRequired: true)]
         public EntityHeader<TagContainer_Status> Status { get; set; }

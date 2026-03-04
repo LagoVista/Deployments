@@ -19,8 +19,10 @@ namespace LagoVista.IoT.Deployment.Models
         GetListUrl: "/api/systemtests", SaveUrl: "/api/systemtest", GetUrl: "/api/systemtest/{id}", DeleteUrl: "/api/systemtest/{id}", FactoryUrl: "/api/systemtest/factory")]
     public class SystemTest : EntityBase, ISummaryFactory, IIconEntity, IDescriptionEntity, IValidateable, IFormDescriptor
     {
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-fo-laptop-protection";
+        public SystemTest()
+        {
+            Icon = "icon-fo-laptop-protection";
+        }
 
         
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTest_Steps, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/systemtest/step/factory", ResourceType: typeof(DeploymentAdminResources))]

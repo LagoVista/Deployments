@@ -172,9 +172,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             ResourceType: typeof(DeploymentAdminResources))]
         public List<EntityHeader<ApplicationCache>> ApplicationCaches { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         public List<InstanceAccount> InstanceAccounts { get; set; }
 
 
@@ -187,8 +184,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_UpSince, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: false)]
         public string UpSince { get; set; }
 
-        [FKeyProperty(nameof(Subscription), typeof(LagoVista.UserAdmin.Models.Orgs.SubscriptionDTO), nameof(Subscription) + ".Id = {0}")]
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, 
+       [FormField(LabelResource: DeploymentAdminResources.Names.Host_Subscription, nameof(Subscription), WaterMark: DeploymentAdminResources.Names.Host_SubscriptionSelect, 
            HelpResource:DeploymentAdminResources.Names.Instance_Subscription_Help, FieldType: FieldTypes.EntityHeaderPicker, EntityHeaderPickerUrl: "/api/subscriptions", FactoryUrl: "/api/subscription/factory",
             ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true, IsRequired: true)]
         public EntityHeader Subscription { get; set; }

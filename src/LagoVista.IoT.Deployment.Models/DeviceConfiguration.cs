@@ -94,9 +94,6 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public string CustomPageQuickLink { get; set; }
         
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
 
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceConfiguration_Routes, FieldType: FieldTypes.ChildListInline, FactoryUrl: "/api/deviceconfig/route/factory", ResourceType: typeof(DeploymentAdminResources))]
         public List<Route> Routes { get; set; }

@@ -41,7 +41,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<List<InstanceAccount>> GetInstanceAccountsAsync(string instanceId)
         {
-            var accounts = await GetByParitionIdAsync(instanceId);
+            var accounts = await GetByPartitionIdAsync(instanceId);
             return accounts.Select(act => act.ToInstanceAccount()).OrderBy(act => act.UserName).ToList();
         }
 

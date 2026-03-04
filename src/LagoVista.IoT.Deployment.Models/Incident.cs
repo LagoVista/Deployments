@@ -23,9 +23,10 @@ namespace LagoVista.IoT.Deployment.Models
         GetListUrl: "/api/incidents", SaveUrl: "/api/incident", GetUrl: "/api/incident/{id}", DeleteUrl: "/api/incident/{id}", FactoryUrl: "/api/incident/factory")]
     public class Incident : EntityBase, ISummaryFactory, IIconEntity, IDescriptionEntity, IValidateable
     {
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-ae-critical";
-
+        public Incident()
+        {
+            Icon = "icon-ae-critical";
+        }
         public EntityHeader IncidentProtocol { get; set; }
 
         public string OpenedTimeStamp { get; set; }

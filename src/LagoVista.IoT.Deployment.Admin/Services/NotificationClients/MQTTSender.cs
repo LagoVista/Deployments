@@ -49,7 +49,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     });
             }
 
-            var clientId = String.IsNullOrEmpty(mqtt.ClientId) ? mqtt.Key : mqtt.ClientId;
+            var clientId = String.IsNullOrEmpty(mqtt.ClientId) ? mqtt.Key.Value : mqtt.ClientId;
             if (!mqtt.Anonymous)
             {
                 var passwordResult = await _secureStorage.GetSecretAsync(org, mqtt.PasswordSecretId, user);

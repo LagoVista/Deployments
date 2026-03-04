@@ -575,7 +575,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var deviceStates = await _deviceConfigHelper.GetCustomDeviceStatesAsync(device.Result.DeviceConfiguration.Id, orgEntityHeader, userEntityHeader);
             if (deviceStates != null && deviceStates.HasValue)
             {
-                var newDeviceState = deviceStates.Value.States.Where(st => st.Key.ToLower() == raisedNotification.NotificationKey).FirstOrDefault();
+                var newDeviceState = deviceStates.Value.States.Where(st => st.Key.Value.ToLower() == raisedNotification.NotificationKey).FirstOrDefault();
                 if (newDeviceState != null)
                 {
                     device.Result.CustomStatus = EntityHeader.Create(newDeviceState.Key, newDeviceState.Name);

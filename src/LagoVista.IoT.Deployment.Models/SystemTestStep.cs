@@ -30,11 +30,11 @@ namespace LagoVista.IoT.Deployment.Models
 
         [FormField(LabelResource: LagoVistaCommonStrings.Names.Common_Key, HelpResource: LagoVistaCommonStrings.Names.Common_Key_Help, FieldType: FieldTypes.Key,
             RegExValidationMessageResource: LagoVistaCommonStrings.Names.Common_Key_Validation, ResourceType: typeof(LagoVistaCommonStrings), IsRequired: true)]
-        public string Key { get; set; }
+        public LagoVistaKey Key { get; set; }
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; } = "icon-ae-device-config";
+        public LagoVistaIcon Icon { get; set; } = "icon-ae-device-config";
 
 
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Summary, FieldType: FieldTypes.MultiLineText, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
@@ -56,7 +56,7 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.SystemTestStep_Resources, FieldType: FieldTypes.MediaResources, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: true)]
         public List<MediaResourceSummary> Resources { get; set; } = new List<MediaResourceSummary>();
 
-        public string Id { get; set; }
+        public NormalizedId32 Id { get; set; }
 
         public List<string> GetFormFields()
         {

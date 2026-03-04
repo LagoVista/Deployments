@@ -34,9 +34,6 @@ namespace LagoVista.IoT.Deployment.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotification_EmailSubject, HelpResource: DeploymentAdminResources.Names.DeviceNotification_EmailSubject_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false)]
         public string EmailSubject { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Common_Icon, FieldType: FieldTypes.Icon, ResourceType: typeof(DeploymentAdminResources))]
-        public string Icon { get; set; }
-
         [FormField(LabelResource: DeploymentAdminResources.Names.DeviceNotifications_SendSMS, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool SendSMS { get; set; }
 
