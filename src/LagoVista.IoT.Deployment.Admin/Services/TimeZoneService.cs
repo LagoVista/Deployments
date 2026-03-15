@@ -157,5 +157,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             EnsureLoaded();
             return _timeZoneReferences;
         }
+
+        public TimeZoneReference GetTimeZoneReferenceById(string id)
+        {
+            EnsureLoaded();
+
+            var timeZone = _timeZoneReferences.FirstOrDefault(tz => tz.Id == id);
+            if (timeZone == null)
+                throw new InvalidOperationException($"Unknown timezone id [{id}].");
+
+            return timeZone;
+        }
     }
 }
