@@ -66,10 +66,10 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         public void Host_ShouldUpdate_Status_DateIfChangeed()
         {
             _host.Status = EntityHeader<HostStatus>.Create(HostStatus.Offline);
-            _host.StatusTimeStamp = DateTime.UtcNow.AddHours(-5).ToJSONString();
+            _host.StatusTimeStamp = UtcTimestamp.Now.Add(TimeSpan.FromHours(-5));
             _deploymentHostManager.UpdateDeploymentHostStatusAsync(_host.Id, Admin.Models.HostStatus.Running, "1.2.3.4", _org, _user);
 
-            _hostRepo.Verify(hsr => hsr.UpdateDeploymentHostAsync(It.Is<DeploymentHost>(hst => hst.StatusTimeStamp.ToDateTime() > DateTime.UtcNow.AddMinutes(-5))), Times.Once);
+            _hostRepo.Verify(hsr => hsr.UpdateDeploymentHostAsync(It.Is<DeploymentHost>(hst => hst.StatusTimeStamp.Value.ToDateTime() > DateTime.UtcNow.AddMinutes(-5))), Times.Once);
         }
 
         [TestMethod]

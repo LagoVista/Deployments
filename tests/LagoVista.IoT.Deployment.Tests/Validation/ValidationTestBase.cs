@@ -69,7 +69,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
         {
             entity.CreatedBy = EntityHeader.Create(Guid.NewGuid().ToId(), "dontcare");
             entity.LastUpdatedBy = entity.CreatedBy;
-            entity.CreationDate = DateTime.Now.ToJSONString();
+            entity.CreationDate = UtcTimestamp.Now;
             entity.LastUpdatedDate = entity.CreationDate;
         }
 

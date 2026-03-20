@@ -1,13 +1,11 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: 69ad9026e445e9e3115dcf6531d179575e581bcaec1e48e07fffef5555c9a7e8
-// IndexVersion: 2
-// --- END CODE INDEX META ---
-using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.CloudRepos.Repos;
 using LagoVista.IoT.Deployment.Models;
+using LagoVista.IoT.Logging.Loggers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LagoVista.IoT.Deployment.CloudRepos
 {
@@ -42,6 +40,19 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IIncidentProtocolRepo, IncidentProtocolRepo>();
             services.AddTransient<ISystemTestExecutionRepo, SystemTestExecutionRepo>();
             services.AddTransient<IRaisedNotificationHistoryRepo, RaisedNotificationHistoryRepo>();
+        }
+    }
+}
+
+namespace LagoVista.DependencyInjection
+{
+    public static class DeploymentModule
+    {
+        public static void AddDeploymentModule(this IServiceCollection services, IConfigurationRoot configRoot, IAdminLogger logger)
+        {
+            LagoVista.IoT.Deployment.CloudRepos.Startup.ConfigureServices(services);
+            LagoVista.IoT.Deployment.Admin.Startup.ConfigureServices(services);
+            services.AddMetaDataHelper<DeviceNotification>();
         }
     }
 }

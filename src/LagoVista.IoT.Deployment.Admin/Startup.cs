@@ -1,8 +1,3 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: 2252c3f1c700d3a588aee6b3a27edf1704b1e5571d20d38a0e3116af3e7605fd
-// IndexVersion: 2
-// --- END CODE INDEX META ---
-using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
@@ -13,6 +8,7 @@ using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Interfaces;
 using LagoVista.IoT.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using System.Resources;
 
 [assembly: NeutralResourcesLanguage("en")]
@@ -44,7 +40,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
             services.AddTransient<IClientAppManager, ClientAppManager>();
             services.AddTransient<IIntegrationManager, IntegrationManager>();
-            services.AddTransient<ITimeZoneServices, TimeZoneService>();
+            services.AddTransient<LagoVista.Core.Interfaces.ITimeZoneServices, TimeZoneService>();
             services.AddTransient<IDeviceArchiveConnector, DeviceArchiveConnectorService>();
             services.AddTransient<IDeviceManagementConnector, DeviceManagementConnectorService>();
             services.AddTransient<ITelemetryConnector, TelemetryConnector>();
@@ -64,7 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddScoped<ICOTSender, COTSender>();
             services.AddScoped<ISMSSender, SMSSender>();
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddSingleton<ILocalizationService, LocalizationService>();
+            services.AddSingleton<LagoVista.Core.Interfaces.ILocalizationService, LocalizationService>();
             services.AddSingleton<INotificationLandingPage, NotificationLandingPage>();
             services.AddSingleton<IDeviceCommandSender, DeviceCommandSender>();
             services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();

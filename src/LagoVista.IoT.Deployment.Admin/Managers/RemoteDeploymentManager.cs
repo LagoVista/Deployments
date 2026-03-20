@@ -90,7 +90,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             ValidationCheck(host, Actions.Update);
 
             await AuthorizeAsync(host, AuthorizeResult.AuthorizeActions.Update, user, org);
-            host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            host.LastUpdatedDate = UtcTimestamp.Now;
             host.LastUpdatedBy = user;
             await _repo.UpdateRemoteeDeploymentAsync(host);
             return InvokeResult.Success;

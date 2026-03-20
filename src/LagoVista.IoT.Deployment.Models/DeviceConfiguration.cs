@@ -116,13 +116,14 @@ namespace LagoVista.IoT.Deployment.Admin.Models
 
         public static DeviceConfiguration Create(Organization org, AppUser appUser)
         {
+            var ts = UtcTimestamp.Now;
             return new DeviceConfiguration()
             {
                 Id = Guid.NewGuid().ToId(),
                 CreatedBy = appUser.ToEntityHeader(),
-                CreationDate = DateTime.Now.ToJSONString(),
+                CreationDate = ts,
                 LastUpdatedBy = appUser.ToEntityHeader(),
-                LastUpdatedDate = DateTime.Now.ToJSONString(),
+                LastUpdatedDate = ts,
                 OwnerOrganization = org.ToEntityHeader(),
             };
         }

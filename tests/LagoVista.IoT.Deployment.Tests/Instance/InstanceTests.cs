@@ -15,8 +15,8 @@ using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.Logging.Loggers;
 using LagoVista.UserAdmin.Interfaces.Managers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
@@ -30,7 +30,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
     /// 3) The device repo that was reassigned is not in use
     /// 4) If a device repo is swapped the original repo is reset so it can be used somewhere else.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class InstanceTests
     {
         private const string NEW_DEVICE_REPO_ID = "ABC123ABC123ABC123";
@@ -54,7 +54,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         EntityHeader ORG = EntityHeader.Create("FB4C4FD759E3497180DF1B28FFCB7ACD", "MyOrg");
         EntityHeader USER = EntityHeader.Create("{B050B8F2B72D46E8-8555BCE178111218", "MyUser");
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             _deploymentHostManager = new Mock<IDeploymentHostManager>();
@@ -96,12 +96,13 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
         private DeploymentInstance GetInstance()
         {
+            var ts = UtcTimestamp.Now;
             var instance = new DeploymentInstance();
             instance.Id = DEVICE_INSTANCE_ID;
             instance.CreatedBy = EntityHeader.Create(Guid.NewGuid().ToId(), "username");
             instance.LastUpdatedBy = instance.CreatedBy;
-            instance.CreationDate = DateTime.Now.ToJSONString();
-            instance.LastUpdatedDate = DateTime.Now.ToJSONString();
+            instance.CreationDate = ts;
+            instance.LastUpdatedDate = ts;
             instance.Key = "abc123";
             instance.Name = "myinstance";
             instance.OwnerOrganization = ORG;
@@ -124,7 +125,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             return instance;
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Add_Can_Add_If_Device_Repo_Not_InUse()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -145,8 +146,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(repo => repo.Instance.Id == DEVICE_INSTANCE_ID), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException))]
+        [Test]
         public async Task Instance_Add_ThrowValidationException_IfDeviceRepoNotAssigned()
         {
 
@@ -160,12 +160,11 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
             instance.DeviceRepository = null;
-            await _instanceManager.AddInstanceAsync(instance, ORG, USER);
+            Assert.That(async () => await _instanceManager.AddInstanceAsync(instance, ORG, USER), Throws.InstanceOf<ValidationException>());
         }
 
 
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException))]
+        [Test]
         public async Task Instance_Add_ThrowValidationException_Device_Repo_Is_InUse()
         {
 
@@ -179,10 +178,10 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var instance = GetInstance();
 
-            await _instanceManager.AddInstanceAsync(instance, ORG, USER);
+            Assert.That(async () => await _instanceManager.AddInstanceAsync(instance, ORG, USER), Throws.InstanceOf<ValidationException>());
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Add_Does_Not_Call_Add_If_Repo_Is_InUse()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -207,7 +206,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentInstanceRepo.Verify(dir => dir.AddInstanceAsync(It.IsAny<DeploymentInstance>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Update_NoDeviceRepoChange()
         {
             _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).Returns((string id) =>
@@ -230,7 +229,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.IsAny<DeviceRepository>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Update_DeviceRepoChange_NewDeviceRepoNotInUse()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(OLD_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -278,8 +277,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         }
 
 
-        [TestMethod]
-        [ExpectedException(typeof(ValidationException))]
+        [Test]
         public async Task Instance_Update_DeviceRepoChange_NewDeviceRepoInUse_WillThrowException()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(OLD_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -312,7 +310,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Update_DeviceRepoChange_NewDeviceRepoInUse_WillNotCallUpdatesn()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(OLD_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -365,7 +363,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == OLD_DEVICE_REPO_ID && rpo.Instance == null), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Delete_ClearRepo()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).Returns((string id, EntityHeader user, EntityHeader org) =>
@@ -386,12 +384,12 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentInstanceRepo.Setup(inst => inst.GetInstanceAsync(DEVICE_INSTANCE_ID)).ReturnsAsync(instance);
             await _instanceManager.DeleteInstanceAsync(instance.Id, ORG, USER);
 
-            Assert.IsTrue(instance.IsArchived);
+            Assert.That(instance.IsArchived);
             /* Didn't change, don't call method to get or update the device repo */
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.Is<DeviceRepository>(rpo => rpo.Id == NEW_DEVICE_REPO_ID && rpo.Instance == null), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Delete_DeletesHostIfDedicated()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });
@@ -410,7 +408,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentHostManager.Verify(dhm => dhm.DeleteDeploymentHostAsync(host.Id, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
         }
 
-        [TestMethod]
+        [Test]
         public async Task Instance_Delete_ShouldNotDeleteIfNotDedicated()
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });

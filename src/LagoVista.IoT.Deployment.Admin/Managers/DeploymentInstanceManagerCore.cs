@@ -562,7 +562,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> UpdateInstanceStatusAsync(string instanceId, DeploymentInstanceStates newStatus, bool deployed, string version, EntityHeader org, EntityHeader user, string details = "")
         {
-            var dateStamp = DateTime.UtcNow.ToJSONString();
+            var dateStamp = UtcTimestamp.Now;
 
             var instance = await _instanceRepo.GetInstanceAsync(instanceId);
             await CheckOwnershipOrSysAdminAsync(instance, org, user);

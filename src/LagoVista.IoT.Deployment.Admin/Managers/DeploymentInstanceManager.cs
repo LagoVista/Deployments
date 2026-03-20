@@ -722,7 +722,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     break;
             }
 
-            instance.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            instance.LastUpdatedDate = UtcTimestamp.Now;
             instance.LastUpdatedBy = user;
 
             await _instanceRepo.UpdateInstanceAsync(instance);
@@ -799,7 +799,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Update, user, org, "Generate Shared Access Keys");
 
                 instance.LastUpdatedBy = user;
-                instance.LastUpdatedDate = DateTime.Now.ToJSONString();
+                instance.LastUpdatedDate = UtcTimestamp.Now;
                 await _instanceRepo.UpdateInstanceAsync(instance);
             }
 
@@ -1127,7 +1127,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     HostType = EntityHeader<HostTypes>.Create(hostType),
                     HostId = host.Id,
                     OwnerOrg = host.OwnerOrganization,
-                    AllocatedTimeStamp = DateTime.UtcNow.ToJSONString(),
+                    AllocatedTimeStamp = UtcTimestamp.Now,
                     Url = host.DnsHostName,
                     ServiceAccount = $"{orgNameSpaceResult.Result}.{instance.Result.Key}.{hostType.ToString().ToLower()}",
                     ServiceAccountPassword = Convert.ToBase64String(Guid.NewGuid().ToByteArray())

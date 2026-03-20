@@ -131,6 +131,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public Task<InvokeResult> DisconnectAsync()
         {
+            TakServerDisconnected?.Invoke(this, null);
             return Task.FromResult(InvokeResult.Success);
         }
 

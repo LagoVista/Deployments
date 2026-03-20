@@ -88,7 +88,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<InvokeResult<SystemTestExecution>> StartTestAsync(string systemTestId, EntityHeader org, EntityHeader user)
         {
             var test = await _systemTestsRepo.GetSystemTestAsync(systemTestId);
-            var timeStamp = DateTime.UtcNow.ToJSONString();
+            var timeStamp = UtcTimestamp.Now;
 
             var result = new SystemTestExecution()
             {
@@ -135,7 +135,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return InvokeResult<SystemTestExecution>.FromError("If the step failed, you must provide a reason.");
             }
 
-            var timeStamp = DateTime.UtcNow.ToJSONString();
+            var timeStamp = UtcTimestamp.Now;
 
             var execution = await _systemTestExecutionRepo.GetSystemTestExecutionAsync(testExecutionId);
             await AuthorizeAsync(user, org, typeof(SystemTestExecution), Actions.Update, testExecutionId);
@@ -193,7 +193,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult<SystemTestExecution>> AbortTestAsync(string testExecutionId, EntityHeader org, EntityHeader user)
         {
-            var timeStamp = DateTime.UtcNow.ToJSONString();
+            var timeStamp = UtcTimestamp.Now;
 
             var execution = await _systemTestExecutionRepo.GetSystemTestExecutionAsync(testExecutionId);
             if(execution.Status.Value != TestExecutionStates.InProcess || execution.Status.Value !=  TestExecutionStates.New)
@@ -231,7 +231,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             stepResult.TimeStamp = null;
 
             execution.LastUpdatedBy = user;
-            execution.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            execution.LastUpdatedDate = UtcTimestamp.Now;
 
             await _systemTestExecutionRepo.UpdateSystemTestExecutionAsync(execution);
             return InvokeResult<SystemTestExecution>.Create(execution);

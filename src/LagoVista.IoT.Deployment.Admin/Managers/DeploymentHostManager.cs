@@ -347,7 +347,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                     throw new Exception($"Invalid key name: {keyName}");
             }
 
-            instance.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            instance.LastUpdatedDate = UtcTimestamp.Now;
             instance.LastUpdatedBy = user;
 
             await _deploymentHostRepo.UpdateDeploymentHostAsync(instance);
@@ -409,7 +409,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 host.HostAccessKey2 = null;
             }
 
-            host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+            host.LastUpdatedDate = UtcTimestamp.Now;
             host.LastUpdatedBy = user;
             
             await _deploymentHostRepo.UpdateDeploymentHostAsync(host);
@@ -423,6 +423,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             if (host.Status.Value != hostStatus)
             {
+                var ts = UtcTimestamp.Now;
+
                 await CheckOwnershipOrSysAdminAsync(host, org, user);
 
                 var hostStatusUpdate = Models.DeploymentHostStatus.Create(hostId, user);
@@ -432,11 +434,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 hostStatusUpdate.Version = version ?? "-";
 
                 host.Status = EntityHeader<HostStatus>.Create(hostStatus);
-                host.StatusTimeStamp = DateTime.UtcNow.ToJSONString();
+                host.StatusTimeStamp = ts;
                 host.StatusDetails = statusDetails;
                 await _deploymentHostStatusRepo.AddDeploymentHostStatusAsync(hostStatusUpdate);
 
-                host.LastUpdatedDate = DateTime.UtcNow.ToJSONString();
+                host.LastUpdatedDate = ts;
                 host.LastUpdatedBy = user;
 
                 await _deploymentHostRepo.UpdateDeploymentHostAsync(host);

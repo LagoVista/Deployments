@@ -88,12 +88,13 @@ namespace LagoVista.IoT.Deployment.Tests.Host
 
         private DeploymentInstance GetInstance()
         {
+            var ts = UtcTimestamp.Now;
             var instance = new DeploymentInstance();
             instance.Id = DEVICE_INSTANCE_ID;
             instance.CreatedBy = EntityHeader.Create(Guid.NewGuid().ToId(), "username");
             instance.LastUpdatedBy = instance.CreatedBy;
-            instance.CreationDate = DateTime.Now.ToJSONString();
-            instance.LastUpdatedDate = DateTime.Now.ToJSONString();
+            instance.CreationDate = ts;
+            instance.LastUpdatedDate = ts;
             instance.Key = "abc123";
             instance.Name = "myinstance";
             instance.OwnerOrganization = ORG;

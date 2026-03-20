@@ -32,11 +32,11 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestMethod]
         public void LoadCerts()
         {
-            var certText = System.IO.File.ReadAllText("slroot.crt");
+    //        var certText = System.IO.File.ReadAllText("slroot.crt");
             
 
-            var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(certText);
-            var cert = new X509Certificate(bytes);
+  //          var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(certText);
+//            var cert = new X509Certificate(bytes);
 
 
         }

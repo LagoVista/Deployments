@@ -204,12 +204,12 @@ namespace LagoVista.IoT.Deployment.Admin.Models
             set
             {
                 _status = value;
-                StatusTimeStamp = DateTime.UtcNow.ToJSONString();
+                StatusTimeStamp = UtcTimestamp.Now;
             }
         }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Instance_StatusTimeStamp, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
-        public string StatusTimeStamp { get; set; }
+        public UtcTimestamp StatusTimeStamp { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_CapacityStatus, EnumType: (typeof(HostCapacityStatus)), FieldType: FieldTypes.Picker, ResourceType: typeof(DeploymentAdminResources), WaterMark: DeploymentAdminResources.Names.Host_Type_Select, IsRequired: false, IsUserEditable: false)]
         public EntityHeader<HostCapacityStatus> CapacityStatus { get; set; }

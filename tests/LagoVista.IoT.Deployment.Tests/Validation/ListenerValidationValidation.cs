@@ -27,8 +27,8 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
             var instance = new DeploymentInstance()
             {
                 Id = Guid.NewGuid().ToId(),
-                CreationDate = DateTime.UtcNow.ToJSONString(),
-                LastUpdatedDate = DateTime.UtcNow.ToJSONString(),
+                CreationDate = UtcTimestamp.Now,
+                LastUpdatedDate = UtcTimestamp.Now,
                 LastUpdatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "USER"),
                 CreatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "CREATED"),
                 OwnerOrganization = EntityHeader.Create("1112403B28644ED180465C0393F0CA14", "USER"),
@@ -56,8 +56,8 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
                     Value = new Solution()
                     {
                         Id = "BB12403B28644ED180465C0393F0CA14",
-                        CreationDate = DateTime.UtcNow.ToJSONString(),
-                        LastUpdatedDate = DateTime.UtcNow.ToJSONString(),
+                        CreationDate = UtcTimestamp.Now,
+                        LastUpdatedDate = UtcTimestamp.Now,
                         LastUpdatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "USER"),
                         CreatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "CREATED"),
                         OwnerOrganization = EntityHeader.Create("1112403B28644ED180465C0393F0CA14", "USER"),
@@ -71,8 +71,8 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
                             {
                                 Id = "07F5FD0D4D734AC48110184DCB20F285",
                                 Name = "MyPlanner",
-                                CreationDate = DateTime.UtcNow.ToJSONString(),
-                                LastUpdatedDate = DateTime.UtcNow.ToJSONString(),
+                                CreationDate = UtcTimestamp.Now,
+                                LastUpdatedDate = UtcTimestamp.Now  ,
                                 LastUpdatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "USER"),
                                 CreatedBy = EntityHeader.Create("6DA61E6EA91448618F2248C97C354F1C", "CREATED"),
                                 OwnerOrganization = EntityHeader.Create("1112403B28644ED180465C0393F0CA14", "USER"),
