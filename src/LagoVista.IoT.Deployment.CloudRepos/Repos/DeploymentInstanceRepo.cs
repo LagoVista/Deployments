@@ -27,16 +27,12 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         private readonly ICacheProvider _cacheProvider;
         private readonly IAdminLogger _adminLogger;
 
-        private bool _shouldConsolidateCollections;
         public DeploymentInstanceRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
             base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
             _adminLogger = services.AdminLogger;
             _cacheProvider = services.CacheProvider;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public Task AddInstanceAsync(DeploymentInstance instance)
         {

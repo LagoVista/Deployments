@@ -15,15 +15,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class ContainerRepositoryRepo : DocumentDBRepoBase<ContainerRepository>, IContainerRepositoryRepo
     {
-        private bool _shouldConsolidateCollections;
         public ContainerRepositoryRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services) 
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
-
 
         public Task AddContainerRepoAsync(ContainerRepository container)
         {

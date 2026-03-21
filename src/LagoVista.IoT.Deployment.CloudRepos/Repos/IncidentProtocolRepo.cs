@@ -16,15 +16,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class IncidentProtocolRepo : DocumentDBRepoBase<IncidentProtocol>, IIncidentProtocolRepo
     {
-        private bool _shouldConsolidateCollections;
-
         public IncidentProtocolRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
-
         public Task AddIncidentProtocolAsync(IncidentProtocol incidentProtocol)
         {
             return CreateDocumentAsync(incidentProtocol);

@@ -15,15 +15,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     public class SolutionRepo : DocumentDBRepoBase<Solution>, ISolutionRepo
     {
 
-        private bool _shouldConsolidateCollections;
         public SolutionRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudServices services) : 
             base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
-
 
         public Task AddSolutionAsync(Solution deployment)
         {

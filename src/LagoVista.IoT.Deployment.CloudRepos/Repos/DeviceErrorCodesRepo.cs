@@ -17,14 +17,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeviceErrorCodesRepo : DocumentDBRepoBase<DeviceErrorCode>, IDeviceErrorCodesRepo
     {
-        private bool _shouldConsolidateCollections;
-
         public DeviceErrorCodesRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public Task AddErrorCodeAsync(DeviceErrorCode errorCode)
         {

@@ -21,14 +21,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeploymentHostRepo : DocumentDBRepoBase<DeploymentHost>, IDeploymentHostRepo
     {
-        private readonly bool _shouldConsolidateCollections;
         public DeploymentHostRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
             base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public async Task AddDeploymentHostAsync(DeploymentHost host)
         {

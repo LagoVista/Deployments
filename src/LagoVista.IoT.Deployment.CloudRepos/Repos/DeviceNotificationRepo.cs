@@ -20,19 +20,14 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeviceNotificationRepo : DocumentDBRepoBase<DeviceNotification>, IDeviceNotificationRepo
     {
-        private readonly bool _shouldConsolidateCollections;
         private readonly ICacheProvider _cacheProvider;
         private readonly IAdminLogger _logger;
 
         public DeviceNotificationRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
-            _cacheProvider = services.CacheProvider;
             _logger = services.AdminLogger;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public Task AddNotificationAsync(DeviceNotification errorCode)
         {

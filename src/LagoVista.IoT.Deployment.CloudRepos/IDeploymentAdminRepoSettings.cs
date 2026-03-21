@@ -11,28 +11,24 @@ namespace LagoVista.IoT.Deployment.CloudRepos
 {
     public interface IDeploymentRepoSettings
     {
-        IConnectionSettings DeploymentAdminDocDbStorage { get; set; }
-        IConnectionSettings DeploymentAdminTableStorage { get; set; }
-        bool ShouldConsolidateCollections { get; }
+        IConnectionSettings DeploymentAdminDocDbStorage { get; }
+        IConnectionSettings DeploymentAdminTableStorage { get; }
     }
 
     public interface IUsageMetricsRepoSettings
     {
-        IConnectionSettings UsageMetricsTableStorage { get; set; }
+        IConnectionSettings UsageMetricsTableStorage { get; }
     }
 
     public interface IDeploymentInstanceRepoSettings
     {
-        IConnectionSettings InstanceDocDbStorage { get; set; }
-        bool ShouldConsolidateCollections { get; }
+        IConnectionSettings InstanceDocDbStorage { get; }
     }
 
 
     public interface IDeviceConfigurationSettings
     {
-        IConnectionSettings DeviceConfigurationtAdminDocDbStorage { get; set; }
-        IConnectionSettings DeviceConfigurationAdminTableStorage { get; set; }
-
-        bool ShouldConsolidateCollections { get; }
+        IConnectionSettings DeviceConfigurationtAdminDocDbStorage { get;  }
+        IConnectionSettings DeviceConfigurationAdminTableStorage { get; }
     }
 }

@@ -16,14 +16,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos
 {
     public class ClientAppRepo : DocumentDBRepoBase<ClientApp>, IClientAppRepo
     {
-        private bool _shouldConsolidateCollections;
         public ClientAppRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
 
         public Task AddClientAppAsync(ClientApp app)
         {

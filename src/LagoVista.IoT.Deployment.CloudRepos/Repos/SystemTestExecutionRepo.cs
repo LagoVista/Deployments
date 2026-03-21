@@ -14,15 +14,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class SystemTestExecutionRepo : DocumentDBRepoBase<SystemTestExecution>, ISystemTestExecutionRepo
     {
-        private bool _shouldConsolidateCollections;
-
         public SystemTestExecutionRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider)
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider)
         {
-            _shouldConsolidateCollections = repoSettings.ShouldConsolidateCollections;
         }
-        protected override bool ShouldConsolidateCollections => _shouldConsolidateCollections;
-
 
         public Task AddSystemTestExecutionAsync(SystemTestExecution testExecution)
         {
