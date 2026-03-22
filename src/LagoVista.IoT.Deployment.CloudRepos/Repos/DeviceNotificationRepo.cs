@@ -27,6 +27,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
         {
             _logger = services.AdminLogger;
+            _cacheProvider = services.CacheProvider;
         }
 
         public Task AddNotificationAsync(DeviceNotification errorCode)
