@@ -3,9 +3,9 @@
     <TargetFramework>net9.0</TargetFramework>
    </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core.Configuration" Version="3.0.3231.0414" />
-    <PackageReference Include="LagoVista.CloudStorage" Version="3.0.3231.0414" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" Version="3.0.3231.0414" />
+    <PackageReference Include="LagoVista.Core.Configuration" Version="3.0.3231.0456" />
+    <PackageReference Include="LagoVista.CloudStorage" Version="3.0.3231.0456" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" Version="3.0.3231.0456" />
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />

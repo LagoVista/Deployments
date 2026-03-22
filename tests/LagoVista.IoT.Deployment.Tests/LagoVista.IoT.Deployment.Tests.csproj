@@ -31,7 +31,7 @@
     <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core.TestBase" Version="3.0.3231.0414" />
+    <PackageReference Include="LagoVista.Core.TestBase" Version="3.0.3231.0456" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

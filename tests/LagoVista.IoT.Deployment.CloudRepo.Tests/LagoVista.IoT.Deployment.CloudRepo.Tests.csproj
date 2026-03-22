@@ -3,7 +3,7 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core.TestBase" Version="3.0.3231.0414" />
+    <PackageReference Include="LagoVista.Core.TestBase" Version="3.0.3231.0456" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.CloudRepos\LagoVista.IoT.Deployment.CloudRepos.csproj" />
