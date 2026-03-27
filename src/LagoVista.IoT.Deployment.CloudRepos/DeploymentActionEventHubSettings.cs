@@ -14,10 +14,10 @@ namespace LagoVista.IoT.Deployment.Admin
 
             DeploymentActivityEventHubConnection = new ConnectionSettings()
             {
-                AccountId = mcpSection["AccountId"],
-                UserName = mcpSection["PolicyName"],
-                AccessKey = mcpSection["AccessKey"],
-                ResourceName = mcpSection["HubName"]
+                AccountId = mcpSection.Require("AccountId"),
+                UserName = mcpSection.Require("PolicyName"),
+                AccessKey = mcpSection.Require("AccessKey"),
+                ResourceName = mcpSection.Require("HubName")
             };
         }
     }
