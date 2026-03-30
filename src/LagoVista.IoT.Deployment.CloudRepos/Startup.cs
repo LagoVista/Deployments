@@ -46,7 +46,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IDeploymentInstanceRepoSettings, DeploymentInstanceRepoSettings>();
             services.AddTransient<IDeviceConfigurationSettings, DeviceConfigurationSettings>();
             services.AddTransient<IDeploymentActionEventHubSettings, DeploymentActionEventHubSettings>();
-            services.AddTransient<IDeviceErrorScheduleCheckSettings, DeviceErrorScheduleCheckSettings>();
+            services.AddSingleton<IDeviceErrorScheduleCheckSettings, DeviceErrorScheduleCheckSettings>();
         }
     }
 }

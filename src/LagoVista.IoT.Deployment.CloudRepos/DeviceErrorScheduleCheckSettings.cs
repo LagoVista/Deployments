@@ -11,7 +11,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
 
         public DeviceErrorScheduleCheckSettings(IConfiguration configuration)
         {
-            var section = configuration.GetRequiredSection("ErrorHandlerQueue");
+            var section = configuration.GetSection("ErrorHandlerQueue");
             DeviceErrorScheduleQueueSettings = new ConnectionSettings()
             {
                 AccountId = section.Require("AccountId"),

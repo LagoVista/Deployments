@@ -8,10 +8,6 @@ using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
 using LagoVista.IoT.Logging.Loggers;
@@ -32,7 +28,6 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             _errorConnectionSettings = errorConnectionSettings ?? throw new ArgumentNullException(nameof(errorConnectionSettings));
             _adminLogger = adminLogger;
             _transmitterConnectionSettings = $"Endpoint=sb://{_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccountId}.servicebus.windows.net/;SharedAccessKeyName={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.UserName};SharedAccessKey={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccessKey};";
-
         }
 
         private async Task CreateQueue(string queueName)
@@ -49,31 +44,25 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         public async Task<InvokeResult> ScheduleAsync(DeviceErrorScheduleCheck errorCheck)
         {
-            var entityPath = "deviceerrorescalationqueue";
-            await CreateQueue(entityPath);
+            var queuePath = _errorConnectionSettings.DeviceErrorScheduleQueueSettings.ResourceName;
+            await CreateQueue(queuePath);
 
             var clientOptions = new ServiceBusClientOptions() { TransportType = ServiceBusTransportType.AmqpWebSockets };
             _senderClient = new ServiceBusClient(_transmitterConnectionSettings, clientOptions);
-            _sender = _senderClient.CreateSender(entityPath);
+            _sender = _senderClient.CreateSender(queuePath);
 
             var json = JsonConvert.SerializeObject(errorCheck);
             var jsonBuffer = System.Text.ASCIIEncoding.ASCII.GetBytes(json);
             try
             {
-                    var sbMsg = new ServiceBusMessage(json);
-                    sbMsg.ContentType = errorCheck.GetType().FullName;
-                    sbMsg.Subject = errorCheck.DeviceException.ErrorCode;
-                    //        sbMsg.CorrelationId = message.CorrelationId;
-                    //        sbMsg.Subject = message.DestinationPath;
-                    //        sbMsg.MessageId = Guid.NewGuid().ToId();
-                    //        sbMsg.
-                    await _sender.ScheduleMessageAsync(sbMsg, errorCheck.DueTimeStamp.ToDateTime());
-                    //        return InvokeResult.Success;
-             
+                var sbMsg = new ServiceBusMessage(json);
+                sbMsg.ContentType = errorCheck.GetType().FullName;
+                sbMsg.Subject = errorCheck.DeviceException.ErrorCode;
+                await _sender.ScheduleMessageAsync(sbMsg, errorCheck.DueTimeStamp.ToDateTime());
             }
             catch (Exception ex)
             {
-                _adminLogger.AddException("[ServiceBusProxyClient__CustomTransmitMessageAsync]", ex, _transmitterConnectionSettings.ToKVP("txconnstr"), entityPath.ToKVP("entityPath"));
+                _adminLogger.AddException(this.Tag(), ex, _transmitterConnectionSettings.ToKVP("txconnstr"), queuePath.ToKVP("entityPath"));
                 throw;
             }
             finally

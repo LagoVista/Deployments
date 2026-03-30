@@ -1,12 +1,9 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: ae271bf1434904d54a5bf670b161bfcae4284d55571d7c47675ebac07cb0c124
-// IndexVersion: 2
-// --- END CODE INDEX META ---
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -15,17 +12,17 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 {
     public class DeviceErrorScheduleCheckListener : IDeviceErrorScheduleCheckListener
     {
-        IDeviceErrorHandler _errorHandler;
-        IDeviceErrorScheduleCheckSettings _errorConnectionSettings;
+        private readonly IDeviceErrorScheduleCheckSettings _errorConnectionSettings;
         private ServiceBusClient _processorClient;
         private ServiceBusProcessor _processor;
         private readonly IAdminLogger _adminLogger;
- 
-        public DeviceErrorScheduleCheckListener(IDeviceErrorHandler errorHandler, IDeviceErrorScheduleCheckSettings errorConnectionSettings, IAdminLogger adminLogger)
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        public DeviceErrorScheduleCheckListener(IServiceScopeFactory scopeFactory, IDeviceErrorScheduleCheckSettings errorConnectionSettings, IAdminLogger adminLogger)
         {
-            _errorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
             _errorConnectionSettings = errorConnectionSettings ?? throw new ArgumentNullException(nameof(errorConnectionSettings));
             _adminLogger = adminLogger ?? throw new ArgumentNullException(nameof(adminLogger));
+            _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
         }
 
         private async Task CreateQueue(string queueName)
@@ -36,17 +33,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             if (!await client.QueueExistsAsync(queueName))
             {
                 await client.CreateQueueAsync(queueName);
-                await client.CreateSubscriptionAsync(queueName, "errorsubs");
             }
         }
 
         public async Task StartAsync()
         {
+            if (_processor != null)
+            {
+                return;
+            }
+
             var queuePath = _errorConnectionSettings.DeviceErrorScheduleQueueSettings.ResourceName;
-      
-            _adminLogger.Trace($"[DeviceErrorScheduleCheckListener__StartAsync] Starting Listener: {queuePath}");
+
+            _adminLogger.Trace($"{this.Tag()} Starting Listener: {queuePath}");
 
             await CreateQueue(queuePath);
+
             var connstr = $"Endpoint=sb://{_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccountId}.servicebus.windows.net/;SharedAccessKeyName={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.UserName};SharedAccessKey={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccessKey};";
 
             var clientOptions = new ServiceBusClientOptions() { TransportType = ServiceBusTransportType.AmqpWebSockets };
@@ -54,24 +56,42 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
             _processor = _processorClient.CreateProcessor(queuePath);
             _processor.ProcessMessageAsync += _processor_ProcessMessageAsync;
-            _processor.ProcessErrorAsync += _processor_ProcessErrorAsync; ;
+            _processor.ProcessErrorAsync += _processor_ProcessErrorAsync;
 
             await _processor.StartProcessingAsync();
-            _adminLogger.Trace($"[DeviceErrorScheduleCheckListener__StartAsync] Started Listener: {queuePath}");
+            _adminLogger.Trace($"{this.Tag()} Started Listener: {queuePath}");
         }
 
         private async Task _processor_ProcessMessageAsync(ProcessMessageEventArgs arg)
         {
-            var json = arg.Message.Body.ToString();
+            try
+            {
+                var json = arg.Message.Body.ToString();
 
-            var exception = JsonConvert.DeserializeObject<DeviceErrorScheduleCheck>(json);
-            exception.DeviceException.FollowUpAttempt++;
-            await _errorHandler.HandleDeviceExceptionAsync(exception.DeviceException, exception.Org, exception.User);
+                using var scope = _scopeFactory.CreateScope();
+
+                var errorCheck = JsonConvert.DeserializeObject<DeviceErrorScheduleCheck>(json);
+                if (errorCheck?.DeviceException == null)
+                {
+                    _adminLogger.AddError(this.Tag(), $"Invalid message payload for queue [{arg.EntityPath}]");
+                    return;
+                }
+
+                errorCheck.DeviceException.FollowUpAttempt++;
+
+                var errorHandler = scope.ServiceProvider.GetRequiredService<IDeviceErrorHandler>();
+                await errorHandler.HandleDeviceExceptionAsync(errorCheck.DeviceException, errorCheck.Org, errorCheck.User);
+            }
+            catch (Exception ex)
+            {
+                _adminLogger.AddException(this.Tag(), ex);
+                throw;
+            }
         }
 
         private Task _processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
-            _adminLogger.AddError("[DeviceErrorScheduleCheckListener___processor_ProcessErrorAsync]", arg.Exception.Message);
+            _adminLogger.AddError(this.Tag(), arg.Exception.Message);
             return Task.CompletedTask;
         }
 

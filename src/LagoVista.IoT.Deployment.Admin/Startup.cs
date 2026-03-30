@@ -63,8 +63,10 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddScoped<LagoVista.Core.Interfaces.ILocalizationService, LocalizationService>();
             services.AddScoped<INotificationLandingPage, NotificationLandingPage>();
             services.AddScoped<IDeviceCommandSender, DeviceCommandSender>();
-            services.AddScoped<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
             services.AddTransient<IDeviceErrorScheduleCheckSender, DeviceErrorScheduleCheckSender>();
+
+            services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
+
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
     }

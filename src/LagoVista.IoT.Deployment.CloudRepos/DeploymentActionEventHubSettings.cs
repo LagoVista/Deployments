@@ -10,7 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin
     
         public DeploymentActionEventHubSettings(IConfiguration configuration)
         {
-            var mcpSection = configuration.GetRequiredSection("MCPEventHub");
+            var mcpSection = configuration.GetSection("MCPEventHub");
 
             DeploymentActivityEventHubConnection = new ConnectionSettings()
             {

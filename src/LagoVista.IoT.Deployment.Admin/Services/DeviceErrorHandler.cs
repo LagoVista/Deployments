@@ -1,7 +1,3 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: 03975919ff9d32ea417a7708e20776076d07fa1f9690e2e09a3970fbf318549d
-// IndexVersion: 2
-// --- END CODE INDEX META ---
 using LagoVista.Core;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
@@ -22,7 +18,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using static LagoVista.Core.Networking.Models.uPnPDevice;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
