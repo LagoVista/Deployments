@@ -30,8 +30,8 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IUsageMetricsManager, UsageMetricsManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentHostManagerRemote, DeploymentHostManager>();
-            services.AddSingleton<IDeploymentInstanceManager, DeploymentInstanceManager>();
-            services.AddSingleton<IRemoteDeploymentManager, RemoteDeploymentManager>();
+            services.AddScoped<IDeploymentInstanceManager, DeploymentInstanceManager>();
+            services.AddScoped<IRemoteDeploymentManager, RemoteDeploymentManager>();
             services.AddTransient<IDeploymentInstanceManagerRemote, DeploymentInstanceManager>();
             services.AddTransient<IDeploymentActivityQueueManager, DeploymentActivityQueueManager>();            
             services.AddTransient<IInstanceValidator, InstanceValidator>();
@@ -53,17 +53,17 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IIncidentManager, IncidentManager>();
             services.AddTransient<IIncidentProtocolManager, IncidentProtocolManager>();
             services.AddTransient<ITakClient, TakClient>();
-            services.AddSingleton<INotificationSender, NotificationSender>();
-            services.AddSingleton<ITagReplacementService, TagReplacementService>();
-            services.AddSingleton<IRestSender, RESTSender>();
-            services.AddSingleton<IMqttSender, MQTTSender>();
+            services.AddScoped<INotificationSender, NotificationSender>();
+            services.AddScoped<ITagReplacementService, TagReplacementService>();
+            services.AddScoped<IRestSender, RESTSender>();
+            services.AddScoped<IMqttSender, MQTTSender>();
             services.AddScoped<ICOTSender, COTSender>();
             services.AddScoped<ISMSSender, SMSSender>();
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddSingleton<LagoVista.Core.Interfaces.ILocalizationService, LocalizationService>();
-            services.AddSingleton<INotificationLandingPage, NotificationLandingPage>();
-            services.AddSingleton<IDeviceCommandSender, DeviceCommandSender>();
-            services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
+            services.AddScoped<LagoVista.Core.Interfaces.ILocalizationService, LocalizationService>();
+            services.AddScoped<INotificationLandingPage, NotificationLandingPage>();
+            services.AddScoped<IDeviceCommandSender, DeviceCommandSender>();
+            services.AddScoped<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
             services.AddTransient<IDeviceErrorScheduleCheckSender, DeviceErrorScheduleCheckSender>();
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
