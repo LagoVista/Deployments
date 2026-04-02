@@ -1,5 +1,7 @@
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
+using LagoVista.Core.Interfaces;
+using LagoVista.Core.Models.Dignostics;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
@@ -10,13 +12,15 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Admin.Services
 {
-    public class DeviceErrorScheduleCheckListener : IDeviceErrorScheduleCheckListener
+    public class DeviceErrorScheduleCheckListener : IDeviceErrorScheduleCheckListener, IHostedServiceDiagnostics
     {
         private readonly IDeviceErrorScheduleCheckSettings _errorConnectionSettings;
         private ServiceBusClient _processorClient;
         private ServiceBusProcessor _processor;
         private readonly IAdminLogger _adminLogger;
         private readonly IServiceScopeFactory _scopeFactory;
+
+        public string Name => nameof(DeviceErrorScheduleCheckListener);
 
         public DeviceErrorScheduleCheckListener(IServiceScopeFactory scopeFactory, IDeviceErrorScheduleCheckSettings errorConnectionSettings, IAdminLogger adminLogger)
         {
@@ -38,29 +42,46 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
         public async Task StartAsync()
         {
-            if (_processor != null)
+            try
             {
-                return;
+                if (_processor != null)
+                {
+                    return;
+                }
+
+                var queuePath = _errorConnectionSettings.DeviceErrorScheduleQueueSettings.ResourceName;
+
+                _adminLogger.Trace($"{this.Tag()} Starting Listener: {queuePath}");
+
+                await CreateQueue(queuePath);
+
+                var connstr = $"Endpoint=sb://{_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccountId}.servicebus.windows.net/;SharedAccessKeyName={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.UserName};SharedAccessKey={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccessKey};";
+
+                var clientOptions = new ServiceBusClientOptions() { TransportType = ServiceBusTransportType.AmqpWebSockets };
+                _processorClient = new ServiceBusClient(connstr, clientOptions);
+
+                _processor = _processorClient.CreateProcessor(queuePath);
+                _processor.ProcessMessageAsync += _processor_ProcessMessageAsync;
+                _processor.ProcessErrorAsync += _processor_ProcessErrorAsync;
+
+                await _processor.StartProcessingAsync();
+                _adminLogger.Trace($"{this.Tag()} Started Listener: {queuePath}");
+            
+                _snapShot.Status = HostedServiceDiagnosticStatus.Running;
+                _snapShot.StartedUtc = DateTime.UtcNow;
+                _snapShot.LastActivity = "Started Listening";
+                _snapShot.LastActivityUtc = DateTime.UtcNow;
             }
-
-            var queuePath = _errorConnectionSettings.DeviceErrorScheduleQueueSettings.ResourceName;
-
-            _adminLogger.Trace($"{this.Tag()} Starting Listener: {queuePath}");
-
-            await CreateQueue(queuePath);
-
-            var connstr = $"Endpoint=sb://{_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccountId}.servicebus.windows.net/;SharedAccessKeyName={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.UserName};SharedAccessKey={_errorConnectionSettings.DeviceErrorScheduleQueueSettings.AccessKey};";
-
-            var clientOptions = new ServiceBusClientOptions() { TransportType = ServiceBusTransportType.AmqpWebSockets };
-            _processorClient = new ServiceBusClient(connstr, clientOptions);
-
-            _processor = _processorClient.CreateProcessor(queuePath);
-            _processor.ProcessMessageAsync += _processor_ProcessMessageAsync;
-            _processor.ProcessErrorAsync += _processor_ProcessErrorAsync;
-
-            await _processor.StartProcessingAsync();
-            _adminLogger.Trace($"{this.Tag()} Started Listener: {queuePath}");
+            catch (Exception ex)
+            {
+                _snapShot.LastError = ex.Message;
+                _snapShot.Status = HostedServiceDiagnosticStatus.Error;
+                _snapShot.LastErrorUtc = DateTime.UtcNow;
+                _adminLogger.AddException(this.Tag(), ex);
+            }
         }
+
+        int processCount = 0;
 
         private async Task _processor_ProcessMessageAsync(ProcessMessageEventArgs arg)
         {
@@ -81,9 +102,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                 var errorHandler = scope.ServiceProvider.GetRequiredService<IDeviceErrorHandler>();
                 await errorHandler.HandleDeviceExceptionAsync(errorCheck.DeviceException, errorCheck.Org, errorCheck.User);
+
+                _snapShot.LastActivity = $"Processed Escalation Message Total Count: {processCount}.";
+                _snapShot.LastActivityUtc = DateTime.UtcNow;
             }
             catch (Exception ex)
             {
+
+                _snapShot.LastError = $"{this.Tag()} - {ex.Message} - likely still listening";
+                _snapShot.LastErrorUtc = DateTime.UtcNow;
                 _adminLogger.AddException(this.Tag(), ex);
                 throw;
             }
@@ -92,6 +119,9 @@ namespace LagoVista.IoT.Deployment.Admin.Services
         private Task _processor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
             _adminLogger.AddError(this.Tag(), arg.Exception.Message);
+            _snapShot.LastError = $"{this.Tag()} - {arg.Exception.Message} - likely still listening";
+            _snapShot.LastErrorUtc = DateTime.UtcNow;
+            _adminLogger.AddException(this.Tag(), arg.Exception);
             return Task.CompletedTask;
         }
 
@@ -109,6 +139,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services
                 await _processorClient.DisposeAsync();
                 _processorClient = null;
             }
+        }
+
+        HostedServiceDiagnosticSnapshot _snapShot = new HostedServiceDiagnosticSnapshot();
+
+        public HostedServiceDiagnosticSnapshot GetSnapshot()
+        {
+            return _snapShot;
         }
     }
 }

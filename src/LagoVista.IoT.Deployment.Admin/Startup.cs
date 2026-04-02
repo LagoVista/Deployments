@@ -1,3 +1,4 @@
+using LagoVista.Core.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Managers;
 using LagoVista.IoT.Deployment.Admin.Resources;
@@ -66,6 +67,7 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IDeviceErrorScheduleCheckSender, DeviceErrorScheduleCheckSender>();
 
             services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
+            services.AddSingleton<IHostedServiceDiagnostics>(serviceProvider => serviceProvider.GetService<IDeviceErrorScheduleCheckListener>());
 
             ErrorCodes.Register(typeof(DeploymentErrorCodes));
         }
