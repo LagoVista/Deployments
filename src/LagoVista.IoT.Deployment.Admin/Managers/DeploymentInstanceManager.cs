@@ -160,8 +160,12 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 throw new ArgumentNullException(nameof(host));
             }
 
-            /// this was for some very early legacy stuff.
-            return true;      
+            if (host.HostType.Value == HostTypes.Shared)
+                return true;
+
+            //"v1.5" and up == rpc
+            var version = Version.Parse(host.ContainerTag.Text.ToLower().Replace("v", ""));
+            return version.Major > 1 || (version.Major == 1 && version.Minor >= 5);
         }
 
         protected override async Task<InvokeResult> PerformActionAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user, DeploymentActivityTaskTypes activityType, int timeoutSeconds = 120)

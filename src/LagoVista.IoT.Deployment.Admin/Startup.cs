@@ -31,14 +31,11 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddTransient<IUsageMetricsManager, UsageMetricsManager>();
             services.AddTransient<IDeploymentHostManager, DeploymentHostManager>();
             services.AddTransient<IDeploymentHostManagerRemote, DeploymentHostManager>();
-            services.AddScoped<IDeploymentInstanceManager, DeploymentInstanceManager>();
             services.AddScoped<IRemoteDeploymentManager, RemoteDeploymentManager>();
-            services.AddTransient<IDeploymentInstanceManagerRemote, DeploymentInstanceManager>();
             services.AddTransient<IDeploymentActivityQueueManager, DeploymentActivityQueueManager>();            
             services.AddTransient<IInstanceValidator, InstanceValidator>();
             services.AddTransient<IDeploymentConnectorService, DeploymentConnectorService>();
             services.AddTransient<IDockerRegisteryServices, DockerRegisteryServices>();
-            services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
             services.AddTransient<IClientAppManager, ClientAppManager>();
             services.AddTransient<IIntegrationManager, IntegrationManager>();
             services.AddTransient<LagoVista.Core.Interfaces.ITimeZoneServices, TimeZoneService>();
@@ -65,6 +62,10 @@ namespace LagoVista.IoT.Deployment.Admin
             services.AddScoped<INotificationLandingPage, NotificationLandingPage>();
             services.AddScoped<IDeviceCommandSender, DeviceCommandSender>();
             services.AddTransient<IDeviceErrorScheduleCheckSender, DeviceErrorScheduleCheckSender>();
+
+            services.AddScoped<IDeploymentInstanceManager, DeploymentInstanceManager>();
+            services.AddTransient<IDeploymentInstanceManagerRemote, DeploymentInstanceManager>();
+            services.AddTransient<IDeploymentInstanceManagerCore, DeploymentInstanceManagerCore>();
 
             services.AddSingleton<IDeviceErrorScheduleCheckListener, DeviceErrorScheduleCheckListener>();
             services.AddSingleton<IHostedServiceDiagnostics>(serviceProvider => serviceProvider.GetService<IDeviceErrorScheduleCheckListener>());
