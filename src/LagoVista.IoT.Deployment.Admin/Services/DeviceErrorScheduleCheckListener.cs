@@ -1,7 +1,7 @@
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using LagoVista.Core.Interfaces;
-using LagoVista.Core.Models.Dignostics;
+using LagoVista.Core.Models.Diagnostics;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Logging.Loggers;
