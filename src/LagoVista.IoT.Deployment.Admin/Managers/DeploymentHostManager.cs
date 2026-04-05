@@ -262,17 +262,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<DeploymentHost> GetNotificationsHostAsync(EntityHeader org, EntityHeader user)
         {
+            var host = await _deploymentHostRepo.GetNotificationsHostAsync();
+            var secureHost = await GetSecureDeploymentHostAsync(host.Id, org, user);
             if (_appConfig.Environment == Environments.Local)
             {
-                return new DeploymentHost()
-                {
-                    AdminAPIUri = "https://dev-notifications.nuviot.com",
-                    HostType = EntityHeader<HostTypes>.Create(HostTypes.Notification),
-                    ContainerTag = EntityHeader.Create("notification", "v1.1.0")
-                };
+                secureHost.AdminAPIUri = "https://dev-notifications.nuviot.com";
             }
 
-            return await _deploymentHostRepo.GetNotificationsHostAsync();
+            return secureHost;
         }
 
         public Task<bool> QueryDeploymentHostKeyInUseAsync(string key, EntityHeader org)
