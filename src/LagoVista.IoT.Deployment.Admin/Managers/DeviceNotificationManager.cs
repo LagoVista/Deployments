@@ -29,9 +29,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly DeviceManagement.Core.IDeviceManager _deviceManager;
         private readonly IDeviceRepositoryManager _deviceRepoManager;
         private readonly IRaisedNotificationHistoryRepo _raisedNotificationHistoryRepo;
-
+        private readonly IDeviceNotificationRecipientRepo _recipientRepo;
         public DeviceNotificationManager(IDeviceNotificationRepo deviceNotificationRepo, IDeviceNotificationTracking notificationTracking, DeviceManagement.Core.IDeviceManager deviceManager, IDeviceRepositoryManager deviceRepoNanager,
-                ILogger logger,  ISecureStorage secureStorage, IStaticPageStorage staticPageStorage, IRaisedNotificationHistoryRepo raisedNotificationHistoryRepo, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
+                ILogger logger,  ISecureStorage secureStorage, IStaticPageStorage staticPageStorage, IDeviceNotificationRecipientRepo recipientRepo, IRaisedNotificationHistoryRepo raisedNotificationHistoryRepo, IAppConfig appConfig, IDependencyManager dependencyManager, ISecurity security) :
             base(logger, appConfig, dependencyManager, security)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -41,6 +41,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _deviceRepoManager = deviceRepoNanager ?? throw new ArgumentNullException(nameof(deviceRepoNanager));
+            _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
+            _recipientRepo = recipientRepo ?? throw new ArgumentNullException( nameof(recipientRepo));
         }
 
         public async Task<InvokeResult> AddNotificationAsync(DeviceNotification notification, EntityHeader org, EntityHeader user)
@@ -264,5 +266,30 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
            
             return InvokeResult<RaiseNotificationSummary>.Create(summary);
          }
+
+        public async Task<InvokeResult> AddNotificationRecipientAsync(DeviceNotificationRecipient recipient, EntityHeader org, EntityHeader user)
+        {
+            recipient.Org = org;
+            recipient.User = user;
+
+            await _recipientRepo.AddNotificationRecipientAsync(recipient);
+            return InvokeResult.Success;
+        }
+
+        public Task<ListResponse<DeviceNotificationRecipient>> GetRecipientsForDeviceAsync(ListRequest listRequest, string deviceRepoId, string deviceUniqueId, EntityHeader org, EntityHeader user)
+        {
+            return _recipientRepo.GetRecipientsForDeviceAsync(listRequest, deviceRepoId, deviceUniqueId);
+        }
+
+        public Task<ListResponse<DeviceNotificationRecipient>> GetRecipientsForDeviceAndNotificationKeyAsync(ListRequest listRequest, string deviceRepoId, string deviceUniqueId, string notitificationKey, EntityHeader org, EntityHeader user)
+        {
+            return _recipientRepo.GetRecipientsForDeviceAndNotificationKeyAsync(listRequest, deviceRepoId, deviceUniqueId, notitificationKey);
+        }
+
+        public async Task<InvokeResult> DeleteNotificationRecipientAsync(string deviceRepoId, string notificationRecipientId, EntityHeader org, EntityHeader user)
+        {
+            await _recipientRepo.DeleteNotificationRecipientAsync(deviceRepoId, notificationRecipientId);
+            return InvokeResult.Success;
+        }
     }
 }

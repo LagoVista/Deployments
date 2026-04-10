@@ -70,6 +70,31 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return _notificationManager.UpdateNotificationAsync(notification, OrgEntityHeader, UserEntityHeader);
         }
 
+        [HttpPost("/api/notification/device/recipient")]
+        public Task<InvokeResult> AddRecipientAsync([FromBody] DeviceNotificationRecipient recipient)
+        {
+            return _notificationManager.AddNotificationRecipientAsync(recipient, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/notification/device/recipient/factory")]
+        public DeviceNotificationRecipient CreateRecipient()
+        {
+            return new DeviceNotificationRecipient();
+        }
+
+        [HttpDelete("/api/notification/device/{repoid}/recipient/{id}")]
+        public Task<InvokeResult> DeleteRecipientAsync(string repoid, string id)
+        {
+            return _notificationManager.DeleteNotificationRecipientAsync(repoid, id, OrgEntityHeader, UserEntityHeader);
+        }
+
+
+        [HttpGet("/api/notification/{repoid}/{deviceid}/device/recipients")]
+        public Task<ListResponse<DeviceNotificationRecipient>> CreateDeviceRecipients(string repoid, string deviceid)
+        {
+            return _notificationManager.GetRecipientsForDeviceAsync(GetListRequestFromHeader(), repoid, deviceid, OrgEntityHeader, UserEntityHeader);
+        }
+
         /// <summary>
         /// Device Error Code - Get Device Error Code
         /// </summary>

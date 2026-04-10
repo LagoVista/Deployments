@@ -5,6 +5,7 @@
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestInitialize]
         public void Init()
         {
-            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object,
+            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object, Mock.Of<IDeviceNotificationRecipientRepo>(),
                                 RasiedDeviceNotificationRepo.Object, NotificationPublisher.Object, BackgroundTaskQueue.Object, TagReplacer.Object,  DeviceConfigHelper.Object, AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeviceCommandSender.Object,
                                 DeploymentInstanceRepo.Object, TimeZoneService.Object);
         }

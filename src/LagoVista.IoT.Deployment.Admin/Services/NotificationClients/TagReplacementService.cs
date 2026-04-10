@@ -51,7 +51,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             try
             {
-                //The following tags will be replaced in the generated content [DeviceName] [DeviceId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
+                //The following tags will be replaced in the generated content [DeviceName] [DeviceUniqueId] [DeviceLocation] [DeviceSummary] [NotificationTimeStamp]
                 if (device == null)
                     return template;
 

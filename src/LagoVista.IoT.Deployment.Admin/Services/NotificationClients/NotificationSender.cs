@@ -29,6 +29,7 @@ using ProtoBuf.WellKnownTypes;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
+using LagoVista.Core.Models.UIMetaData;
 
 namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 {
@@ -59,10 +60,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private readonly IDeviceCommandSender _deviceCommandSender;
         private readonly ITagReplacementService _tagReplacementService;
         private readonly INotificationPublisher _notificationPublisher;
+        private readonly IDeviceNotificationRecipientRepo _deviceNotificationSenderRepo;
 
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
-                                  IRaisedNotificationHistoryRepo raisedNotificationHistory, INotificationPublisher notificationPublisher, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
+                                  IDeviceNotificationRecipientRepo deviceNotificationSenderRepo, IRaisedNotificationHistoryRepo raisedNotificationHistory, INotificationPublisher notificationPublisher, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
                                   ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, IDeviceCommandSender deviceCommandSender, IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
@@ -88,6 +90,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             _deviceCommandSender = deviceCommandSender ?? throw new ArgumentNullException(nameof(deviceCommandSender));
             _notificationPublisher = notificationPublisher ?? throw new ArgumentNullException(nameof(notificationPublisher));
             _tagReplacementService = tagReplacementService ?? throw new ArgumentNullException(nameof(tagReplacementService));
+            _deviceNotificationSenderRepo = deviceNotificationSenderRepo ?? throw new ArgumentNullException(nameof(deviceNotificationSenderRepo));
         }
 
         private async Task<InvokeResult<List<NotificationRecipient>>> GetRecipientsAsync(RaisedDeviceNotification raisedNotification, Device device, EntityHeader orgEntityHeader, EntityHeader userEntityHeader, params EntityHeader[] additionalDistroLists)
@@ -105,6 +108,17 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 externalContacts.AddRange(raisedNotification.AdditionalExternalContacts);
 
             externalContacts.AddRange(device.NotificationContacts);
+
+            var deviceNotificationRecipients = await _deviceNotificationSenderRepo.GetRecipientsForDeviceAndNotificationKeyAsync(ListRequest.All, device.DeviceRepository.Id, device.Id.ToString(), raisedNotification.NotificationKey);
+            externalContacts.AddRange(deviceNotificationRecipients.Model.Select(rec => new ExternalContact()
+            {
+                Email = rec.Email,
+                FirstName = rec.FirstName,
+                LastName = rec.LastName,
+                Phone = rec.Phone,
+                SendEmail = rec.SendEmail,
+                SendSMS = rec.SendSms,
+            }));
 
             foreach(var distro in additionalDistroLists)
             {
