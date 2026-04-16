@@ -36,6 +36,7 @@ using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.MediaServices.Interfaces;
 using LagoVista.AI.Interfaces.Managers;
+using LagoVista.Core;
 
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -59,6 +60,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceManager _deviceManager;
         private readonly IMediaServicesManager _mediaServicesManager;
         private readonly INotificationSender _notificationSender;
+        private readonly IAdminLogger _logger;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -73,7 +75,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
-            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager,
+            IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
@@ -93,6 +95,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             this._mediaServicesManager = mediaServicesManager ?? throw new ArgumentNullException(nameof(mediaServicesManager));
             this._notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         private void CheckHeader(HttpRequest request, String header)
@@ -241,10 +244,18 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         [HttpGet("/api/deployment/instance/full")]
         public async Task<string> GetFullInstanceAsync()
         {
-            await ValidateRequest(HttpContext.Request);
-            var deviceInstanceResponse = await _instanceManager.LoadFullInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-            return JsonConvert.SerializeObject(deviceInstanceResponse, _jsonSettings);
-        }
+            try
+            {
+                await ValidateRequest(HttpContext.Request);
+                var deviceInstanceResponse = await _instanceManager.LoadFullInstanceAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+                return JsonConvert.SerializeObject(deviceInstanceResponse, _jsonSettings);
+            }
+            catch (Exception ex)
+            {
+                _logger.AddException(this.Tag(), ex, InstanceEntityHeader.Id.ToKVP("instanceId"));
+                throw;
+            }
+         }
 
         /// <summary>
         /// Runtime Controller - Request Connection for device watchdog timer
