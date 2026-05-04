@@ -73,12 +73,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                    smsContent += $"\r\nView: {shortenedLink.Result}\r\n";
                 }
-                else if (!String.IsNullOrEmpty(links.AcknowledgeLink))
+               /* else if (!String.IsNullOrEmpty(links.AcknowledgeLink))
                 {
                     var shortenedLink = await _linkShortener.ShortenLinkAsync(links.AcknowledgeLink.Replace("[RecipientId]", recipient.Id));
                     if (!shortenedLink.Successful) return shortenedLink.ToInvokeResult();
                     smsContent += $"\r\nAcknowledge: {shortenedLink.Result}\r\n";
-                }
+                }*/
 
                 if (allowSilence)
                 {
