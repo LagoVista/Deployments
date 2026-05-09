@@ -163,8 +163,11 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             EnsureLoaded();
 
             var timeZone = _timeZoneReferences.FirstOrDefault(tz => tz.Id == id);
-            if (timeZone == null)
-                throw new InvalidOperationException($"Unknown timezone id [{id}].");
+            if (timeZone == null) {
+                timeZone = GetTimeZoneReferenceByIntId(int.Parse(id));
+                if(timeZone == null) 
+                    throw new InvalidOperationException($"Unknown timezone id [{id}], looked at both string and int.");
+            }
 
             return timeZone;
         }
