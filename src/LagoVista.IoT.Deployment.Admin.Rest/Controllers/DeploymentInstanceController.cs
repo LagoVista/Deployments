@@ -665,9 +665,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
     }
 
-    /// <summary>
-    /// Kiosk - Manage Deployment Instances 
-    /// </summary>
     [ConfirmedUser]
     [Authorize]
     public class DataStreamDeploymentInstanceController : LagoVistaBaseController
