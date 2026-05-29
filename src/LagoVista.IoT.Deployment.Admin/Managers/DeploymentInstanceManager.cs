@@ -11,6 +11,7 @@ using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.Core.PlatformSupport;
 using LagoVista.Core.Rpc.Client;
+using LagoVista.Core.Services;
 using LagoVista.Core.Validation;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
@@ -77,9 +78,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly IRemoteServiceManager _remoteListenerServiceManager;
         private readonly LagoVista.IoT.DeviceManagement.Core.IDeviceManager _deviceManager;
         private readonly IDeviceStatusRepo _deviceStatusRepo;
+        private readonly ISignedServiceHttpClient _signedServiceHttpClient;
         #endregion
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, ISignedServiceHttpClient signedServiceHttpClient,
                     IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IUserManager userManager, IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISecureStorage secureStorage, ISolutionVersionRepo solutionVersionRepo,
                     IContainerRepositoryManager containerRepoMgr, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager,
@@ -109,15 +111,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _deviceManager = deviceManager ?? throw new ArgumentNullException(nameof(deviceManager));
             _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
             _deviceStatusRepo = deviceStatusRepo ?? throw new ArgumentNullException(nameof(deviceStatusRepo));
-        
+            _signedServiceHttpClient = signedServiceHttpClient ?? throw new ArgumentNullException(nameof(signedServiceHttpClient));
+
         }
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, ISignedServiceHttpClient signedServiceHttpClient,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage,
                     IDeviceStatusRepo deviceStatusRepo, IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, 
                     LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, ICacheProvider cacheProvider, IRemoteServiceManager remoteListenerServiceManager) :
-            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager,
+            this(deviceRepoManager, connector, hostManager, deviceManagerRepo, signedServiceHttpClient, deploymentActivityQueueManager, instanceRepo, solutionManager, hostRepo, deploymentStatusInstanceRepo, userManager,
                 dataStreamManager, logger, appConfig, depmanager, security, secureStorage, solutionVersionRepo, containerRepoMgr, pipelineModuleManager, deviceTypeManager, instanceAccountRepo, orgUtils, deviceManager, deviceStatusRepo, cacheProvider, remoteListenerServiceManager)
         {
             _proxyFactory = proxyFactory ?? throw new ArgumentNullException(nameof(proxyFactory));
@@ -391,15 +394,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if(org.Text != "PUBLIC")
                 await AuthorizeAsync(user, org, $"wsrequest.{channel}", id);
 
-            var notificationHost = await _hostManager.GetNotificationsHostAsync(org, user);
-            bldr.CompleteAndRestart("[DeploymentInstanceManager__GetRemoteMonitoringURIAsync__GetNotificationsHostAsync]");
-
-            var connector = GetConnector(notificationHost, org.Id, id);
-
-            var result = await connector.GetRemoteMonitoringUriAsync(notificationHost, channel, id, verbosity, org, user);
-            bldr.CompleteAndRestart("[DeploymentInstanceManager__GetRemoteMonitoringURIAsync__GetConnector__GetRemoteMonitoringUriAsync]");
-            result.Timings.AddRange(bldr.ResultTimings);
-            return result;
+            var path = $"/api/websocket/{channel}/{id}/{verbosity}";
+            return await _signedServiceHttpClient.GetAsync<string>(SignedServiceHttpTarget.NotificationServer, path);
         }
 
         public async Task<InvokeResult<string>> GetRemoteMonitoringURIForDeviceWithPINAsync(string channel, string repoId, string id, string pin, string verbosity, EntityHeader org, EntityHeader user)
