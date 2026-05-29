@@ -37,6 +37,7 @@ using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.MediaServices.Interfaces;
 using LagoVista.AI.Interfaces.Managers;
 using LagoVista.Core;
+using LagoVista.Web.Common.Security;
 
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
@@ -61,6 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IMediaServicesManager _mediaServicesManager;
         private readonly INotificationSender _notificationSender;
         private readonly IAdminLogger _logger;
+        private readonly ISignedRequestHttpValidator _signedRequestValidator;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -72,7 +74,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         public const string DATE = "X-Nuviot-Date";
         public const string VERSION = "X-Nuviot-Version";
 
-        public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager,
+        public InstanceRuntimeController(IDeploymentInstanceManager instanceManager, IRuntimeTokenManager runtimeTokenManager, ISignedRequestHttpValidator signedRequestValidator,
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
@@ -96,19 +98,9 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._mediaServicesManager = mediaServicesManager ?? throw new ArgumentNullException(nameof(mediaServicesManager));
             this._notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._signedRequestValidator = signedRequestValidator ?? throw new ArgumentNullException(nameof(signedRequestValidator));
         }
 
-        private void CheckHeader(HttpRequest request, String header)
-        {
-            
-            if (!request.Headers.Keys.Contains(header) || String.IsNullOrEmpty(request.Headers[header].ToString()))
-            {
-                if (!request.Headers.Keys.Contains(header.ToLower()) || String.IsNullOrEmpty(request.Headers[header.ToLower()].ToString()))
-                {
-                    throw new NotAuthorizedException($"Missing request id header: {header}");
-                }
-            }
-        }
 
         private string GetHeader(HttpRequest request, String header)
         {
@@ -124,91 +116,35 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             throw new NotAuthorizedException($"Missing request id header: {header}");
         }
 
-        private string GetSignature(string requestId, string key, string source)
-        {
-            var encData = Encoding.UTF8.GetBytes(source);
-
-            var hmac = new HMac(new Sha256Digest());
-
-            hmac.Init(new KeyParameter(Encoding.UTF8.GetBytes(key)));
-
-            var resultBytes = new byte[hmac.GetMacSize()];
-            hmac.BlockUpdate(encData, 0, encData.Length);
-            hmac.DoFinal(resultBytes, 0);
-
-            var b64Str = System.Convert.ToBase64String(resultBytes);
-            return $"SAS {requestId}:{b64Str}";
-        }
-
         protected async Task ValidateRequest(HttpRequest request)
         {
-            CheckHeader(request, DATE);
-            CheckHeader(request, VERSION);
-            CheckHeader(request, REQUEST_ID);
-            CheckHeader(request, ORG_ID);
-            CheckHeader(request, ORG);
-            CheckHeader(request, USER_ID);
-            CheckHeader(request, USER);
-            CheckHeader(request, INSTANCE_ID);
-            CheckHeader(request, INSTANCE);                        
-
-            var authheader = request.Headers["Authorization"];
-
-            var requestId = GetHeader(request, REQUEST_ID);
-            var dateStamp = GetHeader(request, DATE);
             var orgId = GetHeader(request, ORG_ID);
             var org = GetHeader(request, ORG);
             var userId = GetHeader(request, USER_ID);
             var user = GetHeader(request, USER);
             var instanceId = GetHeader(request, INSTANCE_ID);
-            var instanceName = GetHeader(request, INSTANCE);
-            var version = GetHeader(request, VERSION);
 
-            var bldr = new StringBuilder();
-            //Adding the \r\n manualy ensures that the we don't have any 
-            //platform specific code messing with our signature.
-            bldr.Append($"{requestId}\r\n");
-            bldr.Append($"{dateStamp}\r\n");
-            bldr.Append($"{version}\r\n");
-            bldr.Append($"{orgId}\r\n");
-            bldr.Append($"{userId}\r\n");
-            bldr.Append($"{instanceId}\r\n");
-
-            OrgEntityHeader = EntityHeader.Create(orgId, org);
             UserEntityHeader = EntityHeader.Create(userId, user);
-            InstanceEntityHeader = EntityHeader.Create(instanceId, instanceName);
+            OrgEntityHeader = EntityHeader.Create(orgId, org); ;
 
             var instance = await _instanceRepo.GetReadOnlyInstanceAsync(instanceId);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
-            if (!key1.Successful)
+            if (!key1.Successful) throw new Exception(key1.Errors.First().Message);
+            var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
+            if (!key2.Successful) throw new Exception(key2.Errors.First().Message);
+          
+            _signedRequestValidator.ValidateRuntimeInstanceHttpV1(request, key1.Result, key2.Result);
+
+            var claims = new List<Claim>
             {
-                throw new Exception(key1.Errors.First().Message);
-            }
+                new Claim(ClaimsFactory.CurrentUserId, userId),
+                new Claim(ClaimsFactory.CurrentOrgId, orgId),
+                new Claim(ClaimsFactory.HostId, instance.PrimaryHost.Id),
+                new Claim(ClaimsFactory.InstanceId, instanceId)
+            };
 
-            var calculatedFromFirst = GetSignature(requestId, key1.Result, bldr.ToString());
-
-            if (calculatedFromFirst != authheader)
-            {
-                var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
-                if (!key2.Successful)
-                {
-                    throw new Exception(key2.Errors.First().Message);
-                }
-
-                var calculatedFromSecond = GetSignature(requestId, key2.Result, bldr.ToString());
-                if (calculatedFromSecond != authheader)
-                {
-                    throw new UnauthorizedAccessException("Invalid signature.");
-                }
-            }
-
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimsFactory.CurrentUserId, userId));
-            claims.Add(new Claim(ClaimsFactory.CurrentOrgId, orgId));
-            claims.Add(new Claim(ClaimsFactory.HostId, instance.PrimaryHost.Id));
-            claims.Add(new Claim(ClaimsFactory.InstanceId, instanceId));
-
-            HttpContext.User.AddIdentity(new System.Security.Claims.ClaimsIdentity(claims, "host_instance_signarue"));
+            InstanceEntityHeader = instance.ToEntityHeader();
+            HttpContext.User.AddIdentity(new ClaimsIdentity(claims, "host_instance_signarue"));
 
         }
 
