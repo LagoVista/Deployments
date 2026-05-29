@@ -112,10 +112,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _cacheProvider = cacheProvider ?? throw new ArgumentNullException(nameof(cacheProvider));
             _deviceStatusRepo = deviceStatusRepo ?? throw new ArgumentNullException(nameof(deviceStatusRepo));
             _signedServiceHttpClient = signedServiceHttpClient ?? throw new ArgumentNullException(nameof(signedServiceHttpClient));
-
         }
 
-        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo, ISignedServiceHttpClient signedServiceHttpClient,
+        public DeploymentInstanceManager(IDeviceRepositoryManager deviceRepoManager, IDeploymentConnectorService connector, IDeploymentHostManager hostManager, IDeviceRepositoryManager deviceManagerRepo,  ISignedServiceHttpClient signedServiceHttpClient,
                     IUserManager userManager, IDeploymentActivityQueueManager deploymentActivityQueueManager, IDeploymentInstanceRepo instanceRepo, ISolutionManager solutionManager, IDeploymentHostRepo hostRepo, IDeploymentInstanceStatusRepo deploymentStatusInstanceRepo,
                     IDataStreamManager dataStreamManager, IAdminLogger logger, IAppConfig appConfig, IDependencyManager depmanager, ISecurity security, ISolutionVersionRepo solutionVersionRepo, IContainerRepositoryManager containerRepoMgr, ISecureStorage secureStorage,
                     IDeviceStatusRepo deviceStatusRepo, IProxyFactory proxyFactory, IPipelineModuleManager pipelineModuleManager, IDeviceTypeManager deviceTypeManager, IInstanceAccountsRepo instanceAccountRepo, IOrgUtils orgUtils, 
