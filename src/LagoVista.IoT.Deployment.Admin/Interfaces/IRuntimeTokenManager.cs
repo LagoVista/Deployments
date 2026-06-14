@@ -26,7 +26,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
         Task<InvokeResult<ConnectionSettings>> GetDeviceEventConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetUsageStorageConnectionAsync(SettingType settingType, String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetDeviceTransactionStorageAsync(SettingType settingType, String instanceId, EntityHeader org, EntityHeader user);
-        Task<InvokeResult<ConnectionSettings>> GetAzureEventHubsWSNotifyConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetRabbitMQWSNotifyConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);
       
         Task<InvokeResult<RPCSettings>> GetRPCConnectionAsync(SettingType settingType, String id, EntityHeader org, EntityHeader user);

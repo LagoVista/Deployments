@@ -2,8 +2,6 @@
 // ContentHash: f9f72cf824beebeeb698895bf5b4f37f92f42de6c91f38d2a56b62df66dbdee3
 // IndexVersion: 2
 // --- END CODE INDEX META ---
-using Azure.Messaging.EventHubs;
-using Azure.Messaging.EventHubs.Producer;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Managers;
 using LagoVista.Core.Models;
@@ -28,7 +26,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         private readonly ISignedServiceHttpClient _signedServiceHttpClient;
 
         const string EhConnectionString = "Endpoint=sb://{0}.servicebus.windows.net/;SharedAccessKeyName={1};SharedAccessKey={2}";
-        EventHubProducerClient _eventHubClient;
+        //EventHubProducerClient _eventHubClient;
 
         public DeploymentActivityQueueManager(IDeploymentActivityRepo repo, IFailedDeploymentActivityRepo failedRepo, ISignedServiceHttpClient signedServiceHttpClient,
                 ICompletedDeploymentActivityRepo completedRepo, IDeploymentActionEventHubSettings settings, IAdminLogger logger,
@@ -43,12 +41,13 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             _settings = settings;
 
-            var connectionString = string.Format(EhConnectionString,
-                _settings.DeploymentActivityEventHubConnection.AccountId,
-                _settings.DeploymentActivityEventHubConnection.UserName,
-                _settings.DeploymentActivityEventHubConnection.AccessKey);
+            //var connectionString = string.Format(EhConnectionString,
+            //    _settings.DeploymentActivityEventHubConnection.AccountId,
+            //    _settings.DeploymentActivityEventHubConnection.UserName,
+            //    _settings.DeploymentActivityEventHubConnection.AccessKey);
 
-            _eventHubClient = new EventHubProducerClient(connectionString, _settings.DeploymentActivityEventHubConnection.ResourceName);        }
+        //    _eventHubClient = new EventHubProducerClient(connectionString, _settings.DeploymentActivityEventHubConnection.ResourceName);       
+        }
 
         public async Task Enqueue(DeploymentActivity deploymentActivity)
         {

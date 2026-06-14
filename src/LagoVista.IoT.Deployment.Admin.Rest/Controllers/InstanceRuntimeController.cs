@@ -241,28 +241,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         /// Runtime Controller - Request Connection for Web Socket Notify Connection
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/api/deployment/instance/wsnotify/settings")]
-        public async Task<InvokeResult<ConnectionSettings>> GetWSNotifyConnectionAsync()
-        {
-            await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-        }
-
-        /// <summary>
-        /// Runtime Controller - Request Connection for Web Socket Notify Connection
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/wsnotify/azureeventhub/settings")]
-        public async Task<InvokeResult<ConnectionSettings>> GetAzureEventHubWSNotifyConnectionAsync()
-        {
-            await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetAzureEventHubsWSNotifyConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-        }
-
-        /// <summary>
-        /// Runtime Controller - Request Connection for Web Socket Notify Connection
-        /// </summary>
-        /// <returns></returns>
         [HttpGet("/api/deployment/instance/wsnotify/rabbitmq/settings")]
         public async Task<InvokeResult<ConnectionSettings>> GetRabbitMQNotifyConnectionAsync()
         {
