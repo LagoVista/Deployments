@@ -1,12 +1,8 @@
-
 using LagoVista.IoT.Deployment.Admin.Managers;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.Tests.TimeZones
 {
@@ -39,7 +35,6 @@ namespace LagoVista.IoT.Deployment.Tests.TimeZones
             Assert.That(duplicateIds, Is.Empty, $"Duplicate IntIds found: {String.Join(',', duplicateIds)}");
         }
 
-
         [Test]
         public void GetTimeZones_When_Loaded_Should_Have_Unique_Ids()
         {
@@ -69,6 +64,7 @@ namespace LagoVista.IoT.Deployment.Tests.TimeZones
             Assert.That(result.IntId, Is.EqualTo(first.IntId));
             Assert.That(result.Id, Is.EqualTo(first.Id));
         }
+
         [Test]
         public void GetTimeZoneByIntId_When_ValidId_Should_Return_TimeZoneInfo()
         {
@@ -81,7 +77,6 @@ namespace LagoVista.IoT.Deployment.Tests.TimeZones
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(reference.Id));
         }
-
 
         [Test]
         public void GetTimeZoneEnumOptions_When_Called_Should_Use_IntId_As_Id_And_Key()
@@ -97,6 +92,53 @@ namespace LagoVista.IoT.Deployment.Tests.TimeZones
             Assert.That(option.Key, Is.EqualTo(firstReference.IntId.ToString()));
             Assert.That(option.Label, Is.EqualTo(firstReference.DisplayName));
             Assert.That(option.Name, Is.EqualTo(firstReference.DisplayName));
+        }
+
+        [Test]
+        public void GetTimeZoneReferenceById_When_IanaId_Should_Return_Canonical_TimeZone()
+        {
+            var sut = new TimeZoneService();
+
+            Assert.That(TimeZoneInfo.TryConvertIanaIdToWindowsId("America/New_York", out var windowsId), Is.True);
+
+            var result = sut.GetTimeZoneReferenceById("America/New_York");
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(windowsId));
+        }
+
+        [Test]
+        public void GetTimeZoneById_When_IanaId_Should_Return_Canonical_TimeZoneInfo()
+        {
+            var sut = new TimeZoneService();
+
+            Assert.That(TimeZoneInfo.TryConvertIanaIdToWindowsId("America/New_York", out var windowsId), Is.True);
+
+            var result = sut.GetTimeZoneById("America/New_York");
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(windowsId));
+        }
+
+        [Test]
+        public void GetTimeZoneReferenceById_When_LegacyNumericId_Should_Return_TimeZone()
+        {
+            var sut = new TimeZoneService();
+            var reference = sut.GetTimeZoneReferences().First();
+
+            var result = sut.GetTimeZoneReferenceById(reference.IntId.ToString());
+
+            Assert.That(result.Id, Is.EqualTo(reference.Id));
+        }
+
+        [Test]
+        public void GetTimeZoneReferenceById_When_UnknownString_Should_Throw_Clear_Error()
+        {
+            var sut = new TimeZoneService();
+
+            var ex = Assert.Throws<InvalidOperationException>(() => sut.GetTimeZoneReferenceById("Not/A-TimeZone"));
+
+            Assert.That(ex.Message, Does.Contain("Unknown timezone id"));
         }
 
         [Test]
