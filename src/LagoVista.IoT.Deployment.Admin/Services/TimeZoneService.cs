@@ -30,8 +30,8 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             if (String.IsNullOrWhiteSpace(id))
                 return null;
 
-            EnsureLoaded();
-            return _timeZones.FirstOrDefault(tz => tz.Id == id);
+            var reference = GetTimeZoneReferenceById(id);
+            return _timeZones.FirstOrDefault(tz => String.Equals(tz.Id, reference.Id, StringComparison.OrdinalIgnoreCase));
         }
 
         public TimeZoneInfo GetTimeZoneByIntId(int intId)
@@ -160,16 +160,27 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public TimeZoneReference GetTimeZoneReferenceById(string id)
         {
-            EnsureLoaded();
+            if (String.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
 
-            var timeZone = _timeZoneReferences.FirstOrDefault(tz => tz.Id == id);
-            if (timeZone == null) {
-                timeZone = GetTimeZoneReferenceByIntId(int.Parse(id));
-                if(timeZone == null) 
-                    throw new InvalidOperationException($"Unknown timezone id [{id}], looked at both string and int.");
+            EnsureLoaded();
+            var candidate = id.Trim();
+
+            var timeZone = _timeZoneReferences.FirstOrDefault(tz => String.Equals(tz.Id, candidate, StringComparison.OrdinalIgnoreCase));
+            if (timeZone != null)
+                return timeZone;
+
+            if (Int32.TryParse(candidate, out var intId))
+                return GetTimeZoneReferenceByIntId(intId);
+
+            if (TimeZoneInfo.TryConvertIanaIdToWindowsId(candidate, out var windowsId))
+            {
+                timeZone = _timeZoneReferences.FirstOrDefault(tz => String.Equals(tz.Id, windowsId, StringComparison.OrdinalIgnoreCase));
+                if (timeZone != null)
+                    return timeZone;
             }
 
-            return timeZone;
+            throw new InvalidOperationException($"Unknown timezone id [{id}]. Expected a LagoVista/Windows timezone id, IANA timezone id, or legacy numeric id.");
         }
     }
 }
