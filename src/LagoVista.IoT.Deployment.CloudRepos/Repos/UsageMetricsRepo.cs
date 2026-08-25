@@ -24,6 +24,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return StoragePeriod.Month;
         }
 
+        public Task AddMetricAsync(UsageMetrics metrics)
+        {
+            return InsertAsync(metrics);
+        }
+
         public Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request)
         {
             return GetPagedResultsAsync(hostId, request);
