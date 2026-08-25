@@ -10,6 +10,7 @@ namespace LagoVista.IoT.Deployment.Admin.Repos
 {
     public interface IUsageMetricsRepo
     {
+        Task AddMetricAsync(UsageMetrics metrics);
         Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request);
         Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request);
         Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, ListRequest request);
