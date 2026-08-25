@@ -1,69 +1,61 @@
-# Card RDS-05 - Deploy, Observe, and Prepare Server Cutover
+# Card RDS-05 - API Wiring, Observability, and Cutover
 
 ## Objective
 
-Deploy the Runtime Data Service into the cluster and prove it can safely carry production-style runtime traffic before Phase 2 disables direct infrastructure access.
+Finish the first RuntimeData vertical slices inside the existing API host, measure them, and retire the corresponding infrastructure credential paths only after validation.
 
-## Cluster deployment
+## API integration
 
-- Kubernetes Deployment and Service.
-- External HTTPS route/ingress suitable for remote runtimes.
-- Multiple replicas supported from the first deployment.
-- Resource requests/limits with conservative initial values.
-- Pod disruption/readiness behavior appropriate for stateless traffic.
-- Cluster-local backend connectivity only.
-- Secrets/configuration sourced through the standard cluster mechanisms.
+- Reference `LagoVista.IoT.RuntimeData` from the existing `nuviot/nuviot` API composition.
+- Add the RuntimeData controller assembly to `AddLagoVistaControllers()`.
+- Reuse existing DeviceManagement, Deployment, CloudStorage, SecureStorage, and WebCommon registrations.
+- Do not introduce a new executable host for V1.
 
 ## Observability
 
-Capture at least:
+Capture by RuntimeData operation:
 
-- Requests by operation and result.
-- Latency percentiles by operation.
-- Batch sizes and records processed.
-- Authentication/authorization failures.
-- Backend failures/retries.
-- Active replica count/readiness.
-- Idempotency/replay outcomes where applicable.
+- request rate
+- duration/latency
+- success/failure
+- batch size / records accepted
+- payload size where useful
+- signed-request validation failures
+- backend/storage failures
+- org/instance dimensions only where cardinality is acceptable
 
-Logs should carry request/correlation ID, org ID, instance ID, host ID when available, capability, and operation without leaking tokens or infrastructure credentials.
+Use these measurements to decide later whether RuntimeData needs an independent host. Do not pre-scale architecture without evidence.
+
+## First cutover set
+
+1. Usage metrics: signed batch HTTP -> Cassandra activity store.
+2. Device connection/history: signed HTTP -> Cassandra activity store.
+3. Current device connectivity projection: signed HTTP -> durable mutable internal store.
+
+After each path is validated, remove/disable the corresponding runtime credential/settings endpoint and direct provider SDK use in `nuviot/engine`.
 
 ## Validation
 
-Exercise the service with representative runtime traffic and failure cases:
-
-- Valid/expired/invalid leases.
-- Lease renewal while traffic continues.
-- Multiple service replicas.
-- Pod restart during runtime traffic.
-- Backend transient failure/retry.
-- Duplicate/replayed writes.
-- Batch payload limits.
-- Device read/write parity.
-- Transaction parity.
-- Notification delivery.
-
-## Cutover controls
-
-- Keep old infrastructure lease endpoints available during initial rollout.
-- Provide a server-side or runtime-version-based way to enable the new Runtime Data Service path selectively.
-- Define rollback to the old runtime image/lease path until Phase 2 is complete.
-- Do not revoke old infrastructure lease issuance until all supported runtime containers have migrated.
-
-## Deliverables
-
-- Git-managed Kubernetes manifests/Helm values in the appropriate infrastructure repo.
-- Validation/runbook.
-- Dashboards/alerts or integration with existing platform diagnostics.
-- Cutover checklist referencing engine Cards RDS-06 through RDS-10.
-- Explicit criteria for disabling each old infrastructure lease endpoint.
+- signed valid/invalid runtime calls
+- usage one-minute batch behavior
+- latest-30 instance usage read
+- module drill-down
+- connection history write/read
+- current device state update/read/list/timed-out queries
+- storage TTL where configured
+- API restart/pod restart with current state preserved
+- no infrastructure credentials in runtime responses/logs
 
 ## Acceptance criteria
 
-- [ ] Runtime Data Service is deployed in dev with 2+ replicas.
-- [ ] External HTTPS access works with a valid Runtime Access Lease.
-- [ ] Cluster credentials are not present in runtime responses or logs.
-- [ ] Restarting a service pod does not interrupt sustained test traffic beyond normal request retry behavior.
-- [ ] Metrics/logging make operation failures attributable to an org/instance/request.
-- [ ] All Phase 1 operation families required by the engine migration are available.
-- [ ] A written cutover and rollback procedure exists before Phase 2 removes old runtime implementations.
+- [ ] RuntimeData controllers are hosted by the existing API server.
+- [ ] Endpoint-family metrics are available.
+- [ ] Usage and connection-history semantic stores are validated.
+- [ ] Current connectivity projection is durable and query-complete.
+- [ ] Engine uses signed API paths for the migrated operations.
+- [ ] Old Usage/Connection/Status storage credential endpoints are removed only after parity validation.
+- [ ] Separate host remains an evidence-driven future option, not a prerequisite.
+
+## Status
+
+**Pending completion of Cards 2-4.**
