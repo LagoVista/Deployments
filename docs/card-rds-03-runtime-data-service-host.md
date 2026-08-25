@@ -1,59 +1,46 @@
-# Card RDS-03 - Build Runtime Data Service Host
+# Card RDS-03 - Usage Activity Batch Path and Cassandra Migration
 
 ## Objective
 
-Create the minimal stateless HTTP service that accepts runtime data-plane requests inside the cluster boundary.
+Move runtime usage writes behind signed RuntimeData HTTP and migrate the largest append-only usage table from Azure Table Storage to Cassandra activity storage.
 
-## Responsibilities
+## Workload
 
-- Validate Runtime Access Leases from Card RDS-02.
-- Establish runtime request context: org, instance, host, capability.
-- Expose versioned runtime-facing HTTPS APIs.
-- Provide consistent validation, error responses, correlation IDs, metrics, and structured logging.
-- Resolve and call cluster-local repositories/services using cluster-held credentials.
-- Remain stateless so Kubernetes can scale replicas horizontally.
+- Runtime emits once per minute.
+- Each instance produces one top-level aggregate plus roughly 20-50 component records.
+- Normal web view requests exactly the latest 30 top-level instance snapshots.
+- Module/component history is queried only on drill-down.
+- Runtime remains responsible for composing all aggregates.
 
-## Non-goals
+## Target storage shape
 
-- Do not move lease issuance into this service.
-- Do not expose generic database proxy APIs.
-- Do not reproduce Cosmos/Table/Rabbit/Postgres protocols.
-- Do not make the runtime aware of Kubernetes service names or storage-provider topology.
+Use `IActivityRecordStore<UsageMetrics>` / Cassandra.
 
-## Baseline service capabilities
+- partition: `OrganizationId + InstanceId + Day bucket`
+- clustering: `CreationDate + Id`
+- optional indexed component/scope field(s) only where drill-down callers require them
+- bounded TTL/retention policy, chosen explicitly
 
-- Health/readiness endpoints.
-- Runtime lease authentication middleware/filter.
-- Capability authorization.
-- Request-size and batch-size limits.
-- Idempotency/correlation mechanism for write operations where replay is possible.
-- OpenAPI/contract documentation suitable for generating or sharing client contracts if useful.
+The Activity Record provider already supports `InsertBatchAsync`; RuntimeData should forward one natural one-minute cohort as a batch. Keep the HTTP safety ceiling at 250 records.
 
-## Performance posture
+## Repository conversion
 
-The service should be designed for inexpensive horizontal scale:
+`UsageMetricsRepo` becomes an ordinary class composed with `IActivityRecordStore<UsageMetrics>`; it must no longer inherit `TableStorageBase<UsageMetrics>`.
 
-- Avoid session state.
-- Reuse backend client pools/connections.
-- Support batched write APIs.
-- Avoid control-plane calls on the normal data request path.
-- Capture request duration/error-rate metrics from the start.
-
-## Deliverables
-
-- Buildable host project.
-- Authentication/authorization pipeline.
-- Health/readiness endpoints.
-- Baseline runtime API route/version convention.
-- Integration-test harness that can issue a valid test lease and call a protected endpoint.
-- Container image definition.
+Convert legacy Azure keys/timestamps into normal activity identity and `CreationDate`. Add a definition-driven historical migration entry in `nuviot/appsupport/LagoVista.StorageMigration`.
 
 ## Acceptance criteria
 
-- [ ] Service builds independently.
-- [ ] Service starts with only its documented dependencies/configuration.
-- [ ] Unauthenticated and expired-lease requests are rejected.
-- [ ] Capability checks are enforced.
-- [ ] Valid runtime requests establish org/instance context.
-- [ ] Health/readiness checks are available.
-- [ ] At least one protected test endpoint proves end-to-end lease validation.
+- [ ] `UsageMetrics` implements the activity-record contract and no longer carries Azure-only persistence mechanics.
+- [ ] Cassandra definition is colocated with the repo.
+- [ ] Day bucketing is supported by the semantic storage layer.
+- [ ] Batch write maps directly to `InsertBatchAsync`.
+- [ ] Latest-30 top-level instance query is covered.
+- [ ] Module drill-down query is covered.
+- [ ] TTL is explicitly selected and validated.
+- [ ] Historical Azure migration definition/checkpointing is added.
+- [ ] Runtime no longer receives Usage Table Storage credentials.
+
+## Status
+
+**In progress.** Signed batch endpoint and repo batch seam exist; Cassandra conversion is next.
