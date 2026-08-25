@@ -1,66 +1,58 @@
-# Card RDS-04 - Implement Runtime Data Operations and Storage Adapters
+# Card RDS-04 - Device Connectivity History and Current-State Split
 
 ## Objective
 
-Implement the runtime-facing operations required to replace direct infrastructure access, reusing shared models and CloudStorage/provider logic where practical.
+Move device connectivity data off Azure Table Storage without conflating immutable history with authoritative current state.
 
-## Initial operation families
+## Legacy shape
 
-### Append/write-first operations
+The existing repositories mix two personalities:
 
-- Device connection events.
-- Usage metrics.
-- Device status/archive/exception/sensor archive writes confirmed as active.
-- Runtime logging paths confirmed as active.
+1. immutable history (`DeviceConnectionEvent`, device status history)
+2. mutable current status (`GetDeviceStatusAsync`, add/update status, watchdog/timed-out/current-device listing)
 
-These are the preferred first production slices because they are naturally simple, append-oriented operations and are good validation of transport, lease authorization, batching, retries, and observability.
+They currently use different physical Azure tables but share repository interfaces and DTOs.
 
-### Notification publishing
+## Decision
 
-Accept the existing shared notification model and publish internally through the cluster's notification/Rabbit abstraction. The remote runtime must not receive Rabbit host/user/password/topology details.
+### Connection and status history
 
-### Device transactions
+Move append-only device connection/history records to `IActivityRecordStore<T>` / Cassandra.
 
-Move transaction persistence semantics server-side, including balance lookup/update, hashing/integrity behavior, and database interaction. The runtime submits the domain transaction request and receives the resulting balance/outcome.
+The history record should use normal activity fields (`Id`, `OrganizationId`, `Organization`, `CreationDate`) and preserve device identity plus relevant connection/status details. Partition and bucket shape must match real per-device history queries; do not recreate global Table Storage scans.
 
-### Device repository operations
+### Current connectivity state
 
-Implement the concrete operations currently required by `IDeviceStorage`, including device lookup, update/upsert, configuration-based queries, device-group queries, and any additional active methods discovered during runtime inventory. The API should model these as device operations, not Cosmos queries.
+Do **not** model current state as Cassandra activity history. Current status is mutable, important operational state and supports:
 
-### Remaining active infrastructure paths
+- get one device's current status
+- update current state/last contact/watchdog information
+- list current device status for a repository/instance
+- find timed-out devices
 
-Classify and implement replacement APIs for Event Hub checkpoint, PEM, media, logging, and other leased resources only where the current supported runtime actually uses them.
+Target this state at durable `IApplicationDataStore` / Mongo unless focused caller/concurrency analysis identifies a stronger requirement. Give current state and history separate repository responsibilities even if public manager APIs remain stable.
 
-## Adapter guidance
+## RuntimeData
 
-- Prefer existing CloudStorage repositories/provider-neutral abstractions when they already express the required operation.
-- It is acceptable to create thin service-local adapters when existing manager/service abstractions introduce unnecessary dependencies.
-- Reuse domain models rather than duplicating DTOs unless a runtime-specific request/response contract materially improves versioning or security.
-- Keep persistence decisions server-side.
-- Add batch forms for high-volume append operations.
+The runtime posts connection/history events through signed HTTP. Current-state updates may be carried in the same runtime call when one event naturally changes both projections, but server storage remains two explicit operations:
 
-## Compatibility and idempotency
+```text
+connection event -> Cassandra history
+current state change -> Application Data current projection
+```
 
-- Define retry semantics per operation.
-- Writes that may be replayed need idempotency keys or naturally idempotent identities.
-- Preserve relevant runtime-visible behavior from the old direct implementations.
-- Do not preserve backend implementation quirks merely for compatibility.
-
-## Deliverables
-
-- Endpoint/operation matrix mapping old runtime interface methods to new APIs.
-- Server implementations for each required operation family.
-- CloudStorage/service adapters.
-- Batch contracts for append-heavy paths.
-- Integration tests against the actual in-cluster/provider-neutral repository implementations.
-- Parity tests for device and transaction behavior where semantics are richer than simple writes.
+Do not reconstruct current connectivity by scanning history on normal request paths.
 
 ## Acceptance criteria
 
-- [ ] Every direct infrastructure consumer targeted for Phase 2 has a corresponding runtime API operation or an explicit decision that it is obsolete.
-- [ ] Simple write paths support retry-safe behavior.
-- [ ] High-volume append paths support batching.
-- [ ] Notifications are published without exposing Rabbit credentials.
-- [ ] Transactions execute fully server-side.
-- [ ] Device storage operations no longer require Cosmos semantics in the runtime-facing contract.
-- [ ] Provider-specific credentials remain entirely inside the cluster.
+- [ ] `DeviceConnectionEvent` history is stored via Cassandra activity storage.
+- [ ] Device status history is classified/migrated to Cassandra where still actively used.
+- [ ] Current device status is separated from history storage.
+- [ ] Current-state query requirements (single device, repository/instance list, timed-out set) are covered by explicit Application Data indexes.
+- [ ] RuntimeData write path does not expose Azure credentials.
+- [ ] Historical migration definitions are added for the legacy connection/status-history tables.
+- [ ] Current state survives process/pod restarts and is not dependent on replaying history.
+
+## Status
+
+**In progress.** Connection-event signed endpoint exists; semantic storage conversion and current-state projection split remain.
