@@ -2,57 +2,65 @@
 
 ## Goal
 
-Replace direct infrastructure access from remote IoT runtimes with a small, stateless, horizontally scalable cluster-facing Runtime Data Service. Remote runtimes continue to obtain short-lived access through the existing Deployments/AppServices control plane, but leased credentials authorize calls to NuvIoT-owned runtime APIs rather than exposing Mongo, Cassandra, PostgreSQL, RabbitMQ, Azure Table Storage, Cosmos DB, or other infrastructure credentials.
+Remove direct infrastructure access from remote IoT runtimes. Runtimes call NuvIoT-owned HTTPS endpoints using the existing signed runtime request mechanism; cluster storage and messaging credentials never leave the cluster.
 
-## Architectural boundaries
+## Final architecture
 
-- `InstanceRuntimeController` remains the control-plane entry point for authenticated runtime requests and lease issuance.
-- The new Runtime Data Service is a separate data-plane service optimized for runtime traffic.
-- Cluster infrastructure credentials never leave the cluster.
-- The Runtime Data Service should be stateless and horizontally scalable.
-- Prefer shared domain models from existing downstream projects.
-- Prefer existing CloudStorage repositories/managers where they provide the required behavior without pulling in large application-service dependency graphs.
-- Do not require the Runtime Data Service to share all existing service abstractions. Share interfaces only when they keep the dependency graph small and preserve useful behavior.
-- Runtime-facing contracts should express business/runtime operations, not persistence-provider concepts.
-- Batch endpoints should be supported where runtime traffic is naturally append-heavy.
+```text
+runtime
+  -> RuntimeSignedHttpClient
+  -> existing Web API /api/runtime-data/...
+  -> existing runtime signature validation
+  -> thin RuntimeData controller/service
+  -> existing domain repositories
+  -> semantic storage/provider
+```
 
-## Service home
+There is no Runtime Data Service lease, no new runtime-to-cloud RPC transport, and no separate RuntimeData host in the first version. `LagoVista.IoT.RuntimeData` lives in `nuviot/appsupport` and its controllers are hosted by the existing API server in `nuviot/nuviot`.
 
-The final repository/project home is intentionally not fixed yet. `AppServices` is the leading candidate because lease issuance already belongs to the main application-services pipeline, but the data-plane host must remain independently deployable and have a deliberately small dependency budget. Card 1 resolves this before implementation spreads across repositories.
+## Restacked first five cards
 
-## Phase 1 - Server side
+1. [RDS-01 - Boundary, home, and existing API integration](card-rds-01-service-boundary-and-home.md)
+2. [RDS-02 - Signed runtime request context](card-rds-02-runtime-access-lease.md)
+3. [RDS-03 - Usage activity batch path and Cassandra migration](card-rds-03-runtime-data-service-host.md)
+4. [RDS-04 - Device connection history and current-state split](card-rds-04-runtime-data-operations.md)
+5. [RDS-05 - API wiring, observability, cutover, and credential removal](card-rds-05-deployment-and-cutover-readiness.md)
 
-1. [Card 1 - Runtime Data Service boundary and home](card-rds-01-service-boundary-and-home.md)
-2. [Card 2 - Runtime access lease contract](card-rds-02-runtime-access-lease.md)
-3. [Card 3 - Runtime Data Service host and authentication](card-rds-03-runtime-data-service-host.md)
-4. [Card 4 - Runtime data operation contracts and adapters](card-rds-04-runtime-data-operations.md)
-5. [Card 5 - Cluster deployment, observability, and cutover readiness](card-rds-05-deployment-and-cutover-readiness.md)
+The original lease/separate-host design is superseded by these cards.
 
-## Phase 2 - Runtime
+## Storage decisions established during the restack
 
-Runtime implementation work is tracked in `nuviot/engine` as Cards 6-10. The containerized runtimes have no compatibility requirement with future unreleased runtime versions, so Phase 2 should refactor aggressively toward the end-state API client and remove direct infrastructure SDKs where practical.
+### UsageMetrics
+
+`UsageMetrics` is treated as high-volume append-only activity storage in Cassandra rather than PostgreSQL metrics storage. Runtime composition remains authoritative. The normal UI query is the latest 30 one-minute top-level instance snapshots, with optional module drill-down.
+
+Target shape:
+
+- partition: OrganizationId + InstanceId + Day bucket
+- clustering: CreationDate + Id
+- natural runtime batch: one minute of instance + component records
+- API safety ceiling: 250 records/request
+- TTL: explicit retention policy, to be selected deliberately
+
+### Device connection history
+
+Device connection events and immutable status history belong in Cassandra activity storage.
+
+### Current device connectivity
+
+Current device state is mutable and operationally important. It must not be modeled as append-only history. The target is durable Application Data/Mongo unless caller analysis reveals a stronger consistency requirement. Current state and history should have separate repository responsibilities even if legacy interfaces currently combine them.
 
 ## Migration principles
 
-- Build and validate the new path before disabling old leases.
-- Allow old and new paths to coexist during migration.
-- Move simple append-only writers first.
-- Move Rabbit/PostgreSQL direct connections next.
-- Move richer device-storage/query behavior after the transport and authorization path is proven.
-- Disable and ultimately delete direct infrastructure lease issuance only after the corresponding runtime path is verified.
-
-## Initial runtime infrastructure inventory
-
-The current engine contains direct consumers for at least:
-
-- Cosmos DB device storage.
-- Azure Table Storage device connection events.
-- Azure Table Storage usage metrics.
-- Azure Table Storage device status/archive/exceptions/sensor archives and related remote storage.
-- PostgreSQL device transactions.
-- RabbitMQ notification publishing.
-- Additional logging/checkpoint/PEM paths that require final active-use classification.
+- Runtime owns business/domain composition.
+- RuntimeData validates identity, transport shape, batching, and storage-boundary rules only.
+- Reuse existing DeviceManagement/DeploymentManagement repos and DI before adding abstractions.
+- Move provider-specific Table/Cosmos/Rabbit/Postgres access behind signed endpoints.
+- Use semantic storage capabilities rather than replacing one universal repository base with another.
+- Batch append-heavy writes naturally.
+- Preserve existing infrastructure credential endpoints only until each corresponding runtime consumer has migrated.
+- Add endpoint-family metrics from the start; extract a separate host later only if observed load requires it.
 
 ## Completion definition
 
-The project is complete when supported remote runtimes communicate only with NuvIoT-owned HTTPS endpoints for these platform data operations, renew a short-lived runtime access lease without learning cluster credentials, and no supported runtime requires direct network access to cluster persistence or messaging systems.
+The project is complete when supported remote runtimes use signed NuvIoT HTTPS endpoints for platform data operations, no runtime receives cluster infrastructure credentials, migrated append/history data uses semantic internal storage, and obsolete credential-leasing paths can be removed.
