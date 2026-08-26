@@ -19,8 +19,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class SystemTestRepo : DocumentDBRepoBase<SystemTest>, ISystemTestRepo
     {
-        public SystemTestRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public SystemTestRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

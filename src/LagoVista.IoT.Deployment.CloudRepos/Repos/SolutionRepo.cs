@@ -15,8 +15,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
     public class SolutionRepo : DocumentDBRepoBase<Solution>, ISolutionRepo
     {
 
-        public SolutionRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudServices services) : 
-            base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public SolutionRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

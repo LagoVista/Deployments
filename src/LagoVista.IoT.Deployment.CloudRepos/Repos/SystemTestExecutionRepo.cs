@@ -3,6 +3,7 @@
 // IndexVersion: 2
 // --- END CODE INDEX META ---
 using LagoVista.CloudStorage.DocumentDB;
+using LagoVista.CloudStorage.Interfaces;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
@@ -14,8 +15,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class SystemTestExecutionRepo : DocumentDBRepoBase<SystemTestExecution>, ISystemTestExecutionRepo
     {
-        public SystemTestExecutionRepo(IDeploymentRepoSettings repoSettings, IAdminLogger logger, ICacheProvider cacheProvider)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, logger, cacheProvider)
+        public SystemTestExecutionRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

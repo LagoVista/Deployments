@@ -16,8 +16,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class IncidentProtocolRepo : DocumentDBRepoBase<IncidentProtocol>, IIncidentProtocolRepo
     {
-        public IncidentProtocolRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public IncidentProtocolRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
         public Task AddIncidentProtocolAsync(IncidentProtocol incidentProtocol)

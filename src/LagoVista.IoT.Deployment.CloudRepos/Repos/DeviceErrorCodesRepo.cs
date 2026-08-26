@@ -17,8 +17,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeviceErrorCodesRepo : DocumentDBRepoBase<DeviceErrorCode>, IDeviceErrorCodesRepo
     {
-        public DeviceErrorCodesRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public DeviceErrorCodesRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

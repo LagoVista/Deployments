@@ -23,8 +23,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         private readonly ICacheProvider _cacheProvider;
         private readonly IAdminLogger _logger;
 
-        public DeviceNotificationRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public DeviceNotificationRepo(IDocumentCloudCachedServices services) : base(services)
         {
             _logger = services.AdminLogger;
             _cacheProvider = services.CacheProvider;

@@ -14,8 +14,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class IntegrationRepo : DocumentDBRepoBase<Integration>,  IIntegrationRepo
     {
-        public IntegrationRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
-            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
+        public IntegrationRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

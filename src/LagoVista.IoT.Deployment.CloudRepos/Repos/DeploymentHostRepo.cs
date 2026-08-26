@@ -21,9 +21,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class DeploymentHostRepo : DocumentDBRepoBase<DeploymentHost>, IDeploymentHostRepo
     {
-        public DeploymentHostRepo(IDeploymentInstanceRepoSettings repoSettings, IDocumentCloudCachedServices services) : 
-            base(repoSettings.InstanceDocDbStorage.Uri, repoSettings.InstanceDocDbStorage.AccessKey, repoSettings.InstanceDocDbStorage.ResourceName, services)
-        {
+        public DeploymentHostRepo(IDocumentCloudCachedServices services) : base(services)
+        { 
         }
 
         public async Task AddDeploymentHostAsync(DeploymentHost host)

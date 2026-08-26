@@ -16,8 +16,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class IncidentRepo : DocumentDBRepoBase<Incident>, IIncidentRepo
     {
-        public IncidentRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public IncidentRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

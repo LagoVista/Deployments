@@ -14,8 +14,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
     public class RemoteDeploymentRepo : DocumentDBRepoBase<RemoteDeployment>, IRemoteDeploymentRepo
     {
-        public RemoteDeploymentRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public RemoteDeploymentRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 

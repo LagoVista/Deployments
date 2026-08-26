@@ -16,8 +16,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos
 {
     public class ClientAppRepo : DocumentDBRepoBase<ClientApp>, IClientAppRepo
     {
-        public ClientAppRepo(IDeploymentRepoSettings repoSettings, IDocumentCloudCachedServices services)
-            : base(repoSettings.DeploymentAdminDocDbStorage.Uri, repoSettings.DeploymentAdminDocDbStorage.AccessKey, repoSettings.DeploymentAdminDocDbStorage.ResourceName, services)
+        public ClientAppRepo(IDocumentCloudCachedServices services) : base(services)
         {
         }
 
