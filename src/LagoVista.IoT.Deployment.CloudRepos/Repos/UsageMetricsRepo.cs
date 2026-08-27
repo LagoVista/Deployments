@@ -4,6 +4,7 @@
 // --- END CODE INDEX META ---
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Deployment.Admin.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.CloudStorage.Storage;
@@ -22,6 +23,19 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public override StoragePeriod GetStoragePeriod()
         {
             return StoragePeriod.Month;
+        }
+
+        public Task AddMetricAsync(UsageMetrics metrics)
+        {
+            return InsertAsync(metrics);
+        }
+
+        public async Task AddMetricsAsync(IEnumerable<UsageMetrics> metrics)
+        {
+            foreach (var metric in metrics)
+            {
+                await InsertAsync(metric);
+            }
         }
 
         public Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request)
