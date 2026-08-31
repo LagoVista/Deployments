@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-   </PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LagoVista.Core.Configuration" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.CloudStorage" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" Version="3.0.3387.2044" />
-   </ItemGroup>
+    <PackageReference Include="LagoVista.Core.Configuration" />
+    <PackageReference Include="LagoVista.CloudStorage" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.CloudRepos" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
   </ItemGroup>

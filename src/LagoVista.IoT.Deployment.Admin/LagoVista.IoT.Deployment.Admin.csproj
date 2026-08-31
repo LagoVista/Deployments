@@ -20,18 +20,18 @@
     <EmbeddedResource Include="Data\TimeZones.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
-    <PackageReference Include="LagoVista.Core.Authentication" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.Core.Rpc" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.Core.Rpc.Client" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.IoT.DeviceAdmin" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" Version="3.0.3387.2044" />
-    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" Version="3.0.3387.2044" />
-    <PackageReference Include="prometheus-net" Version="8.2.1" />
-    <PackageReference Include="LagoVista.UserAdmin" Version="3.0.3387.2044" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" />
+    <PackageReference Include="LagoVista.Core.Authentication" />
+    <PackageReference Include="LagoVista.Core.Rpc" />
+    <PackageReference Include="LagoVista.Core.Rpc.Client" />
+    <PackageReference Include="LagoVista.IoT.DeviceAdmin" />
+    <PackageReference Include="LagoVista.IoT.DeviceManagement.Core" />
+    <PackageReference Include="LagoVista.IoT.DeviceMessaging.Admin" />
+    <PackageReference Include="LagoVista.IoT.Pipeline.Admin" />
+    <PackageReference Include="prometheus-net" />
+    <PackageReference Include="LagoVista.UserAdmin" />
+    <PackageReference Include="Portable.BouncyCastle" />
+    <PackageReference Include="MQTTnet" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Models\LagoVista.IoT.Deployment.Models.csproj" />
