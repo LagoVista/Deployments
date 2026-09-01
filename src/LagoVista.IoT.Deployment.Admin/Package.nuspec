@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.Admin</id>
-    <version>6.0.0</version>
+    <version>6.0.1</version>
     <authors>Software Logistics, LLC</authors>
     <owners>Software Logistics, LLC</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -17,15 +17,15 @@
     <dependencies>
       <group targetFramework="net9.0">
         <dependency id="Azure.Messaging.ServiceBus" version="7.20.1" />
-        <dependency id="LagoVista.Core.Authentication" version="6.0.10" />
-        <dependency id="LagoVista.Core.Rpc" version="6.0.10" />
-        <dependency id="LagoVista.Core.Rpc.Client" version="6.0.10" />
-        <dependency id="LagoVista.IoT.Deployment.Models" version="6.0.0" />
-        <dependency id="LagoVista.IoT.DeviceAdmin" version="6.0.0" />
-        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="6.0.0" />
-        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="6.0.0" />
-        <dependency id="LagoVista.IoT.Pipeline.Admin" version="6.0.0" />
-        <dependency id="LagoVista.UserAdmin" version="6.0.1" />
+        <dependency id="LagoVista.Core.Authentication" version="6.0.11" />
+        <dependency id="LagoVista.Core.Rpc" version="6.0.11" />
+        <dependency id="LagoVista.Core.Rpc.Client" version="6.0.11" />
+        <dependency id="LagoVista.IoT.Deployment.Models" version="6.0.1" />
+        <dependency id="LagoVista.IoT.DeviceAdmin" version="6.0.1" />
+        <dependency id="LagoVista.IoT.DeviceManagement.Core" version="6.0.1" />
+        <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="6.0.1" />
+        <dependency id="LagoVista.IoT.Pipeline.Admin" version="6.0.1" />
+        <dependency id="LagoVista.UserAdmin" version="6.0.2" />
         <dependency id="MQTTnet" version="4.3.7.1207" />
         <dependency id="Portable.BouncyCastle" version="1.9.0" />
         <dependency id="prometheus-net" version="8.2.1" />
