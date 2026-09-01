@@ -4,25 +4,25 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
-    <PackageVersion Include="LagoVista.AI" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.CloudStorage" Version="6.0.3" />
-    <PackageVersion Include="LagoVista.Core.Authentication" Version="6.0.11" />
-    <PackageVersion Include="LagoVista.Core.Configuration" Version="6.0.11" />
-    <PackageVersion Include="LagoVista.Core.Rpc" Version="6.0.11" />
-    <PackageVersion Include="LagoVista.Core.Rpc.Client" Version="6.0.11" />
-    <PackageVersion Include="LagoVista.Core.TestBase" Version="6.0.11" />
-    <PackageVersion Include="LagoVista.IoT.DeviceAdmin" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.DeviceAdmin.Models" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Core" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Models" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Admin" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Models" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.Pipeline.Admin" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.Pipeline.CloudRepos" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.Pipeline.Models" Version="6.0.1" />
-    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="6.0.2" />
-    <PackageVersion Include="LagoVista.UserAdmin" Version="6.0.2" />
-    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="6.0.2" />
+    <PackageVersion Include="LagoVista.AI" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.CloudStorage" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.Core.Authentication" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.Core.Configuration" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.Core.Rpc" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.Core.Rpc.Client" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.Core.TestBase" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceAdmin" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceAdmin.Models" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Core" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Models" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Admin" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Models" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.Pipeline.Admin" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.Pipeline.CloudRepos" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.Pipeline.Models" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.UserAdmin" Version="7.0.0" />
+    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="7.0.0" />
     <PackageVersion Include="MQTTnet" Version="4.3.7.1207" />
     <PackageVersion Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
