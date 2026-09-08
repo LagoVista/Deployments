@@ -257,7 +257,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_ComputeResourceId, HelpResource: DeploymentAdminResources.Names.Host_ComputeResourceId_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false, IsRequired: false)]
         public string ComputeResourceId { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.Host_HasSSLCert, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.Host_HasSSLCert, FieldType: FieldTypes.Bool, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]
         public bool HasSSLCert { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.Host_SSLExpires, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsUserEditable: false)]

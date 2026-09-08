@@ -76,7 +76,7 @@ namespace LagoVista.IoT.Deployment.Models.DeviceNotifications
         [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_ContentType, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
         public string ContentType { get; set; }
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_UserName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
+        [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_UserName, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]
         public bool Anonymous { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.RestNotification_UserName, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources))]
