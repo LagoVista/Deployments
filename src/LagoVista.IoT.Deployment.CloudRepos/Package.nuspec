@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>LagoVista.IoT.Deployment.CloudRepos</id>
@@ -18,7 +18,7 @@
       <group targetFramework="net9.0">
         <dependency id="LagoVista.CloudStorage" version="7.0.59" />
         <dependency id="LagoVista.Core.Configuration" version="7.0.12" />
-        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.3" />
+        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.4" />
         <dependency id="LagoVista.IoT.Pipeline.CloudRepos" version="7.0.3" />
       </group>
     </dependencies>
