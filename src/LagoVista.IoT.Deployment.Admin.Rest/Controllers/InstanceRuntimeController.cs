@@ -258,9 +258,15 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var summaries = group.Devices
                 .Select(device => new DeviceSummary
                 {
-                    Id = device.Id,
-                    DeviceId = device.Text,
-                    Name = device.Text
+                    Id = device.DeviceUniqueId,
+                    DeviceId = device.DeviceId,
+                    DeviceConfiguration = device.DeviceConfiguration?.Text,
+                    DeviceConfigurationId = device.DeviceConfiguration?.Id,
+                    DeviceRepo = repo.Name,
+                    DeviceRepoId = repo.Id,
+                    DeviceName = device.Name,
+                    DeviceType = device.DeviceType?.Text,
+                    DeviceTypeId = device.DeviceType?.Id
                 })
                 .ToList();
 
