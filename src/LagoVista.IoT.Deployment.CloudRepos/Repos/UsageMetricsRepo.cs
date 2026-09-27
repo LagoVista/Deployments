@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
-    public class UsageMetricsRepo : TableStorageBase<UsageMetrics>, IUsageMetricsRepo
+    public class UsageMetricsRepo : TableStorageBase<UsageMetrics>, IUsageMetricsRepo, IUsageMetricsHistoryRepo
     {
         private static readonly TimeSpan UsageRetention = TimeSpan.FromDays(90);
         private readonly IActivityRecordStore<UsageMetricActivityRecord> _activityStore;
@@ -121,7 +121,6 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, ListRequest request)
         {
-            // Historical reads remain on Azure Table Storage until the separate data-migration/read-cutover work is scheduled.
             return GetPagedResultsAsync(dependencyId, request);
         }
 
@@ -133,6 +132,108 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task<ListResponse<UsageMetrics>> GetMetricsForPipelineModuleAsync(string pipelineModuleId, ListRequest request)
         {
             return GetPagedResultsAsync(pipelineModuleId, request);
+        }
+
+        public Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, EntityHeader organization, ListRequest request)
+        {
+            return QueryHistoryAsync(organization, request, query =>
+                query.Where(record => record.HostId, StorageFilterOperator.Equal, hostId));
+        }
+
+        public Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, EntityHeader organization, ListRequest request)
+        {
+            return QueryHistoryAsync(organization, request, query =>
+                query.Where(record => record.SourceId, StorageFilterOperator.Equal, dependencyId));
+        }
+
+        public Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, EntityHeader organization, ListRequest request)
+        {
+            return QueryHistoryAsync(organization, request, query =>
+                query.Where(record => record.InstanceId, StorageFilterOperator.Equal, instanceId));
+        }
+
+        public Task<ListResponse<UsageMetrics>> GetMetricsForPipelineModuleAsync(string pipelineModuleId, EntityHeader organization, ListRequest request)
+        {
+            return QueryHistoryAsync(organization, request, query =>
+                query.Where(record => record.PipelineModuleId, StorageFilterOperator.Equal, pipelineModuleId));
+        }
+
+        private async Task<ListResponse<UsageMetrics>> QueryHistoryAsync(
+            EntityHeader organization,
+            ListRequest request,
+            Func<HistoryQuery<UsageMetricActivityRecord>, HistoryQuery<UsageMetricActivityRecord>> applyFilter)
+        {
+            if (EntityHeader.IsNullOrEmpty(organization)) throw new ArgumentNullException(nameof(organization));
+            request = request ?? ListRequest.Create(1, 100);
+
+            DateTime? startUtc;
+            DateTime? endExclusiveUtc;
+            if (!request.TryGetDateRange(out startUtc, out endExclusiveUtc, out var dateError))
+            {
+                return ListResponse<UsageMetrics>.FromError(dateError);
+            }
+
+            var endUtc = endExclusiveUtc.HasValue
+                ? endExclusiveUtc.Value.AddTicks(-1)
+                : DateTime.UtcNow;
+
+            var start = startUtc ?? endUtc.Subtract(UsageRetention);
+            var pageSize = request.PageSize <= 0 ? 100 : Math.Min(request.PageSize, 1000);
+            var continuationToken =
+                String.Equals(request.NextPartitionKey, "cassandra", StringComparison.OrdinalIgnoreCase)
+                    ? request.NextRowKey
+                    : null;
+
+            var query = new HistoryQuery<UsageMetricActivityRecord>()
+                .Between(start, endUtc)
+                .Where(record => record.OrganizationId, StorageFilterOperator.Equal, organization.Id)
+                .WithPage(new StoragePageRequest(pageSize, continuationToken));
+
+            query = applyFilter(query);
+
+            var page = await _activityStore.QueryAsync(query).ConfigureAwait(false);
+            var metrics = page.Items.Select(ToUsageMetrics).ToList();
+
+            return ListResponse<UsageMetrics>.Create(
+                metrics,
+                request,
+                page.HasMoreRecords,
+                page.HasMoreRecords ? "cassandra" : null,
+                page.ContinuationToken);
+        }
+
+        private static UsageMetrics ToUsageMetrics(UsageMetricActivityRecord record)
+        {
+            var rowKey = record.Id;
+            if (!String.IsNullOrWhiteSpace(record.SourceId) &&
+                !String.IsNullOrWhiteSpace(record.Id) &&
+                record.Id.StartsWith(record.SourceId + ":", StringComparison.Ordinal))
+            {
+                rowKey = record.Id.Substring(record.SourceId.Length + 1);
+            }
+
+            return new UsageMetrics
+            {
+                PartitionKey = record.SourceId,
+                RowKey = rowKey,
+                HostId = record.HostId,
+                InstanceId = record.InstanceId,
+                PipelineModuleId = record.PipelineModuleId,
+                StartTimeStamp = record.StartTimeStamp,
+                EndTimeStamp = record.EndTimeStamp,
+                ElapsedMS = record.ElapsedMS,
+                MessagesPerSecond = record.MessagesPerSecond,
+                AverageProcessingMS = record.AverageProcessingMS,
+                Version = record.Version,
+                Status = record.Status,
+                MessagesProcessed = record.MessagesProcessed,
+                DeadLetterCount = record.DeadLetterCount,
+                BytesProcessed = record.BytesProcessed,
+                ErrorCount = record.ErrorCount,
+                WarningCount = record.WarningCount,
+                ActiveCount = record.ActiveCount,
+                ProcessingMS = record.ProcessingMS
+            };
         }
     }
 }
