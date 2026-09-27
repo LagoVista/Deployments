@@ -336,7 +336,12 @@ namespace LagoVista.IoT.Deployment.Admin.Services
             }
 
 
-            if (deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable && !deviceError.Silenced)
+            var hasPendingNotification = !String.IsNullOrEmpty(deviceError.NextNotification) &&
+                deviceError.NextNotification.ToDateTime().ToUniversalTime() > DateTime.UtcNow;
+
+            if (deviceErrorCode.NotificationIntervalTimeSpan.Value != TimeSpanIntervals.NotApplicable &&
+                !deviceError.Silenced &&
+                (exception.FollowUpAttempt > 0 || !hasPendingNotification))
             {
                 var scheduledNotification = new DeviceErrorScheduleCheck()
                 {
