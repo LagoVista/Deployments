@@ -6,6 +6,7 @@ using LagoVista.Core.Exceptions;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
@@ -63,6 +64,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly INotificationSender _notificationSender;
         private readonly IAdminLogger _logger;
         private readonly ISignedRequestHttpValidator _signedRequestValidator;
+        private readonly IUsageMetricsManager _usageMetricsManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -78,7 +80,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
-            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager)
+            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -99,6 +101,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._notificationSender = notificationSender ?? throw new ArgumentNullException(nameof(notificationSender));
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._signedRequestValidator = signedRequestValidator ?? throw new ArgumentNullException(nameof(signedRequestValidator));
+            this._usageMetricsManager = usageMetricsManager ?? throw new ArgumentNullException(nameof(usageMetricsManager));
         }
 
 
@@ -224,6 +227,26 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _runtimeTokenManager.GetUsageStorageConnectionAsync(SettingType.Instance, InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        /// <summary>
+        /// RuntimeData - persist a natural runtime usage metrics cohort.
+        /// </summary>
+        [HttpPost("/api/runtime-data/usage")]
+        public async Task<InvokeResult> AddUsageMetricsAsync([FromBody] UsageMetricsBatchRequest request)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if (request == null || request.Metrics == null)
+            {
+                return InvokeResult.FromError("Usage metrics batch is required.");
+            }
+
+            return await _usageMetricsManager.AddMetricsAsync(
+                request.Metrics,
+                InstanceEntityHeader.Id,
+                OrgEntityHeader,
+                UserEntityHeader);
         }
 
         /// <summary>

@@ -10,7 +10,10 @@ using LagoVista.Core.Rpc.Client;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.IoT.Logging.Loggers;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using LagoVista.Core.Validation;
 
 namespace LagoVista.IoT.Deployment.Admin.Managers
 {
@@ -27,6 +30,31 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             _metricsRepo = metricsRepo;
             _deploymentInstanceRepo = deploymentInstanceMgr;
             _proxyFactory = proxyFactory;
+        }
+
+        public async Task<InvokeResult> AddMetricsAsync(IEnumerable<UsageMetrics> metrics, string instanceId, EntityHeader org, EntityHeader user)
+        {
+            if (metrics == null) return InvokeResult.FromError("Usage metrics batch is required.");
+
+            var batch = metrics.ToList();
+            if (batch.Count == 0) return InvokeResult.Success;
+            if (batch.Count > 250) return InvokeResult.FromError("Usage metrics batch cannot contain more than 250 records.");
+            if (batch.Any(metric => metric == null)) return InvokeResult.FromError("Usage metrics batch cannot contain null records.");
+
+            await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Create, "RuntimeDataUsage");
+
+            foreach (var metric in batch)
+            {
+                if (!string.IsNullOrWhiteSpace(metric.InstanceId) && metric.InstanceId != instanceId)
+                {
+                    return InvokeResult.FromError($"Usage metric instance id [{metric.InstanceId}] does not match signed runtime instance [{instanceId}].");
+                }
+
+                metric.InstanceId = instanceId;
+            }
+
+            await _metricsRepo.AddMetricsAsync(batch, org, instanceId);
+            return InvokeResult.Success;
         }
 
         public async Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request, EntityHeader org, EntityHeader user)
