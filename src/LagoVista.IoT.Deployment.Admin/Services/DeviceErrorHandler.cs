@@ -365,7 +365,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services
 
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Scheduling message for delivery at {scheduledNotification.DueTimeStamp}");
 
-                await _deviceErrorScheduleCheckSender.ScheduleAsync(scheduledNotification);
+         //       await _deviceErrorScheduleCheckSender.ScheduleAsync(scheduledNotification);
             }
             else
                 _adminLogger.Trace($"[DeviceErrorHandler__HandleDeviceExceptionAsync] - Notification Interval Set to Not Applicable, not queing notification.");
