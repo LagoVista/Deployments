@@ -16,9 +16,9 @@
     <repository url="https://www.github.com/lagovista" type="git" branch="master"></repository>
     <dependencies>
       <group targetFramework="net9.0">
-        <dependency id="LagoVista.CloudStorage" version="7.0.59" />
+        <dependency id="LagoVista.CloudStorage" version="7.0.61-ws-c-ea171054" />
         <dependency id="LagoVista.Core.Configuration" version="7.0.12" />
-        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.6" />
+        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.7-ws-c-51435448" />
         <dependency id="LagoVista.IoT.Pipeline.CloudRepos" version="7.0.3" />
       </group>
     </dependencies>
