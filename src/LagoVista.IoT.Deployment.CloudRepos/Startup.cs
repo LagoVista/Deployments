@@ -1,3 +1,5 @@
+using LagoVista.CloudStorage.Storage.StorageProviders;
+using LagoVista.CloudStorage.Storage.StorageProviders.Cassandra;
 using LagoVista.IoT.Deployment.Admin;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Repos;
@@ -15,6 +17,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos
         {
             services.AddTransient<IDeviceConfigurationRepo, DeviceConfigurationRepo>();
             services.AddTransient<ISolutionRepo, SolutionRepo>();
+            services.AddActivityRecordStore<UsageMetricActivityRecord, CassandraActivityRecordStore<UsageMetricActivityRecord>>(
+                UsageMetricsRepo.ConfigureStorage);
             services.AddTransient<IUsageMetricsRepo, UsageMetricsRepo>();
             services.AddTransient<IDeploymentActivityRepo, DeploymentActivityRepo>();
             services.AddTransient<IRemoteDeploymentRepo, RemoteDeploymentRepo>();
