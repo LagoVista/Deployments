@@ -619,18 +619,6 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         /// <summary>
-        /// Runtime Controller - Get Device Storage Settings
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("/api/deployment/instance/devicestorage/settings")]
-        public async Task<InvokeResult<ConnectionSettings>> GetDeviceStorageAsync()
-        {
-            await ValidateRequest(HttpContext.Request);
-            return await _runtimeTokenManager.GetDeviceStorageConnectionAsync(InstanceEntityHeader.Id, OrgEntityHeader, UserEntityHeader);
-
-        }
-
-        /// <summary>
         /// Runtime Controller - Get Device Data Settings
         /// </summary>
         /// <returns></returns>
