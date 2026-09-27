@@ -35,6 +35,7 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core;
+using LagoVista.IoT.DeviceManagement.Core.Managers;
 using LagoVista.MediaServices.Interfaces;
 using LagoVista.AI.Interfaces.Managers;
 using LagoVista.Core;
@@ -66,6 +67,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly ISignedRequestHttpValidator _signedRequestValidator;
         private readonly IUsageMetricsManager _usageMetricsManager;
         private readonly INotificationPublisher _runtimeNotificationPublisher;
+        private readonly IDeviceRepositoryManager _deviceRepositoryManager;
+        private readonly IDeviceGroupManager _deviceGroupManager;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -81,7 +84,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
-            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher)
+            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
+            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -104,6 +108,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._signedRequestValidator = signedRequestValidator ?? throw new ArgumentNullException(nameof(signedRequestValidator));
             this._usageMetricsManager = usageMetricsManager ?? throw new ArgumentNullException(nameof(usageMetricsManager));
             this._runtimeNotificationPublisher = runtimeNotificationPublisher ?? throw new ArgumentNullException(nameof(runtimeNotificationPublisher));
+            this._deviceRepositoryManager = deviceRepositoryManager ?? throw new ArgumentNullException(nameof(deviceRepositoryManager));
+            this._deviceGroupManager = deviceGroupManager ?? throw new ArgumentNullException(nameof(deviceGroupManager));
         }
 
 
@@ -193,6 +199,94 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _instanceManager.GetKeyAsync(keyid, InstanceEntityHeader, OrgEntityHeader);
+        }
+
+        private Task<DeviceRepository> GetRuntimeDeviceRepositoryAsync()
+        {
+            return _deviceRepositoryManager.GetDeviceRepositoryForInstanceAsync(
+                InstanceEntityHeader.Id,
+                OrgEntityHeader,
+                UserEntityHeader);
+        }
+
+        [HttpGet("/api/runtime-data/device/by-device-id/{deviceId}")]
+        public async Task<InvokeResult<Device>> GetRuntimeDeviceByDeviceIdAsync(string deviceId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceManager.GetDeviceByDeviceIdAsync(repo, deviceId, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/runtime-data/device/by-id/{id}")]
+        public async Task<InvokeResult<Device>> GetRuntimeDeviceByIdAsync(string id)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceManager.GetDeviceByIdAsync(repo, id, OrgEntityHeader, UserEntityHeader);
+        }
+
+        [HttpGet("/api/runtime-data/device/configuration/{configurationId}")]
+        public async Task<ListResponse<DeviceSummary>> GetRuntimeDevicesForConfigurationAsync(string configurationId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceManager.GetDevicesWithConfigurationAsync(
+                repo,
+                configurationId,
+                ListRequest.Create(1, 1000),
+                OrgEntityHeader,
+                UserEntityHeader);
+        }
+
+        [HttpGet("/api/runtime-data/device/group/{groupKey}")]
+        public async Task<ListResponse<DeviceSummary>> GetRuntimeDevicesForGroupAsync(string groupKey)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            var group = await _deviceGroupManager.GetDeviceGroupByKeyAsync(
+                repo,
+                groupKey,
+                OrgEntityHeader,
+                UserEntityHeader);
+
+            if (group == null)
+            {
+                return ListResponse<DeviceSummary>.FromError(
+                    $"Could not find device group by key [{groupKey}].");
+            }
+
+            var summaries = group.Devices
+                .Select(device => new DeviceSummary
+                {
+                    Id = device.Id,
+                    DeviceId = device.Text,
+                    Name = device.Text
+                })
+                .ToList();
+
+            return ListResponse<DeviceSummary>.Create(
+                summaries,
+                ListRequest.Create(1, Math.Max(1, summaries.Count)),
+                false,
+                null,
+                null);
+        }
+
+        [HttpPut("/api/runtime-data/device")]
+        public async Task<InvokeResult<Device>> UpdateRuntimeDeviceAsync([FromBody] Device device)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (device == null)
+            {
+                return InvokeResult<Device>.FromError("Device body is required.");
+            }
+
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceManager.UpdateDeviceAsync(
+                repo,
+                device,
+                OrgEntityHeader,
+                UserEntityHeader);
         }
 
         [HttpPost("/api/runtime-data/notification/{target}")]
