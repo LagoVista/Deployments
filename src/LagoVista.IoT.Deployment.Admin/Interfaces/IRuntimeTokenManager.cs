@@ -20,7 +20,6 @@ namespace LagoVista.IoT.Deployment.Admin.Interfaces
 
     public interface IRuntimeTokenManager
     {
-        Task<InvokeResult<ConnectionSettings>> GetDeviceStorageConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
         Task<InvokeResult<ConnectionSettings>> GetDeviceWatchdogConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
 
         Task<InvokeResult<ConnectionSettings>> GetDeviceEventConnectionAsync(String instanceId, EntityHeader org, EntityHeader user);
