@@ -137,7 +137,7 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, EntityHeader organization, ListRequest request)
         {
             return QueryHistoryAsync(organization, request, query =>
-                query.Where(record => record.HostId, StorageFilterOperator.Equal, hostId));
+                query.Where(record => record.SourceId, StorageFilterOperator.Equal, hostId));
         }
 
         public Task<ListResponse<UsageMetrics>> GetMetricsForDependencyAsync(string dependencyId, EntityHeader organization, ListRequest request)
@@ -149,13 +149,13 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, EntityHeader organization, ListRequest request)
         {
             return QueryHistoryAsync(organization, request, query =>
-                query.Where(record => record.InstanceId, StorageFilterOperator.Equal, instanceId));
+                query.Where(record => record.SourceId, StorageFilterOperator.Equal, instanceId));
         }
 
         public Task<ListResponse<UsageMetrics>> GetMetricsForPipelineModuleAsync(string pipelineModuleId, EntityHeader organization, ListRequest request)
         {
             return QueryHistoryAsync(organization, request, query =>
-                query.Where(record => record.PipelineModuleId, StorageFilterOperator.Equal, pipelineModuleId));
+                query.Where(record => record.SourceId, StorageFilterOperator.Equal, pipelineModuleId));
         }
 
         private async Task<ListResponse<UsageMetrics>> QueryHistoryAsync(
