@@ -20,7 +20,7 @@
         <dependency id="LagoVista.Core.Authentication" version="7.0.14" />
         <dependency id="LagoVista.Core.Rpc" version="7.0.14" />
         <dependency id="LagoVista.Core.Rpc.Client" version="7.0.14" />
-        <dependency id="LagoVista.IoT.Deployment.Models" version="7.0.12" />
+        <dependency id="LagoVista.IoT.Deployment.Models" version="7.0.13" />
         <dependency id="LagoVista.IoT.DeviceAdmin" version="7.0.4" />
         <dependency id="LagoVista.IoT.DeviceManagement.Core" version="7.0.3" />
         <dependency id="LagoVista.IoT.DeviceMessaging.Admin" version="7.0.3" />
