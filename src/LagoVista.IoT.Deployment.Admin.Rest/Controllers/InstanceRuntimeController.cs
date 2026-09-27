@@ -65,6 +65,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IAdminLogger _logger;
         private readonly ISignedRequestHttpValidator _signedRequestValidator;
         private readonly IUsageMetricsManager _usageMetricsManager;
+        private readonly INotificationPublisher _runtimeNotificationPublisher;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -80,7 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IOrgUserRepo orgUserRepo, IAppUserManagerReadOnly userManager, IDeploymentHostManager hostManager, IDeploymentInstanceRepo instanceRepo,
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
-            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager)
+            IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -102,6 +103,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._signedRequestValidator = signedRequestValidator ?? throw new ArgumentNullException(nameof(signedRequestValidator));
             this._usageMetricsManager = usageMetricsManager ?? throw new ArgumentNullException(nameof(usageMetricsManager));
+            this._runtimeNotificationPublisher = runtimeNotificationPublisher ?? throw new ArgumentNullException(nameof(runtimeNotificationPublisher));
         }
 
 
@@ -191,6 +193,20 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         {
             await ValidateRequest(HttpContext.Request);
             return await _instanceManager.GetKeyAsync(keyid, InstanceEntityHeader, OrgEntityHeader);
+        }
+
+        [HttpPost("/api/runtime-data/notification/{target}")]
+        public async Task<InvokeResult> PublishRuntimeNotificationAsync(Targets target, [FromBody] Notification notification)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if (notification == null)
+            {
+                return InvokeResult.FromError("Notification body is required.");
+            }
+
+            await _runtimeNotificationPublisher.PublishAsync(target, notification);
+            return InvokeResult.Success;
         }
 
         private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
