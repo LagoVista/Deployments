@@ -126,17 +126,38 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var userId = GetHeader(request, USER_ID);
             var user = GetHeader(request, USER);
             var instanceId = GetHeader(request, INSTANCE_ID);
+            var instanceName = GetHeader(request, INSTANCE);
 
             UserEntityHeader = EntityHeader.Create(userId, user);
-            OrgEntityHeader = EntityHeader.Create(orgId, org); ;
+            OrgEntityHeader = EntityHeader.Create(orgId, org);
+
+            var session = _signedRequestValidator.TryValidateRuntimeSession(request);
+            if (session.Successful)
+            {
+                var sessionClaims = new List<Claim>
+                {
+                    new Claim(ClaimsFactory.CurrentUserId, userId),
+                    new Claim(ClaimsFactory.CurrentOrgId, orgId),
+                    new Claim(ClaimsFactory.HostId, session.HostId ?? String.Empty),
+                    new Claim(ClaimsFactory.InstanceId, instanceId)
+                };
+
+                InstanceEntityHeader = EntityHeader.Create(instanceId, instanceName);
+                HttpContext.User.AddIdentity(new ClaimsIdentity(sessionClaims, "host_instance_session"));
+                return;
+            }
 
             var instance = await _instanceRepo.GetReadOnlyInstanceAsync(instanceId);
             var key1 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId1, UserEntityHeader);
             if (!key1.Successful) throw new Exception(key1.Errors.First().Message);
             var key2 = await _secureStorage.GetSecretAsync(OrgEntityHeader, instance.SharedAccessKeySecureId2, UserEntityHeader);
             if (!key2.Successful) throw new Exception(key2.Errors.First().Message);
-          
-            _signedRequestValidator.ValidateRuntimeInstanceHttpV1(request, key1.Result, key2.Result);
+
+            var validation = _signedRequestValidator.ValidateRuntimeInstanceHttpV1(request, key1.Result, key2.Result);
+            if (!validation.Successful)
+            {
+                throw new NotAuthorizedException($"Runtime request signature validation failed: {validation.ErrorCode} - {validation.ErrorMessage}");
+            }
 
             var claims = new List<Claim>
             {
@@ -147,8 +168,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             };
 
             InstanceEntityHeader = instance.ToEntityHeader();
-            HttpContext.User.AddIdentity(new ClaimsIdentity(claims, "host_instance_signarue"));
+            HttpContext.User.AddIdentity(new ClaimsIdentity(claims, "host_instance_signature"));
 
+            _signedRequestValidator.IssueRuntimeSession(
+                request,
+                HttpContext.Response,
+                instance.PrimaryHost.Id,
+                TimeSpan.FromMinutes(5));
         }
 
         protected EntityHeader OrgEntityHeader { get; private set; }
