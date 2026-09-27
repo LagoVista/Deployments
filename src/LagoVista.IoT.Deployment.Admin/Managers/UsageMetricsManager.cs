@@ -20,14 +20,16 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
     public class UsageMetricsManager : ManagerBase, IUsageMetricsManager
     {
         IUsageMetricsRepo _metricsRepo;
+        IUsageMetricsHistoryRepo _historyRepo;
         IProxyFactory _proxyFactory;
         IDeploymentInstanceRepo _deploymentInstanceRepo;
 
         public UsageMetricsManager(IAdminLogger adminLogger, IAppConfig appConfig, IDeploymentInstanceRepo deploymentInstanceMgr,
-            IProxyFactory proxyFactory, IUsageMetricsRepo metricsRepo, IDependencyManager dependencyManager, ISecurity security) :
+            IProxyFactory proxyFactory, IUsageMetricsRepo metricsRepo, IUsageMetricsHistoryRepo historyRepo, IDependencyManager dependencyManager, ISecurity security) :
             base(adminLogger, appConfig, dependencyManager, security)
         {
             _metricsRepo = metricsRepo;
+            _historyRepo = historyRepo;
             _deploymentInstanceRepo = deploymentInstanceMgr;
             _proxyFactory = proxyFactory;
         }
@@ -60,7 +62,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         public async Task<ListResponse<UsageMetrics>> GetMetricsForHostAsync(string hostId, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await AuthorizeOrgAccessAsync(user, org, typeof(UsageMetrics), Core.Validation.Actions.Read, "Host");
-            return await _metricsRepo.GetMetricsForHostAsync(hostId, request);
+            return await _historyRepo.GetMetricsForHostAsync(hostId, org, request);
         }
 
         public async Task<ListResponse<UsageMetrics>> GetMetricsForInstanceAsync(string instanceId, ListRequest request, EntityHeader org, EntityHeader user)
@@ -76,7 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _metricsRepo.GetMetricsForInstanceAsync(instanceId, request);
+                return await _historyRepo.GetMetricsForInstanceAsync(instanceId, org, request);
             }
         }
 
@@ -93,7 +95,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _metricsRepo.GetMetricsForPipelineModuleAsync(pipelineModuleId, request);
+                return await _historyRepo.GetMetricsForPipelineModuleAsync(pipelineModuleId, org, request);
             }
         }
 
@@ -110,7 +112,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _metricsRepo.GetMetricsForDependencyAsync(dependencyId, request);
+                return await _historyRepo.GetMetricsForDependencyAsync(dependencyId, org, request);
             }
         }
 
