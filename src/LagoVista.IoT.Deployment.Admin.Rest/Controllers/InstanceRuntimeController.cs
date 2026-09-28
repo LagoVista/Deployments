@@ -31,6 +31,8 @@ using LagoVista.IoT.Deployment.Admin.Repos;
 using LagoVista.AspNetCore.Identity.Managers;
 using System.Security.Claims;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core.Models;
@@ -76,6 +78,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly ISensorDataArchiveRepo _sensorDataArchiveRepo;
         private readonly IDeviceExceptionRepo _deviceExceptionRepo;
         private readonly IDeviceArchiveRepo _deviceArchiveRepo;
+        private readonly IRuntimePemRepo _runtimePemRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -93,7 +96,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
             IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo,
-            ISensorDataArchiveRepo sensorDataArchiveRepo, IDeviceExceptionRepo deviceExceptionRepo, IDeviceArchiveRepo deviceArchiveRepo, IDeviceAccountTransactionRepo deviceAccountTransactionRepo)
+            ISensorDataArchiveRepo sensorDataArchiveRepo, IDeviceExceptionRepo deviceExceptionRepo, IDeviceArchiveRepo deviceArchiveRepo, IDeviceAccountTransactionRepo deviceAccountTransactionRepo,
+            IRuntimePemRepo runtimePemRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -124,6 +128,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._sensorDataArchiveRepo = sensorDataArchiveRepo ?? throw new ArgumentNullException(nameof(sensorDataArchiveRepo));
             this._deviceExceptionRepo = deviceExceptionRepo ?? throw new ArgumentNullException(nameof(deviceExceptionRepo));
             this._deviceArchiveRepo = deviceArchiveRepo ?? throw new ArgumentNullException(nameof(deviceArchiveRepo));
+            this._runtimePemRepo = runtimePemRepo ?? throw new ArgumentNullException(nameof(runtimePemRepo));
         }
 
 
@@ -332,6 +337,96 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             _deviceAccountTransactionRepo.AddSettings(settings.Result);
             return await _deviceAccountTransactionRepo.AddTransactionAsync(transaction);
+        }
+
+        [HttpPost("/api/runtime-data/pem")]
+        public async Task<InvokeResult> AddRuntimePemAsync([FromBody] JsonElement pem)
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await UpsertRuntimePemAsync(pem);
+        }
+
+        [HttpPut("/api/runtime-data/pem")]
+        public async Task<InvokeResult> UpdateRuntimePemAsync([FromBody] JsonElement pem)
+        {
+            await ValidateRequest(HttpContext.Request);
+            return await UpsertRuntimePemAsync(pem);
+        }
+
+        [HttpGet("/api/runtime-data/pem/device/{deviceId}/message/{messageId}")]
+        public async Task<IActionResult> GetRuntimePemAsync(string deviceId, string messageId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var record = await _runtimePemRepo.GetByDeviceMessageAsync(OrgEntityHeader.Id, deviceId, messageId);
+            if (record == null || String.IsNullOrWhiteSpace(record.Json)) return NotFound();
+            return Content(record.Json, "application/json");
+        }
+
+        private async Task<InvokeResult> UpsertRuntimePemAsync(JsonElement pem)
+        {
+            if (pem.ValueKind != JsonValueKind.Object)
+                return InvokeResult.FromError("PEM body is required.");
+
+            var root = JsonNode.Parse(pem.GetRawText()) as JsonObject;
+            if (root == null) return InvokeResult.FromError("PEM body must be a JSON object.");
+
+            var device = root["device"] as JsonObject;
+            if (device != null)
+            {
+                device.Remove("databaseName");
+                device.Remove("entityType");
+                device.Remove("primaryAccessKey");
+                device.Remove("secondaryAccessKey");
+                device.Remove("deviceGroups");
+                device.Remove("attributeMetaData");
+            }
+
+            var envelope = root["envelope"] as JsonObject;
+            var status = GetJsonText(root, "status");
+            var errorReason = GetJsonText(root, "errorReason");
+            var createdTimeStamp = GetJsonText(root, "creationTimeStamp");
+            var totalProcessingMs = 0.0;
+            if (DateTime.TryParse(createdTimeStamp, out var created))
+                totalProcessingMs = (DateTime.UtcNow - created.ToUniversalTime()).TotalMilliseconds;
+
+            var id = GetJsonText(root, "pemId");
+            if (String.IsNullOrWhiteSpace(id)) id = Guid.NewGuid().ToString("N");
+
+            var record = new RuntimePemStorageRecord
+            {
+                Id = id,
+                OrganizationId = OrgEntityHeader.Id,
+                DeviceId = GetJsonText(device, "deviceId") ?? "??????",
+                MessageId = GetJsonText(root, "messageId"),
+                Topic = GetJsonText(envelope, "topic"),
+                Status = status,
+                ErrorReason = errorReason,
+                MessageType = GetJsonText(root, "messageType"),
+                CreatedTimeStamp = createdTimeStamp,
+                TotalProcessingMS = totalProcessingMs,
+                Json = root.ToJsonString(),
+                TextPayload = GetJsonText(root, "textPayload"),
+                Values = envelope?["values"]?.ToJsonString(),
+                OutgoingMessages = root["outgoingMessages"]?.ToJsonString(),
+                ResponseMessage = root["responseMessage"]?.ToJsonString(),
+                Log = root["log"]?.ToJsonString(),
+                Instructions = root["instructions"]?.ToJsonString(),
+                Device = device?.ToJsonString(),
+                RuntimeVersion = GetJsonText(root, "runtimeVersion"),
+                SolutionVersion = GetJsonText(root, "solutionVersion"),
+                IsFailure = String.Equals(status, "Failed", StringComparison.OrdinalIgnoreCase) ||
+                    (!String.IsNullOrWhiteSpace(errorReason) && !String.Equals(errorReason, "None", StringComparison.OrdinalIgnoreCase))
+            };
+
+            await _runtimePemRepo.UpsertAsync(record);
+            return InvokeResult.Success;
+        }
+
+        private static string GetJsonText(JsonObject value, string propertyName)
+        {
+            if (value == null || !value.TryGetPropertyValue(propertyName, out var node) || node == null) return null;
+            try { return node.GetValue<string>(); }
+            catch { return node.ToJsonString().Trim('"'); }
         }
 
         [HttpPost("/api/runtime-data/device/archive")]
