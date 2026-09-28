@@ -18,7 +18,7 @@
       <group targetFramework="net9.0">
         <dependency id="LagoVista.AI" version="7.0.8" />
         <dependency id="LagoVista.IoT.Billing.Repos" version="7.0.7" />
-        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.20" />
+        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.21" />
         <dependency id="LagoVista.IoT.Web.Common" version="7.0.15" />
       </group>
     </dependencies>
