@@ -71,6 +71,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceRepositoryManager _deviceRepositoryManager;
         private readonly IDeviceGroupManager _deviceGroupManager;
         private readonly IDeviceConnectionEventRepo _deviceConnectionEventRepo;
+        private readonly IDeviceStatusChangeRepo _deviceStatusChangeRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -87,7 +88,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
-            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo)
+            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -113,6 +114,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceRepositoryManager = deviceRepositoryManager ?? throw new ArgumentNullException(nameof(deviceRepositoryManager));
             this._deviceGroupManager = deviceGroupManager ?? throw new ArgumentNullException(nameof(deviceGroupManager));
             this._deviceConnectionEventRepo = deviceConnectionEventRepo ?? throw new ArgumentNullException(nameof(deviceConnectionEventRepo));
+            this._deviceStatusChangeRepo = deviceStatusChangeRepo ?? throw new ArgumentNullException(nameof(deviceStatusChangeRepo));
         }
 
 
@@ -296,6 +298,61 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 device,
                 OrgEntityHeader,
                 UserEntityHeader);
+        }
+
+        [HttpGet("/api/runtime-data/device/status/current/{deviceUniqueId}")]
+        public async Task<InvokeResult<DeviceStatus>> GetRuntimeCurrentDeviceStatusAsync(string deviceUniqueId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            var status = await _deviceStatusChangeRepo.GetDeviceStatusAsync(repo, deviceUniqueId);
+            return InvokeResult<DeviceStatus>.Create(status);
+        }
+
+        [HttpGet("/api/runtime-data/device/status/history/{deviceId}")]
+        public async Task<ListResponse<DeviceStatus>> GetRuntimeDeviceStatusHistoryAsync(string deviceId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceStatusChangeRepo.GetDeviceStatusHistoryAsync(repo, deviceId, ListRequest.Create(1, 1000));
+        }
+
+        [HttpGet("/api/runtime-data/device/status/current")]
+        public async Task<ListResponse<DeviceStatus>> GetRuntimeCurrentDeviceStatusesAsync()
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceStatusChangeRepo.GetWatchdogDeviceStatusAsync(repo, ListRequest.Create(1, 1000));
+        }
+
+        [HttpPost("/api/runtime-data/device/status/current")]
+        public async Task<InvokeResult> AddRuntimeCurrentDeviceStatusAsync([FromBody] DeviceStatus status)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (status == null) return InvokeResult.FromError("Device status body is required.");
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            await _deviceStatusChangeRepo.AddDeviceStatusAsync(repo, status);
+            return InvokeResult.Success;
+        }
+
+        [HttpPut("/api/runtime-data/device/status/current")]
+        public async Task<InvokeResult> UpdateRuntimeCurrentDeviceStatusAsync([FromBody] DeviceStatus status)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (status == null) return InvokeResult.FromError("Device status body is required.");
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            await _deviceStatusChangeRepo.UpdateDeviceStatusAsync(repo, status);
+            return InvokeResult.Success;
+        }
+
+        [HttpPost("/api/runtime-data/device/status/history")]
+        public async Task<InvokeResult> AddRuntimeDeviceStatusHistoryAsync([FromBody] DeviceStatus status)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (status == null) return InvokeResult.FromError("Device status body is required.");
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            await _deviceStatusChangeRepo.AddDeviceStatusHistoryAsync(repo, status);
+            return InvokeResult.Success;
         }
 
         [HttpPost("/api/runtime-data/device/connection-event")]
