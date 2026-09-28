@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="LagoVista.AI" Version="7.0.8" />
-    <PackageVersion Include="LagoVista.CloudStorage" Version="7.0.59" />
+    <PackageVersion Include="LagoVista.CloudStorage" Version="7.0.70" />
     <PackageVersion Include="LagoVista.Core.Authentication" Version="7.0.14" />
     <PackageVersion Include="LagoVista.Core.Configuration" Version="7.0.14" />
     <PackageVersion Include="LagoVista.Core.Rpc" Version="7.0.14" />
@@ -14,8 +14,8 @@
     <PackageVersion Include="LagoVista.IoT.Billing.Repos" Version="7.0.7" />
     <PackageVersion Include="LagoVista.IoT.DeviceAdmin" Version="7.0.4" />
     <PackageVersion Include="LagoVista.IoT.DeviceAdmin.Models" Version="7.0.4" />
-    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Core" Version="7.0.5" />
-    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Models" Version="7.0.5" />
+    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Core" Version="7.0.6" />
+    <PackageVersion Include="LagoVista.IoT.DeviceManagement.Models" Version="7.0.6" />
     <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Admin" Version="7.0.3" />
     <PackageVersion Include="LagoVista.IoT.DeviceMessaging.Models" Version="7.0.3" />
     <PackageVersion Include="LagoVista.IoT.Pipeline.Admin" Version="7.0.3" />
