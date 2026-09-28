@@ -18,7 +18,7 @@
       <group targetFramework="net9.0">
         <dependency id="LagoVista.CloudStorage" version="7.0.59" />
         <dependency id="LagoVista.Core.Configuration" version="7.0.14" />
-        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.19" />
+        <dependency id="LagoVista.IoT.Deployment.Admin" version="7.0.20" />
         <dependency id="LagoVista.IoT.Pipeline.CloudRepos" version="7.0.3" />
       </group>
     </dependencies>
