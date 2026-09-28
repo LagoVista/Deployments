@@ -17,6 +17,7 @@ using LagoVista.UserAdmin.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -393,14 +394,14 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         }
 
         [HttpPost("/api/runtime-data/pem")]
-        public async Task<InvokeResult> AddRuntimePemAsync([FromBody] JsonElement pem)
+        public async Task<InvokeResult> AddRuntimePemAsync([FromBody] object pem)
         {
             await ValidateRequest(HttpContext.Request);
             return await UpsertRuntimePemAsync(pem);
         }
 
         [HttpPut("/api/runtime-data/pem")]
-        public async Task<InvokeResult> UpdateRuntimePemAsync([FromBody] JsonElement pem)
+        public async Task<InvokeResult> UpdateRuntimePemAsync([FromBody] object pem)
         {
             await ValidateRequest(HttpContext.Request);
             return await UpsertRuntimePemAsync(pem);
@@ -438,12 +439,32 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             return Content(root.ToJsonString(), "application/json");
         }
 
-        private async Task<InvokeResult> UpsertRuntimePemAsync(JsonElement pem)
+        private async Task<InvokeResult> UpsertRuntimePemAsync(object pem)
         {
-            if (pem.ValueKind != JsonValueKind.Object)
+            if (pem == null)
                 return InvokeResult.FromError("PEM body is required.");
 
-            var root = JsonNode.Parse(pem.GetRawText()) as JsonObject;
+            string pemJson;
+            if (pem is JsonElement element)
+            {
+                if (element.ValueKind != JsonValueKind.Object)
+                    return InvokeResult.FromError("PEM body must be a JSON object.");
+
+                pemJson = element.GetRawText();
+            }
+            else if (pem is JToken token)
+            {
+                if (token.Type != JTokenType.Object)
+                    return InvokeResult.FromError("PEM body must be a JSON object.");
+
+                pemJson = token.ToString(Newtonsoft.Json.Formatting.None);
+            }
+            else
+            {
+                pemJson = JsonConvert.SerializeObject(pem);
+            }
+
+            var root = JsonNode.Parse(pemJson) as JsonObject;
             if (root == null) return InvokeResult.FromError("PEM body must be a JSON object.");
 
             var device = root["device"] as JsonObject;
