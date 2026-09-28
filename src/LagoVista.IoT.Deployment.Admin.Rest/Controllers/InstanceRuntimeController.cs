@@ -72,6 +72,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceGroupManager _deviceGroupManager;
         private readonly IDeviceConnectionEventRepo _deviceConnectionEventRepo;
         private readonly IDeviceStatusChangeRepo _deviceStatusChangeRepo;
+        private readonly ISensorDataArchiveRepo _sensorDataArchiveRepo;
+        private readonly IDeviceExceptionRepo _deviceExceptionRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -88,7 +90,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
-            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo)
+            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo,
+            ISensorDataArchiveRepo sensorDataArchiveRepo, IDeviceExceptionRepo deviceExceptionRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -115,6 +118,8 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceGroupManager = deviceGroupManager ?? throw new ArgumentNullException(nameof(deviceGroupManager));
             this._deviceConnectionEventRepo = deviceConnectionEventRepo ?? throw new ArgumentNullException(nameof(deviceConnectionEventRepo));
             this._deviceStatusChangeRepo = deviceStatusChangeRepo ?? throw new ArgumentNullException(nameof(deviceStatusChangeRepo));
+            this._sensorDataArchiveRepo = sensorDataArchiveRepo ?? throw new ArgumentNullException(nameof(sensorDataArchiveRepo));
+            this._deviceExceptionRepo = deviceExceptionRepo ?? throw new ArgumentNullException(nameof(deviceExceptionRepo));
         }
 
 
@@ -298,6 +303,26 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 device,
                 OrgEntityHeader,
                 UserEntityHeader);
+        }
+
+        [HttpPost("/api/runtime-data/device/sensor-archive")]
+        public async Task<InvokeResult> AddRuntimeSensorArchiveAsync([FromBody] SensorDataArchive archive)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (archive == null) return InvokeResult.FromError("Sensor archive body is required.");
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            await _sensorDataArchiveRepo.AddSensorDataArchiveAsync(repo, archive);
+            return InvokeResult.Success;
+        }
+
+        [HttpPost("/api/runtime-data/device/exception")]
+        public async Task<InvokeResult> AddRuntimeDeviceExceptionAsync([FromBody] DeviceException exception)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (exception == null) return InvokeResult.FromError("Device exception body is required.");
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            await _deviceExceptionRepo.AddDeviceExceptionAsync(repo, exception);
+            return InvokeResult.Success;
         }
 
         [HttpGet("/api/runtime-data/device/status/current/{deviceUniqueId}")]
