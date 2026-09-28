@@ -2,7 +2,9 @@
 // ContentHash: 1aec4d9a8b843b11ee0194fda7f8b0ab52acc2e70d41cd8d24ea7038cbd53c54
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LagoVista.Core.Models;
 using LagoVista.IoT.Deployment.Admin.Models;
@@ -22,25 +24,46 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         ITelemetryService _telemetryService;
         IProxyFactory _proxyFactory;
         IDeploymentInstanceRepo _deploymentInstanceRepo;
+        IRuntimeLogRepo _runtimeLogRepo;
 
         public TelemetryManager(IAdminLogger adminLogger, IAppConfig appConfig, IDeploymentInstanceRepo deploymentInstanceRepo,
-            IProxyFactory proxyFactory, ITelemetryService telemetryService, IDependencyManager dependencyManager, ISecurity security) : 
+            IProxyFactory proxyFactory, ITelemetryService telemetryService, IRuntimeLogRepo runtimeLogRepo, IDependencyManager dependencyManager, ISecurity security) : 
             base(adminLogger, appConfig, dependencyManager, security)
         {
             _telemetryService = telemetryService;
             _deploymentInstanceRepo = deploymentInstanceRepo;
             _proxyFactory = proxyFactory;
+            _runtimeLogRepo = runtimeLogRepo;
         }
         
-        public Task<ListResponse<TelemetryReportData>> GetAllErrorsAsync(ListRequest request, EntityHeader org, EntityHeader user)
+        public async Task<ListResponse<TelemetryReportData>> GetAllErrorsAsync(ListRequest request, EntityHeader org, EntityHeader user)
         {
-            return _telemetryService.GetAllErrorsasync(request);
+            await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
+            var logs = await _runtimeLogRepo.QueryErrorsAsync(org, request);
+            return ToTelemetryData(logs, request, "error");
+        }
+
+        private static ListResponse<TelemetryReportData> ToTelemetryData(ListResponse<LagoVista.IoT.Logging.Models.LogRecord> logRecords, ListRequest request, string recordType)
+        {
+            var model = logRecords.Model.Select(record => TelemetryReportData.FromLogRecord(record, recordType)).ToList();
+            return ListResponse<TelemetryReportData>.Create(
+                model,
+                request,
+                !String.IsNullOrWhiteSpace(logRecords.NextPartitionKey),
+                logRecords.NextPartitionKey,
+                logRecords.NextRowKey);
+        }
+
+        private async Task<ListResponse<TelemetryReportData>> QueryRuntimeLogsAsync(EntityHeader org, RuntimeLogResourceType resourceType, string resourceId, string recordType, ListRequest request)
+        {
+            var logs = await _runtimeLogRepo.QueryAsync(org, resourceType, resourceId, String.Equals(recordType, "error", StringComparison.OrdinalIgnoreCase), request);
+            return ToTelemetryData(logs, request, recordType);
         }
 
         public async Task<ListResponse<TelemetryReportData>> GetForDeploymentActivityAsync(string activityid, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
-            return await _telemetryService.GetForDeploymentActviityAsync(activityid, recordType, request);
+            return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.Activity, activityid, recordType, request);
         }
 
         public async Task<ListResponse<TelemetryReportData>> GetForDeviceAsync(DeviceRepository deviceRepo, string deviceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
@@ -60,7 +83,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForDeviceAsync(deviceId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.Device, deviceId, recordType, request);
             }
         }
 
@@ -81,14 +104,14 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForDeviceTypeAsync(deviceTypeId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.DeviceType, deviceTypeId, recordType, request);
             }
         }
 
         public async Task<ListResponse<TelemetryReportData>> GetForHostAsync(string hostId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
         {
             await  base.AuthorizeOrgAccessAsync(user, org, typeof(TelemetryReportData));
-            return await  _telemetryService.GetForHostAsync(hostId, recordType, request);
+            return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.Host, hostId, recordType, request);
         }
 
         public async Task<ListResponse<TelemetryReportData>> GetForInstanceAsync(string instanceId, string recordType, ListRequest request, EntityHeader org, EntityHeader user)
@@ -103,7 +126,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForInstanceAsync(instanceId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.Instance, instanceId, recordType, request);
             }
         }
 
@@ -118,7 +141,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForPemAsync(pemId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.Pem, pemId, recordType, request);
             }
         }
 
@@ -134,7 +157,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForPipelineModuleAsync(pipelineModuleId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.PipelineModule, pipelineModuleId, recordType, request);
             }
         }
 
@@ -150,7 +173,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                return await _telemetryService.GetForPipelineQueueAsync(pipelineModuleId, recordType, request);
+                return await QueryRuntimeLogsAsync(org, RuntimeLogResourceType.PipelineModule, pipelineModuleId, recordType, request);
             }
         }        
     }
