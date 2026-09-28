@@ -439,7 +439,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             if (!settings.Successful)
             {
-                return InvokeResult<decimal>.FromErrors(settings.Errors);
+                return InvokeResult<decimal>.FromErrors(settings.Errors.ToArray());
             }
 
             _deviceAccountTransactionRepo.AddSettings(settings.Result);
