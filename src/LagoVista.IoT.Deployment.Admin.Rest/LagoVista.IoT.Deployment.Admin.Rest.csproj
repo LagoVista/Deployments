@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="LagoVista.IoT.Web.Common" />
     <PackageReference Include="LagoVista.AI" />
+    <PackageReference Include="LagoVista.IoT.Billing.Repos" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
