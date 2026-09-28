@@ -36,6 +36,7 @@ using LagoVista.IoT.Deployment.Admins;
 using LagoVista.IoT.DeviceManagement.Core.Models;
 using LagoVista.IoT.DeviceManagement.Core;
 using LagoVista.IoT.DeviceManagement.Core.Managers;
+using LagoVista.IoT.DeviceManagement.Core.Repos;
 using LagoVista.MediaServices.Interfaces;
 using LagoVista.AI.Interfaces.Managers;
 using LagoVista.Core;
@@ -69,6 +70,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly INotificationPublisher _runtimeNotificationPublisher;
         private readonly IDeviceRepositoryManager _deviceRepositoryManager;
         private readonly IDeviceGroupManager _deviceGroupManager;
+        private readonly IDeviceConnectionEventRepo _deviceConnectionEventRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -85,7 +87,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IServiceTicketCreator ticketCreator, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ISmsSender smsSendeer,IDeviceManager deviceManager, INotificationSender notificationSender,
             IDistributionManager distroManager, IModelManager modelManager, ISecureStorage secureStorage, IAdminLogger logger, IMediaServicesManager mediaServicesManager, IAdminLogger adminLogger,
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
-            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager)
+            IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -110,6 +112,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._runtimeNotificationPublisher = runtimeNotificationPublisher ?? throw new ArgumentNullException(nameof(runtimeNotificationPublisher));
             this._deviceRepositoryManager = deviceRepositoryManager ?? throw new ArgumentNullException(nameof(deviceRepositoryManager));
             this._deviceGroupManager = deviceGroupManager ?? throw new ArgumentNullException(nameof(deviceGroupManager));
+            this._deviceConnectionEventRepo = deviceConnectionEventRepo ?? throw new ArgumentNullException(nameof(deviceConnectionEventRepo));
         }
 
 
@@ -293,6 +296,25 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 device,
                 OrgEntityHeader,
                 UserEntityHeader);
+        }
+
+        [HttpPost("/api/runtime-data/device/connection-event")]
+        public async Task<InvokeResult> AddRuntimeDeviceConnectionEventAsync([FromBody] DeviceConnectionEvent connectionEvent)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if (connectionEvent == null)
+            {
+                return InvokeResult.FromError("Device connection event body is required.");
+            }
+
+            if (String.IsNullOrWhiteSpace(connectionEvent.DeviceId))
+            {
+                return InvokeResult.FromError("Device connection event DeviceId is required.");
+            }
+
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+            return await _deviceConnectionEventRepo.AddDeviceConnectionEventAsync(repo, connectionEvent);
         }
 
         [HttpPost("/api/runtime-data/notification/{target}")]
