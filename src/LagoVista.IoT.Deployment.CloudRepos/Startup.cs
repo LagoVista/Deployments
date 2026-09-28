@@ -26,6 +26,8 @@ namespace LagoVista.IoT.Deployment.CloudRepos
             services.AddTransient<IRuntimePemRepo, RuntimePemRepo>();
             services.AddOperationalDataStore<RuntimeDeviceMediaOperationalRecord, CassandraOperationalDataStore<RuntimeDeviceMediaOperationalRecord>>(RuntimeDeviceMediaRepo.ConfigureStorage);
             services.AddTransient<IRuntimeDeviceMediaRepo, RuntimeDeviceMediaRepo>();
+            services.AddActivityRecordStore<RuntimeLogActivityRecord, CassandraActivityRecordStore<RuntimeLogActivityRecord>>(RuntimeLogRepo.ConfigureStorage);
+            services.AddTransient<IRuntimeLogRepo, RuntimeLogRepo>();
             services.AddTransient<IDeploymentActivityRepo, DeploymentActivityRepo>();
             services.AddTransient<IRemoteDeploymentRepo, RemoteDeploymentRepo>();
             services.AddTransient<IFailedDeploymentActivityRepo, FailedDeploymentActivityRepo>();

@@ -11,6 +11,7 @@ using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Models.Settings;
 using LagoVista.IoT.Logging.Loggers;
+using LagoVista.IoT.Logging.Models;
 using LagoVista.UserAdmin.Interfaces.Repos.Orgs;
 using LagoVista.UserAdmin.Managers;
 using Microsoft.AspNetCore.Http;
@@ -80,6 +81,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceArchiveRepo _deviceArchiveRepo;
         private readonly IRuntimePemRepo _runtimePemRepo;
         private readonly IRuntimeDeviceMediaRepo _runtimeDeviceMediaRepo;
+        private readonly IRuntimeLogRepo _runtimeLogRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -98,7 +100,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
             IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo,
             ISensorDataArchiveRepo sensorDataArchiveRepo, IDeviceExceptionRepo deviceExceptionRepo, IDeviceArchiveRepo deviceArchiveRepo, IDeviceAccountTransactionRepo deviceAccountTransactionRepo,
-            IRuntimePemRepo runtimePemRepo, IRuntimeDeviceMediaRepo runtimeDeviceMediaRepo)
+            IRuntimePemRepo runtimePemRepo, IRuntimeDeviceMediaRepo runtimeDeviceMediaRepo, IRuntimeLogRepo runtimeLogRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -131,6 +133,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceArchiveRepo = deviceArchiveRepo ?? throw new ArgumentNullException(nameof(deviceArchiveRepo));
             this._runtimePemRepo = runtimePemRepo ?? throw new ArgumentNullException(nameof(runtimePemRepo));
             this._runtimeDeviceMediaRepo = runtimeDeviceMediaRepo ?? throw new ArgumentNullException(nameof(runtimeDeviceMediaRepo));
+            this._runtimeLogRepo = runtimeLogRepo ?? throw new ArgumentNullException(nameof(runtimeLogRepo));
         }
 
 
@@ -339,6 +342,24 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             _deviceAccountTransactionRepo.AddSettings(settings.Result);
             return await _deviceAccountTransactionRepo.AddTransactionAsync(transaction);
+        }
+
+        [HttpPost("/api/runtime-data/log/event")]
+        public async Task<InvokeResult> WriteRuntimeEventAsync([FromBody] LogRecord record)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (record == null) return InvokeResult.FromError("Log record is required.");
+            await _runtimeLogRepo.WriteAsync(OrgEntityHeader.Id, OrgEntityHeader.Text, record, false);
+            return InvokeResult.Success;
+        }
+
+        [HttpPost("/api/runtime-data/log/error")]
+        public async Task<InvokeResult> WriteRuntimeErrorAsync([FromBody] LogRecord record)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (record == null) return InvokeResult.FromError("Log record is required.");
+            await _runtimeLogRepo.WriteAsync(OrgEntityHeader.Id, OrgEntityHeader.Text, record, true);
+            return InvokeResult.Success;
         }
 
         [HttpPost("/api/runtime-data/device-media/{pemId}")]
