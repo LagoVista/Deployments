@@ -359,7 +359,30 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             await ValidateRequest(HttpContext.Request);
             var record = await _runtimePemRepo.GetByDeviceMessageAsync(OrgEntityHeader.Id, deviceId, messageId);
             if (record == null || String.IsNullOrWhiteSpace(record.Json)) return NotFound();
-            return Content(record.Json, "application/json");
+
+            var root = JsonNode.Parse(record.Json) as JsonObject;
+            if (root == null) return NotFound();
+
+            if (!String.IsNullOrWhiteSpace(record.TextPayload))
+                root["textPayload"] = record.TextPayload;
+
+            if (!String.IsNullOrWhiteSpace(record.Device))
+                root["device"] = JsonNode.Parse(record.Device);
+
+            var envelope = root["envelope"] as JsonObject;
+            if (!String.IsNullOrWhiteSpace(record.Values))
+            {
+                envelope ??= new JsonObject();
+                envelope["values"] = JsonNode.Parse(record.Values);
+                root["envelope"] = envelope;
+            }
+
+            RestoreJson(root, "outgoingMessages", record.OutgoingMessages);
+            RestoreJson(root, "responseMessage", record.ResponseMessage);
+            RestoreJson(root, "log", record.Log);
+            RestoreJson(root, "instructions", record.Instructions);
+
+            return Content(root.ToJsonString(), "application/json");
         }
 
         private async Task<InvokeResult> UpsertRuntimePemAsync(JsonElement pem)
@@ -379,9 +402,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 device.Remove("secondaryAccessKey");
                 device.Remove("deviceGroups");
                 device.Remove("attributeMetaData");
+                StripReferenceValues(device);
             }
 
             var envelope = root["envelope"] as JsonObject;
+            if (envelope?["values"] != null)
+                StripReferenceValues(envelope["values"]);
+
             var status = GetJsonText(root, "status");
             var errorReason = GetJsonText(root, "errorReason");
             var createdTimeStamp = GetJsonText(root, "creationTimeStamp");
@@ -391,6 +418,22 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             var id = GetJsonText(root, "pemId");
             if (String.IsNullOrWhiteSpace(id)) id = Guid.NewGuid().ToString("N");
+
+            var textPayload = GetJsonText(root, "textPayload");
+            var values = envelope?["values"]?.ToJsonString();
+            var outgoingMessages = root["outgoingMessages"]?.ToJsonString();
+            var responseMessage = root["responseMessage"]?.ToJsonString();
+            var log = root["log"]?.ToJsonString();
+            var instructions = root["instructions"]?.ToJsonString();
+            var deviceJson = device?.ToJsonString();
+
+            envelope?.Remove("values");
+            root.Remove("textPayload");
+            root.Remove("outgoingMessages");
+            root.Remove("responseMessage");
+            root.Remove("log");
+            root.Remove("instructions");
+            root.Remove("device");
 
             var record = new RuntimePemStorageRecord
             {
@@ -405,13 +448,13 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
                 CreatedTimeStamp = createdTimeStamp,
                 TotalProcessingMS = totalProcessingMs,
                 Json = root.ToJsonString(),
-                TextPayload = GetJsonText(root, "textPayload"),
-                Values = envelope?["values"]?.ToJsonString(),
-                OutgoingMessages = root["outgoingMessages"]?.ToJsonString(),
-                ResponseMessage = root["responseMessage"]?.ToJsonString(),
-                Log = root["log"]?.ToJsonString(),
-                Instructions = root["instructions"]?.ToJsonString(),
-                Device = device?.ToJsonString(),
+                TextPayload = textPayload,
+                Values = values,
+                OutgoingMessages = outgoingMessages,
+                ResponseMessage = responseMessage,
+                Log = log,
+                Instructions = instructions,
+                Device = deviceJson,
                 RuntimeVersion = GetJsonText(root, "runtimeVersion"),
                 SolutionVersion = GetJsonText(root, "solutionVersion"),
                 IsFailure = String.Equals(status, "Failed", StringComparison.OrdinalIgnoreCase) ||
@@ -420,6 +463,36 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             await _runtimePemRepo.UpsertAsync(record);
             return InvokeResult.Success;
+        }
+
+        private static void RestoreJson(JsonObject root, string propertyName, string json)
+        {
+            if (!String.IsNullOrWhiteSpace(json))
+                root[propertyName] = JsonNode.Parse(json);
+        }
+
+        private static void StripReferenceValues(JsonNode node)
+        {
+            if (node is JsonObject obj)
+            {
+                foreach (var property in obj.ToList())
+                {
+                    if ((String.Equals(property.Key, "stateSet", StringComparison.OrdinalIgnoreCase) ||
+                         String.Equals(property.Key, "unitSet", StringComparison.OrdinalIgnoreCase)) &&
+                        property.Value is JsonObject reference)
+                    {
+                        reference.Remove("value");
+                    }
+
+                    if (property.Value != null)
+                        StripReferenceValues(property.Value);
+                }
+            }
+            else if (node is JsonArray array)
+            {
+                foreach (var child in array)
+                    if (child != null) StripReferenceValues(child);
+            }
         }
 
         private static string GetJsonText(JsonObject value, string propertyName)
