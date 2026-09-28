@@ -79,6 +79,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceExceptionRepo _deviceExceptionRepo;
         private readonly IDeviceArchiveRepo _deviceArchiveRepo;
         private readonly IRuntimePemRepo _runtimePemRepo;
+        private readonly IRuntimeDeviceMediaRepo _runtimeDeviceMediaRepo;
 
         public const string REQUEST_ID = "X-Nuviot-Runtime-Request-Id";
         public const string ORG_ID = "X-Nuviot-Orgid";
@@ -97,7 +98,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             IDeviceErrorHandler deviceErrorHandler, IRemoteServiceManager remoteServiceManager, IUsageMetricsManager usageMetricsManager, INotificationPublisher runtimeNotificationPublisher,
             IDeviceRepositoryManager deviceRepositoryManager, IDeviceGroupManager deviceGroupManager, IDeviceConnectionEventRepo deviceConnectionEventRepo, IDeviceStatusChangeRepo deviceStatusChangeRepo,
             ISensorDataArchiveRepo sensorDataArchiveRepo, IDeviceExceptionRepo deviceExceptionRepo, IDeviceArchiveRepo deviceArchiveRepo, IDeviceAccountTransactionRepo deviceAccountTransactionRepo,
-            IRuntimePemRepo runtimePemRepo)
+            IRuntimePemRepo runtimePemRepo, IRuntimeDeviceMediaRepo runtimeDeviceMediaRepo)
         {
             this._instanceRepo = instanceRepo ?? throw new ArgumentNullException(nameof(instanceRepo));
             this._ticketCreator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -129,6 +130,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceExceptionRepo = deviceExceptionRepo ?? throw new ArgumentNullException(nameof(deviceExceptionRepo));
             this._deviceArchiveRepo = deviceArchiveRepo ?? throw new ArgumentNullException(nameof(deviceArchiveRepo));
             this._runtimePemRepo = runtimePemRepo ?? throw new ArgumentNullException(nameof(runtimePemRepo));
+            this._runtimeDeviceMediaRepo = runtimeDeviceMediaRepo ?? throw new ArgumentNullException(nameof(runtimeDeviceMediaRepo));
         }
 
 
@@ -337,6 +339,36 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 
             _deviceAccountTransactionRepo.AddSettings(settings.Result);
             return await _deviceAccountTransactionRepo.AddTransactionAsync(transaction);
+        }
+
+        [HttpPost("/api/runtime-data/device-media/{pemId}")]
+        public async Task<InvokeResult<string>> StoreRuntimeDeviceMediaAsync(string pemId, long length = 0, double? latitude = null, double? longitude = null)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var repo = await GetRuntimeDeviceRepositoryAsync();
+
+            using var buffer = new System.IO.MemoryStream();
+            await Request.Body.CopyToAsync(buffer);
+            var contentType = String.IsNullOrWhiteSpace(Request.ContentType) ? "application/octet-stream" : Request.ContentType;
+
+            return await _runtimeDeviceMediaRepo.StoreAsync(repo, OrgEntityHeader.Id, pemId, buffer.ToArray(), contentType, length, latitude, longitude);
+        }
+
+        [HttpPost("/api/runtime-data/device-media/{pemId}/attach")]
+        public async Task<InvokeResult<string>> AttachRuntimeDeviceMediaAsync(string pemId, [FromBody] RuntimeDeviceMediaAttachRequest request)
+        {
+            await ValidateRequest(HttpContext.Request);
+            if (request == null) return InvokeResult<string>.FromError("Device media attach request is required.");
+            return await _runtimeDeviceMediaRepo.AttachAsync(OrgEntityHeader.Id, pemId, request.Title, request.UniqueDeviceId, request.DeviceId);
+        }
+
+        [HttpGet("/api/runtime-data/device-media/{uniqueDeviceId}/{mediaItemId}")]
+        public async Task<IActionResult> GetRuntimeDeviceMediaAsync(string uniqueDeviceId, string mediaItemId)
+        {
+            await ValidateRequest(HttpContext.Request);
+            var result = await _runtimeDeviceMediaRepo.GetAsync(OrgEntityHeader.Id, uniqueDeviceId, mediaItemId);
+            if (!result.Successful || result.Result?.Data == null) return NotFound();
+            return File(result.Result.Data, String.IsNullOrWhiteSpace(result.Result.ContentType) ? "application/octet-stream" : result.Result.ContentType, result.Result.FileName);
         }
 
         [HttpPost("/api/runtime-data/pem")]
