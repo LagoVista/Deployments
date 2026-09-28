@@ -71,6 +71,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
         private readonly IDeviceRepositoryManager _deviceRepositoryManager;
         private readonly IDeviceGroupManager _deviceGroupManager;
         private readonly IDeviceConnectionEventRepo _deviceConnectionEventRepo;
+        private readonly IDeviceAccountTransactionRepo _deviceAccountTransactionRepo;
         private readonly IDeviceStatusChangeRepo _deviceStatusChangeRepo;
         private readonly ISensorDataArchiveRepo _sensorDataArchiveRepo;
         private readonly IDeviceExceptionRepo _deviceExceptionRepo;
@@ -119,6 +120,7 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             this._deviceRepositoryManager = deviceRepositoryManager ?? throw new ArgumentNullException(nameof(deviceRepositoryManager));
             this._deviceGroupManager = deviceGroupManager ?? throw new ArgumentNullException(nameof(deviceGroupManager));
             this._deviceConnectionEventRepo = deviceConnectionEventRepo ?? throw new ArgumentNullException(nameof(deviceConnectionEventRepo));
+            this._deviceAccountTransactionRepo = deviceAccountTransactionRepo ?? throw new ArgumentNullException(nameof(deviceAccountTransactionRepo));
             this._deviceStatusChangeRepo = deviceStatusChangeRepo ?? throw new ArgumentNullException(nameof(deviceStatusChangeRepo));
             this._sensorDataArchiveRepo = sensorDataArchiveRepo ?? throw new ArgumentNullException(nameof(sensorDataArchiveRepo));
             this._deviceExceptionRepo = deviceExceptionRepo ?? throw new ArgumentNullException(nameof(deviceExceptionRepo));
@@ -417,6 +419,31 @@ namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
             var repo = await GetRuntimeDeviceRepositoryAsync();
             await _deviceStatusChangeRepo.AddDeviceStatusHistoryAsync(repo, status);
             return InvokeResult.Success;
+        }
+
+        [HttpPost("/api/runtime-data/device/transaction")]
+        public async Task<InvokeResult<decimal>> AddRuntimeDeviceTransactionAsync([FromBody] DeviceTransaction transaction)
+        {
+            await ValidateRequest(HttpContext.Request);
+
+            if (transaction == null)
+            {
+                return InvokeResult<decimal>.FromError("Device transaction body is required.");
+            }
+
+            var settings = await _runtimeTokenManager.GetDeviceTransactionStorageAsync(
+                SettingType.Instance,
+                InstanceEntityHeader.Id,
+                OrgEntityHeader,
+                UserEntityHeader);
+
+            if (!settings.Successful)
+            {
+                return InvokeResult<decimal>.FromErrors(settings.Errors);
+            }
+
+            _deviceAccountTransactionRepo.AddSettings(settings.Result);
+            return await _deviceAccountTransactionRepo.AddTransactionAsync(transaction);
         }
 
         [HttpPost("/api/runtime-data/device/connection-event")]
