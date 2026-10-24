@@ -37,20 +37,58 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             ValidationCheck(containerRepo, Actions.Create);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Create, user, org);
 
-            if(String.IsNullOrEmpty(containerRepo.Password))
+            if(!String.IsNullOrEmpty(containerRepo.Password))
             {
-                return InvokeResult.FromErrors(new ErrorMessage("Password is required."));
+                var addSecretResult = await _secureStorage.AddSecretAsync(org, containerRepo.Password);
+                if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
+                containerRepo.SecurePasswordId = addSecretResult.Result;
+                containerRepo.Password = null;
             }
-
-            var addSecretResult = await _secureStorage.AddSecretAsync(org, containerRepo.Password);
-            if (!addSecretResult.Successful) return addSecretResult.ToInvokeResult();
-            containerRepo.SecurePasswordId = addSecretResult.Result;
-            containerRepo.Password = null;
-
 
             await _repo.AddContainerRepoAsync(containerRepo);
 
             return InvokeResult.Success;
+        }
+
+        public async Task<ContainerRepository> RegisterContainerTagAsync(string orgId, string containerName, TaggedContainer taggedContainer)
+        {
+            if (String.IsNullOrWhiteSpace(orgId)) throw new ArgumentException("Organization id is required.", nameof(orgId));
+            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException("Container name is required.", nameof(containerName));
+            if (taggedContainer == null) throw new ArgumentNullException(nameof(taggedContainer));
+            if (String.IsNullOrWhiteSpace(taggedContainer.Tag)) throw new ArgumentException("Container tag is required.", nameof(taggedContainer));
+
+            var normalizedContainerName = containerName.Trim().Trim('/').ToLowerInvariant();
+            var separator = normalizedContainerName.IndexOf('/');
+            if (separator <= 0 || separator == normalizedContainerName.Length - 1)
+                throw new ArgumentException("Container name must be in namespace/repository form.", nameof(containerName));
+
+            var containerNamespace = normalizedContainerName.Substring(0, separator);
+            var repositoryName = normalizedContainerName.Substring(separator + 1);
+            if (repositoryName.Contains("/"))
+                throw new ArgumentException("Container name must contain exactly one namespace separator.", nameof(containerName));
+
+            var container = await _repo.GetContainerRepoByNameAsync(orgId.Trim(), containerNamespace, repositoryName);
+            if (container == null)
+            {
+                var key = $"{containerNamespace}-{repositoryName}".Replace("_", "-").Replace(".", "-");
+                container = new ContainerRepository()
+                {
+                    Id = Guid.NewGuid().ToString("N").ToUpperInvariant(),
+                    Name = normalizedContainerName,
+                    Key = key,
+                    Namespace = containerNamespace,
+                    RepositoryName = repositoryName,
+                    OwnerOrganization = EntityHeader.Create(orgId.Trim(), orgId.Trim())
+                };
+                await _repo.AddContainerRepoAsync(container);
+            }
+
+            var existingTag = container.Tags.FirstOrDefault(tag => String.Equals(tag.Tag, taggedContainer.Tag, StringComparison.OrdinalIgnoreCase));
+            if (existingTag != null) container.Tags.Remove(existingTag);
+            container.Tags.Insert(0, taggedContainer);
+            container.PreferredTag = taggedContainer.ToEntityHeader();
+            await _repo.UpdateContainerRepoAsync(container);
+            return container;
         }
 
         public async Task<InvokeResult> UpdateContainerRepoAsync(ContainerRepository containerRepo, EntityHeader org, EntityHeader user)
@@ -89,6 +127,9 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
         {
             var containerRepo = await _repo.GetContainerRepoAsync(containerId);
             await AuthorizeAsync(containerRepo, AuthorizeResult.AuthorizeActions.Read, user, org);
+
+            if (String.IsNullOrWhiteSpace(containerRepo.UserName) || String.IsNullOrWhiteSpace(containerRepo.SecurePasswordId))
+                throw new InvalidOperationException("Registry credentials are not configured for this container repository.");
 
             var pwdResult = await _secureStorage.GetSecretAsync(org, containerRepo.SecurePasswordId, user);
             if(!pwdResult.Successful)

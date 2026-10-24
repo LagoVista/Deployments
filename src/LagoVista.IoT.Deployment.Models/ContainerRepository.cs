@@ -30,7 +30,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         public EntityHeader Registry { get; set; }
 
 
-        [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_UserName, HelpResource: DeploymentAdminResources.Names.ContainerRepository_UserName_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: true, IsUserEditable: true)]
+        [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_UserName, HelpResource: DeploymentAdminResources.Names.ContainerRepository_UserName_Help, FieldType: FieldTypes.Text, ResourceType: typeof(DeploymentAdminResources), IsRequired: false, IsUserEditable: true)]
         public string UserName { get; set; }
 
         [FormField(LabelResource: DeploymentAdminResources.Names.ContainerRepository_IsDefautForRuntime, HelpResource: DeploymentAdminResources.Names.ContainerRepository_IsDefautForRuntime_Help, FieldType: FieldTypes.CheckBox, ResourceType: typeof(DeploymentAdminResources))]

@@ -29,6 +29,15 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
             return GetDocumentAsync(containerRepoId);
         }
 
+        public async Task<ContainerRepository> GetContainerRepoByNameAsync(string orgId, string containerNamespace, string repositoryName)
+        {
+            var containers = await base.QueryAsync(attr => attr.OwnerOrganization.Id == orgId && attr.Namespace == containerNamespace && attr.RepositoryName == repositoryName);
+            if (containers.Count() > 1)
+                throw new System.Exception($"Found multiple container repositories for '{orgId}/{containerNamespace}/{repositoryName}'.");
+
+            return containers.FirstOrDefault();
+        }
+
         public async Task<IEnumerable<ContainerRepositorySummary>> GetContainerReposForOrgAsync(string orgId)
         {
             var containers = await base.QueryAsync(attr => (attr.OwnerOrganization.Id == orgId || attr.IsPublic == true));

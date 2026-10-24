@@ -18,9 +18,31 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.IoT.Deployment.Admin.Models.DockerSupport;
 using LagoVista.Core.Exceptions;
 using Newtonsoft.Json;
+using LagoVista.IoT.Web.Common.Attributes;
 
 namespace LagoVista.IoT.Deployment.Admin.Rest.Controllers
 {
+    [ApiController]
+    [RequireSignedRequest]
+    [Route("api/services/{orgId}/container")]
+    public class ContainerRepositoryServiceController : ControllerBase
+    {
+        private readonly IContainerRepositoryManager _containerManager;
+
+        public ContainerRepositoryServiceController(IContainerRepositoryManager containerManager)
+        {
+            _containerManager = containerManager ?? throw new ArgumentNullException(nameof(containerManager));
+        }
+
+        [HttpPost("{containerName}/tag")]
+        public Task<ContainerRepository> RegisterTagAsync(string orgId, string containerName, [FromBody] TaggedContainer taggedContainer)
+        {
+            if (taggedContainer == null) throw new ArgumentNullException(nameof(taggedContainer));
+            return _containerManager.RegisterContainerTagAsync(orgId, Uri.UnescapeDataString(containerName), taggedContainer);
+        }
+    }
+
+
     [Authorize(AuthenticationSchemes = "APIToken")]
     public class ContainerRepositoryControllerClientAPI : LagoVistaBaseController
     {

@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.Admin\LagoVista.IoT.Deployment.Admin.csproj" />
+    <ProjectReference Include="..\..\src\LagoVista.IoT.Deployment.Admin.Rest\LagoVista.IoT.Deployment.Admin.Rest.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LagoVista.Core.TestBase" />
