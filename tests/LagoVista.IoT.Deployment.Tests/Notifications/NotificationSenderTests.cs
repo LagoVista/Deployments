@@ -40,6 +40,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         public async Task SendNotificationAsync()
         {
             var raised = GetRaisedNotification();
+            raised.DeviceRepositoryId = "ABCDEF0123456789ABCDEF0123456789";
             var repository = new DeviceRepository()
             {
                 Id = raised.DeviceRepositoryId,
