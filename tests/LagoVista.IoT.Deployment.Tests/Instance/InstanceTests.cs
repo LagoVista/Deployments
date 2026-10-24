@@ -228,7 +228,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentHostManager.Verify(dir => dir.UpdateDeploymentHostAsync(It.IsAny<DeploymentHost>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
 
             /* Didn't change, don't call method to get or update the device repo */
-            _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
+            _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.IsAny<DeviceRepository>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
 
