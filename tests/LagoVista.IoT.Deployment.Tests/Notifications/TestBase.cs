@@ -110,6 +110,9 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             LandingPageBuilder.Setup(lpg => lpg.PreparePage(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DeviceNotification>(), It.IsAny<bool>(), It.IsAny<Device>(), It.IsAny<OrgLocation>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).
                 ReturnsAsync(Core.Validation.InvokeResult<NotificationLinks>.Create(GetLinks()));
 
+            EmailMessageSender.Setup(ems => ems.SendInBackgroundAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult.Success);
+            SMSMessageSender.Setup(sms => sms.SendInBackgroundAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(InvokeResult.Success);
+
             EmailMessageSender.Setup(ems => ems.SendAsync(It.IsAny<Email>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(InvokeResult<string>.Create("{A12ADAA2-5D66-421D-A9A0-D1C8B05B1D6F}"));
 
             EmailMessageSender.Setup(ems => ems.SendAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(InvokeResult.Success);

@@ -137,7 +137,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
         {
             var unitSet = new UnitSet()
             {
-                Id = "unitset1",
+                Id = "FEDCBA9876543210FEDCBA9876543210",
                 Key = "abc123",
                 Name = "MyUnitSet"
             };
@@ -149,7 +149,7 @@ namespace LagoVista.IoT.Deployment.Tests.Validation
         {
             var stateSet = new StateSet()
             {
-                Id = "stateset1",
+                Id = "ABCDEF0123456789ABCDEF0123456789",
                 Key = "sts123",
                 Name = "MyStateSet"
             };

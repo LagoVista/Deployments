@@ -221,8 +221,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             sw.Restart();
 
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(raisedNotification.DeviceRepositoryId, orgEntityHeader, userEntityHeader);
-            if (repo.OwnerOrganization.Id != orgEntityHeader.Id) throw new NotAuthorizedException("Org missmatch.");
-            if (repo == null) return InvokeResult<string>.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");            
+            if (repo == null) return InvokeResult<string>.FromError($"Could not locate device repository {raisedNotification.DeviceRepositoryId}");
+            if (repo.OwnerOrganization.Id != orgEntityHeader.Id) throw new NotAuthorizedException("Org missmatch.");            
             result.Timings.Add(new ResultTiming() { Key = "loadrepo", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
 

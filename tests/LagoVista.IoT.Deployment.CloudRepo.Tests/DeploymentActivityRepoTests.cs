@@ -26,6 +26,7 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         Mock<IAdminLogger> _adminLogger = new Mock<IAdminLogger>();
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task ShouldNotGetFutureScheduledActivities()
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()
@@ -50,6 +51,7 @@ namespace LagoVista.IoT.Deployment.CloudRepo.Tests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task ShouldGetScheduledActivitiesIfScheudleExpires()
         {
             _deploymentSettings.Setup(dep => dep.DeploymentAdminTableStorage).Returns(new ConnectionSettings()

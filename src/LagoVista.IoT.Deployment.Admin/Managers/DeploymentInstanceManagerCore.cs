@@ -229,6 +229,19 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> AddInstanceAsync(DeploymentInstance instance, EntityHeader org, EntityHeader user)
         {
+            ValidationCheck(instance, Actions.Create);
+            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Create, user, org);
+
+            // Validate repository ownership before creating a deployment host. A rejected
+            // assignment must not leave an orphan host behind.
+            LagoVista.IoT.DeviceManagement.Core.Models.DeviceRepository assignmentRepo = null;
+            if (!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
+            {
+                assignmentRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
+                if (!EntityHeader.IsNullOrEmpty(assignmentRepo.Instance))
+                    throw new ValidationException("Can not reassign repo", new ErrorMessage($"Repository is already assigned to the instance {assignmentRepo.Instance.Text}.  A Device Repository can only be assigned to one Instance at a time."));
+            }
+
             if (instance.NuvIoTEdition.Value == NuvIoTEditions.Shared)
             {
                 var host = await _deploymentHostManager.FindHostServiceAsync(HostTypes.Shared);
@@ -271,22 +284,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
 
 
-            ValidationCheck(instance, Actions.Create);
-
-            await AuthorizeAsync(instance, AuthorizeResult.AuthorizeActions.Create, user, org);
-
-            if (!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
+            if (assignmentRepo != null)
             {
-                var repo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
-                if (EntityHeader.IsNullOrEmpty(repo.Instance))
-                {
-                    repo.Instance = EntityHeader.Create(instance.Id, instance.Name);
-                    await _deviceManagerRepo.UpdateDeviceRepositoryAsync(repo, org, user);
-                }
-                else
-                {
-                    throw new ValidationException("Can not reassign repo", new ErrorMessage($"Repository is already assigned to the instance {repo.Instance.Text}.  A Device Repository can only be assigned to one Instance at a time."));
-                }
+                assignmentRepo.Instance = EntityHeader.Create(instance.Id, instance.Name);
+                await _deviceManagerRepo.UpdateDeviceRepositoryAsync(assignmentRepo, org, user);
             }
 
             var keyAddResult = await _secureStorage.AddSecretAsync(org, instance.SharedAccessKey1);

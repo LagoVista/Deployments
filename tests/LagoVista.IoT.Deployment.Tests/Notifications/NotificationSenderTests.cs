@@ -3,6 +3,12 @@
 // IndexVersion: 2
 // --- END CODE INDEX META ---
 using LagoVista.IoT.Deployment.Admin.Interfaces;
+using LagoVista.Core.Models;
+using LagoVista.Core.Models.UIMetaData;
+using LagoVista.Core.Validation;
+using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.DeviceManagement.Core.Models;
+using LagoVista.IoT.Deployment.Models;
 using LagoVista.IoT.Deployment.Admin.Services.NotificationClients;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,11 +25,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
     {
 
         INotificationSender _sender;
+        private Mock<IDeviceNotificationRecipientRepo> _recipientRepo = new Mock<IDeviceNotificationRecipientRepo>();
 
         [TestInitialize]
         public void Init()
         {
-            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object, Mock.Of<IDeviceNotificationRecipientRepo>(),
+            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object, _recipientRepo.Object,
                                 RasiedDeviceNotificationRepo.Object, NotificationPublisher.Object, BackgroundTaskQueue.Object, TagReplacer.Object,  DeviceConfigHelper.Object, AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeviceCommandSender.Object,
                                 DeploymentInstanceRepo.Object, TimeZoneService.Object);
         }
@@ -32,7 +39,36 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         [TestMethod]
         public async Task SendNotificationAsync()
         {
-            var result =  await _sender.RaiseNotificationAsync(GetRaisedNotification(), OrgEH, UserEH);
+            var raised = GetRaisedNotification();
+            raised.DeviceRepositoryId = "ABCDEF0123456789ABCDEF0123456789";
+            var repository = new DeviceRepository()
+            {
+                Id = raised.DeviceRepositoryId,
+                Name = "Fixture Repository",
+                OwnerOrganization = OrgEH,
+                Instance = EntityHeader.Create("AABBCCDDEEFF00112233445566778899", "Fixture Deployment")
+            };
+            var device = GetDevice();
+            device.Id = "00112233445566778899AABBCCDDEEFF";
+            device.DeviceId = raised.DeviceId;
+            device.Name = "Fixture Device";
+            device.OwnerOrganization = OrgEH;
+            device.DeviceRepository = EntityHeader.Create(repository.Id, repository.Name);
+            device.DeviceConfiguration = EntityHeader.Create("00112233445566778899AABBCCDDEEFF", "Fixture Configuration");
+            var notification = GetNotification();
+            notification.Name = "Fixture Notification";
+            notification.Id = "11223344556677889900AABBCCDDEEFF";
+
+            RepoManager.Setup(x => x.GetDeviceRepositoryWithSecretsAsync(raised.DeviceRepositoryId, OrgEH, UserEH, null, false)).ReturnsAsync(repository);
+            DeviceManager.Setup(x => x.GetDeviceByIdAsync(repository, raised.DeviceUniqueId, OrgEH, UserEH, false))
+                .ReturnsAsync(InvokeResult<Device>.Create(device));
+            NotificationRepo.Setup(x => x.GetNotificationByKeyAsync(OrgEH.Id, It.IsAny<string>(), raised.NotificationKey))
+                .ReturnsAsync(notification);
+            _recipientRepo.Setup(x => x.GetRecipientsForDeviceAndNotificationKeyAsync(It.IsAny<ListRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new ListResponse<DeviceNotificationRecipient> { Model = new List<DeviceNotificationRecipient>() });
+            DeploymentInstanceRepo.Setup(x => x.GetReadOnlyInstanceAsync(repository.Instance.Id))
+                .ReturnsAsync(new DeploymentInstance() { Id = repository.Instance.Id });
+            var result = await _sender.RaiseNotificationAsync(raised, OrgEH, UserEH);
             Assert.IsTrue(result.Successful, result.ErrorMessage);
         }
 

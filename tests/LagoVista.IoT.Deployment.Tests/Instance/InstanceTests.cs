@@ -33,10 +33,10 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
     [TestFixture]
     public class InstanceTests
     {
-        private const string NEW_DEVICE_REPO_ID = "ABC123ABC123ABC123";
-        private const string OLD_DEVICE_REPO_ID = "DEF123DEF321DEF123";
-        private const string DEVICE_INSTANCE_ID = "INSTANCEID001";
-        private const string DEVICE_INSTANCE_OTHER_ID = "INSTANCEID001_OTHER";
+        private const string NEW_DEVICE_REPO_ID = "ABC123ABC123ABC123ABC123ABC123AB";
+        private const string OLD_DEVICE_REPO_ID = "DEF123DEF321DEF123DEF123DEF321DE";
+        private const string DEVICE_INSTANCE_ID = "AABBCCDDEEFF00112233445566778899";
+        private const string DEVICE_INSTANCE_OTHER_ID = "11223344556677889900AABBCCDDEEFF";
 
         IDeploymentInstanceManagerCore _instanceManager;
         Mock<IDeploymentHostManager> _deploymentHostManager;
@@ -214,6 +214,9 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
                 return Task.FromResult<DeploymentInstance>(GetInstance());
             });
 
+            _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()))
+                .ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = EntityHeader.Create(DEVICE_INSTANCE_ID, "myinstance") });
+
             var instance = GetInstance();
 
             await _instanceManager.UpdateInstanceAsync(instance, ORG, USER);
@@ -225,7 +228,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
             _deploymentHostManager.Verify(dir => dir.UpdateDeploymentHostAsync(It.IsAny<DeploymentHost>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
 
             /* Didn't change, don't call method to get or update the device repo */
-            _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
+            _deviceRepoManager.Verify(dir => dir.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Once);
             _deviceRepoManager.Verify(drm => drm.UpdateDeviceRepositoryAsync(It.IsAny<DeviceRepository>(), It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()), Times.Never);
         }
 
@@ -307,7 +310,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var updatedInstance = GetInstance();
             updatedInstance.DeviceRepository.Id = NEW_DEVICE_REPO_ID;
-            await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
+            Assert.That(async () => await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER), Throws.InstanceOf<ValidationException>());
         }
 
         [Test]
@@ -375,7 +378,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
                 });
             });
 
-            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
+            var host = new DeploymentHost() { Id = "A1B2C3D4E5F60718293A4B5C6D7E8F90", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
 
             var instance = GetInstance();
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
@@ -394,7 +397,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });
 
-            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
+            var host = new DeploymentHost() { Id = "A1B2C3D4E5F60718293A4B5C6D7E8F90", HostType = EntityHeader<HostTypes>.Create(HostTypes.Dedicated) };
 
             var instance = GetInstance();
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };
@@ -413,7 +416,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
         {
             _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>())).ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = new EntityHeader() { Id = DEVICE_INSTANCE_ID, Text = "dontcare" } });
 
-            var host = new DeploymentHost() { Id = "MYHOSTID", HostType = EntityHeader<HostTypes>.Create(HostTypes.Free) };
+            var host = new DeploymentHost() { Id = "A1B2C3D4E5F60718293A4B5C6D7E8F90", HostType = EntityHeader<HostTypes>.Create(HostTypes.Free) };
 
             var instance = GetInstance();
             instance.PrimaryHost = new EntityHeader<DeploymentHost>() { Id = host.Id };

@@ -1,0 +1,48 @@
+# Deployments test inventory
+
+Source baseline: 69a9a0075d8bfecd935b7c75cdb983db3ae6e05b. Source inventory: 2 net9.0 test projects, 83 explicitly attributed [TestMethod] cases. The test source uses MSTest-style attributes, while the canonical runner's failure traces contain NUnit.Framework internals; the exact adapter and runtime discovery require verification. Classification below is provisional wherever fixture execution has not been inspected.
+
+## LagoVista.IoT.Deployment.CloudRepo.Tests
+- DeploymentActivityRepoTests.cs :: DeploymentActivityRepoTests (2): ShouldNotGetFutureScheduledActivities; ShouldGetScheduledActivitiesIfScheudleExpires. Integration candidate: persistence repository behavior; confirm mocks versus real backing store.
+
+## LagoVista.IoT.Deployment.Tests
+- DeviceConfig/RouteMappings.cs :: RouteMappings (1): Route_Mapping_Primary. Unit candidate.
+- DeviceConfig/WatchDogExclusionValidationTests.cs :: WatchDogExclusionValidationTests (7): Should_Be_Valid_Exclusion; Should_Not_Be_Valid_Exclusion_When_Start_Is_Greater_Then_End; Should_Not_Be_Valid_Exclusion_When_Start_Is_Equal_To_End; Should_Not_Be_Valid_Exclusion_When_Start_Is_Invalid_Minute; Should_Not_Be_Valid_Exclusion_When_End_Is_Invalid_Minute; Should_Not_Be_Valid_Exclusion_When_Start_Is_Invalid_Hours; Should_Not_Be_Valid_Exclusion_When_End_Is_Invalid_Hours. Unit candidate.
+- Host/HostDeletionTests.cs :: HostDeletionTests (4): HostDelete_DeleteShoudlFailForNotificationserver; HostDelete_DeleteShouldFailForMCPServer; HostDelete_DeleteNotificationShouldReturnErrHST1001; HostDelete_DeleteShouldFailForMCPServerErrHST1002. Unit candidate.
+- Host/HostStatusTests.cs :: HostTests (3): Host_ShouldUpdate_State_IfStatusIfChanged; Host_ShouldUpdate_Status_DateIfChangeed; Host_Should_Not_UpdateStatus_IfStatusDidNotChange. Unit candidate.
+- Host/SharedHostTests.cs :: SharedHostTests (0 attributed methods). Discovery gap: helper or missing attributes?
+- Instance/InstanceTests.cs :: InstanceTests (11): Instance_Add_Can_Add_If_Device_Repo_Not_InUse; Instance_Add_ThrowValidationException_IfDeviceRepoNotAssigned; Instance_Add_ThrowValidationException_Device_Repo_Is_InUse; Instance_Add_Does_Not_Call_Add_If_Repo_Is_InUse; Instance_Update_NoDeviceRepoChange; Instance_Update_DeviceRepoChange_NewDeviceRepoNotInUse; Instance_Update_DeviceRepoChange_NewDeviceRepoInUse_WillThrowException; Instance_Update_DeviceRepoChange_NewDeviceRepoInUse_WillNotCallUpdatesn; Instance_Delete_ClearRepo; Instance_Delete_DeletesHostIfDedicated; Instance_Delete_ShouldNotDeleteIfNotDedicated. Unit candidate; several currently fail with invalid NormalizedId32 fixtures.
+- Notifications/CoTSenderTests.cs :: CoTSenderTests (2): LoadCerts; SendAsync. Integration candidate: certificate and network behavior.
+- Notifications/DeviceErrorQueueSchedue.cs :: DeviceErrorQueueSchedule (1): SendAndReceiveMessageAsync. Integration candidate: queue interaction.
+- Notifications/EmailSenderTests.cs :: EmailSenderTests (2): PreparePageTest; SendTest. Distinguish preparation unit test from outbound integration.
+- Notifications/LandingPageBuilderTests.cs :: LandingPageBuilderTests (1): CreateLandingPage. Review setup; unit candidate.
+- Notifications/MqttSenderTests.cs :: MqttSenderTests (1): TestSend. Integration candidate: broker.
+- Notifications/NotificationSenderTests.cs :: NotificationSenderTests (2): SendNotificationAsync; UniqueNotificationsTest. Review for externally delivered notifications versus isolated behavior.
+- Notifications/RestSenderTests.cs :: RestSenderTests (1): SendRestMessage. Integration candidate: HTTP request.
+- Notifications/SMSSenderTests.cs :: SMSSenderTests (2): PreparePageTest; SendTest. Distinguish preparation from outbound integration.
+- Notifications/TagReplacementTests.cs :: TagReplacementTests (1): ReplaceTags. Unit candidate.
+- Notifications/TestBase.cs :: TestBase (0). Shared helper, not a test fixture.
+- Publishing/Deserialization.cs :: Deserialization (1): Should_Successfully_Deserialization_Solution. Unit/fixture-file candidate.
+- Tak/TakFileLoaderTests.cs :: TakFileLoaderTests (1): ShouldInitTak. Needs certificate/file/environment review.
+- Tak/XmlParserTests.cs :: XmlParserTests (6): ShouldParseManifestXML; ShouldGetConfigFile; ShouldFindPreferencesFile; ShouldParsePreferencetXML; ShouldGetSteamPropos; ShouldGetPreferencesPropos. Unit candidate.
+- TimeZones/TimeZoneTests.cs :: TimeZoneTests (12): GetTimeZones_When_Called_Should_Return_TimeZones; GetTimeZones_When_Loaded_Should_Have_Unique_IntIds; GetTimeZones_When_Loaded_Should_Have_Unique_Ids; GetTimeZoneReferenceByIntId_When_ValidId_Should_Return_TimeZone; GetTimeZoneByIntId_When_ValidId_Should_Return_TimeZoneInfo; GetTimeZoneEnumOptions_When_Called_Should_Use_IntId_As_Id_And_Key; GetTimeZoneReferenceById_When_IanaId_Should_Return_Canonical_TimeZone; GetTimeZoneById_When_IanaId_Should_Return_Canonical_TimeZoneInfo; GetTimeZoneReferenceById_When_LegacyNumericId_Should_Return_TimeZone; GetTimeZoneReferenceById_When_UnknownString_Should_Throw_Clear_Error; GetTimeZoneReferenceByIntId_When_InvalidId_Should_Return_Null; GetTimeZoneReferenceByIntId_When_InvalidId_Should_Throw. Unit candidate.
+- UsageMetrics/UsageMetricsTests.cs :: UsageMetricsTests (5): UsageMetrics_Concat; UsageMetrics_Clone; UsageMetrics_Calculate_MessagePerSecond; UsageMetrics_Calculate_ElapsedMS; UsageMetrics_Calculate_AvergeProcessing. Unit candidate.
+- Validation/InputTranslatorToInputValidationTests.cs :: InputTranslatorToInputValidationTests (8): InputTranslator_To_Input_Valid; InputTranslator_To_Input_MissingField_InValid; InputTranslator_To_Input_MissingInput_InValid; InputTranslator_To_Input_TypeMisMatch_InValid; InputTranslator_To_Input_StateSet_Valid; InputTranslator_To_Input_UnitSet_Valid; InputTranslator_To_Input_StateSetMisMatch_InValid; InputTranslator_To_Input_UnitSetMisMatch_InValid. Unit candidate.
+- Validation/ListenerValidationValidation.cs :: ListenerValidationValidation (1): InstanceValidation_ListenerUniquePorts_Valid. Unit candidate.
+- Validation/OutputCommandToOutputTranslatorValidationTests.cs :: OutputCommandToOutputTranslatorValidationTests (8): OutputCommand_To_OutputTranslator_Valid; OutputCommand_To_OutputTranslator_MissingFieldOnMessage_InValid; OutputCommand_To_OutputTranslator_MissingFieldOnOutputCommand_InValid; OutputCommand_To_OutputTranslator_InvalidMapping_InValid; OutputCommand_To_OutputTranslator_StateSet_Valid; OutputCommand_To_OutputTranslator_StateSetMisMatch_InValid; OutputCommand_To_OutputTranslator_UnitSet_Valid; OutputCommand_To_OutputTranslator_UnitSetMisMatch_InValid. Unit candidate.
+- Validation/ValidationTestBase.cs :: ValidationTestBase (0). Shared helper.
+
+## Observed runtime test run and discovery limits
+Canonical workspace-test of prior inventory commit f642c62f2693bb4597dfaf22719e0c6883347222 stopped at the 60-second process timeout. Diagnostics reported 39 passed, 17 failed and 0 skipped at termination. This is **not** a full discovery or execution count. Several InstanceTests fail because fixture identifiers violate the current 32-character NormalizedId32 contract. NUnit.Framework stack frames appeared despite MSTest attributes, so runner/framework configuration deserves separate investigation. A hung or external-dependency test is possible; do not increase global timeout to hide it.
+
+No tests have been deleted. The tests above are source-level inventory entries, not proof of successful test discovery or execution. Task 2 must confirm integration dependencies, use the test framework's supported Category=Integration metadata, and verify unit filtering; Task 3 will record full runtime discovery and a reproducible per-case failure baseline.
+
+## Confirmed execution-dependency classification
+- Integration: CloudRepo.Tests/DeploymentActivityRepoTests.ShouldNotGetFutureScheduledActivities and ShouldGetScheduledActivitiesIfScheudleExpires. Both perform real add/query/delete through DeploymentActivityRepo, configured using TEST_AZURESTORAGE_ACCOUNTID and TEST_AZURESTORAGE_ACCESSKEY (user environment variables). No backing store mock.
+- Integration: Notifications/DeviceErrorQueueSchedue.SendAndReceiveMessageAsync. Requires DEV_SB_NUVIOT_ERRS_ACCOUNT_ID, DEV_SB_NUVIOT_ERRS_USER_NAME, DEV_SB_NUVIOT_ERRS_ACCESS_KEY; creates real listener/sender and waits up to 30 seconds for message delivery.
+- Integration: Notifications/MqttSenderTests.TestSend. Uses DEV_MQTT_HOST, DEV_MQTT_PORT, DEV_MQTT_USERNAME, DEV_MQTT_PASSWORD and real MQTTSender.
+- Integration: Notifications/RestSenderTests.SendRestMessage. Actual RESTSender sends to https://www.nuviot.com.
+- Unit (mocked delivery): Notifications/EmailSenderTests, SMSSenderTests, NotificationSenderTests, LandingPageBuilderTests. Dependencies are Moq-managed in shared TestBase; email/SMS do not use live transports. NotificationSenderTests.UniqueNotificationsTest has no assertions, a value-quality review candidate, not an integration test.
+- Unit (local file/fixture): Tak/TakFileLoaderTests.ShouldInitTak. Consumes local kevin.zip file using MemoryStream, no external service required in test setup.
+- Integration: CoTSenderTests.SendAsync uses COTSender -> TakClient.ConnectAsync/SendAsync/DisconnectAsync against an external TAK endpoint described by the local package and certificate fixtures. LoadCerts has no assertions or executable body, and is a low-value review candidate. TestBase initializes local kevin.zip and slroot.crt for every descendant. Missing files therefore break these fixture tests at setup, but local files alone do not make them integration tests.
+- Host/SharedHostTests has setup and private helpers but no [TestMethod], so it is not currently a discoverable test fixture with runnable test cases.

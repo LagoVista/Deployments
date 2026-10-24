@@ -40,7 +40,7 @@ namespace LagoVista.IoT.Deployment.Tests.Host
         {
             _host = new DeploymentHost()
             {
-                Id = "MYHOSTID",
+                Id = "A1B2C3D4E5F60718293A4B5C6D7E8F90",
                 Status = EntityHeader<HostStatus>.Create(HostStatus.Offline),
                 OwnerOrganization = _org
             };
