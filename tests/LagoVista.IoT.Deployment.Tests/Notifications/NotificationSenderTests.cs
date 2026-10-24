@@ -57,13 +57,12 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             notification.Name = "Fixture Notification";
             notification.Id = "11223344556677889900AABBCCDDEEFF";
 
-            RepoManager.Setup(x => x.GetDeviceRepositoryWithSecretsAsync(raised.DeviceRepositoryId, OrgEH, UserEH)).ReturnsAsync(repository);
-            DeviceManager.Setup(x => x.GetDeviceByDeviceIdAsync(repository, raised.DeviceId, OrgEH, UserEH))
+            RepoManager.Setup(x => x.GetDeviceRepositoryWithSecretsAsync(raised.DeviceRepositoryId, OrgEH, UserEH, null, false)).ReturnsAsync(repository);
+            DeviceManager.Setup(x => x.GetDeviceByDeviceIdAsync(repository, raised.DeviceId, OrgEH, UserEH, false))
                 .ReturnsAsync(InvokeResult<Device>.Create(device));
             NotificationRepo.Setup(x => x.GetNotificationByKeyAsync(OrgEH.Id, It.IsAny<string>(), raised.NotificationKey))
                 .ReturnsAsync(notification);
-            var recipientRepo = Mock.Get<IDeviceNotificationRecipientRepo>(Mock.Of<IDeviceNotificationRecipientRepo>());
-            recipientRepo.Setup(x => x.GetRecipientsForDeviceAndNotificationKeyAsync(It.IsAny<ListRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _recipientRepo.Setup(x => x.GetRecipientsForDeviceAndNotificationKeyAsync(It.IsAny<ListRequest>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new ListResponse<DeviceNotificationRecipient> { Model = new List<DeviceNotificationRecipient>() });
             DeploymentInstanceRepo.Setup(x => x.GetReadOnlyInstanceAsync(repository.Instance.Id))
                 .ReturnsAsync(new DeploymentInstance() { Id = repository.Instance.Id });
