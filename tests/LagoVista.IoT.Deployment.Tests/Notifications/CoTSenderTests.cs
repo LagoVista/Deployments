@@ -43,6 +43,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
 
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task SendAsync()
         {
             var cotMessage = new CursorOnTarget()

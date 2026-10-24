@@ -83,6 +83,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task SendAndReceiveMessageAsync()
         {
             var handled = new TaskCompletionSource<DeviceManagement.Models.DeviceException>(TaskCreationOptions.RunContinuationsAsynchronously);
