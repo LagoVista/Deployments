@@ -66,7 +66,7 @@ namespace LagoVista.IoT.Deployment.Tests
             Assert.IsTrue(String.IsNullOrWhiteSpace(created.SecurePasswordId));
             Assert.AreEqual(1, created.Tags.Count);
             Assert.AreEqual("v1.2.3", created.Tags[0].Tag);
-            Assert.AreEqual(tag.Id, created.PreferredTag.Id);
+            Assert.AreEqual(tag.Id.ToString(), created.PreferredTag.Id);
         }
 
         [TestMethod]
@@ -92,7 +92,7 @@ namespace LagoVista.IoT.Deployment.Tests
             Assert.AreSame(existing, result);
             Assert.AreEqual(1, result.Tags.Count(tag => tag.Tag == "v1.2.3"));
             Assert.AreSame(replacement, result.Tags[0]);
-            Assert.AreEqual(replacement.Id, result.PreferredTag.Id);
+            Assert.AreEqual(replacement.Id.ToString(), result.PreferredTag.Id);
             _repo.Verify(repo => repo.AddContainerRepoAsync(It.IsAny<ContainerRepository>()), Times.Never);
         }
 
