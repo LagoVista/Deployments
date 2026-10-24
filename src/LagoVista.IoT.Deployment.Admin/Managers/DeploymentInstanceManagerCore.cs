@@ -234,7 +234,7 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
             // Validate repository ownership before creating a deployment host. A rejected
             // assignment must not leave an orphan host behind.
-            DeviceRepository assignmentRepo = null;
+            LagoVista.IoT.DeviceManagement.Core.Models.DeviceRepository assignmentRepo = null;
             if (!EntityHeader.IsNullOrEmpty(instance.DeviceRepository))
             {
                 assignmentRepo = await _deviceManagerRepo.GetDeviceRepositoryAsync(instance.DeviceRepository.Id, org, user);
