@@ -59,7 +59,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             notification.Id = "11223344556677889900AABBCCDDEEFF";
 
             RepoManager.Setup(x => x.GetDeviceRepositoryWithSecretsAsync(raised.DeviceRepositoryId, OrgEH, UserEH, null, false)).ReturnsAsync(repository);
-            DeviceManager.Setup(x => x.GetDeviceByDeviceIdAsync(repository, raised.DeviceId, OrgEH, UserEH, false))
+            DeviceManager.Setup(x => x.GetDeviceByIdAsync(repository, raised.DeviceUniqueId, OrgEH, UserEH, false))
                 .ReturnsAsync(InvokeResult<Device>.Create(device));
             NotificationRepo.Setup(x => x.GetNotificationByKeyAsync(OrgEH.Id, It.IsAny<string>(), raised.NotificationKey))
                 .ReturnsAsync(notification);
