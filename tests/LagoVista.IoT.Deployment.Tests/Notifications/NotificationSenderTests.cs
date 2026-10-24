@@ -54,6 +54,7 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             device.Name = "Fixture Device";
             device.OwnerOrganization = OrgEH;
             device.DeviceRepository = EntityHeader.Create(repository.Id, repository.Name);
+            device.DeviceConfiguration = EntityHeader.Create("00112233445566778899AABBCCDDEEFF", "Fixture Configuration");
             var notification = GetNotification();
             notification.Name = "Fixture Notification";
             notification.Id = "11223344556677889900AABBCCDDEEFF";
