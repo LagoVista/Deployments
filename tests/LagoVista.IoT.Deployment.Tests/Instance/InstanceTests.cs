@@ -214,6 +214,9 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
                 return Task.FromResult<DeploymentInstance>(GetInstance());
             });
 
+            _deviceRepoManager.Setup(drm => drm.GetDeviceRepositoryAsync(NEW_DEVICE_REPO_ID, It.IsAny<EntityHeader>(), It.IsAny<EntityHeader>()))
+                .ReturnsAsync(new DeviceRepository() { Id = NEW_DEVICE_REPO_ID, Instance = EntityHeader.Create(DEVICE_INSTANCE_ID, "myinstance") });
+
             var instance = GetInstance();
 
             await _instanceManager.UpdateInstanceAsync(instance, ORG, USER);
