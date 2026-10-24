@@ -307,7 +307,7 @@ namespace LagoVista.IoT.Deployment.Tests.Instance
 
             var updatedInstance = GetInstance();
             updatedInstance.DeviceRepository.Id = NEW_DEVICE_REPO_ID;
-            await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER);
+            Assert.That(async () => await _instanceManager.UpdateInstanceAsync(updatedInstance, ORG, USER), Throws.InstanceOf<ValidationException>());
         }
 
         [Test]
