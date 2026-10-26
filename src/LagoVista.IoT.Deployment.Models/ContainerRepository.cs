@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace LagoVista.IoT.Deployment.Admin.Models
 {
+    [ShareableStorage]
     [EntityDescription(DeploymentAdminDomain.DeploymentAdmin, DeploymentAdminResources.Names.ContainerRepository_Title, DeploymentAdminResources.Names.ContainerRepository_Help, 
         DeploymentAdminResources.Names.ContainerRepository_Description, 
         EntityDescriptionAttribute.EntityTypes.SimpleModel, typeof(DeploymentAdminResources),
