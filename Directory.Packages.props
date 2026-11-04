@@ -4,14 +4,14 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
-    <PackageVersion Include="LagoVista.AI" Version="7.0.156" />
-    <PackageVersion Include="LagoVista.CloudStorage" Version="7.0.107" />
-    <PackageVersion Include="LagoVista.Core.Authentication" Version="7.0.61" />
-    <PackageVersion Include="LagoVista.Core.Configuration" Version="7.0.61" />
-    <PackageVersion Include="LagoVista.Core.Rpc" Version="7.0.61" />
-    <PackageVersion Include="LagoVista.Core.Rpc.Client" Version="7.0.61" />
-    <PackageVersion Include="LagoVista.Core.TestBase" Version="7.0.61" />
-    <PackageVersion Include="LagoVista.IoT.Billing.Repos" Version="7.0.9" />
+    <PackageVersion Include="LagoVista.AI" Version="7.0.162" />
+    <PackageVersion Include="LagoVista.CloudStorage" Version="7.0.108" />
+    <PackageVersion Include="LagoVista.Core.Authentication" Version="7.0.63" />
+    <PackageVersion Include="LagoVista.Core.Configuration" Version="7.0.63" />
+    <PackageVersion Include="LagoVista.Core.Rpc" Version="7.0.63" />
+    <PackageVersion Include="LagoVista.Core.Rpc.Client" Version="7.0.63" />
+    <PackageVersion Include="LagoVista.Core.TestBase" Version="7.0.63" />
+    <PackageVersion Include="LagoVista.IoT.Billing.Repos" Version="7.0.10" />
     <PackageVersion Include="LagoVista.IoT.DeviceAdmin" Version="7.0.9" />
     <PackageVersion Include="LagoVista.IoT.DeviceAdmin.Models" Version="7.0.9" />
     <PackageVersion Include="LagoVista.IoT.DeviceManagement.Core" Version="7.0.12" />
@@ -21,9 +21,9 @@
     <PackageVersion Include="LagoVista.IoT.Pipeline.Admin" Version="7.0.6" />
     <PackageVersion Include="LagoVista.IoT.Pipeline.CloudRepos" Version="7.0.6" />
     <PackageVersion Include="LagoVista.IoT.Pipeline.Models" Version="7.0.6" />
-    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="7.0.64" />
-    <PackageVersion Include="LagoVista.UserAdmin" Version="7.0.35" />
-    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="7.0.35" />
+    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="7.0.65" />
+    <PackageVersion Include="LagoVista.UserAdmin" Version="7.0.39" />
+    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="7.0.39" />
     <PackageVersion Include="MQTTnet" Version="4.3.7.1207" />
     <PackageVersion Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
