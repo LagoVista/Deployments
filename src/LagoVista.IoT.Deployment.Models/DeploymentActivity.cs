@@ -102,6 +102,11 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         /// <summary>
         /// How many retries are available, will be decremented after being checked.
         /// </summary>
+        // Internal optimistic concurrency token for the Cassandra active-work store.
+        // Not part of the deployment command or REST payload.
+        [JsonIgnore]
+        public long StorageVersion { get; set; }
+
         public int RetryCount { get; set; }
 
         /// <summary>
