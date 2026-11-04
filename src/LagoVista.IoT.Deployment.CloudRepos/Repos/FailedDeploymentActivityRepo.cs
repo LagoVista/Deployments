@@ -1,44 +1,48 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: b569edc1d1a0bac8a9531c9d9558fb0f427a8163de40f1fd8f3b37327f4904fb
-// IndexVersion: 2
-// --- END CODE INDEX META ---
 using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.Logging.Loggers;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
-    public class FailedDeploymentActivityRepo : TableStorageBase<DeploymentActivity>, IFailedDeploymentActivityRepo
+    public sealed class FailedDeploymentActivityRepo : IFailedDeploymentActivityRepo
     {
-        public FailedDeploymentActivityRepo(IDeploymentRepoSettings repoSettings, IAdminLogger adminLogger) :
-            base(repoSettings.DeploymentAdminTableStorage.AccountId, repoSettings.DeploymentAdminTableStorage.AccessKey, adminLogger)
-        {
+        private readonly IActivityRecordStore<FailedDeploymentActivityRecord> _store;
 
+        public FailedDeploymentActivityRepo(IActivityRecordStore<FailedDeploymentActivityRecord> store)
+        {
+            _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
-        public Task AddFailedDeploymentActivityAsync(DeploymentActivity deploymentActivity)
+        public Task AddFailedDeploymentActivityAsync(DeploymentActivity activity)
         {
-            return InsertAsync(deploymentActivity);
+            return _store.InsertAsync(FailedDeploymentActivityRecord.From(activity));
         }
 
-        protected override string GetTableName()
-        {
-            return "FailedDeploymentActivity";
-        }
-
-        public Task RemoveFailedDeploymentActivityAsync(DeploymentActivity deploymentActivity)
-        {
-            return RemoveAsync(deploymentActivity);
-        }
-    
         public async Task<IEnumerable<DeploymentActivitySummary>> GetFailedDeploymentActivitiesForResourceIdAsync(string resourceId)
         {
-            var records = await GetByPartitionIdAsync(resourceId);
-            return from rec in records select rec.CreateSummary();
+            if (String.IsNullOrWhiteSpace(resourceId)) throw new ArgumentNullException(nameof(resourceId));
+            var summaries = new List<DeploymentActivitySummary>();
+            string cursor = null;
+            do
+            {
+                var page = await _store.QueryAsync(new HistoryQuery<FailedDeploymentActivityRecord>()
+                    .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)
+                    .WithPage(new StoragePageRequest(1000, cursor))).ConfigureAwait(false);
+                summaries.AddRange(page.Items.Select(record => record.CreateSummary()));
+                cursor = page.ContinuationToken;
+            } while (!String.IsNullOrWhiteSpace(cursor));
+            return summaries;
+        }
+
+        public Task RemoveFailedDeploymentActivityAsync(DeploymentActivity activity)
+        {
+            // Terminal deployment history is append-only. No production callers
+            // remain for the legacy Table Storage delete operation.
+            throw new NotSupportedException("Failed deployment history is immutable in Cassandra; deletion is not supported.");
         }
     }
 }
