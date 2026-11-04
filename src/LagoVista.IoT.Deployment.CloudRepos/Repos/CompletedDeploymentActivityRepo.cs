@@ -30,11 +30,11 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
                 .WithPage(new StoragePageRequest(1000))).ConfigureAwait(false);
             // Existing API returns all activities; keep retrieving the full resource
             // history until this contract exposes first-class continuation tokens.
-            var summaries = new List<DeploymentActivitySummary>();
+            var history = new List<CompletedDeploymentActivityRecord>();
             while (true)
             {
-                summaries.AddRange(page.Items.Select(record => record.CreateSummary()));
-                if (!page.HasMoreRecords) return summaries;
+                history.AddRange(page.Items);
+                if (!page.HasMoreRecords) return history.OrderByDescending(record => record.CreationDate).Select(record => record.CreateSummary()).ToList();
                 page = await _store.QueryAsync(new HistoryQuery<CompletedDeploymentActivityRecord>()
                     .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)
                     .WithPage(new StoragePageRequest(1000, page.ContinuationToken))).ConfigureAwait(false);
