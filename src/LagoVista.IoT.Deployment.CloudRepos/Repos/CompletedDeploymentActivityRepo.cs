@@ -1,11 +1,6 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: 85534126802a2baa9dc842469df8cbaf167443636fff5f96986304107e952eb8
-// IndexVersion: 2
-// --- END CODE INDEX META ---
 using LagoVista.CloudStorage.Storage;
 using LagoVista.IoT.Deployment.Admin.Models;
 using LagoVista.IoT.Deployment.Admin.Repos;
-using LagoVista.IoT.Logging.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,28 +8,37 @@ using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
-    public class CompletedDeploymentActivityRepo : TableStorageBase<DeploymentActivity>, ICompletedDeploymentActivityRepo
+    public sealed class CompletedDeploymentActivityRepo : ICompletedDeploymentActivityRepo
     {
-        public CompletedDeploymentActivityRepo(IDeploymentRepoSettings repoSettings, IAdminLogger adminLogger) : 
-            base(repoSettings.DeploymentAdminTableStorage.AccountId, repoSettings.DeploymentAdminTableStorage.AccessKey, adminLogger)
-        {
+        private readonly IActivityRecordStore<CompletedDeploymentActivityRecord> _store;
 
+        public CompletedDeploymentActivityRepo(IActivityRecordStore<CompletedDeploymentActivityRecord> store)
+        {
+            _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
-        protected override string GetTableName()
+        public Task AddCompletedDeploymentActivitiesAsync(DeploymentActivity activity)
         {
-            return "CompletedDeploymentActivity";
-        }
-
-        public Task AddCompletedDeploymentActivitiesAsync(DeploymentActivity deploymentActivity)
-        {
-            return InsertAsync(deploymentActivity);
+            return _store.InsertAsync(CompletedDeploymentActivityRecord.From(activity));
         }
 
         public async Task<IEnumerable<DeploymentActivitySummary>> GetCompletedDeploymentActivitiesForResourceIdAsync(string resourceId)
         {
-            var records = await GetByPartitionIdAsync(resourceId);
-            return from rec in records select rec.CreateSummary();
+            if (String.IsNullOrWhiteSpace(resourceId)) throw new ArgumentNullException(nameof(resourceId));
+            var page = await _store.QueryAsync(new HistoryQuery<CompletedDeploymentActivityRecord>()
+                .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)
+                .WithPage(new StoragePageRequest(1000))).ConfigureAwait(false);
+            // Existing API returns all activities; keep retrieving the full resource
+            // history until this contract exposes first-class continuation tokens.
+            var history = new List<CompletedDeploymentActivityRecord>();
+            while (true)
+            {
+                history.AddRange(page.Items);
+                if (!page.HasMoreRecords) return history.OrderByDescending(record => record.CreationDate).Select(record => record.CreateSummary()).ToList();
+                page = await _store.QueryAsync(new HistoryQuery<CompletedDeploymentActivityRecord>()
+                    .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)
+                    .WithPage(new StoragePageRequest(1000, page.ContinuationToken))).ConfigureAwait(false);
+            }
         }
     }
 }

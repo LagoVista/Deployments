@@ -1,68 +1,112 @@
-// --- BEGIN CODE INDEX META (do not edit) ---
-// ContentHash: 8d8193b670ab9920f9a8b96d5e2a2bd46815d4f6d6c11009ab3e1e4ae1ac53a3
-// IndexVersion: 2
-// --- END CODE INDEX META ---
-using LagoVista.IoT.Deployment.Admin.Repos;
-using System.Collections.Generic;
-using LagoVista.IoT.Deployment.Admin.Models;
-using System.Threading.Tasks;
 using LagoVista.CloudStorage.Storage;
-using LagoVista.IoT.Logging.Loggers;
-using System.Linq;
-using LagoVista.Core;
+using LagoVista.IoT.Deployment.Admin.Models;
+using LagoVista.IoT.Deployment.Admin.Repos;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 {
-    public class DeploymentActivityRepo :  TableStorageBase<DeploymentActivity>, IDeploymentActivityRepo
+    public sealed class DeploymentActivityRepo : IDeploymentActivityRepo
     {
-        public DeploymentActivityRepo(IDeploymentRepoSettings repoSettings, IAdminLogger adminLogger) : 
-            base(repoSettings.DeploymentAdminTableStorage.AccountId, repoSettings.DeploymentAdminTableStorage.AccessKey, adminLogger)
-        {
+        private readonly IConditionalOperationalDataStore<ActiveDeploymentActivityRecord> _store;
 
-        }
-       
-        public Task AddDeploymentActivityAsync(DeploymentActivity deploymentActivity)
+        public DeploymentActivityRepo(IConditionalOperationalDataStore<ActiveDeploymentActivityRecord> store)
         {
-            return InsertAsync(deploymentActivity);
+            _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
-        public Task<IEnumerable<DeploymentActivity>> GetScheduledDeploymentActivitiesAsync()
+        public async Task AddDeploymentActivityAsync(DeploymentActivity activity)
         {
-            return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.Scheduled.ToString()),
-                                    FilterOptions.Create(nameof(DeploymentActivity.ScheduledFor), FilterOptions.Operators.LessThan, DateTime.UtcNow.ToJSONString()));
+            var record = ActiveDeploymentActivityRecord.From(activity);
+            var created = await _store.TryCreateAsync(record).ConfigureAwait(false);
+            if (!created.Applied)
+                throw new InvalidOperationException($"Deployment activity {record.Id} already exists in the Cassandra active queue; current status={created.Current?.Status ?? "unknown"}.");
+
+            activity.StorageVersion = created.Current?.Version ?? record.Version;
+        }
+
+        public async Task UpdateDeploymentActivityAsync(DeploymentActivity activity)
+        {
+            var record = ActiveDeploymentActivityRecord.From(activity);
+            if (activity.StorageVersion <= 0)
+                throw new InvalidOperationException($"Cannot update deployment activity {record.Id}: missing Cassandra StorageVersion.");
+
+            var updated = await _store.TryReplaceAsync(record, activity.StorageVersion).ConfigureAwait(false);
+            if (!updated.Applied)
+                throw new InvalidOperationException(
+                    $"Concurrent deployment activity update rejected for {record.Id}: expected version={activity.StorageVersion}, current version={updated.Current?.Version}, current status={updated.Current?.Status}.");
+
+            activity.StorageVersion = updated.Current?.Version ?? record.Version;
+        }
+
+        public async Task RemoveDeploymentActivityAsync(DeploymentActivity activity)
+        {
+            if (activity == null) throw new ArgumentNullException(nameof(activity));
+            if (String.IsNullOrWhiteSpace(activity.RowKey)) throw new ArgumentException("Deployment activity RowKey is required.", nameof(activity));
+            if (activity.StorageVersion <= 0)
+                throw new InvalidOperationException($"Cannot remove deployment activity {activity.RowKey}: missing Cassandra StorageVersion.");
+
+            var removed = await _store.TryDeleteAsync(
+                ActiveDeploymentActivityRecord.QueueScope, activity.RowKey, activity.StorageVersion).ConfigureAwait(false);
+            if (!removed.Applied)
+                throw new InvalidOperationException(
+                    $"Concurrent deployment activity removal rejected for {activity.RowKey}: expected version={activity.StorageVersion}, current version={removed.Current?.Version}, current status={removed.Current?.Status}.");
+        }
+
+        public async Task<DeploymentActivity> GetDeploymentActivityAsync(string deploymentActivityId)
+        {
+            if (String.IsNullOrWhiteSpace(deploymentActivityId)) throw new ArgumentNullException(nameof(deploymentActivityId));
+            var record = await _store.GetAsync(ActiveDeploymentActivityRecord.QueueScope, deploymentActivityId).ConfigureAwait(false);
+            return record?.ToActivity();
         }
 
         public Task<IEnumerable<DeploymentActivity>> GetRunningDeploymentActivitiesAsync()
-        {
-            return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.Running.ToString()));
-        }
+            => QueryAsync(DeploymentActivityStatus.Running);
 
         public Task<IEnumerable<DeploymentActivity>> GetRetryDeploymentActivitiesAsync()
-        {
-            return GetByFilterAsync(FilterOptions.Create(nameof(DeploymentActivity.Status), FilterOptions.Operators.Equals, DeploymentActivityStatus.PendingRetry.ToString()));
-        }
+            => QueryAsync(DeploymentActivityStatus.PendingRetry);
 
-        public Task<DeploymentActivity> GetDeploymentActivityAsync(string deploymentActivityId)
-        {
-            return GetAsync(deploymentActivityId);
-        }
+        public Task<IEnumerable<DeploymentActivity>> GetScheduledDeploymentActivitiesAsync()
+            => QueryAsync(DeploymentActivityStatus.Scheduled, DateTime.UtcNow);
 
         public async Task<IEnumerable<DeploymentActivitySummary>> GetForResourceIdAsync(string resourceId)
         {
-            var records = await GetByPartitionIdAsync(resourceId);
-            return from rec in records select rec.CreateSummary();
+            if (String.IsNullOrWhiteSpace(resourceId)) throw new ArgumentNullException(nameof(resourceId));
+            var activities = await QueryAllAsync(new StorageQuery<ActiveDeploymentActivityRecord>()
+                .Where(record => record.OrganizationId, StorageFilterOperator.Equal, ActiveDeploymentActivityRecord.QueueScope)
+                .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)).ConfigureAwait(false);
+            return activities.Select(record => record.ToActivity().CreateSummary()).ToList();
         }
 
-        public Task RemoveDeploymentActivityAsync(DeploymentActivity deploymentActivity)
+        private async Task<IEnumerable<DeploymentActivity>> QueryAsync(DeploymentActivityStatus status, DateTime? dueBefore = null)
         {
-            return RemoveAsync(deploymentActivity, "*");
+            var query = new StorageQuery<ActiveDeploymentActivityRecord>()
+                .Where(record => record.OrganizationId, StorageFilterOperator.Equal, ActiveDeploymentActivityRecord.QueueScope)
+                .Where(record => record.Status, StorageFilterOperator.Equal, status.ToString());
+
+            // Cassandra SAI range query; this must never become an unbounded client-side
+            // scan of Scheduled activities. Requires indexed range support in CloudStorage.
+            if (dueBefore.HasValue)
+                query.Where(record => record.ScheduledFor, StorageFilterOperator.LessThan, dueBefore.Value);
+
+            var records = await QueryAllAsync(query).ConfigureAwait(false);
+            return records.Select(record => record.ToActivity()).ToList();
         }
 
-        public async Task UpdateDeploymentActivityAsync(DeploymentActivity deploymentActivity)
+        private async Task<IReadOnlyList<ActiveDeploymentActivityRecord>> QueryAllAsync(StorageQuery<ActiveDeploymentActivityRecord> query)
         {
-            var activity = await GetAsync(deploymentActivity.PartitionKey, deploymentActivity.RowKey);
-            await UpdateAsync(deploymentActivity, "*");
+            var records = new List<ActiveDeploymentActivityRecord>();
+            string cursor = null;
+            do
+            {
+                query.WithPage(new StoragePageRequest(1000, cursor));
+                var page = await _store.QueryAsync(query).ConfigureAwait(false);
+                records.AddRange(page.Items);
+                cursor = page.ContinuationToken;
+            } while (!String.IsNullOrWhiteSpace(cursor));
+            return records;
         }
     }
 }
