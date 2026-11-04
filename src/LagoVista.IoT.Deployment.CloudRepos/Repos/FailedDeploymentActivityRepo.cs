@@ -25,17 +25,17 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
         public async Task<IEnumerable<DeploymentActivitySummary>> GetFailedDeploymentActivitiesForResourceIdAsync(string resourceId)
         {
             if (String.IsNullOrWhiteSpace(resourceId)) throw new ArgumentNullException(nameof(resourceId));
-            var summaries = new List<DeploymentActivitySummary>();
+            var history = new List<FailedDeploymentActivityRecord>();
             string cursor = null;
             do
             {
                 var page = await _store.QueryAsync(new HistoryQuery<FailedDeploymentActivityRecord>()
                     .Where(record => record.ResourceId, StorageFilterOperator.Equal, resourceId)
                     .WithPage(new StoragePageRequest(1000, cursor))).ConfigureAwait(false);
-                summaries.AddRange(page.Items.Select(record => record.CreateSummary()));
+                history.AddRange(page.Items);
                 cursor = page.ContinuationToken;
             } while (!String.IsNullOrWhiteSpace(cursor));
-            return summaries;
+            return history.OrderByDescending(record => record.CreationDate).Select(record => record.CreateSummary()).ToList();
         }
 
         public Task RemoveFailedDeploymentActivityAsync(DeploymentActivity activity)
