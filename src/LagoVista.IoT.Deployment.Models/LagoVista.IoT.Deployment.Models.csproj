@@ -8,6 +8,7 @@
     <AssemblyOriginatorKeyFile>LagoVista.IoT.Deployment.Models.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="LagoVista.Core" />
     <PackageReference Include="LagoVista.IoT.DeviceAdmin.Models" />
     <PackageReference Include="LagoVista.IoT.Pipeline.Models" />
     <PackageReference Include="LagoVista.UserAdmin.Models" />
