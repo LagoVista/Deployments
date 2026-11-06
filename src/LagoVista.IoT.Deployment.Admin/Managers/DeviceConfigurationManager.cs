@@ -360,12 +360,10 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
 
         public async Task<InvokeResult> PopulateDeviceConfigToDeviceAsync(Device device, EntityHeader instanceEH, EntityHeader org, EntityHeader user)
         {
-            Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] Start;");
 
             var result = new InvokeResult();
             if (EntityHeader.IsNullOrEmpty(instanceEH))
             {
-                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Does not have Intance EH, can not populate end points.");
                 instanceEH = EntityHeader.Create(Guid.Empty.ToId(), "none");
             }
 
@@ -373,7 +371,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfigMetaJSON = await _cacheProvider.GetFromCollection(GetDeviceConfigMetaDataKey(instanceEH.Id), device.DeviceConfiguration.Id);
             if (!String.IsNullOrEmpty(deviceConfigMetaJSON))
             {
-                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] Found in Cache;");
 
                 var cachedMetaData = JsonConvert.DeserializeObject<MetaDataCache>(deviceConfigMetaJSON);
                 device.DeviceType.Value = cachedMetaData.DeviceType;
@@ -399,7 +396,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 return result;
             }
 
-            Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Did not find in cache, populte manually;");
 
             var sw = Stopwatch.StartNew();
             device.DeviceType.Value = await _deviceTypeRepo.GetDeviceTypeAsync(device.DeviceType.Id);
@@ -410,7 +406,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             var deviceConfig = await _deviceConfigRepo.GetDeviceConfigurationAsync(device.DeviceConfiguration.Id);
             if (deviceConfig == null)
             {
-                Logger.Trace("[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - No Device Configuration, can not populate (System Error, should be a required field.");
                 result.AddSystemError($"Could Not Load Device Configuration with Device Configuration {device.DeviceConfiguration.Text}, Id={device.DeviceConfiguration.Id}.");
                 return result;
             }
@@ -494,7 +489,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 }
             }
 
-            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Loaded attributes and state machines to device configurations.");
 
             if (instanceEH.Id != Guid.Empty.ToId())
             {             
@@ -588,7 +582,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
             }
             else
             {
-                Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Instance not available, can't populate end points.");
                 device.InputCommandEndPoints = new List<InputCommandEndPoint>();
             }
 
@@ -609,7 +602,6 @@ namespace LagoVista.IoT.Deployment.Admin.Managers
                 metaDataCache.DnsHostName = instance.DnsHostName;
             }
 
-            Logger.Trace($"[DeviceConfigurationManager__PopulateDeviceConfigToDeviceAsync] - Added meta data to cache with cache key: ${GetDeviceConfigMetaDataKey(instanceEH.Id)}.");
 
             await _cacheProvider.AddToCollectionAsync(GetDeviceConfigMetaDataKey(instanceEH.Id), deviceConfig.Id, JsonConvert.SerializeObject(metaDataCache));
            

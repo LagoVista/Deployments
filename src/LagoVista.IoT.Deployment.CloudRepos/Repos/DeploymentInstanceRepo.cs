@@ -17,7 +17,6 @@ using LagoVista.Core.Models.UIMetaData;
 using LagoVista.CloudStorage;
 using LagoVista.Core.Interfaces;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using LagoVista.CloudStorage.Interfaces;
 
 namespace LagoVista.IoT.Deployment.CloudRepos.Repos
@@ -48,21 +47,14 @@ namespace LagoVista.IoT.Deployment.CloudRepos.Repos
 
         public async Task<DeploymentInstance> GetReadOnlyInstanceAsync(string id)
         {
-            var sw = Stopwatch.StartNew();
             var existing = await _cacheProvider.GetAsync($"{nameof(DeploymentInstance)}-{id}");
             if (!String.IsNullOrEmpty(existing))
             {
-                _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Found instance {id} in cache in {sw.Elapsed.TotalMilliseconds}.");
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<DeploymentInstance>(existing);
             }
 
-            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Cache miss for instance {id} {sw.Elapsed.TotalMilliseconds}.");
-            sw.Restart();
             var instance = await GetInstanceAsync(id);
-            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - Laoded {id} from storage in {sw.Elapsed.TotalMilliseconds}.");
-            sw.Restart();
             await _cacheProvider.AddAsync($"{nameof(DeploymentInstance)}-{id}", JsonConvert.SerializeObject(instance));
-            _adminLogger.AddCustomEvent(LogLevel.Message, "[DeploymentInstanceRepo__GetReadOnlyInstanceAsync]", $"[DeploymentInstanceRepo__GetReadOnlyInstanceAsync] - added {id} to cache in {sw.Elapsed.TotalMilliseconds}.");
 
             return instance;
         }
