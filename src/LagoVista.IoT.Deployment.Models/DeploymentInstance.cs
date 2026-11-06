@@ -23,6 +23,7 @@ namespace LagoVista.IoT.Deployment.Admin.Models
         SaveUrl: "/api/deployment/instance", FactoryUrl: "/api/deployment/instance/factory", GetUrl: "/api/deployment/instance/{id}",
         ListUIUrl: "/iotstudio/manage/instances", EditUIUrl: "/iotstudio/manage/instance/{id}", CreateUIUrl: "/iotstudio/manage/instance/add",
         GetListUrl: "/api/deployment/instances", DeleteUrl: "/api/deployment/instance/{id}", Icon: "icon-ae-deployment-instance")]
+    [SkipProducedArtifactGeneration]
     public class DeploymentInstance : LagoVista.IoT.DeviceAdmin.Models.IoTModelBase, IValidateable, IFormDescriptor, IIconEntity, IFormDescriptorAdvanced, IFormDescriptorAdvancedCol2, ISummaryFactory, ICategorized
     {
         public DeploymentInstance()
