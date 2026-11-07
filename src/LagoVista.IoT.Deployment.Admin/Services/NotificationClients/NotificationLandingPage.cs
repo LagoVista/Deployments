@@ -2,6 +2,7 @@
 // ContentHash: cc1b1630968e3290a6e331e4c0d6ded84d2a51d7a0fbe1482cee7c659aff20f2
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using LagoVista.CloudStorage.RuntimeControls;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.PlatformSupport;
@@ -20,12 +21,15 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
     {
         private readonly ITagReplacementService _tagReplacer;
         private readonly ILogger _logger;
+        private readonly IRuntimeControlService _runtimeControls;
+        private bool DiagnosticsEnabled => _runtimeControls?.IsEnabled(RuntimeControlCatalog.NotificationSenderDiagnostics) == true;
         private readonly IAppConfig _appConfig;
         private readonly IStaticPageStorage _staticPageStorage;
 
-        public NotificationLandingPage(IAdminLogger logger, IAppConfig appConfig, ITagReplacementService tagReplacer, IStaticPageStorage staticPageStorage)
+        public NotificationLandingPage(IAdminLogger logger, IAppConfig appConfig, ITagReplacementService tagReplacer, IStaticPageStorage staticPageStorage, IRuntimeControlService runtimeControls = null)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _runtimeControls = runtimeControls;
             _tagReplacer = tagReplacer ?? throw new ArgumentNullException(nameof(tagReplacer));
             _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
             _staticPageStorage = staticPageStorage ?? throw new ArgumentNullException(nameof(staticPageStorage));
@@ -37,28 +41,28 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (notification.IncludeLandingPage)
             {
-                _logger.Trace("[NotificationSender__RaiseNotificationAsync] - Including Landindg page");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, "[NotificationSender__RaiseNotificationAsync] - Including Landindg page");
                 var template = await _tagReplacer.ReplaceTagsAsync(notification.LandingPageContent, true, device, location);
                 if (testMode)
                     template = $"<h1>TESTING - TESTING</h1> {template}";
 
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Tags replaced in template");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Tags replaced in template");
 
                 var storageResult = await _staticPageStorage.StorePageAsync(org.Id, "devnotif", template);
                 if (!storageResult.Successful) return InvokeResult<NotificationLinks>.FromInvokeResult(storageResult.ToInvokeResult());
 
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Static page stored page id: {storageResult.Result}");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Static page stored page id: {storageResult.Result}");
 
                 links.PageId = storageResult.Result;
                 // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
                 links.FullLandingPageLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotificationId}/{org.Id}/[RecipientId]/{links.PageId}";
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.FullLandingPageLink}");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Including Landindg page - {links.FullLandingPageLink}");
             }
             else
             {
                 // hand this off to an ASP.NET API Controller that will handle the request and return HTML as a static content.
                 links.AcknowledgeLink = $"{_appConfig.WebAddress}/device/notifications/{raisedNotificationId}/{org.Id}/[RecipientId]/acknowledge";
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No Landindg page, just acknowledge link - {links.AcknowledgeLink}");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - No Landindg page, just acknowledge link - {links.AcknowledgeLink}");
             }
 
             if (String.IsNullOrEmpty(errorId))
