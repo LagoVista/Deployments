@@ -633,7 +633,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id, org, user);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
 
-            if (repo.DisableWatchdog)
+            if (repo.DisableWatchdog || repo.MuteDeviceOnlineOfflineNotifications)
                 return InvokeResult.Success;
 
             var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOnlinNotification)) ?
@@ -655,7 +655,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             var repo = await _repoManager.GetDeviceRepositoryWithSecretsAsync(device.DeviceRepository.Id, org, user);
             if (repo == null) return InvokeResult.FromError($"Could not locate device repository {device.DeviceRepository.Id}");
-            if (repo.DisableWatchdog)
+            if (repo.DisableWatchdog || repo.MuteDeviceOnlineOfflineNotifications)
                 return InvokeResult.Success;
 
             var notification = (!EntityHeader.IsNullOrEmpty(repo.DeviceOfflinNotification)) ?

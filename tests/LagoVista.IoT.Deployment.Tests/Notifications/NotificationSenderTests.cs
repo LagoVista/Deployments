@@ -106,6 +106,36 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         }
 
         [TestMethod]
+        public void DeviceRepository_MuteNotifications_DefaultsToFalse()
+        {
+            Assert.IsFalse(new DeviceRepository().MuteDeviceOnlineOfflineNotifications);
+        }
+
+        [DataTestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public async Task DeviceRepository_MuteNotifications_SuppressesOnlineAndOffline(bool testMode)
+        {
+            var repo = new DeviceRepository()
+            {
+                Id = "ABCDEF0123456789ABCDEF0123456789",
+                MuteDeviceOnlineOfflineNotifications = true,
+                DisableWatchdog = false
+            };
+            var device = GetDevice();
+            device.DeviceRepository = EntityHeader.Create(repo.Id, "Muted Repository");
+            RepoManager.Setup(x => x.GetDeviceRepositoryWithSecretsAsync(repo.Id, OrgEH, UserEH, null, false))
+                .ReturnsAsync(repo);
+
+            var online = await _sender.SendDeviceOnlineNotificationAsync(device, DateTime.UtcNow.ToString("o"), testMode, OrgEH, UserEH);
+            var offline = await _sender.SendDeviceOfflineNotificationAsync(device, DateTime.UtcNow.ToString("o"), testMode, OrgEH, UserEH);
+
+            Assert.IsTrue(online.Successful, online.ErrorMessage);
+            Assert.IsTrue(offline.Successful, offline.ErrorMessage);
+            NotificationRepo.Verify(x => x.GetNotificationAsync(It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
         public void UniqueNotificationsTest()
         {
             var contacts = new List<NotificationRecipient>()
