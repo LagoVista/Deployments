@@ -18,6 +18,10 @@ namespace LagoVista.IoT.Deployment.CloudRepos
         {
             services.AddTransient<IDeviceConfigurationRepo, DeviceConfigurationRepo>();
             services.AddTransient<ISolutionRepo, SolutionRepo>();
+            services.AddActivityRecordStore<ComputeResourceMetricActivityRecord, CassandraActivityRecordStore<ComputeResourceMetricActivityRecord>>(
+                ComputeResourceMetricsRepo.ConfigureStorage);
+            services.AddTransient<IComputeResourceMetricsWriterRepo, ComputeResourceMetricsRepo>();
+            services.AddTransient<IComputeResourceMetricsHistoryRepo, ComputeResourceMetricsRepo>();
             services.AddActivityRecordStore<UsageMetricActivityRecord, CassandraActivityRecordStore<UsageMetricActivityRecord>>(
                 UsageMetricsRepo.ConfigureStorage);
             services.AddTransient<IUsageMetricsRepo, UsageMetricsRepo>();
