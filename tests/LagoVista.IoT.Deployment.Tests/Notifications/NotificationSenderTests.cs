@@ -120,7 +120,9 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
             {
                 Id = "ABCDEF0123456789ABCDEF0123456789",
                 MuteDeviceOnlineOfflineNotifications = true,
-                DisableWatchdog = false
+                DisableWatchdog = false,
+                DeviceOnlinNotification = EntityHeader.Create("00112233445566778899AABBCCDDEEFF", "Online Notification"),
+                DeviceOfflinNotification = EntityHeader.Create("11223344556677889900AABBCCDDEEFF", "Offline Notification")
             };
             var device = GetDevice();
             device.DeviceRepository = EntityHeader.Create(repo.Id, "Muted Repository");
