@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" />
+    <PackageReference Include="LagoVista.CloudStorage" />
     <PackageReference Include="LagoVista.Core.Authentication" />
     <PackageReference Include="LagoVista.Core.Rpc" />
     <PackageReference Include="LagoVista.Core.Rpc.Client" />
