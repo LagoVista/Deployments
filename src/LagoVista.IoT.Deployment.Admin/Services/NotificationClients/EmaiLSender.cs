@@ -2,6 +2,7 @@
 // ContentHash: 077016fadcc724caecf23ead2be9b66b207a62bd55353bbe65ecabd26400ab8d
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using LagoVista.CloudStorage.RuntimeControls;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.PlatformSupport;
@@ -22,6 +23,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
     {
         private readonly ITagReplacementService _tagReplacer;
         private readonly ILogger _logger;
+        private readonly IRuntimeControlService _runtimeControls;
+        private bool DiagnosticsEnabled => _runtimeControls?.IsEnabled(RuntimeControlCatalog.NotificationSenderDiagnostics) == true;
         private readonly UserAdmin.Interfaces.Managers.IEmailSender _emailSender;
         private readonly ILinkShortener _linkShortener;
 
@@ -29,9 +32,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         private string _emailSubject;
         public int EmailsSent { get; private set; }
 
-        public EmailSender(IAdminLogger logger, ITagReplacementService tagReplacer, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ILinkShortener linkShortener)
+        public EmailSender(IAdminLogger logger, ITagReplacementService tagReplacer, UserAdmin.Interfaces.Managers.IEmailSender emailSender, ILinkShortener linkShortener, IRuntimeControlService runtimeControls = null)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _runtimeControls = runtimeControls;
             _tagReplacer = tagReplacer ?? throw new ArgumentNullException(nameof(tagReplacer));
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _linkShortener = linkShortener ?? throw new ArgumentNullException(nameof(linkShortener));
@@ -106,7 +110,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     contentToSend += $"<div><a href='{shortenedClearLink.Result}'>Clear/Cancel</a></div>";
                 }
 
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending Email To {recipient.FirstName} {recipient.LastName} {recipient.Email} -  {shortenedLink.Result} ({actualInk})");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending Email To {recipient.FirstName} {recipient.LastName} {recipient.Email} -  {shortenedLink.Result} ({actualInk})");
                 var result = await _emailSender.SendInBackgroundAsync(recipient.Email, _emailSubject, contentToSend, org, user);
                 if (result.Successful)
                     EmailsSent++;
