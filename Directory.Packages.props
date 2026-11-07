@@ -22,9 +22,9 @@
     <PackageVersion Include="LagoVista.IoT.Pipeline.Admin" Version="7.0.6" />
     <PackageVersion Include="LagoVista.IoT.Pipeline.CloudRepos" Version="7.0.6" />
     <PackageVersion Include="LagoVista.IoT.Pipeline.Models" Version="7.0.6" />
-    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="7.0.69" />
-    <PackageVersion Include="LagoVista.UserAdmin" Version="7.0.41" />
-    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="7.0.41" />
+    <PackageVersion Include="LagoVista.IoT.Web.Common" Version="7.0.70" />
+    <PackageVersion Include="LagoVista.UserAdmin" Version="7.0.42" />
+    <PackageVersion Include="LagoVista.UserAdmin.Models" Version="7.0.42" />
     <PackageVersion Include="MQTTnet" Version="4.3.7.1207" />
     <PackageVersion Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
