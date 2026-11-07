@@ -2,6 +2,9 @@
 // ContentHash: ba07cb4fb85ed55ba1764b327c5bc6d05da6fca695cdc5c436923a4d73ff4944
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using LagoVista.CloudStorage.RuntimeControls;
+using LagoVista.Core.PlatformSupport;
+using LagoVista.IoT.Logging.Loggers;
 using LagoVista.IoT.Deployment.Admin.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Models.UIMetaData;
@@ -27,19 +30,49 @@ namespace LagoVista.IoT.Deployment.Tests.Notifications
         INotificationSender _sender;
         private Mock<IDeviceNotificationRecipientRepo> _recipientRepo = new Mock<IDeviceNotificationRecipientRepo>();
 
+        private NotificationSender CreateSender(IAdminLogger logger, IRuntimeControlService runtimeControls = null)
+        {
+            return new NotificationSender(logger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object, _recipientRepo.Object,
+                                  RasiedDeviceNotificationRepo.Object, NotificationPublisher.Object, BackgroundTaskQueue.Object, TagReplacer.Object, DeviceConfigHelper.Object, AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeviceCommandSender.Object,
+                                  DeploymentInstanceRepo.Object, TimeZoneService.Object, runtimeControls);
+        }
+
         [TestInitialize]
         public void Init()
         {
-            _sender = new NotificationSender(AdminLogger, DistroLibRepo.Object, NotificationTacker.Object, NotificationRepo.Object, OrgLocationRepo.Object, DeviceManager.Object, EmailSender.Object, SMSSender.Object, LandingPageBuilder.Object, OrgRepo.Object, _recipientRepo.Object,
-                                RasiedDeviceNotificationRepo.Object, NotificationPublisher.Object, BackgroundTaskQueue.Object, TagReplacer.Object,  DeviceConfigHelper.Object, AppUserRepo.Object, RepoManager.Object, COTSender.Object, RestSender.Object, MqttSender.Object, DeviceCommandSender.Object,
-                                DeploymentInstanceRepo.Object, TimeZoneService.Object);
+            _sender = CreateSender(AdminLogger);
+        }
+
+        [TestMethod]
+        public async Task NotificationSenderDiagnostics_EmitsOnlyWhenEnabled()
+        {
+            var enabled = false;
+            var controls = new Mock<IRuntimeControlService>();
+            controls.Setup(x => x.IsEnabled(RuntimeControlCatalog.NotificationSenderDiagnostics)).Returns(() => enabled);
+            var logger = new Mock<IAdminLogger>();
+            var sender = CreateSender(logger.Object, controls.Object);
+            var raised = GetRaisedNotification();
+
+            await sender.RaiseNotificationAsync(raised, OrgEH, UserEH);
+            logger.Verify(x => x.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics,
+                It.IsAny<string>(), It.IsAny<KeyValuePair<string, string>[]>()), Times.Never);
+
+            enabled = true;
+            await sender.RaiseNotificationAsync(raised, OrgEH, UserEH);
+            logger.Verify(x => x.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics,
+                It.IsAny<string>(), It.IsAny<KeyValuePair<string, string>[]>()), Times.Once);
+            logger.Verify(x => x.Trace(It.IsAny<string>(), It.IsAny<KeyValuePair<string, string>[]>()), Times.Never);
         }
 
 
-        [TestMethod]
-        public async Task SendNotificationAsync()
+        [DataTestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public async Task SendNotificationAsync(bool includeMissingAppUser)
         {
             var raised = GetRaisedNotification();
+            if (includeMissingAppUser)
+                raised.AdditionalUsers.Add(EntityHeader.Create("D054A5C208564CF9A0B8BED754DD6FCD", "Missing app user"));
             raised.DeviceRepositoryId = "ABCDEF0123456789ABCDEF0123456789";
             var repository = new DeviceRepository()
             {
