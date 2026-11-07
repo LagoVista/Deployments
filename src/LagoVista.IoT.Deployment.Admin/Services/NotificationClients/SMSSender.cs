@@ -2,6 +2,7 @@
 // ContentHash: feef65309a2777f5fa492b7d48007cca914296ba5ef3565e33e7fdbfd2198bf8
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using LagoVista.CloudStorage.RuntimeControls;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.PlatformSupport;
@@ -21,6 +22,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         private readonly ITagReplacementService _tagReplacer;
         private readonly ILogger _logger;
+        private readonly IRuntimeControlService _runtimeControls;
+        private bool DiagnosticsEnabled => _runtimeControls?.IsEnabled(RuntimeControlCatalog.NotificationSenderDiagnostics) == true;
         private readonly IAppConfig _appConfig;
         private readonly ILinkShortener _linkShortener;
         private readonly LagoVista.UserAdmin.Interfaces.Managers.ISmsSender _smsSender;
@@ -29,9 +32,10 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
         public int TextMessagesSent { get; private set; }
 
-        public SMSSender(IAdminLogger logger, IAppConfig appConfig, ITagReplacementService tagReplacer, ILinkShortener linkShortener, LagoVista.UserAdmin.Interfaces.Managers.ISmsSender smsSender)
+        public SMSSender(IAdminLogger logger, IAppConfig appConfig, ITagReplacementService tagReplacer, ILinkShortener linkShortener, LagoVista.UserAdmin.Interfaces.Managers.ISmsSender smsSender, IRuntimeControlService runtimeControls = null)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _runtimeControls = runtimeControls;
             _tagReplacer = tagReplacer ?? throw new ArgumentNullException(nameof(tagReplacer));
             _linkShortener = linkShortener ?? throw new ArgumentNullException(nameof(linkShortener));
             _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
@@ -64,7 +68,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 var smsContent = _smsContent;
                 smsContent += "\r\n";
 
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sending SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
                 
                 if(!String.IsNullOrEmpty(links.FullLandingPageLink))
                 {
@@ -100,7 +104,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
                 if (result.Successful)
                 {
-                    _logger.Trace($"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sent SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
+                    if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync__ExternalContact] - Sent SMS To {recipient.FirstName} {recipient.LastName} {recipient.Phone}");
 
                     TextMessagesSent++;
                     return InvokeResult.Success;
