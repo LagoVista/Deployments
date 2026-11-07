@@ -2,6 +2,7 @@
 // ContentHash: 9eadc10730ffb849604afa49b28e74ccc5c73e255a70abe9b9407f7a1fb01e5f
 // IndexVersion: 2
 // --- END CODE INDEX META ---
+using LagoVista.CloudStorage.RuntimeControls;
 using LagoVista.Core.Interfaces;
 using LagoVista.Core.Models;
 using LagoVista.Core.Validation;
@@ -38,6 +39,8 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         protected static readonly Counter SentNotifications = Metrics.CreateCounter("nuviot_send_notification", "Raise notification to be sent.", "entity");
 
         private readonly ILogger _logger;
+        private readonly IRuntimeControlService _runtimeControls;
+        private bool DiagnosticsEnabled => _runtimeControls?.IsEnabled(RuntimeControlCatalog.NotificationSenderDiagnostics) == true;
         private readonly Interfaces.IEmailSender _emailSender;
         private readonly ISMSSender _smsSender;
         private readonly IDeviceNotificationTracking _notificationTracking;
@@ -65,10 +68,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         public NotificationSender(ILogger logger, IDistributionListRepo distroListRepo, IDeviceNotificationTracking notificationTracking, IDeviceNotificationRepo deviceNotificationRepo, IOrgLocationRepo orgLocationRepo,
             LagoVista.IoT.DeviceManagement.Core.IDeviceManager deviceManager, Interfaces.IEmailSender emailSender, ISMSSender smsSender, INotificationLandingPage landingPageBuilder, IOrganizationRepo orgRepo,
                                   IDeviceNotificationRecipientRepo deviceNotificationSenderRepo, IRaisedNotificationHistoryRepo raisedNotificationHistory, INotificationPublisher notificationPublisher, IBackgroundServiceTaskQueue taskQueue, ITagReplacementService tagReplacementService, IDeviceConfigHelper deviceConfigHelper, IAppUserRepo appUserRepo, IDeviceRepositoryManager repoManager,
-                                  ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, IDeviceCommandSender deviceCommandSender, IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService)
+                                  ICOTSender cotSender, IRestSender restSender, IMqttSender mqttSender, IDeviceCommandSender deviceCommandSender, IDeploymentInstanceRepo deploymentRepo, ITimeZoneServices timeZoneService, IRuntimeControlService runtimeControls = null)
         {
             _deviceNotificationRepo = deviceNotificationRepo ?? throw new ArgumentNullException(nameof(deviceNotificationRepo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _runtimeControls = runtimeControls;
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _smsSender = smsSender ?? throw new ArgumentNullException(nameof(smsSender));
             _distroListRepo = distroListRepo ?? throw new ArgumentNullException(nameof(distroListRepo));
@@ -127,7 +131,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     var dsw = Stopwatch.StartNew();
                     var distroList = await _distroListRepo.GetDistroListAsync(distro.Id, true);
 
-                    _logger.Trace($"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                    if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
                     appUsers.AddRange(distroList.AppUsers);
                     externalContacts.AddRange(distroList.ExternalContacts);
@@ -141,7 +145,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 var dsw = Stopwatch.StartNew();
                 var distroList = await _distroListRepo.GetDistroListAsync(device.DistributionList.Id, true);
                
-                _logger.Trace($"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__GetRecipientsAsync] - Distribution List {distroList.Name} with {distroList.ExternalContacts.Count} contacts", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
                 appUsers.AddRange(distroList.AppUsers);
                 externalContacts.AddRange(distroList.ExternalContacts);
@@ -162,7 +166,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     if (user == null)
                     {
                         _logger.AddCustomEvent(LogLevel.Warning, $"[NotificationSender__RaiseNotificationAsync__SendEmail__AppUser]",
-                        $"Request to send notification to app user, but could not find app user with id: ({user.Id}).");
+                        $"Request to send notification to app user, but could not find app user with id: ({appUser.Id}).");
                     }
                     else
                         recipients.Add(NotificationRecipient.FromAppUser(user));
@@ -176,7 +180,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var uniuqueEmail = recipients.Count(recp => !String.IsNullOrEmpty(recp.Email));
             var uniuqueSms = recipients.Count(recp => !String.IsNullOrEmpty(recp.Phone));
-            _logger.Trace($"[NotificationSender__GetRecipients] Total Count {recipients.Count} Email: {uniuqueEmail} SMS: {uniuqueSms}.", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__GetRecipients] Total Count {recipients.Count} Email: {uniuqueEmail} SMS: {uniuqueSms}.", orgEntityHeader.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             var result = InvokeResult<List<NotificationRecipient>>.Create(recipients);
             result.Timings.AddRange(timings);
@@ -207,7 +211,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             var result = InvokeResult<string>.Create(String.Empty);
             var sw = Stopwatch.StartNew();
             var fullSw = Stopwatch.StartNew();
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] Starting - Key: {raisedNotification.NotificationKey}. Test Mode {raisedNotification.TestMode}, Org: {orgEntityHeader.Text}, Repo: {raisedNotification.DeviceRepositoryId}, Device: {raisedNotification.DeviceId}", orgEntityHeader.Text.ToKVP("org"), 
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] Starting - Key: {raisedNotification.NotificationKey}. Test Mode {raisedNotification.TestMode}, Org: {orgEntityHeader.Text}, Repo: {raisedNotification.DeviceRepositoryId}, Device: {raisedNotification.DeviceId}", orgEntityHeader.Text.ToKVP("org"), 
                 raisedNotification.NotificationKey.ToKVP("notification"),  orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var validationResult = raisedNotification.Validate();
@@ -230,7 +234,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             var device = await GetDeviceAsync(raisedNotification, repo, orgEntityHeader, userEntityHeader);
             if (!device.Successful) return InvokeResult<string>.FromError($"Could not locate device {(String.IsNullOrEmpty(raisedNotification.DeviceId) ? raisedNotification.DeviceId : raisedNotification.DeviceUniqueId)} in device repository {raisedNotification.DeviceRepositoryId}");
-            _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Sending notification {raisedNotification.NotificationKey} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Sending notification {raisedNotification.NotificationKey} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
             result.Timings.AddRange(device.Timings);
             result.Timings.Add(new ResultTiming() { Key = "getdevice", Ms = sw.Elapsed.TotalMilliseconds });
             sw.Restart();
@@ -246,7 +250,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (raisedNotification.Escalate && !EntityHeader.IsNullOrEmpty(notification.EscalationNotification))
             {
-                _logger.Trace("[NotificationSender__RaiseNotificationAsync] - Will escaltate with notification:");
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, "[NotificationSender__RaiseNotificationAsync] - Will escaltate with notification:");
                 notification = await _deviceNotificationRepo.GetNotificationAsync(notification.EscalationNotification.Id);
             }
 
@@ -259,11 +263,11 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             
             if (!recipientsResult.Result.Any())
             {
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification, but may forward to other devices - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - No recipients, will not send notification, but may forward to other devices - {notification.Name} for device {device.Result.Name} in {repo.Name} repository , spent {fullSw.Elapsed.TotalMilliseconds}ms", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
                 result.Warnings.Add(new ErrorMessage($"No recipients, will not send notification, but may forward to other devices - {notification.Name} for device {device.Result.Name} in {repo.Name} repository"));
             }
             else
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Has {recipientsResult.Result.Count} recipients, will send notification - {notification.Name} for device {device.Result.Name} in {repo.Name} repository", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
 
             var deployment = await _deploymentRepo.GetReadOnlyInstanceAsync(repo.Instance.Id);
             if (deployment == null) return InvokeResult<string>.FromError($"Could not locate deployment {repo.Instance.Text} - {repo.Instance.Id}");
@@ -279,13 +283,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
             if (!EntityHeader.IsNullOrEmpty(device.Result.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Result.Location.Id);
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - found location {location.Name} on device, will append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - found location {location.Name} on device, will append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
                 result.Timings.Add(new ResultTiming() { Key = "loadlandingpage", Ms = sw.Elapsed.TotalMilliseconds });
                 sw.Restart();
             }
             else
             {
-                _logger.Trace($"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - No location set on device, can not append location information", orgEntityHeader.Id.ToKVP("orgId"), raisedNotification.DeviceId.ToKVP("deviceId"));
                 result.Timings.Add(new ResultTiming() { Key = "nolandingpage", Ms = sw.Elapsed.TotalMilliseconds });
                 sw.Restart();
             }
@@ -450,13 +454,13 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                     }
                     else
                     {
-                        _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync__ForwardContact]",
+                        if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics,
                           $"[NotificationSender__RaiseNotificationAsync__ForwardContact] - Forwarded message to {notification.ForwardDevice.Text} {notification.ForwardDevice.Id} - {forwardResult.ErrorMessage}");
                     }
                 }
                 else
                 {
-                    _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync__ForwardContact]",
+                    if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics,
                       $"[NotificationSender__RaiseNotificationAsync__ForwardContact] - Dry Run not sending {notification.ForwardDevice.Text} {notification.ForwardDevice.Id}");
                 }
 
@@ -609,7 +613,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 await _notificationPublisher.PublishAsync<DeviceForNotification>(Targets.WebSocket, Channels.Device, device.Result.Id, wssNotification, NotificationVerbosity.Normal);
             }
 
-            _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__RaiseNotificationAsync]", $"[NotificationSender__RaiseNotificationAsync] - Completed in {fullSw.Elapsed.TotalMilliseconds}ms",
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__RaiseNotificationAsync] - Completed in {fullSw.Elapsed.TotalMilliseconds}ms",
                 raisedNotification.TestMode.ToString().ToKVP("testMode"),
                 raisedNotification.Id.ToKVP("id"),
                 fullSw.Elapsed.TotalMilliseconds.ToString().ToKVP("msElapsed"),
@@ -673,7 +677,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
         {
             var sw = Stopwatch.StartNew();
 
-            _logger.Trace($"[NotificationSender__SendNotification] Starting - Key: {notification.Name}, Test Mode {testMode}, Org: {org.Text}, Repo: {repo.Name}, Device: {device.DeviceId}",  org.Text.ToKVP("org"), notification.Key.ToKVP("notiifcation"), org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] Starting - Key: {notification.Name}, Test Mode {testMode}, Org: {org.Text}, Repo: {repo.Name}, Device: {device.DeviceId}",  org.Text.ToKVP("org"), notification.Key.ToKVP("notiifcation"), org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
             var contacts = new List<NotificationRecipient>();
             contacts.AddRange(device.NotificationContacts.Select(cnt => NotificationRecipient.FromExternalContext(cnt)));
@@ -704,22 +708,22 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
 
             if (!contacts.Any())
             {
-                _logger.Trace($"[NotificationSender__SendNotification] - No recipients, will not send notification - {notification.Name} for device {device.Name} in {repo.Name} repository, spent {sw.Elapsed.TotalMilliseconds}ms", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] - No recipients, will not send notification - {notification.Name} for device {device.Name} in {repo.Name} repository, spent {sw.Elapsed.TotalMilliseconds}ms", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
                 return InvokeResult.Success;
             }
             else
             {
-                _logger.Trace($"[NotificationSender__SendNotification] - Found {contacts.Count}, will continue to send notification - {notification.Name} for device {device.Name} in {repo.Name} repository", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] - Found {contacts.Count}, will continue to send notification - {notification.Name} for device {device.Name} in {repo.Name} repository", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
             }
 
             OrgLocation location = null;
             if (!EntityHeader.IsNullOrEmpty(device.Location))
             {
                 location = await _orgLocationRepo.GetLocationAsync(device.Location.Id);
-                _logger.Trace($"[NotificationSender__SendNotification] - found location {location.Name} on device, loaded location and will append.", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] - found location {location.Name} on device, loaded location and will append.", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
             }
             else
-                _logger.Trace($"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
+                if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] - No location set on device, can not append location information", org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"));
 
 
             var tz = TimeZoneInfo.Local;
@@ -865,7 +869,7 @@ namespace LagoVista.IoT.Deployment.Admin.Services.NotificationClients
                 await _restSender.SendAsync(rest, device, location, org, user);
             }
 
-            _logger.AddCustomEvent(LogLevel.Message, $"[NotificationSender__SendNotification]", $"[NotificationSender__SendNotification] - Completed in {sw.Elapsed.TotalMilliseconds}ms",
+            if (DiagnosticsEnabled) _logger.AddCustomEvent(LogLevel.Verbose, RuntimeControlCatalog.NotificationSenderDiagnostics, $"[NotificationSender__SendNotification] - Completed in {sw.Elapsed.TotalMilliseconds}ms",
                 testMode.ToString().ToKVP("testMode"),
                 notification.Key.ToKVP("key"),
                 org.Id.ToKVP("orgId"), device.DeviceId.ToKVP("deviceId"),
